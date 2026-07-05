@@ -197,6 +197,95 @@ LINE_FAQ["pad-neo"] = LINE_FAQ["neo"]
 LINE_FAQ["t-pad"] = LINE_FAQ["tsubame"]
 LINE_FAQ["t-pad-lite"] = LINE_FAQ["lite"]
 
+GAMING_LINES = {"suzaku", "neo", "pad", "pad-neo"}
+LIFE_LINES = {"tsubame", "lite", "t-pad", "t-pad-lite"}
+
+# チップ世代別 タイトル実測fps: (平均fps, 30分後fps) ×4ジャンル(架空タイトル)
+GAME_TITLES = [
+    ("幻晶のエルド", "オープンワールドRPG", "最高画質 / 60fps上限"),
+    ("NOVA STRIKE", "FPSシューター", "最高画質 / 上限解放"),
+    ("頂上決戦アリーナ", "MOBA", "最高画質 / 上限解放"),
+    ("雷鳴レーシング8", "レーシング", "最高画質 / 上限解放"),
+]
+GAME_FPS = {
+    "rai-g1": [(55, 48), (88, 79), (118, 112), (86, 77)],
+    "rai-g2": [(59, 55), (116, 108), (142, 137), (108, 101)],
+    "rai-g3": [(60, 59), (143, 138), (164, 160), (132, 127)],
+    "rai-g4": [(60, 60), (172, 170), (175, 175), (158, 155)],
+}
+
+
+def game_fps_section(p):
+    """ゲーミング系ライン専用: タイトル別実測パフォーマンス表。"""
+    fps = GAME_FPS.get(p["chip"])
+    if not fps:
+        return ""
+    rows = ""
+    for (title, genre, setting), (avg, sustained) in zip(GAME_TITLES, fps):
+        keep = round(sustained / avg * 100)
+        rows += (f'<tr><th scope="row">{title}<br><small class="t-faint">{genre}</small></th>'
+                 f'<td>{setting}</td><td><strong>{avg}fps</strong></td>'
+                 f'<td>{sustained}fps <small class="t-faint">(維持率{keep}%)</small></td></tr>')
+    return f"""
+<section class="section--sm" id="game-ready">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">GAME READY</p><h2 class="t-h2">タイトル別 実測パフォーマンス</h2>
+    <p class="t-soft t-small">室温25℃・輝度50%・Wi-Fi接続の当社試験値(タイトルは検証用の架空タイトル)。「30分後」は連続プレイでの持続性能 — 冷却の実力はここに出ます。</p></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">タイトル</th><th scope="col">画質設定</th><th scope="col">平均fps</th><th scope="col">30分後fps</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table></div>
+    <p class="t-micro t-faint" style="margin-top:14px">ゲーム側からの性能制御は<a href="/developers/docs/performance-api/" style="color:var(--accent);text-decoration:underline">Performance API</a>で開発者に開放しています。</p>
+  </div>
+</section>"""
+
+
+def battery_life_section(p):
+    """スタンダード/エントリー系ライン専用: 電池持ちと充電の目安表。"""
+    bat = num(get_spec(p, ["バッテリー"], "バッテリー容量"))
+    watt = num(get_spec(p, ["バッテリー"], "有線充電"))
+    if not bat:
+        return ""
+    tablet = p["cat"] == "tablet"
+    video = round(bat / (640 if tablet else 195))
+    browse = round(video * 0.7)
+    call = round(video * 0.35)
+    recover = min(85, round((watt or 18) * 0.7))
+    rows = (
+        f'<tr><th scope="row">動画の連続再生</th><td><strong>約{video}時間</strong></td><td>フル充電から・機内モード</td></tr>'
+        f'<tr><th scope="row">SNS・ブラウジング</th><td><strong>約{browse}時間</strong></td><td>5G接続・画面点灯連続</td></tr>'
+        f'<tr><th scope="row">ビデオ通話</th><td><strong>約{call}時間</strong></td><td>Wi-Fi接続・インカメラ使用</td></tr>'
+        f'<tr><th scope="row">30分の充電で</th><td><strong>約{recover}%まで回復</strong></td><td>{watt}W急速充電・電源オフ時</td></tr>')
+    return f"""
+<section class="section--sm" id="battery-life">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">BATTERY LIFE</p><h2 class="t-h2">電池持ちと充電の目安</h2>
+    <p class="t-soft t-small">輝度50%・当社試験条件での参考値です。使用状況により変動します。</p></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">使い方</th><th scope="col">{esc(p['name'])}</th><th scope="col">条件</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table></div>
+    <p class="t-micro t-faint" style="margin-top:14px">いたわり充電(充電上限80%設定)を使うと、2年後の電池劣化を大幅に抑えられます。</p>
+  </div>
+</section>"""
+
+
+# アクセサリ製品別の比較チャート(製品の性格をデータで示す)
+ACC_CHARTS = {
+    "hyoran-cooler": {"type": "bar", "title": "背面温度の低下量(SUZAKU 4・30分高負荷時)", "unit": "℃",
+                      "labels": ["冷却なし", "初代 氷嵐クーラー", "氷嵐クーラー 2"], "values": [0, 19, 28], "highlight": 2},
+    "grip-pro": {"type": "bar", "title": "入力遅延の比較(ボタン押下→画面反映)", "unit": "ms",
+                 "labels": ["一般的なBluetoothパッド", "Grip Pro(Bluetooth)", "Grip Pro(USB-C直結)"], "values": [45, 12, 0.8], "highlight": 2},
+    "buds": {"type": "bar", "title": "音声遅延の比較", "unit": "ms",
+             "labels": ["一般的なTWS(AAC)", "低遅延モード搭載TWS", "SUZAKU Buds(2.4GHzドングル)"], "values": [180, 80, 38], "highlight": 2},
+    "raisoku-charger": {"type": "bar", "title": "SUZAKU 4 のフル充電時間比較", "unit": "分",
+                        "labels": ["一般的な30W充電器", "65W級充電器", "雷速チャージャー 120W"], "values": [78, 52, 34], "highlight": 2},
+    "shield-case": {"type": "bar", "title": "ケース装着による背面温度上昇(30分高負荷)", "unit": "℃",
+                    "labels": ["手帳型ケース", "一般的なTPUケース", "SUZAKU Shield"], "values": [9.2, 6.8, 1.9], "highlight": 2},
+    "dock": {"type": "bar", "title": "ワイヤレス給電出力の比較", "unit": "W",
+             "labels": ["Qi(EPP)", "Qi2", "SUZAKU Dock(対応機種)"], "values": [15, 25, 80], "highlight": 2},
+}
+
 
 # ==========================================================================
 # 共通レイアウト
@@ -789,6 +878,21 @@ def build_product_page(p):
     <div class="section-head"><p class="eyebrow">DATA</p><h2 class="t-h2">数字は、嘘をつかない。</h2>
     <p class="t-soft t-small">スコア・容量は当社測定条件による参考値です。完全な仕様は<a href="{url}specs/" style="color:var(--accent);text-decoration:underline">スペックページ</a>へ。</p></div>
     <div class="chart-grid">{charts_html}</div>
+  </div>
+</section>"""
+        # ラインの性格を構成に反映する固有セクション
+        if p["line"] in GAMING_LINES:
+            data_section += game_fps_section(p)
+        elif p["line"] in LIFE_LINES:
+            data_section += battery_life_section(p)
+    elif p["id"] in ACC_CHARTS:
+        # アクセサリ: 製品ごとに異なる比較グラフ
+        data_section = f"""
+<section class="section--sm" id="data">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">DATA</p><h2 class="t-h2">数字で見る、{esc(p['name'])}。</h2></div>
+    <div class="chart-grid">{chart(ACC_CHARTS[p['id']])}</div>
+    <p class="t-micro t-faint" style="margin-top:14px">当社試験条件による参考値です。比較対象は市場の一般的な製品カテゴリの代表値。</p>
   </div>
 </section>"""
 

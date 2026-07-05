@@ -21,8 +21,14 @@
 <rect x="40.8" y="30.8" width="558.4" height="418.4" rx="29.2" fill="none" stroke="#3d8bff" stroke-opacity="0.5" stroke-width="1.6"/>
 <rect x="54" y="44" width="532" height="392" rx="20" fill="url(#scrtpad0)"/>
 <ellipse cx="320" cy="195" rx="190" ry="115" fill="url(#flaretpad0)"/>
-<path d="M320 120 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="#3d8bff" stroke-width="4.5" stroke-linejoin="round"/>
-<circle cx="320" cy="210" r="10" fill="#3d8bff"/>
-<text x="320" y="286" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">TSUBAME Pad</text>
-<text x="320" y="310" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">燕 Pad</text>
+<circle cx="320" cy="58" r="4.5" fill="#050508" stroke="#33333f" stroke-width="1.5"/>
+<text x="76" y="72" font-family="'Noto Sans JP',sans-serif" font-size="13" font-weight="700" fill="#e6e6ee">12:34</text>
+<rect x="536" y="59" width="19" height="9.5" rx="3.5" fill="none" stroke="#c9c9d6" stroke-width="1.4"/>
+<rect x="538" y="61" width="11" height="5.5" rx="1.5" fill="#3d8bff"/>
+<path d="M320 122 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="#3d8bff" stroke-width="4.5" stroke-linejoin="round"/>
+<circle cx="320" cy="212" r="10" fill="#3d8bff"/>
+<text x="320" y="288" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">TSUBAME Pad</text>
+<text x="320" y="312" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">燕 Pad</text>
+<rect x="250 " y="394" width="26" height="26" rx="7" fill="#ffffff" opacity="0.16"/><rect x="288 " y="394" width="26" height="26" rx="7" fill="#ffffff" opacity="0.24"/><rect x="326 " y="394" width="26" height="26" rx="7" fill="#ffffff" opacity="0.18"/><rect x="364 " y="394" width="26" height="26" rx="7" fill="#ffffff" opacity="0.22"/>
+<path d="M70 44 L360 44 L150 436 L54 436 L54 300 Z" fill="#ffffff" opacity="0.035"/>
 </svg>

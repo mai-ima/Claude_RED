@@ -54,7 +54,9 @@ def chart(cfg, cls=""):
 
 
 # ベンチマーク・技術トレンドの単一ソース(架空値)
-ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385}   # 万点
+ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385}   # 万点(旗艦G系)
+ANTUTU_E = {"rai-e1": 62, "rai-e2": 85}                                   # 万点(エントリーE系)
+TFLOPS_L = {"homura-l1": 0.35, "homura-l2": 0.5}                          # Lite GPU
 CLOCK = {"rai-g1": 3.2, "rai-g2": 3.3, "rai-g3": 3.5, "rai-g4": 3.8}    # GHz
 NPU_TOPS = {"rai-g1": 20, "rai-g2": 45, "rai-g3": 75, "rai-g4": 120}
 TFLOPS = {"homura-x1": 1.0, "homura-x2": 1.6, "homura-x3": 2.3, "homura-x4": 3.4}
@@ -67,10 +69,15 @@ COOL_DELTA = [("氷刃 V1", 9.5), ("氷刃 V2", 12.0), ("氷刃 V3", 14.2), ("�
 
 def product_antutu(p):
     """製品の搭載SoCからAnTuTuスコア(万点)を算出。省電力版(A)は0.74倍。"""
-    if not p.get("chip") or p["chip"] not in ANTUTU:
+    chip = p.get("chip")
+    if not chip:
+        return None
+    if chip in ANTUTU_E:
+        return ANTUTU_E[chip]
+    if chip not in ANTUTU:
         return None
     soc = get_spec(p, ["性能"], "SoC")
-    base = ANTUTU[p["chip"]]
+    base = ANTUTU[chip]
     if re.search(r"RAI-G\dA", soc):
         return round(base * 0.74)
     return base
@@ -177,7 +184,7 @@ LINE_FAQ = {
     ],
     "lite": [
         ("価格が安い理由は何ですか?",
-         "実績ある前世代の省電力チップの採用、液晶ディスプレイの選択、パッケージの簡素化によるものです。FeliCa・防水・セキュリティ更新など「毎日の安心」に関わる部分は削っていません。"),
+         "エントリー専用に新設計した自社SoC「雷 RAI-E」シリーズの採用、液晶ディスプレイの選択、パッケージの簡素化によるものです。FeliCa・防水・セキュリティ更新など「毎日の安心」に関わる部分は削っていません。<a href='/tech/cpu/rai-e2/'>RAI-E2の技術詳細</a>もご覧ください。"),
         ("ゲームはどの程度動きますか?",
          "人気タイトルの標準〜中設定で快適に動作します。高フレームレート・最高画質でのプレイをご希望の場合はNeoシリーズをご検討ください。"),
         ("初めてのスマホでも使えますか?",
@@ -966,6 +973,55 @@ def build_product_page(p):
   </div>
 </section>"""
 
+    # --- カラーギャラリー(2色以上のデバイス) ---
+    color_gallery = ""
+    if is_device and len(p["colors"]) >= 2:
+        gcards = "".join(
+            f"""<figure class="color-card reveal"><img src="/assets/img/products/{p['id']}-{i}.svg" alt="{esc(p['name'])} {esc(c['name'])}" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:{c['hex']}"></i>{esc(c['name'])}</figcaption></figure>"""
+            for i, c in enumerate(p["colors"]))
+        color_gallery = f"""
+<section class="section--sm" id="colors">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">COLORS</p><h2 class="t-h2">{len(p['colors'])}つの色。どれも、{esc(p['kana'].split(' ')[0])}。</h2></div>
+    <div class="color-gallery">{gcards}</div>
+    {'<div class="cluster" style="margin-top:20px"><a class="btn btn--primary" href="#buy">カラーを選んで購入する</a></div>' if p['status'] == 'current' else ''}
+  </div>
+</section>"""
+
+    # --- ローカルナビ(Apple式・PCのみ表示) ---
+    local_links = '<a href="#buy">構成と価格</a>' if p["status"] == "current" else ""
+    if is_device:
+        local_links += '<a href="#data">性能データ</a>'
+        if len(p["colors"]) >= 2:
+            local_links += '<a href="#colors">カラー</a>'
+        local_links += f'<a href="{url}specs/">仕様</a>'
+    local_links += '<a href="/products/compare/">比較</a>'
+    local_cta = (f'<span class="localnav__price">{yen(p["price"])}〜</span><a class="btn btn--primary btn--sm" href="#buy">購入へ</a>'
+                 if p["status"] == "current" else '<span class="badge badge--end">販売終了</span>')
+    localnav = f"""
+<div class="localnav" id="localnav" aria-hidden="true">
+  <div class="localnav__inner">
+    <span class="localnav__name">{esc(p['name'])}</span>
+    <nav class="localnav__links" aria-label="{esc(p['name'])}内のセクション">{local_links}</nav>
+    {local_cta}
+  </div>
+</div>"""
+
+    # --- 注記(Apple式footnotes) ---
+    note_items = [
+        "価格はすべて消費税込みの当社直販価格です。分割払いの月額は24回均等払いの概算で、手数料はカード会社の規定によります。",
+        "バッテリー駆動時間は輝度50%・Wi-Fi接続・当社試験環境での測定値です。使用状況・経年により変動します。",
+        "ベンチマークスコア・温度・fpsは室温25℃の当社試験環境での測定値であり、性能を保証するものではありません。",
+    ]
+    if p["line"] in GAMING_LINES:
+        note_items.append("実測パフォーマンスの検証タイトルは実在のゲームではなく、当社のベンチマーク用シナリオです。ファン動作音は無響室での測定値です。")
+    if is_device:
+        note_items.append("防塵防水性能は当社試験条件によるもので、無故障・無破損を保証するものではありません。水没・砂塵環境でのご使用はお避けください。")
+    note_items.append("本サイトは架空企業のデモンストレーションであり、記載のすべての製品・数値はフィクションです。")
+    footnotes = ('<section class="section--sm"><div class="container container--narrow">'
+                 '<hr class="divider" style="margin-bottom:22px"><ol class="footnotes">'
+                 + "".join(f"<li>{n}</li>" for n in note_items) + "</ol></div></section>")
+
     # --- フローティング購入バー(現行モデルのみ) ---
     buy_float = ""
     if p["status"] == "current":
@@ -1000,12 +1056,15 @@ def build_product_page(p):
 <section class="section--sm"><div class="container">{stats_html(p['stats'])}</div></section>
 {buy_box}
 {bleed}
+{color_gallery}
 {sections_html(p['sections'], glow)}
 {data_section}
 {extras}
 {f'''<section class="section--sm"><div class="container"><div class="card t-center" style="padding:clamp(32px,5vw,56px)"><h2 class="t-h3">すべての仕様を確認する</h2><p class="t-soft">サイズ・性能・カメラ・通信仕様の完全なリストをご用意しています。</p><div class="cluster cluster--center"><a class="btn btn--primary" href="{url}specs/">{esc(p['name'])} の仕様を見る</a><a class="btn btn--ghost" href="/products/compare/">他のモデルと比較する</a></div></div></div></section>''' if is_device else ''}
 {related}
 {cta_band('SUZAKU ストアで、次の一台を。', '全国送料無料(5,000円以上)。14日間の返品保証と1年間のメーカー保証付き。', [('ストアで見る', '/store/', 'btn--primary'), ('購入ガイド', '/store/guide/', 'btn--ghost')])}
+{footnotes}
+{localnav}
 {buy_float}
 """
     crumbs = [("製品", "/products/"), (cat_label, cat_url), (p["name"], None)]
@@ -1040,13 +1099,13 @@ def build_product_page(p):
 
 TECH_HUBS = {
     "cpu": {"title": "雷 RAI", "en": "CPU / SoC", "path": "/tech/cpu/",
-            "desc": "ゲームのためだけに設計された自社SoCシリーズ「雷」。2023年のG1から最新のG4まで、全世代を紹介します。"},
+            "desc": "自社SoCシリーズ「雷」。旗艦のG1〜G4に加え、エントリー専用のE1/E2まで — 全価格帯を自社シリコンで。"},
     "gpu": {"title": "焔 HOMURA", "en": "GPU", "path": "/tech/gpu/",
-            "desc": "実ゲーム性能を最優先する自社GPUシリーズ「焔」。レイトレーシングとAIフレーム生成の進化史。"},
+            "desc": "自社GPUシリーズ「焔」。レイトレ対応のX系と省電力Lite系、2つのアーキテクチャの進化史。"},
     "memory": {"title": "疾風 HAYATE", "en": "MEMORY", "path": "/tech/memory/",
-               "desc": "SoCと同時設計される自社メモリシリーズ「疾風」。LPDDR5XからLPDDR6へ。"},
+               "desc": "SoCと同時設計される自社メモリシリーズ「疾風」。エントリーのL1からLPDDR6のM2まで。"},
     "storage": {"title": "瞬 SHUN", "en": "STORAGE", "path": "/tech/storage/",
-                "desc": "ロード時間を消しにいく自社ストレージシリーズ「瞬」。UFS 4.1で読込5,800MB/s。"},
+                "desc": "ロード時間を消しにいく自社ストレージシリーズ「瞬」。エントリーのL1から読込5,800MB/sのS2まで。"},
     "cooling": {"title": "冷却技術", "en": "COOLING", "path": "/tech/cooling/",
                 "desc": "氷刃・旋風・液焔・水龍。4つの冷却技術シリーズが、性能の持続を支えます。"},
     "camera": {"title": "天眼 TENGAN", "en": "CAMERA", "path": "/tech/camera/",
@@ -1071,6 +1130,26 @@ def tech_bench_charts(t):
         return chart(cfg)
 
     out = ""
+    if t["id"].startswith("rai-e"):
+        hi = 0 if t["id"] == "rai-e1" else 1
+        out += chart({"type": "bar", "title": "雷 RAI-Eシリーズ — AnTuTuスコア(参考: 省電力版G4A)", "unit": "万点",
+                      "labels": ["RAI-E1(2025)", "RAI-E2(2026)", "参考: RAI-G4A"], "values": [62, 85, 285], "highlight": hi})
+        out += chart({"type": "bar", "title": "動画連続再生時間(搭載エントリー機の実測)", "unit": "時間",
+                      "labels": ["RAI-E1 搭載機", "RAI-E2 搭載機"], "values": [20, 22], "highlight": hi if hi < 2 else 1})
+        return out
+    if t["id"].startswith("homura-l"):
+        hi = 0 if t["id"] == "homura-l1" else 1
+        out += chart({"type": "bar", "title": "焔 Liteシリーズ — 理論演算性能(参考: X2)", "unit": "TFLOPS",
+                      "labels": ["HOMURA-L1(2025)", "HOMURA-L2(2026)", "参考: HOMURA-X2"], "values": [0.35, 0.5, 1.6], "highlight": hi})
+        return out
+    if t["id"] == "hayate-l1":
+        out += chart({"type": "bar", "title": "エントリー帯メモリの転送速度比較", "unit": "Mbps",
+                      "labels": ["一般的なLPDDR4X", "疾風 HAYATE-L1", "参考: HAYATE-M1"], "values": [4266, 6400, 8533], "highlight": 1})
+        return out
+    if t["id"] == "shun-l1":
+        out += chart({"type": "bar", "title": "エントリー帯ストレージの読込速度比較", "unit": "MB/s",
+                      "labels": ["eMMC 5.1", "瞬 SHUN-L1", "参考: SHUN-S1"], "values": [300, 2100, 4300], "highlight": 1})
+        return out
     if t["hub"] == "cpu":
         out += gen_bar("雷シリーズ — AnTuTuスコアの世代比較", "万点", ANTUTU)
         out += gen_bar("神楽NPU 推論性能の世代比較", "TOPS", NPU_TOPS)
@@ -1228,6 +1307,18 @@ def build_tech_hub(hub_key):
         if len(pts) >= 2:
             trend_charts += chart({"type": "line", "title": f"{hub['title']} — {title}", "unit": unit, "area": True,
                                    "labels": [f"{y}年" for y, _ in pts], "series": [{"name": hub["title"], "values": [v for _, v in pts]}]})
+    if hub_key == "cpu":
+        trend_charts += chart({"type": "bar", "title": "エントリー向け 雷 RAI-Eシリーズ(参考: 省電力版G4A)", "unit": "万点",
+                               "labels": ["RAI-E1(2025)", "RAI-E2(2026)", "参考: RAI-G4A"], "values": [62, 85, 285], "highlight": 1})
+    if hub_key == "gpu":
+        trend_charts += chart({"type": "bar", "title": "省電力Liteシリーズ 焔 HOMURA-L", "unit": "TFLOPS",
+                               "labels": ["HOMURA-L1(2025)", "HOMURA-L2(2026)", "参考: HOMURA-X2"], "values": [0.35, 0.5, 1.6], "highlight": 1})
+    if hub_key == "memory":
+        trend_charts += chart({"type": "bar", "title": "エントリー向け 疾風 HAYATE-L1", "unit": "Mbps",
+                               "labels": ["一般的なLPDDR4X", "HAYATE-L1", "HAYATE-M2"], "values": [4266, 6400, 10667], "highlight": 1})
+    if hub_key == "storage":
+        trend_charts += chart({"type": "bar", "title": "エントリー向け 瞬 SHUN-L1", "unit": "MB/s",
+                               "labels": ["eMMC 5.1", "SHUN-L1", "SHUN-S2"], "values": [300, 2100, 5800], "highlight": 1})
     if hub_key == "cooling":
         trend_charts += chart({"type": "line", "title": "氷刃 ベイパーチャンバー面積の推移", "unit": "mm²", "area": True,
                                "labels": ["2023年", "2024年", "2025年", "2026年"],
@@ -1626,11 +1717,12 @@ def build_assets():
     (img / "favicon.svg").write_text(svg_art.FAVICON, encoding="utf-8")
     for p in ALL_PRODUCTS:
         glow = LINES[p["line"]]["glow"]
+        hz = f"{num(get_spec(p, ['ディスプレイ'], 'リフレッシュレート')) or 60}Hz" if p["cat"] in ("phone", "tablet") else "60Hz"
         for i, c in enumerate(p["colors"]):
             if p["cat"] == "phone":
-                svg = svg_art.svg_phone(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"])
+                svg = svg_art.svg_phone(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)
             elif p["cat"] == "tablet":
-                svg = svg_art.svg_tablet(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"])
+                svg = svg_art.svg_tablet(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)
             else:
                 svg = svg_art.svg_art(p.get("art", "chip"), glow if i == 0 else c["hex"])
             (img / "products" / f"{p['id']}-{i}.svg").write_text(svg, encoding="utf-8")

@@ -511,16 +511,23 @@
     renderCompare();
   }
 
-  /* ---------------- フローティング購入バー(製品ページ) ---------------- */
+  /* ---------------- フローティング購入バー + ローカルナビ(製品ページ) ---------------- */
   var buyFloat = $("#buyFloat");
-  if (buyFloat) {
+  var localnav = $("#localnav");
+  if (buyFloat || localnav) {
     var buySection = $("#buy");
+    var heroSection = $(".hero");
     var onScrollFloat = function () {
-      if (!buySection) return;
-      var r = buySection.getBoundingClientRect();
-      var show = r.bottom < 0;
-      buyFloat.classList.toggle("is-visible", show);
-      buyFloat.setAttribute("aria-hidden", String(!show));
+      if (buyFloat && buySection) {
+        var show = buySection.getBoundingClientRect().bottom < 0;
+        buyFloat.classList.toggle("is-visible", show);
+        buyFloat.setAttribute("aria-hidden", String(!show));
+      }
+      if (localnav && heroSection) {
+        var showNav = heroSection.getBoundingClientRect().bottom < 70;
+        localnav.classList.toggle("is-visible", showNav);
+        localnav.setAttribute("aria-hidden", String(!showNav));
+      }
     };
     window.addEventListener("scroll", onScrollFloat, { passive: true });
     onScrollFloat();

@@ -165,6 +165,60 @@ TECHS = [
         ],
         "products": ["suzaku-one", "neo"],
     },
+    {
+        "id": "rai-e2", "type": "cpu", "hub": "cpu",
+        "name": "雷 RAI-E2", "en": "RAI-E2", "year": 2026, "announce": "2026年6月5日",
+        "tagline": "エントリーにも、専用設計を。",
+        "sub": "流用ではなく、新設計。3万円台の端末のために4nmで起こした第2世代エントリーSoC。日常動作の軽快さに全リソースを投じた。",
+        "stats": [
+            {"v": "2.9", "u": "GHz", "l": "最大クロック"},
+            {"v": "85", "u": "万点", "l": "AnTuTuスコア"},
+            {"v": "+37", "u": "%", "l": "CPU性能(E1比)"},
+            {"v": "22", "u": "時間", "l": "動画再生(搭載機実測)"},
+        ],
+        "sections": [
+            {"eyebrow": "PHILOSOPHY", "art": "chip",
+             "title": "「安いから遅い」を、終わらせる。",
+             "body": "廉価端末の多くは数年前の汎用チップの流用で作られます。RAI-Eシリーズは逆の発想 — エントリー価格帯のために新規設計する。使わない高性能コアを載せない代わりに、タッチ応答・アプリ起動・カメラ起動など体感頻度の高い処理へ回路を集中させています。",
+             "points": ["4nmプロセス・2+6コア構成", "タッチ最優先スケジューラをG系と共通搭載", "神楽NPU lite 14TOPS"],
+             "link": ("/products/phone/tsubame-lite-2/", "搭載機 TSUBAME Lite 2 を見る")},
+            {"eyebrow": "EFFICIENCY", "art": "battery",
+             "title": "電池のもちは、性能だ。",
+             "body": "ピーク性能ではなく「1日の終わりの残量」を設計目標に置きました。動画再生の実測はE1比+2時間。GPU「焔 HOMURA-L2」との協調で、動画・SNS・ライトゲームの電力を最適化しています。",
+             "points": ["動画再生 約22時間(TSUBAME Lite 2)", "アイドル消費 -18%(E1比)", "33W急速充電コントローラ内蔵"], "link": None},
+        ],
+        "specs": [
+            ("製造・構成", [("プロセス", "4nm"), ("CPU構成", "大型 2.9GHz ×2 + 高効率 2.0GHz ×6"), ("L3キャッシュ", "4MB")]),
+            ("統合ユニット", [("GPU", "焔 HOMURA-L2"), ("NPU", "神楽 KAGURA lite(14TOPS)"), ("ISP", "天眼ISP lite")]),
+            ("対応メモリ・ストレージ", [("メモリ", "疾風 HAYATE-L1 LPDDR5(6,400Mbps)"), ("ストレージ", "瞬 SHUN-L1 UFS 3.1")]),
+        ],
+        "products": ["tsubame-lite-2"],
+    },
+    {
+        "id": "rai-e1", "type": "cpu", "hub": "cpu",
+        "name": "雷 RAI-E1", "en": "RAI-E1", "year": 2025, "announce": "2025年6月6日",
+        "tagline": "廉価版にも、自社の雷を。",
+        "sub": "TSUBAME Liteとともに登場した初のエントリー専用SoC。6nm・2+6コア。「3万円台でもSUZAKU品質」を支える初代。",
+        "stats": [
+            {"v": "2.7", "u": "GHz", "l": "最大クロック"},
+            {"v": "62", "u": "万点", "l": "AnTuTuスコア"},
+            {"v": "6", "u": "nm", "l": "プロセス"},
+            {"v": "8", "u": "TOPS", "l": "神楽NPU lite"},
+        ],
+        "sections": [
+            {"eyebrow": "ORIGIN", "art": "chip",
+             "title": "エントリー専用SoCという決断。",
+             "body": "2025年、SUZAKUはエントリー価格帯にも自社シリコンを届けると決めました。他社汎用チップの採用も検討しましたが、タッチ応答とOSアップデートの保証期間を自社基準で握れることが決め手に。RAI-E1はLite系全機種の心臓として現役です。",
+             "points": ["6nmプロセス・2+6コア", "FeliCa・衛星測位を統合", "セキュリティ更新4年を支える長期供給設計"],
+             "link": ("/tech/cpu/rai-e2/", "後継 RAI-E2 を見る")},
+        ],
+        "specs": [
+            ("製造・構成", [("プロセス", "6nm"), ("CPU構成", "大型 2.7GHz ×2 + 高効率 1.9GHz ×6")]),
+            ("統合ユニット", [("GPU", "焔 HOMURA-L1"), ("NPU", "神楽 KAGURA lite(8TOPS)")]),
+            ("対応メモリ・ストレージ", [("メモリ", "疾風 HAYATE-L1 LPDDR5"), ("ストレージ", "瞬 SHUN-L1 UFS 3.1")]),
+        ],
+        "products": ["tsubame-lite", "t-pad-lite"],
+    },
     # ================================ GPU 焔 HOMURA ================================
     {
         "id": "homura-x4", "type": "gpu", "hub": "gpu",
@@ -259,6 +313,46 @@ TECHS = [
         ],
         "products": ["suzaku-one", "neo"],
     },
+    {
+        "id": "homura-l2", "type": "gpu", "hub": "gpu",
+        "name": "焔 HOMURA-L2", "en": "HOMURA-L2", "year": 2026, "announce": "2026年6月5日",
+        "tagline": "小さな焔は、賢く燃える。",
+        "sub": "RAI-E2に統合される第2世代Lite GPU。動画・UI・カジュアルゲームに最適化した省電力アーキテクチャ。",
+        "stats": [
+            {"v": "192", "u": "ALU", "l": "シェーダーコア"},
+            {"v": "0.5", "u": "TFLOPS", "l": "理論性能"},
+            {"v": "-31", "u": "%", "l": "動画再生時の消費電力(L1比)"},
+            {"v": "120", "u": "fps", "l": "軽量タイトル実測"},
+        ],
+        "sections": [
+            {"eyebrow": "LITE ARCHITECTURE", "art": "gpu",
+             "title": "描かない勇気の、極致。",
+             "body": "Liteアーキテクチャは焔X系からレイトレーシング等の高機能ブロックを大胆に省き、UI描画・動画デコード・2D/軽量3Dの電力効率へ全振りした設計です。120Hz表示のスクロールも、動画の連続再生も、最小の電力で駆動します。",
+             "points": ["AV1ハードウェアデコード対応", "UI描画専用の低電力パス", "パズル・カード系タイトルは120fps動作"], "link": None},
+        ],
+        "specs": [("構成", [("ALU", "192基 / 最大0.85GHz"), ("理論性能", "0.5 TFLOPS"), ("動画支援", "AV1 / H.265 ハードウェアデコード")])],
+        "products": ["tsubame-lite-2"],
+    },
+    {
+        "id": "homura-l1", "type": "gpu", "hub": "gpu",
+        "name": "焔 HOMURA-L1", "en": "HOMURA-L1", "year": 2025, "announce": "2025年6月6日",
+        "tagline": "はじまりの、小さな焔。",
+        "sub": "RAI-E1に統合された初代Lite GPU。エントリー端末の「なめらかな日常」を担う。",
+        "stats": [
+            {"v": "128", "u": "ALU", "l": "シェーダーコア"},
+            {"v": "0.35", "u": "TFLOPS", "l": "理論性能"},
+            {"v": "90", "u": "fps", "l": "UI描画の維持fps"},
+            {"v": "初", "u": "", "l": "Liteアーキテクチャ"},
+        ],
+        "sections": [
+            {"eyebrow": "LITE ARCHITECTURE", "art": "gpu",
+             "title": "スクロールの気持ちよさに、全振り。",
+             "body": "初代Liteアーキテクチャの目標は「ホーム画面とブラウザが絶対にカクつかないこと」。ベンチマークスコアより、90Hz表示の完璧な維持を優先しました。",
+             "points": ["H.265ハードウェアデコード", "90Hz UI描画の完全維持", "焔X系とドライバ基盤を共通化"], "link": None},
+        ],
+        "specs": [("構成", [("ALU", "128基 / 最大0.8GHz"), ("理論性能", "0.35 TFLOPS")])],
+        "products": ["tsubame-lite", "t-pad-lite"],
+    },
     # ================================ メモリ 疾風 HAYATE ================================
     {
         "id": "hayate-m2", "type": "memory", "hub": "memory",
@@ -304,6 +398,26 @@ TECHS = [
         ],
         "products": ["suzaku-3", "neo-3"],
     },
+    {
+        "id": "hayate-l1", "type": "memory", "hub": "memory",
+        "name": "疾風 HAYATE-L1", "en": "HAYATE-L1", "year": 2025, "announce": "2025年6月6日",
+        "tagline": "廉価版の「もっさり」を、卒業。",
+        "sub": "エントリー端末向けの自社メモリ。LPDDR4X据え置きが常識の価格帯に、LPDDR5 6,400Mbpsを持ち込んだ。",
+        "stats": [
+            {"v": "6400", "u": "Mbps", "l": "転送速度"},
+            {"v": "+50", "u": "%", "l": "帯域(LPDDR4X比)"},
+            {"v": "8", "u": "GB", "l": "最大容量"},
+            {"v": "-12", "u": "%", "l": "アクセス消費電力"},
+        ],
+        "sections": [
+            {"eyebrow": "VALUE", "art": "memory",
+             "title": "アプリの切り替えが、待たせない。",
+             "body": "エントリー端末の体感を最も損なうのは、メモリ不足時のアプリ再読み込みです。HAYATE-L1は帯域の余裕とOSのメモリ拡張機能(ストレージ借用)を協調設計し、6GB構成でも主要アプリ8本の常駐を実現しました。",
+             "points": ["LPDDR5 6,400Mbps", "メモリ拡張(+4GB仮想)最適化", "Lite系全機種に搭載"], "link": None},
+        ],
+        "specs": [("仕様", [("規格", "LPDDR5"), ("転送速度", "6,400Mbps"), ("容量", "4GB / 6GB / 8GB"), ("搭載製品", "TSUBAME Lite / Lite 2 / TSUBAME Pad Lite")])],
+        "products": ["tsubame-lite-2", "tsubame-lite", "t-pad-lite"],
+    },
     # ================================ ストレージ 瞬 SHUN ================================
     {
         "id": "shun-s2", "type": "storage", "hub": "storage",
@@ -348,6 +462,26 @@ TECHS = [
             ("仕様", [("規格", "UFS 4.0"), ("読込/書込", "4,300 / 2,900 MB/s"), ("容量", "256GB / 512GB"), ("搭載製品", "SUZAKU 3 / Neo 3 ほか")]),
         ],
         "products": ["suzaku-3", "neo-3"],
+    },
+    {
+        "id": "shun-l1", "type": "storage", "hub": "storage",
+        "name": "瞬 SHUN-L1", "en": "SHUN-L1", "year": 2025, "announce": "2025年6月6日",
+        "tagline": "eMMCの時代を、終わらせる。",
+        "sub": "エントリー価格帯の定番だったeMMCを置き換える自社ストレージ。UFS 3.1で読込2,100MB/s — 廉価版でも7倍速い。",
+        "stats": [
+            {"v": "2100", "u": "MB/s", "l": "シーケンシャル読込"},
+            {"v": "7", "u": "倍", "l": "対eMMC 5.1比"},
+            {"v": "256", "u": "GB", "l": "最大容量"},
+            {"v": "1.4", "u": "秒", "l": "カメラ起動(搭載機実測)"},
+        ],
+        "sections": [
+            {"eyebrow": "VALUE", "art": "storage",
+             "title": "安い端末ほど、ストレージで差が出る。",
+             "body": "アプリの起動、写真の保存、アップデートの適用 — エントリー端末の「遅い」の正体は大抵ストレージです。SHUN-L1はコントローラをS系と共通化し、価格を抑えながら日常操作の速度を底上げします。",
+             "points": ["UFS 3.1 / 2,100MB/s", "microSDとの階層管理に対応", "書込耐久はS系と同一基準"], "link": None},
+        ],
+        "specs": [("仕様", [("規格", "UFS 3.1"), ("読込/書込", "2,100 / 1,200 MB/s"), ("容量", "64GB / 128GB / 256GB"), ("搭載製品", "TSUBAME Lite / Lite 2 / TSUBAME Pad Lite")])],
+        "products": ["tsubame-lite-2", "tsubame-lite", "t-pad-lite"],
     },
     # ================================ 冷却 ================================
     {

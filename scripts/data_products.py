@@ -611,7 +611,7 @@ PHONES = [
         "price": 39800,
         "colors": [{"name": "白練", "hex": "#eceae2"}, {"name": "藍鼠", "hex": "#4a5568"}],
         "storage": [{"label": "6GB + 128GB", "delta": 0}, {"label": "8GB + 256GB", "delta": 6000}],
-        "chip": "rai-g3", "gpu_id": "homura-x3", "os_v": "os-v4",
+        "chip": "rai-e2", "gpu_id": "homura-l2", "os_v": "os-v4",
         "stats": [
             {"v": "39,800", "u": "円", "l": "価格(税込)〜"},
             {"v": "120", "u": "Hz", "l": "ディスプレイ"},
@@ -621,13 +621,13 @@ PHONES = [
         "sections": [
             {"eyebrow": "VALUE", "art": "battery",
              "title": "妥協のリストが、短い。",
-             "body": "RAI-G3Aチップ、120Hz表示、大容量電池、おサイフケータイ対応。「安いから仕方ない」を、できる限り無くしました。",
+             "body": "エントリー専用に新設計された「雷 RAI-E2」チップ、120Hz表示、大容量電池、おサイフケータイ対応。「安いから仕方ない」を、できる限り無くしました。",
              "points": ["FeliCa / おサイフケータイ", "IP67防塵防水", "イヤホンジャック搭載"],
              "link": None},
         ],
         "specs": [
             ("本体", [("サイズ", "高さ160.4mm × 幅73.5mm × 厚さ8.3mm"), ("重量", "192g"), ("防塵防水", "IP67")]),
-            ("性能", [("SoC", "雷 RAI-G3A"), ("メモリ", "6GB / 8GB"), ("ストレージ", "128GB / 256GB(microSD対応)")]),
+            ("性能", [("SoC", "雷 RAI-E2(4nm・最大2.9GHz)"), ("GPU", "焔 HOMURA-L2"), ("メモリ", "疾風 HAYATE-L1 LPDDR5 6GB / 8GB"), ("ストレージ", "瞬 SHUN-L1 UFS 3.1 128GB / 256GB(microSD対応)")]),
             ("ディスプレイ", [("パネル", "6.6インチ 液晶"), ("リフレッシュレート", "最大120Hz")]),
             ("カメラ", [("リアカメラ", "50MP 広角 + 2MP マクロ")]),
             ("バッテリー・充電", [("バッテリー容量", "5000mAh"), ("有線充電", "33W")]),
@@ -643,7 +643,7 @@ PHONES = [
         "price": 34800,
         "colors": [{"name": "白練", "hex": "#eceae2"}, {"name": "藍鼠", "hex": "#4a5568"}],
         "storage": [{"label": "6GB + 128GB", "delta": 0}],
-        "chip": "rai-g2", "gpu_id": "homura-x2", "os_v": "os-v3",
+        "chip": "rai-e1", "gpu_id": "homura-l1", "os_v": "os-v3",
         "stats": [
             {"v": "34,800", "u": "円", "l": "価格(税込)"},
             {"v": "90", "u": "Hz", "l": "ディスプレイ"},
@@ -653,13 +653,13 @@ PHONES = [
         "sections": [
             {"eyebrow": "VALUE", "art": "battery",
              "title": "毎日を、軽くする。",
-             "body": "実績あるRAI-G2Aチップと軽量チューニングのSUZAKU OSで、価格以上のサクサク感。はじめてのスマホにも、2台目にも。",
+             "body": "エントリー専用SoC「雷 RAI-E1」と軽量チューニングのSUZAKU OSで、価格以上のサクサク感。はじめてのスマホにも、2台目にも。",
              "points": ["FeliCa対応", "microSD対応", "イヤホンジャック搭載"],
              "link": None},
         ],
         "specs": [
             ("本体", [("サイズ", "高さ160.2mm × 幅73.4mm × 厚さ8.4mm"), ("重量", "191g"), ("防塵防水", "IP67")]),
-            ("性能", [("SoC", "雷 RAI-G2A"), ("メモリ", "6GB"), ("ストレージ", "128GB(microSD対応)")]),
+            ("性能", [("SoC", "雷 RAI-E1(6nm・最大2.7GHz)"), ("GPU", "焔 HOMURA-L1"), ("メモリ", "疾風 HAYATE-L1 LPDDR5 6GB"), ("ストレージ", "瞬 SHUN-L1 UFS 3.1 128GB(microSD対応)")]),
             ("ディスプレイ", [("パネル", "6.5インチ 液晶"), ("リフレッシュレート", "最大90Hz")]),
             ("カメラ", [("リアカメラ", "50MP 広角")]),
             ("バッテリー・充電", [("バッテリー容量", "5000mAh"), ("有線充電", "18W")]),
@@ -833,13 +833,13 @@ TABLETS = [
     {
         "id": "t-pad-lite", "cat": "tablet", "line": "t-pad-lite",
         "name": "TSUBAME Pad Lite", "kana": "燕 Pad Lite",
-        "year": 2025, "release": "2025年4月11日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年6月20日", "status": "current", "flag": None,
         "tagline": "気軽に持てる、10.4インチ。",
         "sub": "動画視聴と電子書籍に最適化した3万円台のエントリータブレット。",
         "price": 32800,
         "colors": [{"name": "白練", "hex": "#eceae2"}],
         "storage": [{"label": "4GB + 64GB", "delta": 0}, {"label": "6GB + 128GB", "delta": 5000}],
-        "chip": "rai-g2", "gpu_id": "homura-x2", "os_v": "os-v3",
+        "chip": "rai-e1", "gpu_id": "homura-l1", "os_v": "os-v3",
         "stats": [
             {"v": "32,800", "u": "円", "l": "価格(税込)〜"},
             {"v": "10.4", "u": "型", "l": "2K ディスプレイ"},
@@ -855,7 +855,7 @@ TABLETS = [
         ],
         "specs": [
             ("本体", [("サイズ", "高さ246.0mm × 幅156.0mm × 厚さ7.6mm"), ("重量", "465g")]),
-            ("性能", [("SoC", "雷 RAI-G2A"), ("メモリ", "4GB / 6GB"), ("ストレージ", "64GB / 128GB(microSD対応)")]),
+            ("性能", [("SoC", "雷 RAI-E1(6nm・最大2.7GHz)"), ("GPU", "焔 HOMURA-L1"), ("メモリ", "疾風 HAYATE-L1 LPDDR5 4GB / 6GB"), ("ストレージ", "瞬 SHUN-L1 UFS 3.1 64GB / 128GB(microSD対応)")]),
             ("ディスプレイ", [("パネル", "10.4インチ IPS(2000 × 1200)")]),
             ("バッテリー・充電", [("バッテリー容量", "7700mAh"), ("有線充電", "18W")]),
             ("ソフトウェア", [("OS", "SUZAKU OS 3.0 → 4.0アップデート対応")]),

@@ -1614,6 +1614,121 @@ a.card:hover,
   .chip-visual svg { max-height: 320px; margin-inline: auto; }
 }
 
+/* --------------------------------------------------------------------------
+   カラーギャラリー / ギャラリーレール / ローカルナビ / 注記
+   -------------------------------------------------------------------------- */
+.color-gallery,
+.gallery-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(268px, 74vw);
+  gap: var(--sp-4);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 16px;
+  scrollbar-width: thin;
+}
+
+.color-card,
+.gallery-card {
+  scroll-snap-align: start;
+  margin: 0;
+  background: radial-gradient(120% 90% at 50% 0%, var(--surface-2), var(--bg-deep));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 22px 18px 16px;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  transition: transform var(--dur-mid) var(--ease-out), border-color var(--dur-mid);
+}
+
+.color-card:hover,
+.gallery-card:hover { transform: translateY(-5px); border-color: var(--card-hover-line); }
+
+.color-card img,
+.gallery-card img { max-height: 300px; width: auto; }
+
+.color-card figcaption,
+.gallery-card figcaption {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.color-card figcaption i {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 1.5px solid var(--line-strong);
+  flex: none;
+}
+
+.gallery-card figcaption small { color: var(--text-faint); font-weight: 500; margin-left: 4px; }
+
+/* ローカルナビ(製品ページ・PC) */
+.localnav {
+  position: fixed;
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-header) - 1);
+  background: var(--header-bg);
+  -webkit-backdrop-filter: saturate(1.4) blur(18px);
+  backdrop-filter: saturate(1.4) blur(18px);
+  border-bottom: 1px solid var(--line);
+  transform: translateY(-130%);
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.localnav.is-visible { transform: translateY(0); }
+
+.localnav__inner {
+  max-width: var(--w-max);
+  margin-inline: auto;
+  padding: 9px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+.localnav__name { font-weight: 800; color: var(--text-strong); font-size: var(--fs-small); }
+.localnav__links { display: flex; gap: 4px; margin-left: auto; }
+
+.localnav__links a {
+  padding: 7px 13px;
+  border-radius: var(--r-full);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  color: var(--text-soft);
+  transition: color var(--dur-fast), background-color var(--dur-fast);
+}
+
+.localnav__links a:hover { color: var(--text-strong); background: var(--surface-2); }
+.localnav__price { font-size: var(--fs-micro); color: var(--text-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+@media (max-width: 768px) {
+  .localnav { display: none; } /* モバイルは下部の購入バーが担当 */
+}
+
+/* 注記(Apple式footnotes) */
+.footnotes {
+  list-style: decimal;
+  padding-left: 1.3em;
+  display: grid;
+  gap: 7px;
+  font-size: var(--fs-micro);
+  color: var(--text-faint);
+  line-height: 1.75;
+}
+
+.footnotes li::marker { color: var(--text-faint); }
+
 /* フッターをアコーディオン化(スマートフォン) */
 @media (max-width: 640px) {
   .footer-map { grid-template-columns: 1fr; gap: 0; padding-block: var(--sp-3); }

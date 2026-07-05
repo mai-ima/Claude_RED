@@ -21,8 +21,17 @@
 <rect x="40.8" y="30.8" width="558.4" height="418.4" rx="29.2" fill="none" stroke="#ff8a3d" stroke-opacity="0.5" stroke-width="1.6"/>
 <rect x="54" y="44" width="532" height="392" rx="20" fill="url(#scrpadneo0)"/>
 <ellipse cx="320" cy="195" rx="190" ry="115" fill="url(#flarepadneo0)"/>
-<path d="M320 120 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="#ff8a3d" stroke-width="4.5" stroke-linejoin="round"/>
-<circle cx="320" cy="210" r="10" fill="#ff8a3d"/>
-<text x="320" y="286" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">SUZAKU Pad Neo</text>
-<text x="320" y="310" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">朱雀 Pad Neo</text>
+<circle cx="320" cy="58" r="4.5" fill="#050508" stroke="#33333f" stroke-width="1.5"/>
+<text x="76" y="72" font-family="'Noto Sans JP',sans-serif" font-size="13" font-weight="700" fill="#e6e6ee">12:34</text>
+<rect x="536" y="59" width="19" height="9.5" rx="3.5" fill="none" stroke="#c9c9d6" stroke-width="1.4"/>
+<rect x="538" y="61" width="11" height="5.5" rx="1.5" fill="#ff8a3d"/>
+<path d="M320 122 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="#ff8a3d" stroke-width="4.5" stroke-linejoin="round"/>
+<circle cx="320" cy="212" r="10" fill="#ff8a3d"/>
+<text x="320" y="288" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">SUZAKU Pad Neo</text>
+<text x="320" y="312" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">朱雀 Pad Neo</text>
+
+<rect x="252" y="392" width="136" height="26" rx="13" fill="#07070b" stroke="#ff8a3d" stroke-opacity="0.65" stroke-width="1.4"/>
+<circle cx="270" cy="405" r="4.5" fill="#ff8a3d"/>
+<text x="328" y="409.5" font-family="'Noto Sans JP',sans-serif" font-size="12" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">144Hz 陣</text>
+<path d="M70 44 L360 44 L150 436 L54 436 L54 300 Z" fill="#ffffff" opacity="0.035"/>
 </svg>

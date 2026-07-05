@@ -26,29 +26,66 @@ def _defs(gid, glow):
 </defs>"""
 
 
-def svg_phone(pid, body_hex, glow, label, kana=""):
-    """スマートフォン正面ビュー。"""
+def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
+    """スマートフォン正面ビュー(ステータスバー・HUD/ドック・反射付き)。"""
     gid = pid.replace("-", "")
+    gaming = line in ("suzaku", "neo")
+    # パンチホールカメラ(旗艦SUZAKUはアンダーディスプレイのため無し)
+    hole = "" if line == "suzaku" else f'<circle cx="180" cy="56" r="5" fill="#050508" stroke="#33333f" stroke-width="1.5"/>'
+    # ステータスバー
+    status = f"""
+<text x="96" y="62" font-family="'Noto Sans JP',sans-serif" font-size="13" font-weight="700" fill="#e6e6ee">12:34</text>
+<rect x="228" y="52" width="3.5" height="5" rx="1" fill="#c9c9d6"/>
+<rect x="233" y="49.5" width="3.5" height="7.5" rx="1" fill="#c9c9d6"/>
+<rect x="238" y="47" width="3.5" height="10" rx="1" fill="#c9c9d6"/>
+<rect x="247" y="49" width="19" height="9.5" rx="3.5" fill="none" stroke="#c9c9d6" stroke-width="1.4"/>
+<rect x="249" y="51" width="11" height="5.5" rx="1.5" fill="{glow}"/>"""
+    # 下部: ゲーミング=fps HUD / 一般=アプリドック
+    if gaming:
+        bottom = f"""
+<rect x="118" y="540" width="124" height="27" rx="13.5" fill="#07070b" stroke="{glow}" stroke-opacity="0.65" stroke-width="1.4"/>
+<circle cx="134" cy="553.5" r="4.5" fill="{glow}"/>
+<text x="188" y="558" font-family="'Noto Sans JP',sans-serif" font-size="12.5" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">{hz} 陣</text>"""
+    else:
+        docks = "".join(
+            f'<rect x="{116 + i * 36}" y="540" width="24" height="24" rx="7" fill="#ffffff" opacity="{o}"/>'
+            for i, o in enumerate((0.16, 0.24, 0.18, 0.22)))
+        bottom = docks
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 640" role="img" aria-label="{label}">
 {_defs(gid, glow)}
 <rect x="70" y="20" width="220" height="600" rx="38" fill="{body_hex}"/>
 <rect x="70" y="20" width="220" height="600" rx="38" fill="url(#metal{gid})"/>
 <rect x="70.8" y="20.8" width="218.4" height="598.4" rx="37.2" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="1.6"/>
+<path d="M70 132 h4 M70 470 h4 M286 132 h4 M286 470 h4" stroke="#4a4a5a" stroke-width="2.5"/>
 <rect x="80" y="30" width="200" height="580" rx="30" fill="url(#scr{gid})"/>
 <ellipse cx="180" cy="235" rx="110" ry="130" fill="url(#flare{gid})"/>
-<path d="M180 150 c-10 42 -52 60 -52 104 a52 52 0 0 0 104 0 c0 -44 -42 -62 -52 -104z" fill="none" stroke="{glow}" stroke-width="5" stroke-linejoin="round" opacity="0.95"/>
-<circle cx="180" cy="262" r="13" fill="{glow}"/>
-<text x="180" y="352" font-family="'Noto Sans JP',sans-serif" font-size="26" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>
-<text x="180" y="378" font-family="'Noto Sans JP',sans-serif" font-size="13" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">{kana}</text>
+{hole}{status}
+<path d="M180 158 c-9 39 -48 56 -48 97 a48 48 0 0 0 96 0 c0 -41 -39 -58 -48 -97z" fill="none" stroke="{glow}" stroke-width="4.5" stroke-linejoin="round" opacity="0.95"/>
+<circle cx="180" cy="262" r="12" fill="{glow}"/>
+<text x="180" y="348" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>
+<text x="180" y="373" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">{kana}</text>
+<text x="180" y="430" font-family="'Noto Sans JP',sans-serif" font-size="11" fill="#7a7a90" text-anchor="middle" letter-spacing="1.5">{'GAME SPACE 準備完了' if gaming else 'こんにちは'}</text>
+{bottom}
 <rect x="140" y="596" width="80" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+<path d="M92 30 L268 30 L120 610 L80 610 L80 480 Z" fill="#ffffff" opacity="0.035"/>
 <rect x="292" y="150" width="5" height="52" rx="2.5" fill="{glow}"/>
 <rect x="292" y="220" width="5" height="52" rx="2.5" fill="{glow}"/>
 <rect x="63" y="180" width="5" height="70" rx="2.5" fill="#3d3d4e"/>
 </svg>"""
 
 
-def svg_tablet(pid, body_hex, glow, label, kana=""):
+def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz"):
     gid = pid.replace("-", "")
+    gaming = line in ("pad", "pad-neo")
+    if gaming:
+        bottom = f"""
+<rect x="252" y="392" width="136" height="26" rx="13" fill="#07070b" stroke="{glow}" stroke-opacity="0.65" stroke-width="1.4"/>
+<circle cx="270" cy="405" r="4.5" fill="{glow}"/>
+<text x="328" y="409.5" font-family="'Noto Sans JP',sans-serif" font-size="12" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">{hz} 陣</text>"""
+    else:
+        bottom = "".join(
+            f'<rect x="{250 + i * 38} " y="394" width="26" height="26" rx="7" fill="#ffffff" opacity="{o}"/>'
+            for i, o in enumerate((0.16, 0.24, 0.18, 0.22)))
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="{label}">
 {_defs(gid, glow)}
 <rect x="40" y="30" width="560" height="420" rx="30" fill="{body_hex}"/>
@@ -56,10 +93,16 @@ def svg_tablet(pid, body_hex, glow, label, kana=""):
 <rect x="40.8" y="30.8" width="558.4" height="418.4" rx="29.2" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.6"/>
 <rect x="54" y="44" width="532" height="392" rx="20" fill="url(#scr{gid})"/>
 <ellipse cx="320" cy="195" rx="190" ry="115" fill="url(#flare{gid})"/>
-<path d="M320 120 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="{glow}" stroke-width="4.5" stroke-linejoin="round"/>
-<circle cx="320" cy="210" r="10" fill="{glow}"/>
-<text x="320" y="286" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>
-<text x="320" y="310" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">{kana}</text>
+<circle cx="320" cy="58" r="4.5" fill="#050508" stroke="#33333f" stroke-width="1.5"/>
+<text x="76" y="72" font-family="'Noto Sans JP',sans-serif" font-size="13" font-weight="700" fill="#e6e6ee">12:34</text>
+<rect x="536" y="59" width="19" height="9.5" rx="3.5" fill="none" stroke="#c9c9d6" stroke-width="1.4"/>
+<rect x="538" y="61" width="11" height="5.5" rx="1.5" fill="{glow}"/>
+<path d="M320 122 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="{glow}" stroke-width="4.5" stroke-linejoin="round"/>
+<circle cx="320" cy="212" r="10" fill="{glow}"/>
+<text x="320" y="288" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>
+<text x="320" y="312" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">{kana}</text>
+{bottom}
+<path d="M70 44 L360 44 L150 436 L54 436 L54 300 Z" fill="#ffffff" opacity="0.035"/>
 </svg>"""
 
 

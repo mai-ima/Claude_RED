@@ -184,7 +184,7 @@
   padding-inline: 4px;
   border-radius: var(--r-full);
   background: var(--grad-flame);
-  color: #fff;
+  color: var(--accent-contrast);
   font-size: 10.5px;
   font-weight: 800;
   display: none;
@@ -483,7 +483,7 @@ a.card:hover,
   width: fit-content;
 }
 
-.badge--new { background: var(--grad-flame); border: 0; color: #fff; }
+.badge--new { background: var(--grad-flame); border: 0; color: var(--accent-contrast); }
 .badge--gold { background: rgba(217, 164, 65, 0.14); border-color: rgba(217, 164, 65, 0.45); color: var(--su-gold); }
 .badge--end { opacity: 0.75; }
 
@@ -639,7 +639,7 @@ a.card:hover,
 }
 
 .tab:hover { border-color: var(--line-strong); color: var(--text-strong); }
-.tab.is-active { background: var(--grad-flame); border-color: transparent; color: #fff; box-shadow: 0 4px 14px rgba(232, 68, 46, 0.3); }
+.tab.is-active { background: var(--grad-flame); border-color: transparent; color: var(--accent-contrast); box-shadow: var(--glow-vermilion); }
 
 .accordion { border-top: 1px solid var(--line); }
 .accordion__item { border-bottom: 1px solid var(--line); }
@@ -701,7 +701,7 @@ a.card:hover,
 .req {
   font-size: 10px;
   font-weight: 800;
-  color: #fff;
+  color: var(--accent-contrast);
   background: var(--accent);
   border-radius: 4px;
   padding: 2px 6px;
@@ -926,7 +926,7 @@ a.card:hover,
 }
 
 .steps li.is-current { color: var(--text-strong); }
-.steps li.is-current::before { background: var(--grad-flame); border-color: transparent; color: #fff; box-shadow: 0 0 16px rgba(232, 68, 46, 0.4); }
+.steps li.is-current::before { background: var(--grad-flame); border-color: transparent; color: var(--accent-contrast); box-shadow: var(--glow-vermilion); }
 .steps li.is-done { color: var(--text-soft); }
 .steps li.is-done::before { content: "✓"; background: var(--surface-3); color: var(--accent); border-color: rgba(232, 68, 46, 0.4); }
 
@@ -1714,6 +1714,229 @@ a.card:hover,
 
 @media (max-width: 768px) {
   .localnav { display: none; } /* モバイルは下部の購入バーが担当 */
+}
+
+/* --------------------------------------------------------------------------
+   テーマ切替メニュー / メンテナンスバー / アカウント
+   -------------------------------------------------------------------------- */
+.theme-menu { position: relative; }
+
+.theme-menu__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: -8px;
+  min-width: 190px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  display: none;
+  z-index: var(--z-modal);
+}
+
+.theme-menu.is-open .theme-menu__panel { display: grid; gap: 2px; animation: rise-in 0.25s var(--ease-out) both; }
+
+.theme-menu__title {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  color: var(--text-faint);
+  padding: 6px 10px 8px;
+}
+
+.theme-menu__panel button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text-soft);
+  text-align: left;
+}
+
+.theme-menu__panel button:hover { background: var(--surface-2); color: var(--text-strong); }
+.theme-menu__panel button.is-active { color: var(--accent); background: var(--surface-2); }
+
+.theme-menu__panel button i {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  flex: none;
+}
+
+/* ログイン中のアカウントアイコンにドット */
+#accountLink.is-logged-in::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--grad-flame);
+  border: 2px solid var(--bg);
+}
+
+/* メンテナンスバー(全ページ先頭) */
+.maint-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-header) + 1);
+  background: linear-gradient(90deg, #b8862b, #d9a441);
+  color: #241a04;
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  text-align: center;
+  padding: 7px var(--gutter);
+}
+
+.maint-bar a { text-decoration: underline; color: inherit; }
+
+body.has-maint-bar .site-header { top: 30px; }
+body.has-maint-bar { padding-top: 30px; }
+body.has-maint-bar .drawer { top: calc(var(--header-h) + 30px); }
+body.has-maint-bar .localnav { top: calc(var(--header-h) + 30px); }
+
+/* 認証フォームカード */
+.auth-card {
+  max-width: 460px;
+  margin-inline: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: clamp(26px, 4vw, 44px);
+  display: grid;
+  gap: var(--sp-4);
+}
+
+/* --------------------------------------------------------------------------
+   ドキュメントビューア(PDF閲覧)
+   -------------------------------------------------------------------------- */
+.viewer-bar {
+  position: sticky;
+  top: var(--header-h);
+  z-index: calc(var(--z-header) - 2);
+  background: var(--header-bg);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  margin-top: var(--header-h);
+}
+
+.viewer-bar__inner {
+  max-width: var(--w-max);
+  margin-inline: auto;
+  padding: 10px var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px var(--sp-5);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.viewer-bar__meta { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.viewer-bar__meta strong { display: block; font-size: var(--fs-small); color: var(--text-strong); }
+.viewer-bar__meta small { font-size: var(--fs-micro); }
+.viewer-bar__tools { display: flex; gap: 8px; align-items: center; }
+
+.viewer-stage { background: var(--bg-deep); border-bottom: 1px solid var(--line); }
+
+.viewer-scroll { max-height: 78vh; overflow: auto; padding: clamp(16px, 3vw, 40px) var(--gutter); }
+
+.viewer-pages {
+  --doc-zoom: 1;
+  display: grid;
+  gap: 28px;
+  justify-items: center;
+  transform: scale(var(--doc-zoom));
+  transform-origin: top center;
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+/* A4風ページ(常にライトな紙面) */
+.doc-page {
+  width: min(760px, 94vw);
+  min-height: calc(min(760px, 94vw) * 1.414);
+  background: #ffffff;
+  color: #26262e;
+  border-radius: 6px;
+  box-shadow: 0 10px 40px rgba(10, 10, 30, 0.28);
+  padding: clamp(26px, 5vw, 58px) clamp(22px, 5.5vw, 62px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 0.92rem;
+  line-height: 1.9;
+}
+
+.doc-page h1 {
+  color: #14141c;
+  font-size: 1.7rem;
+  border-bottom: 3px solid #e8442e;
+  padding-bottom: 12px;
+}
+
+.doc-page h2 {
+  color: #14141c;
+  font-size: 1.08rem;
+  margin-top: 8px;
+  padding-left: 10px;
+  border-left: 4px solid #e8442e;
+}
+
+.doc-page ul { list-style: disc; padding-left: 1.4em; display: grid; gap: 6px; }
+.doc-page li::marker { color: #e8442e; }
+
+.doc-page table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.doc-page th, .doc-page td { border: 1px solid #d8d8e0; padding: 8px 11px; text-align: left; }
+.doc-page th { background: #f4f4f7; color: #14141c; }
+
+.doc-note {
+  background: #fdf3e4;
+  border: 1px solid #ecd3a8;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: #6d5218;
+}
+
+.doc-page__head,
+.doc-page__foot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #9a9aa8;
+}
+
+.doc-page__head { border-bottom: 1px solid #ececf1; padding-bottom: 8px; margin-bottom: 4px; }
+.doc-page__foot { border-top: 1px solid #ececf1; padding-top: 8px; margin-top: auto; }
+
+.is-current-doc { border-color: var(--accent); }
+
+/* 印刷 = 実PDF出力: 紙面のみを出力 */
+@media print {
+  .site-header, .drawer, .viewer-bar, .site-footer, .cookie-banner, .modal-backdrop,
+  .toast, .breadcrumb, .maint-bar, .section--sm, .localnav, .buy-float { display: none !important; }
+  body { background: #fff !important; padding: 0 !important; }
+  .viewer-stage { border: 0; background: #fff; }
+  .viewer-scroll { max-height: none; overflow: visible; padding: 0; }
+  .viewer-pages { transform: none; gap: 0; }
+  .doc-page { box-shadow: none; border-radius: 0; width: 100%; min-height: auto; page-break-after: always; }
+}
+
+/* 404 */
+.err-code {
+  font-size: clamp(6rem, 20vw, 12rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 /* ヒーロー内の実機レンダー(Apple式) */

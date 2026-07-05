@@ -250,6 +250,74 @@
     });
   }
 
+  /* ---------------- ドキュメントビューア(PDF閲覧) ---------------- */
+  var docPages = $("#docPages");
+  if (docPages) {
+    var docs = SZ.docs || [];
+    var docId = new URLSearchParams(window.location.search).get("doc") || (docs[0] && docs[0].id);
+    var doc = docs.filter(function (d) { return d.id === docId; })[0] || docs[0];
+
+    function block(b) {
+      if (b.t === "h1") return "<h1>" + escHtml(b.v) + "</h1>";
+      if (b.t === "h2") return "<h2>" + escHtml(b.v) + "</h2>";
+      if (b.t === "p") return "<p>" + escHtml(b.v) + "</p>";
+      if (b.t === "note") return '<p class="doc-note">' + escHtml(b.v) + "</p>";
+      if (b.t === "list") return "<ul>" + b.v.map(function (x) { return "<li>" + escHtml(x) + "</li>"; }).join("") + "</ul>";
+      if (b.t === "table") {
+        return '<table>' + b.v.map(function (row, i) {
+          var tag = i === 0 && b.v.length > 2 && b.v[0].length > 2 ? "th" : "td";
+          return "<tr>" + row.map(function (c) { return "<" + tag + ">" + escHtml(c) + "</" + tag + ">"; }).join("") + "</tr>";
+        }).join("") + "</table>";
+      }
+      return "";
+    }
+
+    if (doc) {
+      $("#docTitle").textContent = doc.title;
+      $("#docMeta").textContent = doc.category + " / " + doc.version;
+      document.title = doc.title + " | SUZAKU(朱雀)";
+      docPages.innerHTML = doc.pages.map(function (pg, i) {
+        return '<article class="doc-page" data-page="' + (i + 1) + '">' +
+          '<header class="doc-page__head"><span>SUZAKU — ' + escHtml(doc.title) + "</span><span>" + escHtml(doc.version) + "</span></header>" +
+          pg.map(block).join("") +
+          '<footer class="doc-page__foot"><span>© 2022-2026 SUZAKU Inc.(架空のデモ文書)</span><span>' + (i + 1) + " / " + doc.pages.length + "</span></footer></article>";
+      }).join("");
+      $("#docPageInfo").textContent = "1 / " + doc.pages.length;
+
+      // 表示中ページ番号
+      if ("IntersectionObserver" in window) {
+        var pio = new IntersectionObserver(function (ens) {
+          ens.forEach(function (en) {
+            if (en.isIntersecting) $("#docPageInfo").textContent = en.target.getAttribute("data-page") + " / " + doc.pages.length;
+          });
+        }, { threshold: 0.5 });
+        $$(".doc-page", docPages).forEach(function (el) { pio.observe(el); });
+      }
+    }
+
+    // ズーム
+    var zoom = 100;
+    function applyZoom() {
+      docPages.style.setProperty("--doc-zoom", zoom / 100);
+      $("#zoomLevel").textContent = zoom + "%";
+    }
+    $("#zoomIn").addEventListener("click", function () { zoom = Math.min(150, zoom + 10); applyZoom(); });
+    $("#zoomOut").addEventListener("click", function () { zoom = Math.max(70, zoom - 10); applyZoom(); });
+    $("#docPrint").addEventListener("click", function () { window.print(); });
+
+    // ライブラリ
+    var lib = $("#docLibrary");
+    if (lib) {
+      lib.innerHTML = docs.map(function (d) {
+        var cur = doc && d.id === doc.id;
+        return '<a class="card card--hover' + (cur ? " is-current-doc" : "") + '" href="/viewer/?doc=' + d.id + '">' +
+          '<div class="spread"><div><p class="eyebrow">' + escHtml(d.category) + "</p><h3 class='t-h4'>" + escHtml(d.title) +
+          (cur ? ' <span class="badge">表示中</span>' : "") + "</h3><p class='t-micro t-faint'>" + escHtml(d.version) + " / " + d.pages.length + "ページ</p></div>" +
+          '<span class="link-arrow">開く</span></div></a>';
+      }).join("");
+    }
+  }
+
   /* ---------------- 汎用モックフォーム(お問い合わせ等) ---------------- */
   $$("form[data-mock-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {

@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from data_products import ALL_PRODUCTS, PHONES, TABLETS, ACCESSORIES, LINES  # noqa: E402
 from data_tech import TECHS, OS_VERSIONS  # noqa: E402
 from data_misc import NEWS, FAQ, HISTORY  # noqa: E402
+from data_docs import DOCS  # noqa: E402
 import svg_art  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -450,7 +451,21 @@ def header_html():
       <div class="gnav__item"><a class="gnav__link" href="/company/">企業情報</a>{mega_company()}</div>
     </nav>
     <div class="header-actions">
+      <div class="theme-menu" id="themeMenu">
+        <button class="icon-btn" id="themeBtn" aria-label="カラーテーマを変更" aria-expanded="false" aria-haspopup="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
+          <p class="theme-menu__title">カラーテーマ</p>
+          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
+          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
+          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+        </div>
+      </div>
       <a class="icon-btn" href="/search/" aria-label="検索">{svg_art.ICONS['search']}</a>
+      <a class="icon-btn" href="/account/login/" id="accountLink" aria-label="アカウント">{svg_art.ICONS['user']}</a>
       <a class="icon-btn" href="/store/cart/" aria-label="カート">{svg_art.ICONS['cart']}<span class="cart-badge" id="cartBadge"></span></a>
       <button class="icon-btn nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false"><span></span></button>
     </div>
@@ -511,6 +526,7 @@ def header_html():
     </div></div>
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
+  <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
 </nav>"""
 
 
@@ -550,6 +566,8 @@ def footer_html():
             ("ダウンロード", "/support/downloads/"),
             ("お問い合わせ", "/support/contact/"),
             ("注文状況の確認", "/store/order-status/"),
+            ("マイページ / ログイン", "/account/login/"),
+            ("メンテナンス情報", "/maintenance/"),
         ]),
         col("SUZAKUについて", [
             ("会社概要", "/company/"),
@@ -634,9 +652,12 @@ def footer_html():
 <div class="toast" id="toast" role="status" aria-live="polite"></div>"""
 
 
+# フォントは非ブロッキング読み込み(media=print→onloadでall)。
+# 取得がスタールしてもレンダリング・スクリプト実行を阻害しない。
 HEAD_FONTS = """<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">"""
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"></noscript>"""
 
 
 def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その他", noindex=False):
@@ -684,10 +705,16 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 <script src="/assets/js/charts.js" defer></script>
 <script src="/assets/js/store.js" defer></script>
 <script src="/assets/js/pages.js" defer></script>
+<script src="/assets/js/auth.js" defer></script>
 </body>
 </html>"""
 
-    out = ROOT / url.strip("/") / "index.html" if url != "/" else ROOT / "index.html"
+    if url.endswith(".html"):
+        out = ROOT / url.lstrip("/")
+    elif url != "/":
+        out = ROOT / url.strip("/") / "index.html"
+    else:
+        out = ROOT / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
     if not noindex:
@@ -1770,6 +1797,7 @@ def build_client_data():
         "products": prods,
         "news": news,
         "faq": FAQ,
+        "docs": DOCS,
         "pages": PAGES,
         "tax": 0.10,
         "freeShipping": 5000,
@@ -1813,10 +1841,13 @@ def build_fragments():
             url = "/"
         else:
             url = "/" + rel.as_posix()[:-5].removesuffix("/index") + "/"
+        if meta.get("root_file"):
+            url = "/" + meta["root_file"]
         render_page(url, meta["title"], meta["desc"], body,
                     meta.get("theme", "dark"),
                     [tuple(c) for c in meta.get("crumbs", [])] or None,
-                    meta.get("group", "その他"))
+                    meta.get("group", "その他"),
+                    noindex=meta.get("noindex", False))
 
 
 def build_sitemap():

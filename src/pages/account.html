@@ -1,0 +1,42 @@
+<!--META {"title": "マイページ", "desc": "SUZAKUアカウントのマイページ。プロフィール、注文履歴、修理状況をまとめて確認。", "theme": "dark", "crumbs": [["マイページ", null]], "group": "アカウント", "noindex": true} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">MY PAGE</p>
+    <h1 class="t-h1">こんにちは、<span id="acctName" class="grad-text">—</span> さん</h1>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" id="accountPage" style="padding-top:var(--sp-5)" hidden>
+  <div class="container">
+    <div class="grid grid--3" style="align-items:start">
+      <div class="card">
+        <p class="eyebrow">PROFILE</p>
+        <h2 class="t-h4">プロフィール</h2>
+        <div class="stack" style="gap:8px;font-size:var(--fs-small)">
+          <p class="t-soft">メール: <strong class="t-strong" id="acctEmail">—</strong></p>
+          <p class="t-soft">会員種別: <strong class="t-strong" id="acctRole">—</strong></p>
+          <p class="t-soft">登録日: <strong class="t-strong" id="acctSince">—</strong></p>
+        </div>
+        <a class="btn btn--primary btn--sm" href="/admin/" id="acctAdminLink" hidden>管理ボードを開く</a>
+        <button class="btn btn--ghost btn--sm" id="logoutBtn" type="button">ログアウト</button>
+      </div>
+      <div class="card">
+        <p class="eyebrow">ORDERS</p>
+        <h2 class="t-h4">最近のご注文</h2>
+        <div id="acctOrders"></div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">REPAIR</p>
+        <h2 class="t-h4">修理のお申し込み</h2>
+        <div id="acctTickets"></div>
+      </div>
+    </div>
+    <div class="grid grid--3 reveal-stagger" style="margin-top:var(--sp-5)">
+      <a class="card card--hover" href="/store/"><h3 class="t-h4">ストアで買い物</h3><p class="t-small t-soft">全製品送料無料(5,000円以上)。</p><p class="link-arrow">開く</p></a>
+      <a class="card card--hover" href="/support/"><h3 class="t-h4">サポート</h3><p class="t-small t-soft">FAQ・修理・トラブル診断。</p><p class="link-arrow">開く</p></a>
+      <a class="card card--hover" href="/products/compare/"><h3 class="t-h4">次の一台を比較</h3><p class="t-small t-soft">全機種スペック比較ツール。</p><p class="link-arrow">開く</p></a>
+    </div>
+    <div class="notice" style="margin-top:var(--sp-5)"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> アカウント・注文・修理データはこの端末のブラウザ内にのみ保存されるデモ実装です。</div>
+  </div>
+</section>

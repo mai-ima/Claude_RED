@@ -1,0 +1,34 @@
+<!--META {"title": "ドキュメントビューア", "desc": "取扱説明書・環境報告書などのPDF文書をブラウザで閲覧。印刷(PDF保存)にも対応。", "theme": "light", "crumbs": [["サポート", "/support/"], ["ドキュメントビューア", null]], "group": "サポート", "noindex": true} -->
+
+<div class="viewer-bar" id="viewerBar">
+  <div class="viewer-bar__inner">
+    <div class="viewer-bar__meta">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <div>
+        <strong id="docTitle">ドキュメント</strong>
+        <small id="docMeta" class="t-faint"></small>
+      </div>
+    </div>
+    <div class="viewer-bar__tools">
+      <span class="t-micro t-faint" id="docPageInfo">- / -</span>
+      <button class="btn btn--soft btn--sm" id="zoomOut" type="button" aria-label="縮小">−</button>
+      <span class="t-micro" id="zoomLevel" style="min-width:44px;text-align:center">100%</span>
+      <button class="btn btn--soft btn--sm" id="zoomIn" type="button" aria-label="拡大">+</button>
+      <button class="btn btn--primary btn--sm" id="docPrint" type="button">印刷 / PDF保存</button>
+    </div>
+  </div>
+</div>
+
+<section class="viewer-stage">
+  <div class="viewer-scroll" id="docScroll">
+    <div class="viewer-pages" id="docPages"></div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">LIBRARY</p><h2 class="t-h3">他の文書を開く</h2></div>
+    <div class="stack" id="docLibrary"></div>
+    <div class="notice" style="margin-top:24px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> 「印刷 / PDF保存」からブラウザの印刷ダイアログを開き、送信先を「PDFに保存」にすると実際のPDFファイルとして保存できます。</div>
+  </div>
+</section>

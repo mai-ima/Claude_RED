@@ -1,0 +1,35 @@
+<!--META {"title": "メンテナンス・稼働状況", "desc": "SUZAKUオンラインサービスの稼働状況と、メンテナンスの予定・履歴のご案内。", "theme": "light", "crumbs": [["メンテナンス情報", null]], "group": "サポート", "noindex": true} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">SYSTEM STATUS</p>
+    <h1 class="t-h1">メンテナンス・稼働状況</h1>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div id="maintStatus" aria-live="polite"></div>
+
+    <h2 class="t-h3" style="margin:36px 0 16px">サービス別の状況</h2>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">サービス</th><th scope="col">状態</th><th scope="col">備考</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">オンラインストア</th><td><strong style="color:var(--accent)">稼働中</strong></td><td>メンテナンス時は注文確定のみ停止します</td></tr>
+        <tr><th scope="row">注文・修理照会</th><td><strong style="color:var(--accent)">稼働中</strong></td><td>—</td></tr>
+        <tr><th scope="row">SUZAKU OS アップデート配信</th><td><strong style="color:var(--accent)">稼働中</strong></td><td>機種別の配信状況は<a href="/support/downloads/">ダウンロード</a>へ</td></tr>
+        <tr><th scope="row">ゲームスペース「陣」オンライン機能</th><td><strong style="color:var(--accent)">稼働中</strong></td><td>—</td></tr>
+        <tr><th scope="row">開発者API(GameKit)</th><td><strong style="color:var(--accent)">稼働中</strong></td><td>—</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 class="t-h3" style="margin:36px 0 16px">メンテナンスの予定・履歴</h2>
+    <div class="timeline reveal-stagger">
+      <div class="timeline__item"><p class="timeline__date">予定 — 2026.07.24(金)2:00-5:00</p><h3 class="t-h4">ストア決済システムの定期更新</h3><p class="t-small t-soft">作業中はご注文の確定を一時停止します。カート・閲覧はご利用いただけます。</p></div>
+      <div class="timeline__item"><p class="timeline__date">完了 — 2026.06.20(土)2:00-3:10</p><h3 class="t-h4">SUZAKU OS 4.0.3 配信サーバー増強</h3><p class="t-small t-soft">予定より50分早く完了しました。</p></div>
+      <div class="timeline__item"><p class="timeline__date">完了 — 2026.05.29(金)0:00-1:00</p><h3 class="t-h4">SUZAKU 4 発売に伴うストア負荷対策</h3><p class="t-small t-soft">発売直後のアクセス集中に備えた増強作業。</p></div>
+    </div>
+
+    <div class="notice" style="margin-top:32px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> 緊急のお知らせは<a href="/news/" style="text-decoration:underline">ニュースルーム</a>および本ページでご案内します。</div>
+  </div>
+</section>

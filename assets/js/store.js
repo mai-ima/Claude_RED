@@ -372,6 +372,11 @@
     var placeBtn = $("#placeOrder");
     if (placeBtn) {
       placeBtn.addEventListener("click", function () {
+        var maint = window.szStore.get("sz_maintenance", { on: false });
+        if (maint.on) {
+          window.szToast("メンテナンス中のため、ご注文を一時停止しています");
+          return;
+        }
         var agree = $("#agreeTerms");
         if (agree && !agree.checked) { window.szToast("利用規約と販売条件への同意が必要です"); return; }
         placeBtn.disabled = true;

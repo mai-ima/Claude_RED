@@ -1,0 +1,24 @@
+<!--META {"title": "ログイン", "desc": "SUZAKUアカウントにログイン。注文履歴・修理状況の確認、マイページのご利用に。", "theme": "dark", "crumbs": [["アカウント", null]], "group": "アカウント", "noindex": true} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">SUZAKU ACCOUNT</p>
+    <h1 class="t-h1">ログイン</h1>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <form class="auth-card" id="loginForm" novalidate>
+      <div class="notice" id="loginError" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> メールアドレスまたはパスワードが正しくありません。</div>
+      <div class="field"><label for="loginEmail">メールアドレス</label>
+        <input class="input" id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+      <div class="field"><label for="loginPw">パスワード</label>
+        <input class="input" id="loginPw" type="password" autocomplete="current-password" required placeholder="8文字以上"></div>
+      <button class="btn btn--primary btn--lg btn--block" type="submit">ログイン</button>
+      <p class="t-small t-soft t-center">アカウントをお持ちでない方は <a href="/account/register/" style="color:var(--accent);font-weight:700">新規作成(無料)</a></p>
+      <hr class="divider">
+      <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> <span><strong>デモ用アカウント</strong><br>管理者: admin@suzaku.example.jp / suzaku-admin<br>一般会員はこの端末で新規作成できます。認証はブラウザ内で完結し、外部送信はありません。</span></div>
+    </form>
+  </div>
+</section>

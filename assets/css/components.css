@@ -492,7 +492,8 @@ a.card:hover,
    -------------------------------------------------------------------------- */
 .hero {
   position: relative;
-  min-height: calc(100svh - 0px);
+  min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   place-items: center;
   text-align: center;
@@ -501,7 +502,7 @@ a.card:hover,
   isolation: isolate;
 }
 
-.hero--sub { min-height: 62svh; }
+.hero--sub { min-height: 520px; min-height: 62svh; }
 .hero--page {
   min-height: 0;
   padding-top: calc(var(--header-h) + var(--sp-8));
@@ -1535,3 +1536,106 @@ a.card:hover,
 }
 
 .cookie-settings-link:hover { color: var(--accent); }
+
+/* --------------------------------------------------------------------------
+   スマートフォン(iPhone等)最適化
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* ヒーローの縦の間延びを解消: コンテンツ高に密着させる */
+  .hero {
+    min-height: 0;
+    padding-top: calc(var(--header-h) + var(--sp-8));
+    padding-bottom: var(--sp-8);
+  }
+
+  .hero--sub {
+    min-height: 0;
+    padding-top: calc(var(--header-h) + var(--sp-7));
+    padding-bottom: var(--sp-7);
+  }
+
+  .hero__scroll-cue { display: none; }
+
+  .hero__actions { width: 100%; }
+  .hero__actions .btn { flex: 1 1 auto; min-width: 0; }
+
+  /* 製品カードは2列にして密度を上げる */
+  .grid:has(> .product-card) { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .product-card__media { padding: 14%; }
+  .product-card__body { padding: 13px 13px 16px; gap: 5px; }
+  .product-card__name { font-size: 0.95rem; }
+  .product-card__copy { font-size: var(--fs-micro); }
+  .product-card__price { font-size: var(--fs-micro); }
+  .product-card__tag { font-size: 10px; }
+
+  /* チェックアウトステップ・進捗トラッカーの圧縮 */
+  .steps { gap: 2px; }
+  .steps li { font-size: 10px; gap: 6px; letter-spacing: 0; }
+  .steps li::before { width: 26px; height: 26px; font-size: 12px; }
+
+  .order-track { flex-direction: column; gap: 0; align-items: stretch; }
+
+  .order-track li {
+    grid-template-columns: 16px 1fr;
+    display: grid;
+    justify-items: start;
+    text-align: left;
+    gap: 12px;
+    padding-block: 9px;
+    font-size: var(--fs-small);
+  }
+
+  .order-track li::after {
+    top: 26px;
+    bottom: -10px;
+    left: 7px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  /* 統計・チャートの調整 */
+  .stat-row { gap: var(--sp-5) var(--sp-3); }
+  .chart-bar__row { grid-template-columns: minmax(60px, 104px) 1fr auto; gap: 8px; font-size: 10.5px; }
+  .chart { padding: 16px; }
+
+  /* 購入モジュール */
+  .buy-media img { max-height: 300px; }
+
+  /* 全幅ブレイク */
+  .full-bleed { padding-block: var(--sp-8); }
+}
+
+/* 技術/開発者ページの目次: モバイルでは横スクロールのチップ列に */
+@media (max-width: 900px) {
+  .doc-side {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .doc-side__title { display: none; }
+
+  .doc-side a {
+    flex: none;
+    border: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+    border-radius: var(--r-full);
+    padding: 8px 15px;
+    background: var(--surface);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .doc-side a.is-active {
+    background: rgba(232, 68, 46, 0.1);
+    border-color: var(--accent);
+  }
+
+  .doc-side a small { display: none; }
+}

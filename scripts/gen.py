@@ -93,6 +93,112 @@ RADAR_AXES = ["性能", "カメラ", "バッテリー", "冷却", "コスパ"]
 
 
 # ==========================================================================
+# 製品ページの追加コンテンツ(同梱物・対応アクセサリ・製品別FAQ)
+# ==========================================================================
+
+def box_items(p):
+    """同梱物リスト。カテゴリ・ラインごとに現実的な内容を生成。"""
+    if p["cat"] == "phone":
+        items = ["本体", "USB Type-C to C ケーブル(1m)", "SIMピン", "クイックスタートガイド / 保証のご案内", "SUZAKUステッカー"]
+        if p["line"] in ("suzaku", "neo"):
+            watt = num(get_spec(p, ["バッテリー"], "有線充電")) or 65
+            items.insert(1, f"雷速チャージャー {watt}W(同梱)")
+            items += ["クリアソフトケース", "画面保護フィルム(貼付済み)"]
+        return items
+    if p["cat"] == "tablet":
+        items = ["本体", "USB Type-C to C ケーブル(1.5m)", "クイックスタートガイド / 保証のご案内"]
+        if p["line"] in ("pad", "pad-neo"):
+            watt = num(get_spec(p, ["バッテリー"], "有線充電")) or 67
+            items.insert(1, f"雷速チャージャー {watt}W(同梱)")
+        return items
+    extra = {
+        "hyoran-cooler": ["USB Type-C ケーブル(1.2m)"],
+        "grip-pro": ["キャリングポーチ", "USB Type-C ケーブル(0.8m)"],
+        "buds": ["充電ケース", "2.4GHz USB-C ドングル", "イヤーピース(XS/S/M/L)"],
+        "raisoku-charger": ["120W対応 USB-C ケーブル(1.5m)"],
+        "shield-case": ["クリーニングクロス"],
+        "dock": ["電源アダプタ(140W)", "HDMI 2.1 ケーブル(1.5m)"],
+    }
+    return ["本体"] + extra.get(p["id"], []) + ["クイックスタートガイド / 保証のご案内"]
+
+
+def acc_compat_table(p):
+    """スマホ/タブレット向け: 純正アクセサリ対応表。"""
+    def compat(acc_id):
+        if acc_id == "shield-case":
+            return ("対応", "専用設計") if p["id"] == "suzaku-4" else ("非対応", "SUZAKU 4 専用")
+        if acc_id in ("hyoran-cooler", "grip-pro"):
+            return ("対応", "幅67〜82mm") if p["cat"] == "phone" else ("非対応", "スマートフォン専用")
+        if acc_id == "dock":
+            wl = "ワイヤレス充電も利用可" if p["id"] in ("suzaku-4",) else "有線接続で利用可"
+            return ("対応", wl)
+        return ("対応", "全機種対応")
+
+    rows = ""
+    for a in ACCESSORIES:
+        if a["status"] != "current":
+            continue
+        ok, note = compat(a["id"])
+        mark = ('<strong style="color:var(--accent)">対応</strong>' if ok == "対応"
+                else '<span class="t-faint">—</span>')
+        rows += (f'<tr><td><a href="{product_url(a)}" style="color:var(--accent);font-weight:700">{esc(a["name"])}</a></td>'
+                 f'<td>{yen(a["price"])}</td><td>{mark}</td><td class="t-soft">{esc(note)}</td></tr>')
+    return f"""
+<div class="scroll-x reveal"><table class="spec-table quick-table">
+  <thead><tr><th scope="col">アクセサリ</th><th scope="col">価格(税込)</th><th scope="col">{esc(p['name'])}</th><th scope="col">備考</th></tr></thead>
+  <tbody>{rows}</tbody>
+</table></div>"""
+
+
+LINE_FAQ = {
+    "suzaku": [
+        ("ファンの音はゲーム中どのくらい聞こえますか?",
+         "自動モードでは28〜38dB(ささやき声〜静かな図書館程度)で制御されます。動画視聴などの低負荷時はファンは停止します。「陣」から手動で4段階+停止を選択できます。"),
+        ("冷却用の通気口があっても防水は大丈夫ですか?",
+         "IP54(防塵・防滴)に対応しています。エアダクトを迷路状に設計し、雨滴や手汗が内部へ到達しない構造です。ただし水没には対応しないため、入浴・水泳でのご使用はお避けください。"),
+        ("発熱で性能が落ちる「サーマルスロットリング」は起きませんか?",
+         "60分の高負荷連続プレイを想定した当社試験では、フレームレート低下5%未満を維持しています。氷刃ベイパーチャンバー・旋風ファン・液焔の多層冷却と、神楽サーマルの予測制御によるものです。"),
+    ],
+    "neo": [
+        ("フラッグシップとの違いは何ですか?",
+         "SoC・冷却は前年フラッグシップと同一で、ディスプレイのピーク輝度・カメラ構成・充電速度などを合理化しています。ゲーム性能そのものは前年旗艦とほぼ同等です。<a href='/products/compare/'>比較ツール</a>で並べてご確認ください。"),
+        ("ショルダートリガーは搭載されていますか?",
+         "はい。Neoシリーズ全機種に静電容量式ショルダートリガーを搭載しています。「陣」のエアトリガー設定から感度・割当を調整できます。"),
+        ("何年使えますか?",
+         "OSアップデート2世代+セキュリティ更新4年を保証しています。バッテリーは充電上限設定・バイパス充電で劣化を抑えられます。"),
+    ],
+    "tsubame": [
+        ("ゲーミングスマホのような派手なデザインではありませんか?",
+         "はい。TSUBAMEは日本の伝統色とマット仕上げの落ち着いたデザインです。SUZAKU OSも「ピュアモード」が初期設定で、ゲーム機能は必要な時だけ呼び出せます。"),
+        ("カメラの画質はフラッグシップと同じですか?",
+         "TSUBAME 3はフラッグシップと同じ「天眼 RS-2+」センサーを搭載しています。望遠レンズの有無などの構成差はありますが、広角カメラの画質は同水準です。"),
+        ("おサイフケータイ・防水は使えますか?",
+         "FeliCa(おサイフケータイ)とIP68防塵防水に対応しています。日常利用の安心を最優先した設計です。"),
+    ],
+    "lite": [
+        ("価格が安い理由は何ですか?",
+         "実績ある前世代の省電力チップの採用、液晶ディスプレイの選択、パッケージの簡素化によるものです。FeliCa・防水・セキュリティ更新など「毎日の安心」に関わる部分は削っていません。"),
+        ("ゲームはどの程度動きますか?",
+         "人気タイトルの標準〜中設定で快適に動作します。高フレームレート・最高画質でのプレイをご希望の場合はNeoシリーズをご検討ください。"),
+        ("初めてのスマホでも使えますか?",
+         "かんたんホーム、文字サイズの一括拡大、迷惑電話ブロックなど、初めての方向けの機能を標準搭載しています。"),
+    ],
+    "acc": [
+        ("他社製スマートフォンでも使えますか?",
+         "Bluetooth・USB-C等の標準規格に準拠しているため、多くの他社製端末でも基本機能はご利用いただけます。ただし「陣」との連携機能(自動起動・プロファイル同期など)はSUZAKU端末専用です。"),
+        ("保証期間はどのくらいですか?",
+         "ご購入日から1年間のメーカー保証が付属します。詳細は<a href='/support/warranty/'>保証について</a>をご覧ください。"),
+        ("本体と同時購入するメリットはありますか?",
+         "税込5,000円以上で送料無料になるほか、ストアのカートで本体とまとめて一度に受け取れます。"),
+    ],
+}
+LINE_FAQ["pad"] = LINE_FAQ["suzaku"]
+LINE_FAQ["pad-neo"] = LINE_FAQ["neo"]
+LINE_FAQ["t-pad"] = LINE_FAQ["tsubame"]
+LINE_FAQ["t-pad-lite"] = LINE_FAQ["lite"]
+
+
+# ==========================================================================
 # 共通レイアウト
 # ==========================================================================
 
@@ -705,6 +811,57 @@ def build_product_page(p):
   <h2 class="reveal-scale reveal">{esc(bleed_claims.get(p['line'], p['tagline']))}</h2>
 </section>"""
 
+    # --- 同梱物 + 製品FAQ + 対応アクセサリ + サポート ---
+    box_html = "".join(f"<li>{esc(x)}</li>" for x in box_items(p))
+    faq_items = LINE_FAQ.get(p["line"], LINE_FAQ["acc"])
+    faq_html = "".join(
+        f'<div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>{esc(q)}</span></button>'
+        f'<div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body"><p>{a}</p></div></div></div></div>'
+        for q, a in faq_items)
+    extras = f"""
+<section class="section--sm">
+  <div class="container">
+    <div class="feature-split" style="align-items:start">
+      <div class="stack reveal">
+        <p class="eyebrow">IN THE BOX</p>
+        <h2 class="t-h2">同梱物</h2>
+        <ul class="check-list">{box_html}</ul>
+        <p class="t-micro t-faint">パッケージはプラスチック使用量を98%削減した再生紙製です。<a href="/sustainability/" style="color:var(--accent)">環境への取り組み</a></p>
+      </div>
+      <div class="stack reveal">
+        <p class="eyebrow">Q&amp;A</p>
+        <h2 class="t-h2">よくある質問</h2>
+        <div class="accordion">{faq_html}</div>
+        <a class="link-arrow" href="/support/faq/">すべてのFAQを見る</a>
+      </div>
+    </div>
+  </div>
+</section>"""
+    if is_device:
+        extras += f"""
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">ACCESSORIES</p><h2 class="t-h2">{esc(p['name'])} で使える純正アクセサリ</h2></div>
+    {acc_compat_table(p)}
+  </div>
+</section>"""
+    extras += """
+<section class="section--sm">
+  <div class="container">
+    <div class="grid grid--3 reveal-stagger">
+      <a class="card card--hover" href="/support/warranty/">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9.5 12l2 2 3.5-4"/></svg></div>
+        <h3 class="t-h4">1年保証 + SUZAKU Care+</h3><p class="t-small t-soft">標準で1年間のメーカー保証。Care+なら落下・水濡れもカバー。</p><p class="link-arrow">保証を見る</p></a>
+      <a class="card card--hover" href="/support/repair/">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 6.5a4 4 0 0 0-5.6 5L4 16.4V20h3.6l4.9-4.9a4 4 0 0 0 5-5.6L15 12l-3-3z"/></svg></div>
+        <h3 class="t-h4">最短即日修理</h3><p class="t-small t-soft">秋葉原サービスセンターで画面・電池交換は即日。配送修理も5〜7営業日。</p><p class="link-arrow">修理を申し込む</p></a>
+      <a class="card card--hover" href="/sustainability/recycle/">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-5 0-8-3.5-8-8 0-5.5 4.5-9.5 8-10 3.5.5 8 4.5 8 10 0 4.5-3 8-8 8z"/><path d="M12 21c2-3 3-6.5 3-10"/></svg></div>
+        <h3 class="t-h4">使い終わったら無償回収</h3><p class="t-small t-soft">古い端末はメーカー問わず無償回収。資源の96%を再利用します。</p><p class="link-arrow">回収について</p></a>
+    </div>
+  </div>
+</section>"""
+
     # --- フローティング購入バー(現行モデルのみ) ---
     buy_float = ""
     if p["status"] == "current":
@@ -741,6 +898,7 @@ def build_product_page(p):
 {bleed}
 {sections_html(p['sections'], glow)}
 {data_section}
+{extras}
 {f'''<section class="section--sm"><div class="container"><div class="card t-center" style="padding:clamp(32px,5vw,56px)"><h2 class="t-h3">すべての仕様を確認する</h2><p class="t-soft">サイズ・性能・カメラ・通信仕様の完全なリストをご用意しています。</p><div class="cluster cluster--center"><a class="btn btn--primary" href="{url}specs/">{esc(p['name'])} の仕様を見る</a><a class="btn btn--ghost" href="/products/compare/">他のモデルと比較する</a></div></div></div></section>''' if is_device else ''}
 {related}
 {cta_band('SUZAKU ストアで、次の一台を。', '全国送料無料(5,000円以上)。14日間の返品保証と1年間のメーカー保証付き。', [('ストアで見る', '/store/', 'btn--primary'), ('購入ガイド', '/store/guide/', 'btn--ghost')])}
@@ -1075,6 +1233,16 @@ def build_os_pages():
   </div>
 </section>
 {svg_os_showcase(v)}
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">RELEASE NOTES</p><h2 class="t-h2">配信履歴</h2></div>
+    <div class="scroll-x reveal"><table class="spec-table">
+      <thead><tr><th scope="col" style="padding:12px 18px;text-align:left">バージョン</th><th scope="col" style="padding:12px 18px;text-align:left">配信日</th><th scope="col" style="padding:12px 18px;text-align:left">主な内容</th></tr></thead>
+      <tbody>{''.join(f'<tr><th scope="row">{ver}</th><td style="white-space:nowrap">{date}</td><td>{note}</td></tr>' for ver, date, note in v.get('patches', []))}</tbody>
+    </table></div>
+    <p class="t-micro t-faint" style="margin-top:14px">機種ごとの配信状況は<a href="/support/downloads/" style="color:var(--accent);text-decoration:underline">ダウンロード</a>ページをご確認ください。</p>
+  </div>
+</section>
 {cta_band('「陣」で、すべてのゲームをひとつに。', 'SUZAKU OSの中核、ゲームスペース「陣」の全機能をご覧ください。', [('ゲームスペース「陣」', '/os/game-space/', 'btn--primary'), ('OS トップへ', '/os/', 'btn--ghost')])}
 """
         render_page(f"/os/{v['path']}/", f"{v['name']}「{v['code']}」",

@@ -107,11 +107,11 @@
   animation: rise-in 1s var(--ease-out) forwards;
 }
 
-.hero-enter > :nth-child(1) { animation-delay: 0.1s; }
-.hero-enter > :nth-child(2) { animation-delay: 0.25s; }
-.hero-enter > :nth-child(3) { animation-delay: 0.4s; }
-.hero-enter > :nth-child(4) { animation-delay: 0.55s; }
-.hero-enter > :nth-child(5) { animation-delay: 0.7s; }
+.hero-enter > :nth-child(1) { animation-delay: 0.05s; }
+.hero-enter > :nth-child(2) { animation-delay: 0.16s; }
+.hero-enter > :nth-child(3) { animation-delay: 0.27s; }
+.hero-enter > :nth-child(4) { animation-delay: 0.38s; }
+.hero-enter > :nth-child(5) { animation-delay: 0.5s; }
 
 /* スティッキーショーケース(Apple風) */
 .showcase {

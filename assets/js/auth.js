@@ -77,6 +77,14 @@
       '<a href="/maintenance/">詳細</a>';
     document.body.insertBefore(bar, document.body.firstChild);
     document.body.classList.add("has-maint-bar");
+    // バナーは折返しで高さが変わるため、実高を測ってCSS変数に反映する
+    var syncMaintH = function () {
+      document.documentElement.style.setProperty("--maint-h", bar.offsetHeight + "px");
+    };
+    syncMaintH();
+    window.addEventListener("resize", syncMaintH);
+    window.addEventListener("load", syncMaintH);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncMaintH);
   }
   window.szMaint = {
     get: function () { return get("sz_maintenance", { on: false, msg: "" }); },

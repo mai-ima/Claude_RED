@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,13 +231,23 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/tech/">テクノロジー</a></li><li><a href="/tech/camera/">天眼 TENGAN</a></li><li><span aria-current="page">天眼 RS-2</span></li></ol></div></nav>
 <main id="main">
 
 <section class="hero hero--page">
   <div class="hero__inner hero-enter">
-    <p class="eyebrow">CAMERA — 2025年3月14日 発表</p>
+    <p class="eyebrow">CAMERA — 2025年5月15日 発表</p>
     <h1 class="t-display">天眼 RS-2</h1>
     <p class="t-lead" style="max-width:680px">1/1.28型の、大きな眼。</p>
     <p class="t-soft t-small" style="max-width:680px">第2世代自社イメージセンサー。デュアルネイティブISOと全画素位相差AFで、夜と動きに強い。RS-2+はSUZAKU 4/TSUBAME 3向けの改良版。</p>
@@ -371,9 +381,9 @@
   <div class="container">
     <div class="section-head"><p class="eyebrow">NEWSROOM</p><h2 class="t-h2">天眼 RS-2 関連ニュース</h2></div>
     <div class="grid grid--3 reveal-stagger"><a class="card card--hover" href="/news/2026-03-tsubame3/">
-<p class="t-micro t-faint">2026.03.13 <span class="badge" style="margin-left:8px">製品</span></p>
-<h3 class="t-h4">「TSUBAME 3」発売 — フラッグシップと同じ天眼 RS-2+カメラを178gのボディに</h3>
-<p class="t-small t-soft">省電力版3nmチップ「雷 RAI-G4A」を搭載した一般向けスタンダードの最新作。税込69,800円〜。…</p>
+<p class="t-micro t-faint">2026.05.14 <span class="badge" style="margin-left:8px">製品</span></p>
+<h3 class="t-h4">「TSUBAME 3」— 旗艦と同じ天眼 RS-2+を178gに(IGNITE 2026 発表製品)</h3>
+<p class="t-small t-soft">IGNITE 2026で発表。省電力版3nmチップ「雷 RAI-G4A」搭載の一般向けスタンダード最新作。税込69,800円〜、5月29日発売。…</p>
 <p class="link-arrow">読む</p></a></div>
   </div>
 </section>

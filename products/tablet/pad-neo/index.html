@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,6 +231,16 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/products/">製品</a></li><li><a href="/products/tablet/">タブレット</a></li><li><span aria-current="page">SUZAKU Pad Neo</span></li></ol></div></nav>
 <main id="main">
@@ -282,7 +292,7 @@
           <button class="btn btn--primary btn--lg" id="addToCart">カートに追加</button>
           <a class="btn btn--ghost btn--lg" href="/products/tablet/pad-neo/specs/">スペックを見る</a>
         </div>
-        <p class="t-micro t-faint">発売日: 2025年9月12日 / 型番: SZ-PADNEO</p>
+        <p class="t-micro t-faint">発売日: 2025年5月30日 / 型番: SZ-PADNEO</p>
       </div>
     </div>
   </div>
@@ -427,8 +437,8 @@
   <div class="container">
     <div class="section-head"><p class="eyebrow">NEWSROOM</p><h2 class="t-h2">SUZAKU Pad Neo のニュース</h2></div>
     <div class="grid grid--3 reveal-stagger"><a class="card card--hover" href="/news/2025-09-padneo/">
-<p class="t-micro t-faint">2025.09.12 <span class="badge" style="margin-left:8px">製品</span></p>
-<h3 class="t-h4">「SUZAKU Pad Neo」発売 — 7万円切りのゲーミングタブレット</h3>
+<p class="t-micro t-faint">2025.05.15 <span class="badge" style="margin-left:8px">製品</span></p>
+<h3 class="t-h4">「SUZAKU Pad Neo」— 7万円切りのゲーミングタブレット(IGNITE 2025 発表製品)</h3>
 <p class="t-small t-soft">雷 RAI-G3と氷刃 V3を、6.6mm・499gの薄型ボディに。ゲーミングタブレットの裾野を広げる一台。…</p>
 <p class="link-arrow">読む</p></a></div>
   </div>

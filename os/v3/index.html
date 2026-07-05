@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,6 +231,16 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/os/">SUZAKU OS</a></li><li><span aria-current="page">SUZAKU OS 3.0「疾風」</span></li></ol></div></nav>
 <main id="main">
@@ -292,7 +302,7 @@
     <div class="section-head"><p class="eyebrow">RELEASE NOTES</p><h2 class="t-h2">配信履歴</h2></div>
     <div class="scroll-x reveal"><table class="spec-table">
       <thead><tr><th scope="col" style="padding:12px 18px;text-align:left">バージョン</th><th scope="col" style="padding:12px 18px;text-align:left">配信日</th><th scope="col" style="padding:12px 18px;text-align:left">主な内容</th></tr></thead>
-      <tbody><tr><th scope="row">3.2.8</th><td style="white-space:nowrap">2026年6月13日</td><td>最終機能更新。以降はセキュリティ更新のみ提供(対象: 初代SUZAKU One / Neo / TSUBAME)。</td></tr><tr><th scope="row">3.1.0</th><td style="white-space:nowrap">2025年9月12日</td><td>陣プラグインストアの検索を改善。Pad Neo発売に伴うタブレットUI最適化。</td></tr><tr><th scope="row">3.0.0</th><td style="white-space:nowrap">2025年5月30日</td><td>初回リリース(SUZAKU 3 同梱)。</td></tr></tbody>
+      <tbody><tr><th scope="row">3.2.8</th><td style="white-space:nowrap">2026年6月13日</td><td>最終機能更新。以降はセキュリティ更新のみ提供(対象: 初代SUZAKU One / Neo / TSUBAME)。</td></tr><tr><th scope="row">3.1.0</th><td style="white-space:nowrap">2025年9月12日</td><td>陣プラグインストアの検索改善と、タブレットUIの安定性向上。</td></tr><tr><th scope="row">3.0.0</th><td style="white-space:nowrap">2025年5月30日</td><td>初回リリース(SUZAKU 3 同梱)。</td></tr></tbody>
     </table></div>
     <p class="t-micro t-faint" style="margin-top:14px">機種ごとの配信状況は<a href="/support/downloads/" style="color:var(--accent);text-decoration:underline">ダウンロード</a>ページをご確認ください。</p>
   </div>

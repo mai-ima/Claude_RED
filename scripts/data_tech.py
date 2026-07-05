@@ -167,7 +167,7 @@ TECHS = [
     },
     {
         "id": "rai-e2", "type": "cpu", "hub": "cpu",
-        "name": "雷 RAI-E2", "en": "RAI-E2", "year": 2026, "announce": "2026年6月5日",
+        "name": "雷 RAI-E2", "en": "RAI-E2", "year": 2026, "announce": "2026年5月14日",
         "tagline": "エントリーにも、専用設計を。",
         "sub": "流用ではなく、新設計。3万円台の端末のために4nmで起こした第2世代エントリーSoC。日常動作の軽快さに全リソースを投じた。",
         "stats": [
@@ -196,7 +196,7 @@ TECHS = [
     },
     {
         "id": "rai-e1", "type": "cpu", "hub": "cpu",
-        "name": "雷 RAI-E1", "en": "RAI-E1", "year": 2025, "announce": "2025年6月6日",
+        "name": "雷 RAI-E1", "en": "RAI-E1", "year": 2025, "announce": "2025年5月15日",
         "tagline": "廉価版にも、自社の雷を。",
         "sub": "TSUBAME Liteとともに登場した初のエントリー専用SoC。6nm・2+6コア。「3万円台でもSUZAKU品質」を支える初代。",
         "stats": [
@@ -315,7 +315,7 @@ TECHS = [
     },
     {
         "id": "homura-l2", "type": "gpu", "hub": "gpu",
-        "name": "焔 HOMURA-L2", "en": "HOMURA-L2", "year": 2026, "announce": "2026年6月5日",
+        "name": "焔 HOMURA-L2", "en": "HOMURA-L2", "year": 2026, "announce": "2026年5月14日",
         "tagline": "小さな焔は、賢く燃える。",
         "sub": "RAI-E2に統合される第2世代Lite GPU。動画・UI・カジュアルゲームに最適化した省電力アーキテクチャ。",
         "stats": [
@@ -335,7 +335,7 @@ TECHS = [
     },
     {
         "id": "homura-l1", "type": "gpu", "hub": "gpu",
-        "name": "焔 HOMURA-L1", "en": "HOMURA-L1", "year": 2025, "announce": "2025年6月6日",
+        "name": "焔 HOMURA-L1", "en": "HOMURA-L1", "year": 2025, "announce": "2025年5月15日",
         "tagline": "はじまりの、小さな焔。",
         "sub": "RAI-E1に統合された初代Lite GPU。エントリー端末の「なめらかな日常」を担う。",
         "stats": [
@@ -400,7 +400,7 @@ TECHS = [
     },
     {
         "id": "hayate-l1", "type": "memory", "hub": "memory",
-        "name": "疾風 HAYATE-L1", "en": "HAYATE-L1", "year": 2025, "announce": "2025年6月6日",
+        "name": "疾風 HAYATE-L1", "en": "HAYATE-L1", "year": 2025, "announce": "2025年5月15日",
         "tagline": "廉価版の「もっさり」を、卒業。",
         "sub": "エントリー端末向けの自社メモリ。LPDDR4X据え置きが常識の価格帯に、LPDDR5 6,400Mbpsを持ち込んだ。",
         "stats": [
@@ -465,7 +465,7 @@ TECHS = [
     },
     {
         "id": "shun-l1", "type": "storage", "hub": "storage",
-        "name": "瞬 SHUN-L1", "en": "SHUN-L1", "year": 2025, "announce": "2025年6月6日",
+        "name": "瞬 SHUN-L1", "en": "SHUN-L1", "year": 2025, "announce": "2025年5月15日",
         "tagline": "eMMCの時代を、終わらせる。",
         "sub": "エントリー価格帯の定番だったeMMCを置き換える自社ストレージ。UFS 3.1で読込2,100MB/s — 廉価版でも7倍速い。",
         "stats": [
@@ -593,7 +593,7 @@ TECHS = [
     # ================================ カメラ 天眼 TENGAN ================================
     {
         "id": "tengan-rs2", "type": "camera", "hub": "camera",
-        "name": "天眼 RS-2", "en": "TENGAN RS-2", "year": 2025, "announce": "2025年3月14日",
+        "name": "天眼 RS-2", "en": "TENGAN RS-2", "year": 2025, "announce": "2025年5月15日",
         "tagline": "1/1.28型の、大きな眼。",
         "sub": "第2世代自社イメージセンサー。デュアルネイティブISOと全画素位相差AFで、夜と動きに強い。RS-2+はSUZAKU 4/TSUBAME 3向けの改良版。",
         "stats": [
@@ -620,7 +620,7 @@ TECHS = [
     },
     {
         "id": "tengan-rs1", "type": "camera", "hub": "camera",
-        "name": "天眼 RS-1", "en": "TENGAN RS-1", "year": 2024, "announce": "2024年3月8日",
+        "name": "天眼 RS-1", "en": "TENGAN RS-1", "year": 2024, "announce": "2024年5月16日",
         "tagline": "自分たちの眼を、持つ。",
         "sub": "初代TSUBAMEでデビューした初の自社イメージセンサー。1/1.5型50MP。",
         "stats": [
@@ -685,7 +685,7 @@ OS_VERSIONS = [
         ],
         "patches": [
             ("3.2.8", "2026年6月13日", "最終機能更新。以降はセキュリティ更新のみ提供(対象: 初代SUZAKU One / Neo / TSUBAME)。"),
-            ("3.1.0", "2025年9月12日", "陣プラグインストアの検索を改善。Pad Neo発売に伴うタブレットUI最適化。"),
+            ("3.1.0", "2025年9月12日", "陣プラグインストアの検索改善と、タブレットUIの安定性向上。"),
             ("3.0.0", "2025年5月30日", "初回リリース(SUZAKU 3 同梱)。"),
         ],
         "features": [

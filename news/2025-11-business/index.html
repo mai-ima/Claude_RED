@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,6 +231,16 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/news/">ニュースルーム</a></li><li><span aria-current="page">2025年</span></li></ol></div></nav>
 <main id="main">
@@ -244,7 +254,7 @@
 </section>
 <article class="section--sm">
   <div class="container container--text">
-    <div class="prose reveal"><p>株式会社朱雀は2025年11月6日、法人向けソリューション「SUZAKU for Business」の提供を開始しました。</p><p>高性能端末の一括導入からMDM(モバイルデバイス管理)、キッティング、専任サポートまでをワンストップで提供。eスポーツ施設、教育機関、映像制作現場、建設・物流の現場業務など、高い処理性能と冷却性能が求められる法人用途を支援します。</p><p>あわせて純正ドック「SUZAKU Dock」を11月14日に発売し、端末をデスクトップ環境として運用する「大盤」構成の法人展開も開始しました。</p><p>詳細は<a href='/business/'>法人のお客様向けページ</a>をご覧ください。</p></div>
+    <div class="prose reveal"><p>株式会社朱雀は2025年11月6日、法人向けソリューション「SUZAKU for Business」の提供を開始しました。</p><p>高性能端末の一括導入からMDM(モバイルデバイス管理)、キッティング、専任サポートまでをワンストップで提供。eスポーツ施設、教育機関、映像制作現場、建設・物流の現場業務など、高い処理性能と冷却性能が求められる法人用途を支援します。</p><p>IGNITE 2025で発表した純正ドック「SUZAKU Dock」を核に、端末をデスクトップ環境として運用する「大盤」構成の法人展開も開始しました。</p><p>詳細は<a href='/business/'>法人のお客様向けページ</a>をご覧ください。</p></div>
     <hr class="divider" style="margin-block:40px">
     <div class="prose t-small t-soft">
       <p><strong>株式会社朱雀(SUZAKU Inc.)について</strong><br>

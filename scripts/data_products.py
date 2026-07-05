@@ -327,7 +327,7 @@ PHONES = [
     {
         "id": "neo-3", "cat": "phone", "line": "neo",
         "name": "SUZAKU Neo 3", "kana": "朱雀 Neo 3",
-        "year": 2026, "release": "2026年6月12日", "status": "current", "flag": "new",
+        "year": 2026, "release": "2026年5月29日", "status": "current", "flag": "new",
         "tagline": "この価格は、反則だ。",
         "sub": "昨年のフラッグシップSoC「雷 RAI-G3」を氷刃 V3ごと受け継いだ、8万円以下の本気ゲーミング。",
         "price": 79800,
@@ -389,7 +389,7 @@ PHONES = [
     {
         "id": "neo-2", "cat": "phone", "line": "neo",
         "name": "SUZAKU Neo 2", "kana": "朱雀 Neo 2",
-        "year": 2025, "release": "2025年7月11日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": None,
         "tagline": "遊び倒せ、毎日。",
         "sub": "雷 RAI-G2と氷刃 V2を受け継いだスタンダードゲーミング。7万円切りの新価格。",
         "price": 69800,
@@ -440,7 +440,7 @@ PHONES = [
     {
         "id": "neo", "cat": "phone", "line": "neo",
         "name": "SUZAKU Neo", "kana": "朱雀 Neo",
-        "year": 2024, "release": "2024年7月19日", "status": "old", "flag": None,
+        "year": 2024, "release": "2024年5月17日", "status": "old", "flag": None,
         "tagline": "ゲーミングを、ぜんぶの人に。",
         "sub": "雷 RAI-G1を受け継いだ初のスタンダードゲーミングモデル。SUZAKUの性能哲学を、手の届く価格で。",
         "price": 64800,
@@ -472,7 +472,7 @@ PHONES = [
     {
         "id": "tsubame-3", "cat": "phone", "line": "tsubame",
         "name": "TSUBAME 3", "kana": "燕 3",
-        "year": 2026, "release": "2026年3月13日", "status": "current", "flag": "new",
+        "year": 2026, "release": "2026年5月29日", "status": "current", "flag": "new",
         "tagline": "軽やかに、しなやかに。",
         "sub": "省電力版「雷 RAI-G4A」と天眼カメラを、178gの軽さに。毎日を心地よくする、SUZAKUのスタンダード。",
         "price": 69800,
@@ -540,7 +540,7 @@ PHONES = [
     {
         "id": "tsubame-2", "cat": "phone", "line": "tsubame",
         "name": "TSUBAME 2", "kana": "燕 2",
-        "year": 2025, "release": "2025年3月14日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": None,
         "tagline": "ちょうどいいは、強い。",
         "sub": "天眼 RS-2カメラと2日持ちバッテリー。日常のすべてが快適な、定番スタンダード。",
         "price": 62800,
@@ -572,7 +572,7 @@ PHONES = [
     {
         "id": "tsubame", "cat": "phone", "line": "tsubame",
         "name": "TSUBAME", "kana": "燕",
-        "year": 2024, "release": "2024年3月8日", "status": "old", "flag": None,
+        "year": 2024, "release": "2024年5月17日", "status": "old", "flag": None,
         "tagline": "ゲーミングの技術を、暮らしへ。",
         "sub": "SUZAKU初の一般向けモデル。フラッグシップ由来の省電力チップと快適なOSを軽量ボディに。",
         "price": 59800,
@@ -605,7 +605,7 @@ PHONES = [
     {
         "id": "tsubame-lite-2", "cat": "phone", "line": "lite",
         "name": "TSUBAME Lite 2", "kana": "燕 Lite 2",
-        "year": 2026, "release": "2026年6月5日", "status": "current", "flag": "new",
+        "year": 2026, "release": "2026年5月29日", "status": "current", "flag": "new",
         "tagline": "はじめてでも、ちゃんと速い。",
         "sub": "3万円台で120Hz・5000mAh・4年のセキュリティ更新。エントリーの基準を引き上げる一台。",
         "price": 39800,
@@ -637,7 +637,7 @@ PHONES = [
     {
         "id": "tsubame-lite", "cat": "phone", "line": "lite",
         "name": "TSUBAME Lite", "kana": "燕 Lite",
-        "year": 2025, "release": "2025年6月6日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": None,
         "tagline": "最初の一台に、うれしい全部。",
         "sub": "3万円台前半でもSUZAKU品質。軽快なOSと2日持ちバッテリーのエントリーモデル。",
         "price": 34800,
@@ -740,7 +740,7 @@ TABLETS = [
     {
         "id": "pad-neo", "cat": "tablet", "line": "pad-neo",
         "name": "SUZAKU Pad Neo", "kana": "朱雀 Pad Neo",
-        "year": 2025, "release": "2025年9月12日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": None,
         "tagline": "ゲーミングタブレットを、身近に。",
         "sub": "雷 RAI-G3を11インチ144Hzに搭載。7万円切りのゲーミングタブレット。",
         "price": 69800,
@@ -771,7 +771,7 @@ TABLETS = [
     {
         "id": "t-pad-2", "cat": "tablet", "line": "t-pad",
         "name": "TSUBAME Pad 2", "kana": "燕 Pad 2",
-        "year": 2026, "release": "2026年4月10日", "status": "current", "flag": "new",
+        "year": 2026, "release": "2026年5月29日", "status": "current", "flag": "new",
         "tagline": "家族の真ん中に、一枚。",
         "sub": "動画・学習・ビデオ通話。暮らしの道具としてちょうどいい11.5インチ。",
         "price": 54800,
@@ -802,7 +802,7 @@ TABLETS = [
     {
         "id": "t-pad", "cat": "tablet", "line": "t-pad",
         "name": "TSUBAME Pad", "kana": "燕 Pad",
-        "year": 2024, "release": "2024年9月13日", "status": "old", "flag": None,
+        "year": 2024, "release": "2024年5月17日", "status": "old", "flag": None,
         "tagline": "はじめての、ちゃんとしたタブレット。",
         "sub": "初代スタンダードタブレット。動画も読書も快適な11インチ。",
         "price": 49800,
@@ -833,7 +833,7 @@ TABLETS = [
     {
         "id": "t-pad-lite", "cat": "tablet", "line": "t-pad-lite",
         "name": "TSUBAME Pad Lite", "kana": "燕 Pad Lite",
-        "year": 2025, "release": "2025年6月20日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": None,
         "tagline": "気軽に持てる、10.4インチ。",
         "sub": "動画視聴と電子書籍に最適化した3万円台のエントリータブレット。",
         "price": 32800,
@@ -867,7 +867,7 @@ ACCESSORIES = [
     {
         "id": "hyoran-cooler", "cat": "accessory", "line": "acc",
         "name": "氷嵐クーラー 2", "kana": "ひょうらんクーラー 2",
-        "year": 2025, "release": "2025年10月17日", "status": "current", "flag": "new",
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": "new",
         "tagline": "外付けの、絶対零度。",
         "sub": "ペルチェ素子とマグネット吸着で背面を一気に冷やす、純正外付けクーラー第2世代。",
         "price": 6980,
@@ -894,7 +894,7 @@ ACCESSORIES = [
     {
         "id": "grip-pro", "cat": "accessory", "line": "acc",
         "name": "SUZAKU Grip Pro", "kana": "朱雀 グリップ Pro",
-        "year": 2024, "release": "2024年10月18日", "status": "current", "flag": None,
+        "year": 2024, "release": "2024年5月17日", "status": "current", "flag": None,
         "tagline": "指先が、追いつく。",
         "sub": "ホール効果スティックを備えた伸縮式ゲームパッド。遅延0.8msの直結接続。",
         "price": 8980,
@@ -921,7 +921,7 @@ ACCESSORIES = [
     {
         "id": "buds", "cat": "accessory", "line": "acc",
         "name": "SUZAKU Buds", "kana": "朱雀 バッズ",
-        "year": 2023, "release": "2023年10月13日", "status": "current", "flag": None,
+        "year": 2023, "release": "2023年5月1日", "status": "current", "flag": None,
         "tagline": "音の遅延は、敗因になる。",
         "sub": "独自2.4GHzドングル同梱で遅延38ms。ゲームのために作られた完全ワイヤレスイヤホン。",
         "price": 14800,
@@ -1001,7 +1001,7 @@ ACCESSORIES = [
     {
         "id": "dock", "cat": "accessory", "line": "acc",
         "name": "SUZAKU Dock", "kana": "朱雀 ドック",
-        "year": 2025, "release": "2025年11月14日", "status": "current", "flag": None,
+        "year": 2025, "release": "2025年5月30日", "status": "current", "flag": None,
         "tagline": "置けば、そこがデスクトップ。",
         "sub": "80Wワイヤレス充電と4K/120Hz映像出力を1台に。スマホをゲーム機に変える純正ドック。",
         "price": 12800,

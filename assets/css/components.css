@@ -936,6 +936,13 @@ a.card:hover,
 /* --------------------------------------------------------------------------
    Cookie同意バナー / モーダル
    -------------------------------------------------------------------------- */
+/* ドロワー表示中はCookieバナーがナビ下部(テーマ切替等)を塞がないよう退避 */
+body.drawer-open .cookie-banner {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .cookie-banner {
   position: fixed;
   z-index: var(--z-modal);
@@ -1750,7 +1757,8 @@ a.card:hover,
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 9px 10px;
+  min-height: 44px;
+  padding: 11px 12px;
   border-radius: var(--r-sm);
   font-size: var(--fs-small);
   font-weight: 600;
@@ -1761,12 +1769,59 @@ a.card:hover,
 .theme-menu__panel button:hover { background: var(--surface-2); color: var(--text-strong); }
 .theme-menu__panel button.is-active { color: var(--accent); background: var(--surface-2); }
 
+.theme-menu__panel button.is-active::after {
+  content: "✓";
+  margin-left: auto;
+  font-weight: 900;
+  color: var(--accent);
+}
+
 .theme-menu__panel button i {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   border: 1px solid var(--line-strong);
   flex: none;
+}
+
+/* ドロワー内テーマ切替(スマートフォン向けの大きな操作面) */
+.drawer__theme {
+  padding: 18px var(--gutter) 28px;
+  border-top: 1px solid var(--line);
+}
+
+.theme-seg {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.theme-seg button {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-height: 58px;
+  padding: 9px 4px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.theme-seg button i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+}
+
+.theme-seg button.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
 }
 
 /* ログイン中のアカウントアイコンにドット */
@@ -1799,10 +1854,10 @@ a.card:hover,
 
 .maint-bar a { text-decoration: underline; color: inherit; }
 
-body.has-maint-bar .site-header { top: 30px; }
-body.has-maint-bar { padding-top: 30px; }
-body.has-maint-bar .drawer { top: calc(var(--header-h) + 30px); }
-body.has-maint-bar .localnav { top: calc(var(--header-h) + 30px); }
+body.has-maint-bar .site-header { top: var(--maint-h, 34px); }
+body.has-maint-bar { padding-top: var(--maint-h, 34px); }
+body.has-maint-bar .drawer { top: calc(var(--header-h) + var(--maint-h, 34px)); }
+body.has-maint-bar .localnav { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 
 /* 認証フォームカード */
 .auth-card {

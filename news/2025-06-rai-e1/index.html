@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,6 +231,16 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/news/">ニュースルーム</a></li><li><span aria-current="page">2025年</span></li></ol></div></nav>
 <main id="main">
@@ -239,12 +249,12 @@
   <div class="hero__inner hero-enter">
     <p class="eyebrow">ニュースルーム — 技術</p>
     <h1 class="t-h1" style="max-width:840px">エントリー専用SoC「雷 RAI-E1」を発表 — 廉価版にも、自社シリコンを</h1>
-    <p class="t-soft t-small">2025.06.06 — 株式会社朱雀</p>
+    <p class="t-soft t-small">2025.05.15 — 株式会社朱雀</p>
   </div>
 </section>
 <article class="section--sm">
   <div class="container container--text">
-    <div class="prose reveal"><p>株式会社朱雀は2025年6月6日、エントリー価格帯専用のSoC「雷 RAI-E1」を発表しました。同日発売の「TSUBAME Lite」に搭載されます。</p><p>廉価端末では数年前の汎用チップを流用するのが業界の慣行ですが、当社はタッチ応答性能と長期アップデート保証を自社基準で満たすため、エントリー専用の新規設計を選択しました。RAI-E1は6nmプロセス・2+6コア構成で、体感頻度の高い処理に回路を集中させています。</p><p>同時に、省電力GPU「焔 HOMURA-L1」、LPDDR5メモリ「疾風 HAYATE-L1」、eMMCを置き換えるUFS 3.1ストレージ「瞬 SHUN-L1」も発表。フラッグシップからエントリーまで、全価格帯の中核部品の自社シリコン化が完了しました。</p><p>技術詳細は<a href='/tech/cpu/rai-e1/'>RAI-E1 技術ページ</a>をご覧ください。</p></div>
+    <div class="prose reveal"><p>株式会社朱雀は2025年5月15日、「SUZAKU IGNITE 2025」において、エントリー価格帯専用のSoC「雷 RAI-E1」を発表しました。5月30日発売の「TSUBAME Lite」「TSUBAME Pad Lite」に搭載されます。</p><p>廉価端末では数年前の汎用チップを流用するのが業界の慣行ですが、当社はタッチ応答性能と長期アップデート保証を自社基準で満たすため、エントリー専用の新規設計を選択しました。RAI-E1は6nmプロセス・2+6コア構成で、体感頻度の高い処理に回路を集中させています。</p><p>同時に、省電力GPU「焔 HOMURA-L1」、LPDDR5メモリ「疾風 HAYATE-L1」、eMMCを置き換えるUFS 3.1ストレージ「瞬 SHUN-L1」も発表。フラッグシップからエントリーまで、全価格帯の中核部品の自社シリコン化が完了しました。</p><p>技術詳細は<a href='/tech/cpu/rai-e1/'>RAI-E1 技術ページ</a>をご覧ください。</p></div>
     <hr class="divider" style="margin-block:40px">
     <div class="prose t-small t-soft">
       <p><strong>株式会社朱雀(SUZAKU Inc.)について</strong><br>

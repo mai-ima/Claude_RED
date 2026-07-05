@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,13 +231,23 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/tech/">テクノロジー</a></li><li><a href="/tech/memory/">疾風 HAYATE</a></li><li><span aria-current="page">疾風 HAYATE-L1</span></li></ol></div></nav>
 <main id="main">
 
 <section class="hero hero--page">
   <div class="hero__inner hero-enter">
-    <p class="eyebrow">MEMORY — 2025年6月6日 発表</p>
+    <p class="eyebrow">MEMORY — 2025年5月15日 発表</p>
     <h1 class="t-display">疾風 HAYATE-L1</h1>
     <p class="t-lead" style="max-width:680px">廉価版の「もっさり」を、卒業。</p>
     <p class="t-soft t-small" style="max-width:680px">エントリー端末向けの自社メモリ。LPDDR4X据え置きが常識の価格帯に、LPDDR5 6,400Mbpsを持ち込んだ。</p>
@@ -346,7 +356,7 @@
   <div class="container">
     <div class="section-head"><p class="eyebrow">NEWSROOM</p><h2 class="t-h2">疾風 HAYATE-L1 関連ニュース</h2></div>
     <div class="grid grid--3 reveal-stagger"><a class="card card--hover" href="/news/2025-06-rai-e1/">
-<p class="t-micro t-faint">2025.06.06 <span class="badge" style="margin-left:8px">技術</span></p>
+<p class="t-micro t-faint">2025.05.15 <span class="badge" style="margin-left:8px">技術</span></p>
 <h3 class="t-h4">エントリー専用SoC「雷 RAI-E1」を発表 — 廉価版にも、自社シリコンを</h3>
 <p class="t-small t-soft">3万円台の端末のために新設計した6nm SoC。GPU「焔 HOMURA-L1」、メモリ「疾風 HAYATE-L1」、ストレージ「瞬 SHUN-…</p>
 <p class="link-arrow">読む</p></a></div>

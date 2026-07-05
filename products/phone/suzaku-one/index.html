@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,6 +231,16 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/products/">製品</a></li><li><a href="/products/phone/">スマートフォン</a></li><li><span aria-current="page">SUZAKU One</span></li></ol></div></nav>
 <main id="main">
@@ -428,7 +438,11 @@
 <section class="section--sm">
   <div class="container">
     <div class="section-head"><p class="eyebrow">NEWSROOM</p><h2 class="t-h2">SUZAKU One のニュース</h2></div>
-    <div class="grid grid--3 reveal-stagger"><a class="card card--hover" href="/news/2023-05-suzaku-one/">
+    <div class="grid grid--3 reveal-stagger"><a class="card card--hover" href="/news/2023-10-accessories/">
+<p class="t-micro t-faint">2023.05.01 <span class="badge" style="margin-left:8px">製品</span></p>
+<h3 class="t-h4">純正アクセサリライン始動 — 「SUZAKU Buds」など3製品をSUZAKU Oneと同日発売</h3>
+<p class="t-small t-soft">初製品発表と同じ日に、超低遅延38msのワイヤレスイヤホンなど純正アクセサリも一斉デビュー。…</p>
+<p class="link-arrow">読む</p></a><a class="card card--hover" href="/news/2023-05-suzaku-one/">
 <p class="t-micro t-faint">2023.05.01 <span class="badge" style="margin-left:8px">製品</span></p>
 <h3 class="t-h4">初製品「SUZAKU One」と自社SoC「雷 RAI-G1」、独自OS「SUZAKU OS 1.0」を発表</h3>
 <p class="t-small t-soft">創業からちょうど1年。SUZAKUのすべてが始まった日。初の自社設計SoCを搭載したゲーミングスマートフォンが誕生しました。…</p>

@@ -161,11 +161,11 @@
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button data-theme-opt="auto" role="menuitem"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button data-theme-opt="light" role="menuitem"><i style="background:#fafafc"></i>ライト</button>
-          <button data-theme-opt="dark" role="menuitem"><i style="background:#0b0b10"></i>ダーク</button>
-          <button data-theme-opt="g" role="menuitem"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button data-theme-opt="suzaku" role="menuitem"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
+          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
@@ -231,6 +231,16 @@
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <div class="drawer__theme">
+    <p class="drawer__sub">カラーテーマ</p>
+    <div class="theme-seg" role="group" aria-label="カラーテーマ">
+      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
+      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+    </div>
+  </div>
 </nav>
 <nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/products/">製品</a></li><li><a href="/products/phone/">スマートフォン</a></li><li><span aria-current="page">TSUBAME Lite 2</span></li></ol></div></nav>
 <main id="main">
@@ -282,7 +292,7 @@
           <button class="btn btn--primary btn--lg" id="addToCart">カートに追加</button>
           <a class="btn btn--ghost btn--lg" href="/products/phone/tsubame-lite-2/specs/">スペックを見る</a>
         </div>
-        <p class="t-micro t-faint">発売日: 2026年6月5日 / 型番: SZ-TSUBAMELITE2</p>
+        <p class="t-micro t-faint">発売日: 2026年5月29日 / 型番: SZ-TSUBAMELITE2</p>
       </div>
     </div>
   </div>
@@ -356,7 +366,7 @@
     <p class="t-soft t-small">初代から最新世代まで、このラインの歩みです。販売終了モデルのページもアーカイブとして公開しています。</p></div>
     <div class="scroll-x reveal"><table class="spec-table quick-table">
       <thead><tr><th scope="col">モデル</th><th scope="col">発売日</th><th scope="col">発売時価格</th><th scope="col">SoC</th><th scope="col">販売状況</th></tr></thead>
-      <tbody><tr><td><strong>TSUBAME Lite 2(このページ)</strong></td><td>2026年6月5日</td><td>¥39,800</td><td>雷 RAI-E2</td><td><strong style="color:var(--accent)">現行</strong></td></tr><tr><td><a href="/products/phone/tsubame-lite/" style="color:var(--accent);font-weight:700">TSUBAME Lite</a></td><td>2025年6月6日</td><td>¥34,800</td><td>雷 RAI-E1</td><td><strong style="color:var(--accent)">現行</strong></td></tr></tbody>
+      <tbody><tr><td><strong>TSUBAME Lite 2(このページ)</strong></td><td>2026年5月29日</td><td>¥39,800</td><td>雷 RAI-E2</td><td><strong style="color:var(--accent)">現行</strong></td></tr><tr><td><a href="/products/phone/tsubame-lite/" style="color:var(--accent);font-weight:700">TSUBAME Lite</a></td><td>2025年5月30日</td><td>¥34,800</td><td>雷 RAI-E1</td><td><strong style="color:var(--accent)">現行</strong></td></tr></tbody>
     </table></div>
   </div>
 </section>
@@ -443,9 +453,9 @@
   <div class="container">
     <div class="section-head"><p class="eyebrow">NEWSROOM</p><h2 class="t-h2">TSUBAME Lite 2 のニュース</h2></div>
     <div class="grid grid--3 reveal-stagger"><a class="card card--hover" href="/news/2026-06-lite2-neo3/">
-<p class="t-micro t-faint">2026.06.05 <span class="badge" style="margin-left:8px">製品</span></p>
-<h3 class="t-h4">「TSUBAME Lite 2」「SUZAKU Neo 3」を発売 — エントリーとゲーミングスタンダードが同時刷新</h3>
-<p class="t-small t-soft">3万円台で120Hz表示のTSUBAME Lite 2と、前年フラッグシップSoCを受け継ぐSUZAKU Neo 3を発売しました。…</p>
+<p class="t-micro t-faint">2026.05.14 <span class="badge" style="margin-left:8px">製品</span></p>
+<h3 class="t-h4">SUZAKU Neo 3・TSUBAME Lite 2 — 8万円以下の本気と、3万円台の誠実(IGNITE 2026 発表製品)</h3>
+<p class="t-small t-soft">IGNITE 2026で同日発表。3万円台で120Hz表示のTSUBAME Lite 2と、前年フラッグシップSoCを受け継ぐSUZAKU Ne…</p>
 <p class="link-arrow">読む</p></a></div>
   </div>
 </section>

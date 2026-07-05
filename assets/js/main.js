@@ -49,8 +49,10 @@
     } else {
       html.setAttribute("data-theme", name);
     }
-    $$("#themeMenu [data-theme-opt]").forEach(function (b) {
-      b.classList.toggle("is-active", b.getAttribute("data-theme-opt") === name);
+    $$("[data-theme-opt]").forEach(function (b) {
+      var on = b.getAttribute("data-theme-opt") === name;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-checked", String(on));
     });
   }
   (function initTheme() {
@@ -63,25 +65,35 @@
     applyTheme(saved);
     var btn = $("#themeBtn");
     var menu = $("#themeMenu");
+    function closeMenu() {
+      if (!menu) return;
+      menu.classList.remove("is-open");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+    }
     if (btn && menu) {
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
+      btn.addEventListener("click", function () {
         var open = menu.classList.toggle("is-open");
         btn.setAttribute("aria-expanded", String(open));
       });
-      document.addEventListener("click", function (e) {
-        if (!menu.contains(e.target)) menu.classList.remove("is-open");
+      /* iOS Safariは非インタラクティブ要素のタップでclickが発火しないため、pointerdownで外側クローズする */
+      document.addEventListener("pointerdown", function (e) {
+        if (menu.classList.contains("is-open") && !menu.contains(e.target)) closeMenu();
       });
-      menu.addEventListener("click", function (e) {
-        var opt = e.target.closest("[data-theme-opt]");
-        if (!opt) return;
-        var name = opt.getAttribute("data-theme-opt");
-        lsSet("sz_theme", name);
-        applyTheme(name);
-        menu.classList.remove("is-open");
-        window.szToast("テーマ: " + opt.textContent.trim());
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeMenu();
       });
     }
+    /* ドロップダウン・ドロワー内セグメント共通のテーマ選択 */
+    $$("[data-theme-opt]").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        var name = opt.getAttribute("data-theme-opt");
+        if (THEMES.indexOf(name) === -1) return;
+        lsSet("sz_theme", name);
+        applyTheme(name);
+        closeMenu();
+        window.szToast("テーマ: " + (opt.getAttribute("data-theme-label") || opt.textContent.trim()));
+      });
+    });
   })();
 
   /* ---------- ヘッダー ---------- */

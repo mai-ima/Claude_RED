@@ -347,6 +347,43 @@
     if (t) { e.preventDefault(); openModal(); }
   });
 
+  /* ---------- キャッシュの手動削除 ---------- */
+  var clearCacheBtn = $("#clearCacheBtn");
+  if (clearCacheBtn) {
+    clearCacheBtn.addEventListener("click", function () {
+      clearCacheBtn.disabled = true;
+      var origLabel = clearCacheBtn.textContent;
+      clearCacheBtn.textContent = "削除しています…";
+      Promise.resolve()
+        .then(function () {
+          if ("caches" in window) {
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            });
+          }
+        })
+        .catch(function () { /* noop */ })
+        .then(function () {
+          if ("serviceWorker" in navigator) {
+            return navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(regs.map(function (r) { return r.unregister(); }));
+            });
+          }
+        })
+        .catch(function () { /* noop */ })
+        .then(function () {
+          window.szToast("キャッシュを削除しました。最新の状態に更新します…");
+          setTimeout(function () {
+            /* URLを一意にして、このページのHTML自体をブラウザキャッシュを介さず再取得する。
+               HTMLに書き出されたCSS/JSのURLは常にビルド時点の最新バージョン(?v=ハッシュ)を
+               指しているため、この再取得だけで古いCSS/JSとの混在を解消できる。 */
+            var base = window.location.origin + window.location.pathname;
+            window.location.href = base + "?_cachebust=" + Date.now();
+          }, 500);
+        });
+    });
+  }
+
   /* ---------- 検索ボックス(ヘッダー以外の共通) ---------- */
   $$("form[data-search-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {

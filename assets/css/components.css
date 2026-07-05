@@ -1576,6 +1576,27 @@ body.drawer-open .cookie-banner {
   .product-card__price { font-size: var(--fs-micro); }
   .product-card__tag { font-size: 10px; }
 
+  /* ホーム「4つのライン」は横スクロールのスナップカルーセルに(1台ずつ止まる) */
+  /* 詳細度: .grid:has(> .product-card) (0,2,0) に勝つため .grid.lineup-rail (0,2,0)+後勝ちにする */
+  .grid.lineup-rail {
+    grid-template-columns: none !important;
+    grid-auto-flow: column;
+    grid-auto-columns: min(320px, 84vw);
+    gap: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 4px var(--gutter) 16px;
+    scrollbar-width: thin;
+  }
+
+  .lineup-rail > .product-card {
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
   /* チェックアウトステップ・進捗トラッカーの圧縮 */
   .steps { gap: 2px; }
   .steps li { font-size: 10px; gap: 6px; letter-spacing: 0; }

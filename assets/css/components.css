@@ -1845,6 +1845,104 @@ body.drawer-open .cookie-banner {
   box-shadow: 0 0 0 1px var(--accent) inset;
 }
 
+/* --------------------------------------------------------------------------
+   設定ページ
+   -------------------------------------------------------------------------- */
+.setting-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(20px, 3vw, 32px);
+  margin-bottom: var(--sp-5);
+}
+
+.setting-card .section-head { margin-bottom: var(--sp-4); }
+
+.setting-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.setting-card .section-head + .setting-row { border-top: 0; }
+
+.setting-row__label { flex: 1 1 240px; min-width: 0; }
+.setting-row__title { font-weight: 700; color: var(--text-strong); }
+
+.opt-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  flex: none;
+}
+
+.opt-group button {
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--text-soft);
+  white-space: nowrap;
+  transition: color var(--dur-fast), background-color var(--dur-fast);
+}
+
+.opt-group button:hover { color: var(--text-strong); }
+
+.opt-group button.is-active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.opt-group--theme button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.opt-group--theme button i {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  flex: none;
+}
+
+.opt-group--theme button.is-active i { border-color: var(--accent-contrast); }
+
+.storage-list {
+  margin-top: var(--sp-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.storage-list__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 16px;
+  font-size: var(--fs-small);
+}
+
+.storage-list__row:not(:last-child) { border-bottom: 1px solid var(--line); }
+.storage-list__row code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; }
+
+@media (max-width: 560px) {
+  .setting-row { align-items: flex-start; }
+  .opt-group { width: 100%; }
+  .opt-group button { flex: 1 1 auto; text-align: center; }
+}
+
 /* ログイン中のアカウントアイコンにドット */
 #accountLink.is-logged-in::after {
   content: "";
@@ -2101,7 +2199,20 @@ body.has-maint-bar .localnav { top: calc(var(--header-h) + var(--maint-h, 34px))
   .footer-map ul { display: none; padding-bottom: 16px; }
   .footer-map > div.is-open ul { display: grid; }
   .footer-map a { padding-block: 3px; display: inline-block; }
+
+  /* 設定「常時展開」: スマートフォンでもアコーディオンにせず全リンクを表示 */
+  :root[data-footer-mode="expanded"] .footer-map ul { display: grid; }
+  :root[data-footer-mode="expanded"] .footer-map__title { cursor: default; }
+  :root[data-footer-mode="expanded"] .footer-map__title::after { display: none; }
+  :root[data-footer-mode="expanded"] .footer-map > div { padding-bottom: 10px; }
 }
+
+/* --------------------------------------------------------------------------
+   サイト設定(この端末の表示設定)の反映
+   -------------------------------------------------------------------------- */
+/* 文字とUIの大きさ。コンテナ幅はpx基準なので、レイアウト崩れなく字と余白だけが変わる */
+:root[data-density="compact"] { font-size: 93.75%; }
+:root[data-density="large"] { font-size: 106.25%; }
 
 /* 技術/開発者ページの目次: モバイルでは横スクロールのチップ列に */
 @media (max-width: 900px) {

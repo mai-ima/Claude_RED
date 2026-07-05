@@ -546,6 +546,7 @@ def header_html():
   </div>
   <a class="drawer__direct" href="/search/">検索</a>
   <a class="drawer__direct" href="/account/login/">ログイン / マイページ</a>
+  <a class="drawer__direct" href="/settings/">設定</a>
   <div class="drawer__theme">
     <p class="drawer__sub">カラーテーマ</p>
     <div class="theme-seg" role="group" aria-label="カラーテーマ">
@@ -597,6 +598,7 @@ def footer_html():
             ("注文状況の確認", "/store/order-status/"),
             ("マイページ / ログイン", "/account/login/"),
             ("メンテナンス情報", "/maintenance/"),
+            ("表示設定", "/settings/"),
         ]),
         col("SUZAKUについて", [
             ("会社概要", "/company/"),

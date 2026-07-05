@@ -399,4 +399,76 @@
       window.szToast("送信が完了しました");
     });
   });
+
+  /* ---------------- 設定ページ ---------------- */
+  var settingsPage = $("#settingsPage");
+  if (settingsPage && window.szPrefs) {
+    /* data-pref を持つ各グループを汎用配線。設定項目を増やしても、HTMLに
+       グループを1つ足すだけで動く(個別のJSは不要)。 */
+    $$("[data-pref]", settingsPage).forEach(function (group) {
+      var key = group.getAttribute("data-pref");
+      function sync() {
+        var cur = window.szPrefs.get()[key];
+        $$("[data-pref-value]", group).forEach(function (b) {
+          var on = b.getAttribute("data-pref-value") === cur;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", String(on));
+        });
+      }
+      group.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-pref-value]");
+        if (!b) return;
+        window.szPrefs.set(key, b.getAttribute("data-pref-value"));
+        sync();
+        renderStorageInfo();
+        window.szToast("設定を保存しました");
+      });
+      sync();
+    });
+
+    /* 保存データ一覧(localStorage 使用状況) */
+    var STORAGE_LABELS = {
+      sz_prefs: "表示設定(このページの設定)",
+      sz_theme: "カラーテーマ",
+      sz_cart: "カートの中身",
+      sz_orders: "注文履歴(この端末)",
+      sz_tickets: "修理受付(この端末)",
+      sz_users: "アカウント情報",
+      sz_session: "ログイン状態",
+      sz_consent: "Cookie同意の記録",
+      sz_maintenance: "メンテナンス設定(管理者)",
+      sz_global: "全体制御設定(管理者)",
+      sz_page_ctrl: "ページ別制御(管理者)",
+      sz_services: "サービス状況(管理者)",
+      sz_admin_news: "管理ボードで作成したニュース",
+      sz_seed_del: "削除済みデモ会員の記録"
+    };
+    function renderStorageInfo() {
+      var box = $("#storageInfo", settingsPage);
+      if (!box) return;
+      var rows = [];
+      for (var key in STORAGE_LABELS) {
+        var raw = null;
+        try { raw = localStorage.getItem(key); } catch (e) { /* noop */ }
+        if (raw === null) continue;
+        var bytes = raw.length;
+        var size = bytes < 1024 ? bytes + " B" : (bytes / 1024).toFixed(1) + " KB";
+        rows.push('<div class="storage-list__row"><span>' + escHtml(STORAGE_LABELS[key]) +
+          ' <code class="t-micro t-faint">' + escHtml(key) + '</code></span><span class="t-micro t-faint">' + size + "</span></div>");
+      }
+      box.innerHTML = rows.length
+        ? rows.join("")
+        : '<p class="t-small t-soft">保存されているデータはありません。</p>';
+    }
+    renderStorageInfo();
+
+    var resetBtn = $("#prefReset", settingsPage);
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        window.szPrefs.reset();
+        window.szToast("表示設定を初期化しました");
+        setTimeout(function () { window.location.reload(); }, 500);
+      });
+    }
+  }
 })();

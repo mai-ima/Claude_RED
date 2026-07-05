@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="ja" data-theme="light">
+<html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>お問い合わせ | SUZAKU(朱雀)</title>
-<meta name="description" content="SUZAKUサポートへのお問い合わせ。フォーム、チャット、電話窓口のご案内。製品・注文・修理・採用・報道関係のご連絡はこちら。">
-<meta property="og:title" content="お問い合わせ | SUZAKU(朱雀)">
-<meta property="og:description" content="SUZAKUサポートへのお問い合わせ。フォーム、チャット、電話窓口のご案内。製品・注文・修理・採用・報道関係のご連絡はこちら。">
+<title>設定 | SUZAKU(朱雀)</title>
+<meta name="description" content="この端末での表示設定。フッターの表示方法、文字とUIの大きさ、カラーテーマ、アニメーション低減などをカスタマイズできます。アカウントのログイン設定とは無関係です。">
+<meta property="og:title" content="設定 | SUZAKU(朱雀)">
+<meta property="og:description" content="この端末での表示設定。フッターの表示方法、文字とUIの大きさ、カラーテーマ、アニメーション低減などをカスタマイズできます。アカウントのログイン設定とは無関係です。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SUZAKU(朱雀)">
-<meta name="theme-color" content="#fafafc">
+<meta name="theme-color" content="#0b0b10">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/assets/css/components.css?v=78812894d7">
 <link rel="stylesheet" href="/assets/css/animations.css?v=78812894d7">
 </head>
-<body class="page-support-contact">
+<body class="page-settings">
 
 <a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header" id="siteHeader">
@@ -243,69 +243,88 @@
     </div>
   </div>
 </nav>
-<nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/support/">サポート</a></li><li><span aria-current="page">お問い合わせ</span></li></ol></div></nav>
+<nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><span aria-current="page">設定</span></li></ol></div></nav>
 <main id="main">
 
 
 <section class="hero hero--page">
   <div class="hero__inner hero-enter">
-    <p class="eyebrow">CONTACT</p>
-    <h1 class="t-h1">お問い合わせ</h1>
-    <p class="t-soft" style="max-width:640px">フォームからのお問い合わせには1営業日以内に返信します。お急ぎの場合は電話・チャットをご利用ください。</p>
+    <p class="eyebrow">SETTINGS</p>
+    <h1 class="t-h1">設定</h1>
+    <p class="t-soft t-small" style="max-width:640px">このページの設定は、お使いのこの端末のブラウザにのみ保存される表示設定です。アカウントのログイン・お客様情報とは一切関係ありません。</p>
   </div>
 </section>
 
-<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)" id="settingsPage">
   <div class="container container--narrow">
-    <div class="grid grid--3 reveal-stagger" style="margin-bottom:48px">
-      <div class="card"><h3 class="t-h4"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg> 電話</h3><p class="t-small t-soft">0120-XXX-XXX(通話無料)<br>10:00-18:00 / 年末年始を除く毎日</p></div>
-      <div class="card"><h3 class="t-h4"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg> チャット</h3><p class="t-small t-soft">10:00-22:00 / 平均応答90秒<br><button class="btn btn--soft btn--sm" style="margin-top:8px" type="button" onclick="szToast('デモ環境のため、チャットは利用できません')">チャットを開始</button></p></div>
-      <div class="card"><h3 class="t-h4"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M12 21v-3"/></svg> 来店予約</h3><p class="t-small t-soft">秋葉原サービスセンター<br>11:00-19:00(水曜定休)・下記フォームで「来店予約」を選択</p></div>
-    </div>
 
-    <h2 class="t-h3" style="margin-bottom:20px">お問い合わせフォーム</h2>
-    <form class="stack stack--lg" data-mock-form="#ctFormDone" novalidate>
-      <div class="field"><label for="ctType">お問い合わせ種別 <span class="req">必須</span></label>
-        <select class="select" id="ctType" required>
-          <option value="">選択してください</option>
-          <option>製品について(購入前のご相談)</option>
-          <option>ご注文・配送について</option>
-          <option>修理・故障について</option>
-          <option>来店予約(秋葉原サービスセンター)</option>
-          <option>SUZAKU OS・ソフトウェアについて</option>
-          <option>開発者プログラムについて</option>
-          <option>採用について</option>
-          <option>報道関係(広報宛)</option>
-          <option>その他</option>
-        </select><p class="field__error">選択してください</p></div>
-      <div class="grid grid--2">
-        <div class="field"><label for="ctName">お名前 <span class="req">必須</span></label>
-          <input class="input" id="ctName" required placeholder="朱雀 太郎"><p class="field__error">入力してください</p></div>
-        <div class="field"><label for="ctEmail">メールアドレス <span class="req">必須</span></label>
-          <input class="input" id="ctEmail" type="email" required placeholder="taro@example.com"><p class="field__error">メールアドレスの形式が正しくありません</p></div>
+    <div class="setting-card">
+      <div class="section-head"><p class="eyebrow">DISPLAY</p><h2 class="t-h3">表示</h2></div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">フッター(サイトマップ)の表示</p>
+          <p class="t-micro t-faint">ページ下部のサイトマップを、スマートフォンで折りたたむか、常に開いておくかを選べます。</p>
+        </div>
+        <div class="opt-group" data-pref="footerMode" role="group" aria-label="フッターの表示">
+          <button type="button" data-pref-value="accordion">折りたたみ式</button>
+          <button type="button" data-pref-value="expanded">常時展開</button>
+        </div>
       </div>
-      <div class="field"><label for="ctOrder">注文番号・受付番号(お持ちの場合)</label>
-        <input class="input" id="ctOrder" placeholder="SZ-2026-XXXXXX / SZR-XXXXXXXX" style="max-width:360px"></div>
-      <div class="field"><label for="ctMsg">お問い合わせ内容 <span class="req">必須</span></label>
-        <textarea class="textarea" id="ctMsg" rows="7" required placeholder="できるだけ具体的にご記入ください。"></textarea>
-        <p class="field__error">入力してください</p></div>
-      <label class="choice" style="align-items:center">
-        <input type="checkbox" required>
-        <span class="choice__radio" style="border-radius:6px"></span>
-        <span class="choice__body"><span class="choice__title"><a href="/legal/privacy/" target="_blank" style="color:var(--accent);text-decoration:underline">プライバシーポリシー</a>に同意します <span class="req">必須</span></span></span>
-      </label>
-      <div><button class="btn btn--primary btn--lg" type="submit">送信する</button></div>
-    </form>
-    <div id="ctFormDone" hidden>
-      <div class="card t-center stack" style="justify-items:center;padding:clamp(32px,5vw,56px)">
-        <h2 class="t-h2">送信が完了しました。</h2>
-        <p class="t-soft">受付番号: <strong data-ref-no class="t-strong"></strong><br>1営業日以内にご入力のメールアドレス宛に返信します(デモのため実際の返信は行われません)。</p>
-        <div class="cluster cluster--center">
-          <a class="btn btn--primary" href="/support/">サポートトップへ</a>
-          <a class="btn btn--ghost" href="/support/faq/">FAQを見る</a>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">文字とUIの大きさ</p>
+          <p class="t-micro t-faint">サイト全体の文字と余白の大きさを調整します。レイアウトの横幅は変わりません。</p>
+        </div>
+        <div class="opt-group" data-pref="density" role="group" aria-label="文字とUIの大きさ">
+          <button type="button" data-pref-value="compact">コンパクト</button>
+          <button type="button" data-pref-value="comfortable">標準</button>
+          <button type="button" data-pref-value="large">大きめ</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">カラーテーマ</p>
+          <p class="t-micro t-faint">「ページ既定」はページごとに用意された配色に従います。ヘッダーやドロワーからも変更できます。</p>
+        </div>
+        <div class="opt-group opt-group--theme" role="group" aria-label="カラーテーマ">
+          <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+          <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
         </div>
       </div>
     </div>
+
+    <div class="setting-card">
+      <div class="section-head"><p class="eyebrow">ACCESSIBILITY</p><h2 class="t-h3">アクセシビリティ</h2></div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">アニメーション</p>
+          <p class="t-micro t-faint">スクロール時の演出などのアニメーションを低減します。「自動」はOS(端末)の視差効果を減らす設定に従います。</p>
+        </div>
+        <div class="opt-group" data-pref="motion" role="group" aria-label="アニメーション">
+          <button type="button" data-pref-value="auto">自動</button>
+          <button type="button" data-pref-value="reduce">低減する</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-card">
+      <div class="section-head"><p class="eyebrow">DATA &amp; STORAGE</p><h2 class="t-h3">データと保存</h2></div>
+      <p class="t-small t-soft">当デモサイトがこの端末に保存しているデータの一覧です。すべてお使いのブラウザ内(localStorage)で完結し、外部への送信は行いません。</p>
+      <div id="storageInfo" class="storage-list" aria-live="polite"></div>
+      <div class="cluster" style="margin-top:18px">
+        <button class="btn btn--soft btn--sm" type="button" id="prefReset">表示設定を初期化する</button>
+        <a class="btn btn--ghost btn--sm" href="/legal/cookie/">Cookie設定・キャッシュ削除</a>
+      </div>
+      <p class="t-micro t-faint" style="margin-top:14px">※「表示設定を初期化する」は、このページの設定(フッター表示・文字サイズ・テーマ・アニメーション)のみを初期化します。カート・注文履歴・ログイン状態は削除されません。</p>
+    </div>
+
   </div>
 </section>
 

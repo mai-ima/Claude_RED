@@ -1,0 +1,82 @@
+<!--META {"title": "設定", "desc": "この端末での表示設定。フッターの表示方法、文字とUIの大きさ、カラーテーマ、アニメーション低減などをカスタマイズできます。アカウントのログイン設定とは無関係です。", "theme": "dark", "crumbs": [["設定", null]], "group": "設定", "noindex": true} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">SETTINGS</p>
+    <h1 class="t-h1">設定</h1>
+    <p class="t-soft t-small" style="max-width:640px">このページの設定は、お使いのこの端末のブラウザにのみ保存される表示設定です。アカウントのログイン・お客様情報とは一切関係ありません。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)" id="settingsPage">
+  <div class="container container--narrow">
+
+    <div class="setting-card">
+      <div class="section-head"><p class="eyebrow">DISPLAY</p><h2 class="t-h3">表示</h2></div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">フッター(サイトマップ)の表示</p>
+          <p class="t-micro t-faint">ページ下部のサイトマップを、スマートフォンで折りたたむか、常に開いておくかを選べます。</p>
+        </div>
+        <div class="opt-group" data-pref="footerMode" role="group" aria-label="フッターの表示">
+          <button type="button" data-pref-value="accordion">折りたたみ式</button>
+          <button type="button" data-pref-value="expanded">常時展開</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">文字とUIの大きさ</p>
+          <p class="t-micro t-faint">サイト全体の文字と余白の大きさを調整します。レイアウトの横幅は変わりません。</p>
+        </div>
+        <div class="opt-group" data-pref="density" role="group" aria-label="文字とUIの大きさ">
+          <button type="button" data-pref-value="compact">コンパクト</button>
+          <button type="button" data-pref-value="comfortable">標準</button>
+          <button type="button" data-pref-value="large">大きめ</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">カラーテーマ</p>
+          <p class="t-micro t-faint">「ページ既定」はページごとに用意された配色に従います。ヘッダーやドロワーからも変更できます。</p>
+        </div>
+        <div class="opt-group opt-group--theme" role="group" aria-label="カラーテーマ">
+          <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
+          <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
+          <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
+          <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
+          <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-card">
+      <div class="section-head"><p class="eyebrow">ACCESSIBILITY</p><h2 class="t-h3">アクセシビリティ</h2></div>
+
+      <div class="setting-row">
+        <div class="setting-row__label">
+          <p class="setting-row__title">アニメーション</p>
+          <p class="t-micro t-faint">スクロール時の演出などのアニメーションを低減します。「自動」はOS(端末)の視差効果を減らす設定に従います。</p>
+        </div>
+        <div class="opt-group" data-pref="motion" role="group" aria-label="アニメーション">
+          <button type="button" data-pref-value="auto">自動</button>
+          <button type="button" data-pref-value="reduce">低減する</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-card">
+      <div class="section-head"><p class="eyebrow">DATA &amp; STORAGE</p><h2 class="t-h3">データと保存</h2></div>
+      <p class="t-small t-soft">当デモサイトがこの端末に保存しているデータの一覧です。すべてお使いのブラウザ内(localStorage)で完結し、外部への送信は行いません。</p>
+      <div id="storageInfo" class="storage-list" aria-live="polite"></div>
+      <div class="cluster" style="margin-top:18px">
+        <button class="btn btn--soft btn--sm" type="button" id="prefReset">表示設定を初期化する</button>
+        <a class="btn btn--ghost btn--sm" href="/legal/cookie/">Cookie設定・キャッシュ削除</a>
+      </div>
+      <p class="t-micro t-faint" style="margin-top:14px">※「表示設定を初期化する」は、このページの設定(フッター表示・文字サイズ・テーマ・アニメーション)のみを初期化します。カート・注文履歴・ログイン状態は削除されません。</p>
+    </div>
+
+  </div>
+</section>

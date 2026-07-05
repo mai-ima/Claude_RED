@@ -96,6 +96,56 @@
     });
   })();
 
+  /* ---------- サイト設定(この端末の表示設定 / アカウント設定とは無関係) ----------
+     新しい設定項目は PREF_SCHEMA に1行足すだけで追加できる。
+       key      … localStorage(sz_prefs)上のキー
+       default  … 初期値
+       apply    … 値を受け取り、<html>属性やクラスへ反映する関数(任意)
+     applyPrefs() が全項目を走査して反映するため、項目追加時に個別配線は不要。 */
+  var htmlEl = document.documentElement;
+  var PREF_SCHEMA = {
+    footerMode: {
+      "default": "accordion",
+      apply: function (v) { htmlEl.setAttribute("data-footer-mode", v); }
+    },
+    motion: {
+      "default": "auto",
+      apply: function (v) { htmlEl.setAttribute("data-motion", v); }
+    },
+    density: {
+      "default": "comfortable",
+      apply: function (v) { htmlEl.setAttribute("data-density", v); }
+    }
+  };
+  function getPrefs() {
+    var saved = lsGet("sz_prefs", {});
+    var out = {};
+    for (var k in PREF_SCHEMA) {
+      out[k] = Object.prototype.hasOwnProperty.call(saved, k) ? saved[k] : PREF_SCHEMA[k]["default"];
+    }
+    return out;
+  }
+  function applyPrefs() {
+    var p = getPrefs();
+    for (var k in PREF_SCHEMA) {
+      if (typeof PREF_SCHEMA[k].apply === "function") PREF_SCHEMA[k].apply(p[k]);
+    }
+    return p;
+  }
+  function setPref(key, value) {
+    if (!PREF_SCHEMA[key]) return;
+    var saved = lsGet("sz_prefs", {});
+    saved[key] = value;
+    lsSet("sz_prefs", saved);
+    applyPrefs();
+  }
+  function resetPrefs() {
+    try { localStorage.removeItem("sz_prefs"); } catch (e) { /* noop */ }
+    applyPrefs();
+  }
+  window.szPrefs = { get: getPrefs, set: setPref, apply: applyPrefs, reset: resetPrefs, schema: PREF_SCHEMA };
+  applyPrefs();
+
   /* ---------- ヘッダー ---------- */
   var header = $("#siteHeader");
   function onScroll() {
@@ -117,9 +167,11 @@
     });
   });
 
-  /* フッターのアコーディオン(スマートフォンのみ挙動、PCではCSSで常時展開) */
+  /* フッターのアコーディオン(スマートフォンのみ挙動、PCではCSSで常時展開)。
+     設定で「常時展開(expanded)」を選んだ場合はトグルを無効化する。 */
   $$(".footer-map__title").forEach(function (title) {
     title.addEventListener("click", function () {
+      if (htmlEl.getAttribute("data-footer-mode") === "expanded") return;
       if (window.matchMedia("(max-width: 640px)").matches) {
         title.parentElement.classList.toggle("is-open");
       }

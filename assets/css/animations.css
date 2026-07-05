@@ -138,6 +138,10 @@
 }
 
 /* --- reduced motion --- */
+/* アニメーション低減。次のいずれかで発火する:
+   ・OSの「視差効果を減らす」等(prefers-reduced-motion: reduce)
+   ・サイト設定ページでの「アニメーションを低減」(<html data-motion="reduce">)
+   両トリガーで同じ結果になるよう、宣言ブロックを揃えて定義する。 */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
@@ -158,4 +162,24 @@
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+:root[data-motion="reduce"] { scroll-behavior: auto; }
+
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+:root[data-motion="reduce"] .reveal,
+:root[data-motion="reduce"] .reveal-l,
+:root[data-motion="reduce"] .reveal-r,
+:root[data-motion="reduce"] .reveal-scale,
+:root[data-motion="reduce"] .reveal-stagger > *,
+:root[data-motion="reduce"] .hero-enter > * {
+  opacity: 1 !important;
+  transform: none !important;
 }

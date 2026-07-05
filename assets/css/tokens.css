@@ -1,0 +1,160 @@
+/* ==========================================================================
+   SUZAKU Design Tokens
+   単一ソースのデザイン変数。ダーク(製品/技術)とライト(企業/サポート/法務)の
+   2テーマを同一トークンから派生させる。
+   ========================================================================== */
+
+:root {
+  /* --- ブランドカラー --- */
+  --su-vermilion: #e8442e;        /* 朱 — プライマリアクセント */
+  --su-vermilion-bright: #ff5a3c; /* ホバー・グロー用 */
+  --su-vermilion-deep: #b52a18;   /* 押下・深部 */
+  --su-ember: #ff8a3d;            /* 熾火オレンジ — グラデ終点 */
+  --su-gold: #d9a441;             /* 金 — プレミアムサブアクセント */
+  --su-gold-soft: #e8c98a;
+
+  --grad-flame: linear-gradient(135deg, #e8442e 0%, #ff6a3c 55%, #ff9a4d 100%);
+  --grad-flame-v: linear-gradient(180deg, #ff6a3c 0%, #e8442e 100%);
+  --grad-gold: linear-gradient(120deg, #d9a441, #f0d9a0 50%, #d9a441 100%);
+  --grad-steel: linear-gradient(160deg, #2a2a36 0%, #15151e 60%);
+
+  /* --- ニュートラル階調 --- */
+  --n-0: #07070b;
+  --n-1: #0b0b10;
+  --n-2: #10101a;
+  --n-3: #15151e;
+  --n-4: #1d1d29;
+  --n-5: #2a2a38;
+  --n-6: #3d3d4e;
+  --n-7: #6b6b80;
+  --n-8: #9c9cb0;
+  --n-9: #c9c9d6;
+  --n-10: #ececf2;
+  --n-11: #f7f7fa;
+
+  /* --- タイポグラフィ --- */
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    "BIZ UDPGothic", Meiryo, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Noto Sans JP", "Hiragino Sans", system-ui, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --fs-hero: clamp(2.6rem, 1.2rem + 6vw, 6rem);
+  --fs-display: clamp(2.1rem, 1.1rem + 4.2vw, 4.2rem);
+  --fs-h1: clamp(1.9rem, 1.2rem + 3vw, 3.4rem);
+  --fs-h2: clamp(1.5rem, 1rem + 2.2vw, 2.6rem);
+  --fs-h3: clamp(1.2rem, 1rem + 1vw, 1.7rem);
+  --fs-h4: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
+  --fs-lead: clamp(1.05rem, 0.95rem + 0.6vw, 1.35rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
+
+  --lh-tight: 1.12;
+  --lh-heading: 1.25;
+  --lh-body: 1.85;
+
+  --ls-wide: 0.14em;
+  --ls-slight: 0.02em;
+
+  /* --- スペーシング (8pxグリッド) --- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+  --sp-section: clamp(4rem, 3rem + 6vw, 9rem);
+  --sp-section-sm: clamp(2.5rem, 2rem + 3vw, 5rem);
+
+  /* --- レイアウト --- */
+  --w-max: 1280px;
+  --w-wide: 1440px;
+  --w-narrow: 840px;
+  --w-text: 680px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --header-h: 64px;
+
+  /* --- 形状 --- */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-full: 999px;
+
+  /* --- エフェクト --- */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.5);
+  --glow-vermilion: 0 0 24px rgba(232, 68, 46, 0.35), 0 0 80px rgba(232, 68, 46, 0.12);
+  --glow-strong: 0 0 30px rgba(255, 90, 60, 0.55), 0 0 110px rgba(232, 68, 46, 0.25);
+
+  /* --- モーション --- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 0.18s;
+  --dur-mid: 0.4s;
+  --dur-slow: 0.8s;
+
+  /* --- z-index --- */
+  --z-header: 100;
+  --z-drawer: 110;
+  --z-modal: 200;
+  --z-toast: 300;
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   ダークテーマ(既定): 製品・技術・OS・ストア
+   -------------------------------------------------------------------------- */
+:root,
+[data-theme="dark"] {
+  --bg: var(--n-1);
+  --bg-deep: var(--n-0);
+  --surface: var(--n-3);
+  --surface-2: var(--n-4);
+  --surface-3: var(--n-5);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --text: var(--n-10);
+  --text-strong: #ffffff;
+  --text-soft: var(--n-8);
+  --text-faint: var(--n-7);
+  --accent: var(--su-vermilion);
+  --accent-hover: var(--su-vermilion-bright);
+  --accent-contrast: #ffffff;
+  --header-bg: rgba(11, 11, 16, 0.72);
+  --card-hover-line: rgba(232, 68, 46, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   ライトテーマ: 企業・サポート・法務・環境
+   -------------------------------------------------------------------------- */
+[data-theme="light"] {
+  --bg: #fafafc;
+  --bg-deep: #f0f0f4;
+  --surface: #ffffff;
+  --surface-2: #f4f4f8;
+  --surface-3: #ebebf1;
+  --line: rgba(10, 10, 20, 0.1);
+  --line-strong: rgba(10, 10, 20, 0.22);
+  --text: #2c2c38;
+  --text-strong: #101018;
+  --text-soft: #5c5c6e;
+  --text-faint: #85859a;
+  --accent: #d43a24;
+  --accent-hover: #e8442e;
+  --accent-contrast: #ffffff;
+  --header-bg: rgba(250, 250, 252, 0.8);
+  --card-hover-line: rgba(212, 58, 36, 0.4);
+  --shadow-sm: 0 2px 8px rgba(20, 20, 40, 0.07);
+  --shadow-md: 0 8px 30px rgba(20, 20, 40, 0.1);
+  --shadow-lg: 0 24px 70px rgba(20, 20, 40, 0.14);
+  --glow-vermilion: 0 8px 30px rgba(212, 58, 36, 0.18);
+  --glow-strong: 0 10px 36px rgba(212, 58, 36, 0.28);
+  color-scheme: light;
+}

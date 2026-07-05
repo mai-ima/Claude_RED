@@ -1,0 +1,30 @@
+<!--META {"title": "修理状況の確認", "desc": "修理の受付番号(SZR-)を入力して、診断・修理・返送の進捗状況を確認できます。", "theme": "light", "crumbs": [["サポート", "/support/"], ["修理状況の確認", null]], "group": "サポート"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">REPAIR STATUS</p>
+    <h1 class="t-h1">修理状況の確認</h1>
+    <p class="t-soft" style="max-width:600px">修理受付時に発行された受付番号(例: SZR-12345678)を入力してください。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <form id="ticketLookupForm" class="cluster" style="align-items:stretch">
+      <input class="input" id="ticketNo" placeholder="SZR-XXXXXXXX" style="flex:1;min-width:220px" required aria-label="受付番号">
+      <button class="btn btn--primary" type="submit">照会する</button>
+    </form>
+    <div id="ticketResult" aria-live="polite"></div>
+    <div class="notice" style="margin-top:32px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> デモ仕様のため、この端末(ブラウザ)で行われたお申し込みのみ照会できます。ご注文(SZ-)の照会は<a href="/store/order-status/" style="text-decoration:underline">注文状況の確認</a>をご利用ください。</div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="grid grid--3 reveal-stagger">
+      <a class="card card--hover" href="/support/repair/"><h3 class="t-h4">修理のお申し込み</h3><p class="t-small t-soft">まだの方はこちらから。</p></a>
+      <a class="card card--hover" href="/support/warranty/"><h3 class="t-h4">保証について</h3><p class="t-small t-soft">無償修理の条件を確認。</p></a>
+      <a class="card card--hover" href="/support/contact/"><h3 class="t-h4">お問い合わせ</h3><p class="t-small t-soft">進捗に関するご相談。</p></a>
+    </div>
+  </div>
+</section>

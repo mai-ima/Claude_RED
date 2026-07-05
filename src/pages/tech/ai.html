@@ -1,0 +1,60 @@
+<!--META {"title": "神楽 KAGURA — AIエンジン", "desc": "120TOPSの自社NPU「神楽」。AIフレーム生成、温度制御、演算フォトグラフィ、オンデバイスLLM。通信不要・プライバシー完結のAI。", "theme": "dark", "crumbs": [["テクノロジー", "/tech/"], ["神楽 AIエンジン", null]], "group": "テクノロジー"} -->
+
+<section class="hero hero--sub">
+  <div class="hero__bg hero__bg--glow" style="background:radial-gradient(50% 40% at 50% 70%, rgba(217,164,65,0.25), transparent 70%), var(--bg-deep)"></div>
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow eyebrow--center">AI ENGINE — v1(2023)〜 v4(2026)</p>
+    <h1 class="t-hero">神楽 <span class="grad-text-gold">KAGURA</span></h1>
+    <p class="t-lead" style="max-width:660px">舞うように、静かに、賢く。RAI SoCに統合された自社NPUは、通信を伴わないオンデバイスAIですべてを処理します。あなたのデータは、あなたの端末から出ません。</p>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="stat-row reveal-stagger" style="--stat-cols:4">
+      <div class="stat"><p class="stat__value" data-count>120<span class="unit">TOPS</span></p><p class="stat__label">v4 推論性能</p></div>
+      <div class="stat"><p class="stat__value" data-count>70<span class="unit">億</span></p><p class="stat__label">端末内実行LLMパラメータ</p></div>
+      <div class="stat"><p class="stat__value" data-count>4<span class="unit">ms</span></p><p class="stat__label">AIフレーム生成レイテンシ</p></div>
+      <div class="stat"><p class="stat__value" data-count>0<span class="unit">件</span></p><p class="stat__label">クラウド送信されるプレイ映像</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">WHAT KAGURA DOES</p><h2 class="t-h1">神楽がやっていること</h2></div>
+    <div class="grid grid--3 reveal-stagger">
+      <div class="card"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h4l2-5 4 10 2-5h4"/></svg></div><h3 class="t-h4">AIフレームブースト</h3><p class="t-small t-soft">焔GPUのレンダリング済みフレームから中間フレームを4ms以下で生成。GPU負荷そのままに体感fpsを最大2倍へ。</p></div>
+      <div class="card"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg></div><h3 class="t-h4">神楽サーマル</h3><p class="t-small t-soft">負荷の3秒先を予測して氷刃・旋風の冷却を先回り制御。発熱が体感される前に手を打ちます。</p></div>
+      <div class="card"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><h3 class="t-h4">演算フォトグラフィ</h3><p class="t-small t-soft">天眼センサーのRAWをノイズと動きに分離処理。ゼロシャッターラグとリアルタイムHDRを実現。</p></div>
+      <div class="card"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/></svg></div><h3 class="t-h4">オンデバイスLLM</h3><p class="t-small t-soft">70億パラメータの言語モデルを端末内で実行。リアルタイム翻訳・要約・攻略サジェストが圏外でも動く。</p></div>
+      <div class="card"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/></svg></div><h3 class="t-h4">プライバシー最優先</h3><p class="t-small t-soft">画面解析・音声処理はすべて端末内で完結。神楽が扱うデータは外部サーバーに送信されません。</p></div>
+      <div class="card"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg></div><h3 class="t-h4">開発者に開放</h3><p class="t-small t-soft">KAGURA Runtime SDKで、ゲーム・アプリから推論性能を直接利用できます。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow reveal">
+    <h3 class="spec-group-title">世代一覧</h3>
+    <div class="scroll-x"><table class="spec-table"><tbody>
+      <tr><th scope="row">神楽 v1(2023)</th><td>20TOPS — RAI-G1統合。ゲームモード学習・電力最適化。</td></tr>
+      <tr><th scope="row">神楽 v2(2024)</th><td>45TOPS — 神楽サーマル初搭載。天眼RS-1の撮影処理。</td></tr>
+      <tr><th scope="row">神楽 v3(2025)</th><td>75TOPS — AI攻略サジェスト。INT4量子化対応。</td></tr>
+      <tr><th scope="row">神楽 v4(2026)</th><td>120TOPS — AIフレーム生成。70億パラメータLLMの端末内実行。FP8ネイティブ。</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="card card--flame t-center reveal" style="padding:clamp(40px,6vw,72px)">
+      <h2 class="t-h2">神楽は、雷の中にいる。</h2>
+      <p class="t-soft" style="max-width:560px;margin-inline:auto">神楽NPUはすべてのRAI SoCに統合されています。世代ごとの詳細はCPUページへ。</p>
+      <div class="cluster cluster--center" style="margin-top:12px">
+        <a class="btn btn--primary" href="/tech/cpu/rai-g4/">雷 RAI-G4 を見る</a>
+        <a class="btn btn--ghost" href="/developers/">開発者向けSDK</a>
+      </div>
+    </div>
+  </div>
+</section>

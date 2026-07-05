@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>焔 HOMURA-X1 — 最初の焔。 | SUZAKU(朱雀)</title>
+<meta name="description" content="RAI-G1に統合された初代自社GPU。ゲーム実測性能を最優先した設計思想はここから。">
+<meta property="og:title" content="焔 HOMURA-X1 — 最初の焔。 | SUZAKU(朱雀)">
+<meta property="og:description" content="RAI-G1に統合された初代自社GPU。ゲーム実測性能を最優先した設計思想はここから。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SUZAKU(朱雀)">
+<meta name="theme-color" content="#0b0b10">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/animations.css">
+</head>
+<body class="page-tech-gpu-homura-x1">
+
+<a class="skip-link" href="#main">本文へスキップ</a>
+<header class="site-header" id="siteHeader">
+  <div class="site-header__inner">
+    <a class="brand" href="/" aria-label="SUZAKU ホーム"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path class="brand-mark__flame" d="M24 4 C21 16 10 21 10 31 a14 14 0 0 0 28 0 C38 21 27 16 24 4 Z" stroke="url(#bm-g)" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="24" cy="33" r="4.2" fill="#e8442e"/>
+<defs><linearGradient id="bm-g" x1="10" y1="4" x2="38" y2="45"><stop stop-color="#ff6a3c"/><stop offset="1" stop-color="#e8442e"/></linearGradient></defs>
+</svg><span>SUZAKU</span></a>
+    <nav class="gnav" aria-label="グローバルナビゲーション">
+      <div class="gnav__item"><a class="gnav__link" href="/products/">製品</a>
+<div class="mega" style="--mega-cols:4">
+  <div class="mega__inner">
+    <div>
+      <p class="mega__group-title">スマートフォン</p>
+      <ul class="mega__list">
+        <li><a href="/products/phone/suzaku-4/"><strong>SUZAKU 4</strong><small>ゲーミングフラッグシップ</small></a></li>
+        <li><a href="/products/phone/suzaku-3/">SUZAKU 3<small>ゲーミングフラッグシップ</small></a></li>
+        <li><a href="/products/phone/neo-3/">SUZAKU Neo 3<small>ゲーミングスタンダード</small></a></li>
+        <li><a href="/products/phone/tsubame-3/">TSUBAME 3<small>スタンダード</small></a></li>
+        <li><a href="/products/phone/tsubame-lite-2/">TSUBAME Lite 2<small>エントリー</small></a></li>
+        <li><a href="/products/phone/">すべてのスマートフォン</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">タブレット</p>
+      <ul class="mega__list">
+        <li><a href="/products/tablet/pad-2/"><strong>SUZAKU Pad 2</strong><small>ゲーミング</small></a></li>
+        <li><a href="/products/tablet/pad-neo/">SUZAKU Pad Neo<small>ゲーミング</small></a></li>
+        <li><a href="/products/tablet/t-pad-2/">TSUBAME Pad 2<small>スタンダード</small></a></li>
+        <li><a href="/products/tablet/t-pad-lite/">TSUBAME Pad Lite<small>エントリー</small></a></li>
+        <li><a href="/products/tablet/">すべてのタブレット</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">アクセサリ</p>
+      <ul class="mega__list">
+        <li><a href="/products/accessories/hyoran-cooler/">氷嵐クーラー 2</a></li>
+        <li><a href="/products/accessories/grip-pro/">SUZAKU Grip Pro</a></li>
+        <li><a href="/products/accessories/buds/">SUZAKU Buds</a></li>
+        <li><a href="/products/accessories/raisoku-charger/">雷速チャージャー 120W</a></li>
+        <li><a href="/products/accessories/">すべてのアクセサリ</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">ショッピング</p>
+      <ul class="mega__list">
+        <li><a href="/store/">SUZAKU ストア</a></li>
+        <li><a href="/products/compare/">製品を比較する</a></li>
+        <li><a href="/store/guide/">購入ガイド</a></li>
+        <li><a href="/store/order-status/">注文状況の確認</a></li>
+        <li><a href="/store/cart/">カートを見る</a></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+      <div class="gnav__item"><a class="gnav__link" href="/tech/">テクノロジー</a>
+<div class="mega" style="--mega-cols:4">
+  <div class="mega__inner">
+    <div>
+      <p class="mega__group-title">自社シリコン</p>
+      <ul class="mega__list">
+        <li><a href="/tech/cpu/">雷 RAI<small>CPU / SoC</small></a></li>
+        <li><a href="/tech/gpu/">焔 HOMURA<small>GPU</small></a></li>
+        <li><a href="/tech/memory/">疾風 HAYATE<small>メモリ</small></a></li>
+        <li><a href="/tech/storage/">瞬 SHUN<small>ストレージ</small></a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">冷却技術</p>
+      <ul class="mega__list">
+        <li><a href="/tech/cooling/hyojin/">氷刃<small>ベイパーチャンバー</small></a></li>
+        <li><a href="/tech/cooling/senpu/">旋風<small>内蔵アクティブファン</small></a></li>
+        <li><a href="/tech/cooling/ekien/">液焔<small>リキッドメタル</small></a></li>
+        <li><a href="/tech/cooling/suiryu/">水龍<small>能動液冷(次世代)</small></a></li>
+        <li><a href="/tech/cooling/">冷却技術のすべて</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">イメージング & AI</p>
+      <ul class="mega__list">
+        <li><a href="/tech/camera/">天眼 TENGAN<small>カメラシステム</small></a></li>
+        <li><a href="/tech/ai/">神楽 KAGURA<small>AIエンジン</small></a></li>
+        <li><a href="/tech/display/">燐光 RINKO<small>ディスプレイ</small></a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">ソフトウェア</p>
+      <ul class="mega__list">
+        <li><a href="/os/v4/">SUZAKU OS 4.0<small>最新バージョン「不知火」</small></a></li>
+        <li><a href="/os/game-space/">ゲームスペース「陣」</a></li>
+        <li><a href="/os/">SUZAKU OS トップ</a></li>
+        <li><a href="/tech/">テクノロジー トップ</a></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+      <div class="gnav__item"><a class="gnav__link" href="/os/">OS</a></div>
+      <div class="gnav__item"><a class="gnav__link" href="/store/">ストア</a></div>
+      <div class="gnav__item"><a class="gnav__link" href="/support/">サポート</a></div>
+      <div class="gnav__item"><a class="gnav__link" href="/company/">企業情報</a>
+<div class="mega" style="--mega-cols:3">
+  <div class="mega__inner">
+    <div>
+      <p class="mega__group-title">企業情報</p>
+      <ul class="mega__list">
+        <li><a href="/company/">会社概要</a></li>
+        <li><a href="/company/history/">沿革 — SUZAKUの歴史</a></li>
+        <li><a href="/news/">ニュースルーム</a></li>
+        <li><a href="/company/careers/">採用情報</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">取り組み</p>
+      <ul class="mega__list">
+        <li><a href="/sustainability/">環境への取り組み</a></li>
+        <li><a href="/sustainability/recycle/">回収・リサイクル</a></li>
+        <li><a href="/legal/accessibility/">アクセシビリティ</a></li>
+        <li><a href="/legal/">法的情報</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="mega__group-title">パートナー</p>
+      <ul class="mega__list">
+        <li><a href="/business/">法人のお客様</a></li>
+        <li><a href="/business/solutions/">法人向けソリューション</a></li>
+        <li><a href="/developers/">開発者向け</a></li>
+        <li><a href="/developers/docs/">開発者ドキュメント</a></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-btn" href="/search/" aria-label="検索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
+      <a class="icon-btn" href="/store/cart/" aria-label="カート"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h13l-1.5 9h-10z"/><path d="M6 7L5 4H2.5"/><circle cx="9" cy="20" r="1.6"/><circle cx="16" cy="20" r="1.6"/></svg><span class="cart-badge" id="cartBadge"></span></a>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+<nav class="drawer" id="drawer" aria-label="モバイルナビゲーション">
+  <div class="drawer__group">
+    <button class="drawer__summary">製品</button>
+    <div class="drawer__panel"><div class="drawer__panel-inner">
+      <p class="drawer__sub">スマートフォン</p>
+      <a href="/products/phone/suzaku-4/">SUZAKU 4</a>
+      <a href="/products/phone/neo-3/">SUZAKU Neo 3</a>
+      <a href="/products/phone/tsubame-3/">TSUBAME 3</a>
+      <a href="/products/phone/tsubame-lite-2/">TSUBAME Lite 2</a>
+      <a href="/products/phone/">すべてのスマートフォン</a>
+      <p class="drawer__sub">タブレット</p>
+      <a href="/products/tablet/pad-2/">SUZAKU Pad 2</a>
+      <a href="/products/tablet/">すべてのタブレット</a>
+      <p class="drawer__sub">アクセサリ・ツール</p>
+      <a href="/products/accessories/">すべてのアクセサリ</a>
+      <a href="/products/compare/">製品を比較する</a>
+    </div></div>
+  </div>
+  <div class="drawer__group">
+    <button class="drawer__summary">テクノロジー</button>
+    <div class="drawer__panel"><div class="drawer__panel-inner">
+      <a href="/tech/">テクノロジー トップ</a>
+      <a href="/tech/cpu/">雷 RAI(CPU)</a>
+      <a href="/tech/gpu/">焔 HOMURA(GPU)</a>
+      <a href="/tech/memory/">疾風 HAYATE(メモリ)</a>
+      <a href="/tech/storage/">瞬 SHUN(ストレージ)</a>
+      <a href="/tech/cooling/">冷却技術</a>
+      <a href="/tech/camera/">天眼 カメラ</a>
+      <a href="/tech/ai/">神楽 AIエンジン</a>
+      <a href="/tech/display/">燐光 ディスプレイ</a>
+    </div></div>
+  </div>
+  <div class="drawer__group">
+    <button class="drawer__summary">SUZAKU OS</button>
+    <div class="drawer__panel"><div class="drawer__panel-inner">
+      <a href="/os/">SUZAKU OS トップ</a>
+      <a href="/os/v4/">SUZAKU OS 4.0「不知火」</a>
+      <a href="/os/game-space/">ゲームスペース「陣」</a>
+    </div></div>
+  </div>
+  <a class="drawer__direct" href="/store/">ストア</a>
+  <a class="drawer__direct" href="/support/">サポート</a>
+  <div class="drawer__group">
+    <button class="drawer__summary">企業情報</button>
+    <div class="drawer__panel"><div class="drawer__panel-inner">
+      <a href="/company/">会社概要</a>
+      <a href="/company/history/">沿革</a>
+      <a href="/news/">ニュースルーム</a>
+      <a href="/company/careers/">採用情報</a>
+      <a href="/sustainability/">環境への取り組み</a>
+      <a href="/business/">法人のお客様</a>
+      <a href="/developers/">開発者向け</a>
+    </div></div>
+  </div>
+  <a class="drawer__direct" href="/search/">検索</a>
+</nav>
+<nav class="breadcrumb" aria-label="パンくずリスト"><div class="container container--wide"><ol><li><a href="/">ホーム</a></li><li><a href="/tech/">テクノロジー</a></li><li><a href="/tech/gpu/">焔 HOMURA</a></li><li><span aria-current="page">焔 HOMURA-X1</span></li></ol></div></nav>
+<main id="main">
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">GPU — 2023年5月1日 発表</p>
+    <h1 class="t-display">焔 HOMURA-X1</h1>
+    <p class="t-lead" style="max-width:680px">最初の焔。</p>
+    <p class="t-soft t-small" style="max-width:680px">RAI-G1に統合された初代自社GPU。ゲーム実測性能を最優先した設計思想はここから。</p>
+  </div>
+</section>
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="doc-layout">
+      <aside class="doc-side">
+        <p class="doc-side__title">このページの内容</p>
+        <a href="#overview">概要と主要数値</a><a href="#bench">ベンチマーク・世代比較</a><a href="#sec-0">ベンチマークより、実ゲーム。</a><a href="#spec">仕様</a><a href="#products">搭載製品</a>
+        <p class="doc-side__title">焔 HOMURA の他の世代</p>
+        <a href="/tech/gpu/homura-x4/">焔 HOMURA-X4<small style="color:var(--text-faint)">(2026)</small></a><a href="/tech/gpu/homura-x3/">焔 HOMURA-X3<small style="color:var(--text-faint)">(2025)</small></a><a href="/tech/gpu/homura-x2/">焔 HOMURA-X2<small style="color:var(--text-faint)">(2024)</small></a>
+        <p class="doc-side__title">シリーズ</p>
+        <a href="/tech/gpu/">焔 HOMURA トップ</a>
+        <a href="/tech/">テクノロジー トップ</a>
+      </aside>
+      <div class="stack" style="gap:var(--sp-8)">
+        <div id="overview" style="scroll-margin-top:90px" class="stack stack--lg">
+          <div class="chip-visual reveal-scale" style="max-width:520px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="HOMURA-X1">
+<defs>
+<linearGradient id="pcbhomurax1" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#15151e"/><stop offset="1" stop-color="#0b0b10"/>
+</linearGradient>
+<radialGradient id="corehomurax1" cx="0.5" cy="0.5" r="0.7">
+  <stop offset="0" stop-color="#ff8a3d" stop-opacity="0.85"/>
+  <stop offset="0.65" stop-color="#ff8a3d" stop-opacity="0.2"/>
+  <stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect x="30" y="30" width="420" height="420" rx="26" fill="url(#pcbhomurax1)" stroke="#ff8a3d" stroke-opacity="0.4" stroke-width="1.5"/>
+<line x1="60" y1="30" x2="60" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="100" y1="30" x2="100" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="140" y1="30" x2="140" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="180" y1="30" x2="180" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="220" y1="30" x2="220" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="260" y1="30" x2="260" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="300" y1="30" x2="300" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="340" y1="30" x2="340" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="380" y1="30" x2="380" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="420" y1="30" x2="420" y2="14" stroke="#3d3d4e" stroke-width="5"/>
+<line x1="60" y1="450" x2="60" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="100" y1="450" x2="100" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="140" y1="450" x2="140" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="180" y1="450" x2="180" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="220" y1="450" x2="220" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="260" y1="450" x2="260" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="300" y1="450" x2="300" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="340" y1="450" x2="340" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="380" y1="450" x2="380" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="420" y1="450" x2="420" y2="466" stroke="#3d3d4e" stroke-width="5"/>
+<line x1="30" y1="60" x2="14" y2="60" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="100" x2="14" y2="100" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="140" x2="14" y2="140" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="180" x2="14" y2="180" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="220" x2="14" y2="220" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="260" x2="14" y2="260" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="300" x2="14" y2="300" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="340" x2="14" y2="340" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="380" x2="14" y2="380" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="420" x2="14" y2="420" stroke="#3d3d4e" stroke-width="5"/>
+<line x1="450" y1="60" x2="466" y2="60" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="100" x2="466" y2="100" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="140" x2="466" y2="140" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="180" x2="466" y2="180" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="220" x2="466" y2="220" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="260" x2="466" y2="260" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="300" x2="466" y2="300" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="340" x2="466" y2="340" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="380" x2="466" y2="380" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="420" x2="466" y2="420" stroke="#3d3d4e" stroke-width="5"/>
+<rect x="86" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.40"/><rect x="132" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.21"/><rect x="178" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.16"/><rect x="224" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.31"/><rect x="270" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.39"/><rect x="316" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.27"/><rect x="86" y="132" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.19"/><rect x="316" y="132" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.21"/><rect x="86" y="178" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.21"/><rect x="316" y="178" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.44"/><rect x="86" y="224" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.42"/><rect x="316" y="224" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.23"/><rect x="86" y="270" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.43"/><rect x="316" y="270" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.35"/><rect x="86" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.17"/><rect x="132" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.24"/><rect x="178" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.19"/><rect x="224" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.33"/><rect x="270" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.22"/><rect x="316" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.31"/>
+<rect x="132" y="132" width="216" height="216" rx="10" fill="#0a0a10" stroke="#ff8a3d" stroke-opacity="0.8" stroke-width="2"/>
+<circle cx="240" cy="240" r="130" fill="url(#corehomurax1)"/>
+<path d="M240 168 c-9 37 -46 53 -46 92 a46 46 0 0 0 92 0 c0 -39 -37 -55 -46 -92z" fill="none" stroke="#ff8a3d" stroke-width="5" stroke-linejoin="round"/>
+<text x="240" y="298" font-family="'Noto Sans JP',sans-serif" font-size="26" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="3">HOMURA-X1</text>
+<text x="240" y="322" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">SUZAKU GPU / 2023</text>
+</svg></div>
+          <div class="stat-row reveal-stagger" style="--stat-cols:4"><div class="stat"><p class="stat__value" data-count>512<span class="unit">ALU</span></p><p class="stat__label">シェーダーコア</p></div><div class="stat"><p class="stat__value" data-count>1.0<span class="unit">TFLOPS</span></p><p class="stat__label">理論性能</p></div><div class="stat"><p class="stat__value" data-count>144<span class="unit">fps</span></p><p class="stat__label">主要タイトル実測(当時)</p></div><div class="stat"><p class="stat__value" data-count>第1<span class="unit">世代</span></p><p class="stat__label">焔アーキテクチャ</p></div></div>
+        </div>
+        <div id="bench" style="scroll-margin-top:90px" class="chart-grid"><figure class="chart reveal" data-chart='{"type": "bar", "title": "焔シリーズ — 理論演算性能の世代比較", "unit": "TFLOPS", "labels": ["焔 HOMURA-X1(2023)", "焔 HOMURA-X2(2024)", "焔 HOMURA-X3(2025)", "焔 HOMURA-X4(2026)"], "values": [1.0, 1.6, 2.3, 3.4], "highlight": 0}'></figure></div>
+        
+<div class="feature-split" id="sec-0" style="scroll-margin-top:90px">
+  <div class="feature-split__media reveal-scale"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label=""><defs>
+<radialGradient id="ag" cx="0.5" cy="0.4" r="0.8">
+  <stop offset="0" stop-color="#ff8a3d" stop-opacity="0.75"/>
+  <stop offset="0.55" stop-color="#ff8a3d" stop-opacity="0.18"/>
+  <stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="al" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#ff8a3d" stop-opacity="0"/>
+  <stop offset="0.5" stop-color="#ff8a3d"/>
+  <stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<rect width="480" height="360" fill="#0b0b10"/>
+<ellipse cx="240" cy="170" rx="220" ry="140" fill="url(#ag)"/><rect x="138" y="100" width="216" height="160" rx="14" fill="#10101a" stroke="#ff8a3d" stroke-width="2"/><rect x="150" y="112" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.25"/><rect x="184" y="112" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.43"/><rect x="218" y="112" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.61"/><rect x="252" y="112" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.79"/><rect x="286" y="112" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.37"/><rect x="320" y="112" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.55"/><rect x="150" y="146" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.55"/><rect x="184" y="146" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.73"/><rect x="218" y="146" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.31"/><rect x="252" y="146" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.49"/><rect x="286" y="146" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.67"/><rect x="320" y="146" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.25"/><rect x="150" y="180" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.25"/><rect x="184" y="180" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.43"/><rect x="218" y="180" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.61"/><rect x="252" y="180" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.79"/><rect x="286" y="180" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.37"/><rect x="320" y="180" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.55"/><rect x="150" y="214" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.55"/><rect x="184" y="214" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.73"/><rect x="218" y="214" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.31"/><rect x="252" y="214" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.49"/><rect x="286" y="214" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.67"/><rect x="320" y="214" width="26" height="26" rx="4" fill="#ff8a3d" opacity="0.25"/>
+<path d="M60 300 L420 300" stroke="url(#al)" stroke-width="2"/></svg></div>
+  <div class="stack reveal">
+    <p class="eyebrow">ORIGIN</p>
+    <h2 class="t-h3">ベンチマークより、実ゲーム。</h2>
+    <p class="t-soft t-small">初代焔の開発目標は「人気タイトル実測でのfpsと電力」のみ。ベンチ番長にならないGPUという思想は、いまも全世代に息づいています。</p>
+    <ul class="check-list"><li>512 ALU</li><li>国産タイトル最適化ドライバ</li><li>OpenGL ES / Vulkan対応</li></ul>
+    
+  </div>
+</div>
+        <div id="spec" style="scroll-margin-top:90px" class="reveal"><h3 class="spec-group-title">構成</h3><div class="scroll-x"><table class="spec-table"><tbody><tr><th scope="row">ALU</th><td>512基 / 最大0.9GHz</td></tr><tr><th scope="row">理論性能</th><td>1.0 TFLOPS</td></tr></tbody></table></div></div>
+        
+<div id="products" style="scroll-margin-top:90px">
+  <h2 class="t-h3" style="margin-bottom:18px">焔 HOMURA-X1 搭載製品</h2>
+  <div class="grid grid--3 reveal-stagger"><a class="product-card" href="/products/phone/suzaku-one/">
+  <div class="product-card__media"><img src="/assets/img/products/suzaku-one-0.svg" alt="SUZAKU One" loading="lazy" width="360" height="640"></div>
+  <div class="product-card__body">
+    <p class="product-card__tag">ゲーミングフラッグシップ / 2023</p>
+    <p class="product-card__name">SUZAKU One <span class="badge badge--end">販売終了</span></p>
+    <p class="product-card__copy">はじまりの朱。</p>
+    <p class="product-card__price t-faint">販売終了モデル</p>
+  </div>
+</a><a class="product-card" href="/products/phone/neo/">
+  <div class="product-card__media"><img src="/assets/img/products/neo-0.svg" alt="SUZAKU Neo" loading="lazy" width="360" height="640"></div>
+  <div class="product-card__body">
+    <p class="product-card__tag">ゲーミングスタンダード / 2024</p>
+    <p class="product-card__name">SUZAKU Neo <span class="badge badge--end">販売終了</span></p>
+    <p class="product-card__copy">ゲーミングを、ぜんぶの人に。</p>
+    <p class="product-card__price t-faint">販売終了モデル</p>
+  </div>
+</a></div>
+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="card card--flame t-center reveal" style="padding:clamp(40px,6vw,72px)">
+      <h2 class="t-h2">技術は、体験のためにある。</h2>
+      <p class="t-soft" style="max-width:560px;margin-inline:auto">SUZAKUの全技術は、製品の上ではじめて意味を持ちます。搭載製品をストアでご覧ください。</p>
+      <div class="cluster cluster--center" style="margin-top:12px"><a class="btn btn--primary" href="/store/">ストアで見る</a><a class="btn btn--ghost" href="/tech/">テクノロジー トップ</a></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-map"><div><p class="footer-map__title">製品とストア</p><ul><li><a href="/products/phone/suzaku-4/">SUZAKU 4</a></li><li><a href="/products/phone/neo-3/">SUZAKU Neo 3</a></li><li><a href="/products/phone/tsubame-3/">TSUBAME 3</a></li><li><a href="/products/tablet/pad-2/">SUZAKU Pad 2</a></li><li><a href="/products/accessories/">アクセサリ</a></li><li><a href="/store/">SUZAKU ストア</a></li><li><a href="/products/compare/">製品を比較する</a></li><li><a href="/store/guide/">購入ガイド</a></li></ul></div><div><p class="footer-map__title">テクノロジー</p><ul><li><a href="/tech/cpu/">雷 RAI(CPU)</a></li><li><a href="/tech/gpu/">焔 HOMURA(GPU)</a></li><li><a href="/tech/memory/">疾風 HAYATE(メモリ)</a></li><li><a href="/tech/storage/">瞬 SHUN(ストレージ)</a></li><li><a href="/tech/cooling/">冷却技術</a></li><li><a href="/tech/camera/">天眼 カメラ</a></li><li><a href="/os/">SUZAKU OS</a></li></ul></div><div><p class="footer-map__title">サポート</p><ul><li><a href="/support/">サポートトップ</a></li><li><a href="/support/faq/">よくあるご質問</a></li><li><a href="/support/repair/">修理のお申し込み</a></li><li><a href="/support/status/">修理状況の確認</a></li><li><a href="/support/warranty/">保証について</a></li><li><a href="/support/downloads/">ダウンロード</a></li><li><a href="/support/contact/">お問い合わせ</a></li><li><a href="/store/order-status/">注文状況の確認</a></li></ul></div><div><p class="footer-map__title">SUZAKUについて</p><ul><li><a href="/company/">会社概要</a></li><li><a href="/company/history/">沿革</a></li><li><a href="/news/">ニュースルーム</a></li><li><a href="/company/careers/">採用情報</a></li><li><a href="/sustainability/">環境への取り組み</a></li><li><a href="/sustainability/recycle/">回収・リサイクル</a></li></ul></div><div><p class="footer-map__title">法人・開発者</p><ul><li><a href="/business/">法人のお客様</a></li><li><a href="/business/solutions/">法人向けソリューション</a></li><li><a href="/business/cases/">導入事例</a></li><li><a href="/business/contact/">法人お問い合わせ</a></li><li><a href="/developers/">開発者向け</a></li><li><a href="/developers/docs/">ドキュメント</a></li><li><a href="/developers/sdk/">SDKダウンロード</a></li></ul></div></div>
+    <div class="site-footer__legal">
+      <p>本サイトは、架空の企業「株式会社朱雀(SUZAKU Inc.)」のデモンストレーションサイトです。掲載されている製品・価格・技術・サービスはすべてフィクションであり、実在の商品・役務の販売を行うものではありません。</p>
+      <div class="site-footer__legal-links"><a href="/legal/privacy/">プライバシーポリシー</a><a href="/legal/cookie/">Cookieポリシー</a><a href="/legal/external-transmission/">外部送信ポリシー</a><a href="/legal/terms/">利用規約</a><a href="/legal/sales/">販売条件</a><a href="/legal/tokushoho/">特定商取引法に基づく表記</a><a href="/legal/warranty-policy/">保証規定</a><a href="/legal/accessibility/">アクセシビリティ</a><a href="/legal/ip/">知的財産</a><a href="/legal/">法的情報</a><button type="button" class="cookie-settings-link" id="cookieSettingsBtn">Cookie設定</button></div>
+      <div class="spread">
+        <p>Copyright © 2022-2026 SUZAKU Inc. All rights reserved.</p>
+        <p>日本 — 東京都千代田区外神田(秋葉原)</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookieの利用について">
+  <p class="cookie-banner__title"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="0.5"/><circle cx="14.5" cy="14" r="0.5"/><circle cx="13" cy="8.5" r="0.5"/><circle cx="9.5" cy="15" r="0.5"/><circle cx="15" cy="10.5" r="0.5"/></svg> Cookieの利用について</p>
+  <p>当サイトは、サイトの基本機能に必要なCookie等に加え、利便性向上・利用状況分析のためにCookieおよび類似技術を使用します。詳細は<a href="/legal/cookie/">Cookieポリシー</a>および<a href="/legal/external-transmission/">外部送信ポリシー</a>をご覧ください。「設定」からカテゴリごとに選択できます。</p>
+  <div class="cluster">
+    <button class="btn btn--primary btn--sm" id="consentAcceptAll">すべて同意する</button>
+    <button class="btn btn--ghost btn--sm" id="consentRejectAll">必須のみ許可</button>
+    <button class="btn btn--soft btn--sm" id="consentOpenSettings">設定</button>
+  </div>
+</div>
+<div class="modal-backdrop" id="consentModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="consentModalTitle">
+    <div class="stack">
+      <h2 class="t-h3" id="consentModalTitle">Cookie設定</h2>
+      <p class="t-small t-soft">カテゴリごとにCookie等の利用可否を選択できます。選択内容はこの端末に保存され、<a href="/legal/cookie/" style="color:var(--accent);text-decoration:underline">Cookieポリシー</a>のページからいつでも変更できます。</p>
+    </div>
+    <div>
+      <div class="consent-row">
+        <div><p class="consent-row__title">必須Cookie</p><p>カート、ログイン状態、Cookie同意の記録など、サイトの動作に不可欠なもの。無効にできません。</p></div>
+        <label class="switch"><input type="checkbox" checked disabled><span class="switch__track"></span></label>
+      </div>
+      <div class="consent-row">
+        <div><p class="consent-row__title">分析Cookie</p><p>ページの利用状況を統計的に把握し、サイト改善に役立てます(アクセス解析)。</p></div>
+        <label class="switch"><input type="checkbox" id="consentAnalytics"><span class="switch__track"></span></label>
+      </div>
+      <div class="consent-row">
+        <div><p class="consent-row__title">マーケティングCookie</p><p>興味・関心に基づく情報提供や、広告効果の測定に使用します。</p></div>
+        <label class="switch"><input type="checkbox" id="consentMarketing"><span class="switch__track"></span></label>
+      </div>
+    </div>
+    <div class="cluster">
+      <button class="btn btn--primary" id="consentSave">選択を保存</button>
+      <button class="btn btn--ghost" id="consentModalClose">閉じる</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/data/products.js" defer></script>
+<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/charts.js" defer></script>
+<script src="/assets/js/store.js" defer></script>
+<script src="/assets/js/pages.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!--META {"title": "ご注文手続き", "desc": "SUZAKUストアのチェックアウト。お客様情報、配送方法、お支払い方法を入力して注文を確定します。", "theme": "dark", "crumbs": [["ストア", "/store/"], ["カート", "/store/cart/"], ["ご注文手続き", null]], "group": "ストア"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">CHECKOUT</p>
+    <h1 class="t-h1">ご注文手続き</h1>
+    <p class="t-small t-faint"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> SSL/TLSで暗号化された安全な接続(デモ環境のため実際の決済は行われません)</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow" id="checkout">
+    <ol class="steps" id="checkoutSteps" style="margin-bottom:40px">
+      <li class="is-current">お客様情報</li>
+      <li>配送方法</li>
+      <li>お支払い</li>
+      <li>ご確認</li>
+      <li>完了</li>
+    </ol>
+
+    <!-- STEP 1: お客様情報 -->
+    <div class="checkout-panel is-active">
+      <h2 class="t-h3">お客様情報の入力</h2>
+      <div class="field"><label for="coName">お名前 <span class="req">必須</span></label>
+        <input class="input" id="coName" required autocomplete="name" placeholder="朱雀 太郎">
+        <p class="field__error">入力してください</p></div>
+      <div class="field"><label for="coPostal">郵便番号 <span class="req">必須</span></label>
+        <input class="input" id="coPostal" required data-kind="postal" inputmode="numeric" autocomplete="postal-code" placeholder="101-0021" style="max-width:220px">
+        <p class="field__error">郵便番号の形式が正しくありません</p></div>
+      <div class="field"><label for="coAddress">ご住所 <span class="req">必須</span></label>
+        <input class="input" id="coAddress" required autocomplete="street-address" placeholder="東京都千代田区外神田1-2-3 朱雀ビル 4F">
+        <p class="field__error">入力してください</p></div>
+      <div class="field"><label for="coTel">電話番号 <span class="req">必須</span></label>
+        <input class="input" id="coTel" required data-kind="tel" inputmode="tel" autocomplete="tel" placeholder="09012345678" style="max-width:280px">
+        <p class="field__error">電話番号の形式が正しくありません</p></div>
+      <div class="field"><label for="coEmail">メールアドレス <span class="req">必須</span></label>
+        <input class="input" id="coEmail" type="email" required autocomplete="email" placeholder="taro@example.com">
+        <p class="field__error">メールアドレスの形式が正しくありません</p>
+        <p class="field__hint">ご注文確認メール(デモでは送信されません)の宛先になります。</p></div>
+      <div class="cluster" style="justify-content:flex-end">
+        <button class="btn btn--primary btn--lg" data-step-next>配送方法へ進む</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: 配送 -->
+    <div class="checkout-panel">
+      <h2 class="t-h3">配送方法の選択</h2>
+      <div class="choice-grid">
+        <label class="choice"><input type="radio" name="shipMethod" value="通常配送(無料)" checked><span class="choice__radio"></span>
+          <span class="choice__body"><span class="choice__title">通常配送</span><span class="choice__desc">2〜3営業日でお届け / 税込5,000円以上は無料</span></span>
+          <span class="choice__price">¥0〜</span></label>
+        <label class="choice"><input type="radio" name="shipMethod" value="お急ぎ便(+¥770)"><span class="choice__radio"></span>
+          <span class="choice__body"><span class="choice__title">お急ぎ便</span><span class="choice__desc">最短翌日お届け(一部地域を除く)</span></span>
+          <span class="choice__price">+¥770</span></label>
+        <label class="choice"><input type="radio" name="shipMethod" value="店舗受け取り(秋葉原・無料)"><span class="choice__radio"></span>
+          <span class="choice__body"><span class="choice__title">店舗受け取り</span><span class="choice__desc">SUZAKU 秋葉原サービスセンターで受け取り</span></span>
+          <span class="choice__price">無料</span></label>
+      </div>
+      <div class="grid grid--2">
+        <div class="field"><label for="shipDate">お届け希望日</label>
+          <select class="select" id="shipDate"><option value="">指定なし(最短)</option></select></div>
+        <div class="field"><label for="shipTime">お届け時間帯</label>
+          <select class="select" id="shipTime">
+            <option>指定なし</option><option>午前中(8-12時)</option><option>14-16時</option><option>16-18時</option><option>18-20時</option><option>19-21時</option>
+          </select></div>
+      </div>
+      <div class="spread">
+        <button class="btn btn--ghost" data-step-back>戻る</button>
+        <button class="btn btn--primary btn--lg" data-step-next>お支払いへ進む</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: 支払い -->
+    <div class="checkout-panel">
+      <h2 class="t-h3">お支払い方法の選択</h2>
+      <div class="choice-grid">
+        <label class="choice"><input type="radio" name="payMethod" value="card" checked><span class="choice__radio"></span>
+          <span class="choice__body"><span class="choice__title">クレジットカード</span><span class="choice__desc">Visa / Mastercard / JCB / AMEX — 分割払い対応</span></span></label>
+        <label class="choice"><input type="radio" name="payMethod" value="cvs"><span class="choice__radio"></span>
+          <span class="choice__body"><span class="choice__title">コンビニ払い</span><span class="choice__desc">ご注文後に払込番号を発行。お支払い確認後に出荷します</span></span></label>
+        <label class="choice"><input type="radio" name="payMethod" value="cod"><span class="choice__radio"></span>
+          <span class="choice__body"><span class="choice__title">代金引換</span><span class="choice__desc">商品お届け時に配達員へお支払い(手数料 ¥330)</span></span></label>
+      </div>
+      <div class="stack" id="cardFields">
+        <div class="field"><label for="ccNumber">カード番号 <span class="req">必須</span></label>
+          <input class="input" id="ccNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242">
+          <p class="field__error">カード番号が正しくありません</p>
+          <p class="field__hint">デモ用テスト番号: 4242 4242 4242 4242</p></div>
+        <div class="grid grid--2">
+          <div class="field"><label for="ccExpiry">有効期限(MM/YY)<span class="req">必須</span></label>
+            <input class="input" id="ccExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="12/28">
+            <p class="field__error">有効期限が正しくありません</p></div>
+          <div class="field"><label for="ccCvv">セキュリティコード <span class="req">必須</span></label>
+            <input class="input" id="ccCvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+            <p class="field__error">3〜4桁で入力してください</p></div>
+        </div>
+        <div class="field"><label for="ccName">カード名義(ローマ字)<span class="req">必須</span></label>
+          <input class="input" id="ccName" autocomplete="cc-name" placeholder="TARO SUZAKU">
+          <p class="field__error">入力してください</p></div>
+        <div class="field" id="installmentBox"><label for="installments">お支払い回数</label>
+          <select class="select" id="installments" style="max-width:280px">
+            <option value="1">一括払い</option><option value="3">3回分割</option><option value="6">6回分割</option><option value="12">12回分割</option><option value="24">24回分割</option>
+          </select></div>
+      </div>
+      <div class="spread">
+        <button class="btn btn--ghost" data-step-back>戻る</button>
+        <button class="btn btn--primary btn--lg" data-step-next>注文内容の確認へ</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: 確認 -->
+    <div class="checkout-panel">
+      <h2 class="t-h3">ご注文内容の確認</h2>
+      <div class="summary-box" id="confirmBox"></div>
+      <label class="choice" style="align-items:center">
+        <input type="checkbox" id="agreeTerms">
+        <span class="choice__radio" style="border-radius:6px"></span>
+        <span class="choice__body"><span class="choice__title"><a href="/legal/terms/" target="_blank" style="color:var(--accent);text-decoration:underline">利用規約</a>・<a href="/legal/sales/" target="_blank" style="color:var(--accent);text-decoration:underline">販売条件</a>・<a href="/legal/privacy/" target="_blank" style="color:var(--accent);text-decoration:underline">プライバシーポリシー</a>に同意します</span></span>
+      </label>
+      <div class="spread">
+        <button class="btn btn--ghost" data-step-back>戻る</button>
+        <button class="btn btn--primary btn--lg" id="placeOrder">注文を確定する</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: 完了 -->
+    <div class="checkout-panel">
+      <div class="t-center stack" style="justify-items:center;padding-block:32px">
+        <div class="card__icon anim-pulse" style="width:72px;height:72px;border-radius:50%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:32px;height:32px"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+        <h2 class="t-h2">ご注文ありがとうございます。</h2>
+        <p class="t-soft">ご注文を受け付けました。注文番号は以下の通りです。</p>
+        <p class="t-display grad-text" id="orderNumber" style="font-variant-numeric:tabular-nums"></p>
+        <p class="t-small t-soft">確認メールを <strong id="orderEmail" class="t-strong"></strong> 宛にお送りしました(デモのため実際には送信されません)。<br>注文番号は<a href="/store/order-status/" style="color:var(--accent);text-decoration:underline">注文状況の確認</a>ページでご利用いただけます。</p>
+        <div class="cluster cluster--center">
+          <a class="btn btn--primary" href="/store/order-status/">注文状況を確認する</a>
+          <a class="btn btn--ghost" href="/store/">ストアに戻る</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

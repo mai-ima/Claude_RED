@@ -1,0 +1,30 @@
+<!--META {"title": "検索", "desc": "SUZAKUサイト内検索。製品、技術、ニュース、サポート情報を横断検索できます。", "theme": "dark", "crumbs": [["検索", null]], "group": "検索"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter" style="width:100%">
+    <p class="eyebrow">SEARCH</p>
+    <h1 class="t-h1">検索</h1>
+    <form data-search-form class="searchbar" style="max-width:680px;width:100%">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input class="input" type="search" name="q" id="siteSearchInput" placeholder="製品名、技術、サポート情報を検索" autocomplete="off" autofocus>
+    </form>
+    <p class="t-small t-faint" id="searchInfo"></p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div class="stack" id="searchResults" aria-live="polite"></div>
+    <div class="stack" style="margin-top:40px">
+      <p class="t-small t-faint">よく検索されるキーワード:</p>
+      <div class="cluster">
+        <a class="tab" href="/search/?q=SUZAKU%204">SUZAKU 4</a>
+        <a class="tab" href="/search/?q=冷却">冷却</a>
+        <a class="tab" href="/search/?q=修理">修理</a>
+        <a class="tab" href="/search/?q=保証">保証</a>
+        <a class="tab" href="/search/?q=下取り">返品</a>
+        <a class="tab" href="/search/?q=法人">法人</a>
+      </div>
+    </div>
+  </div>
+</section>

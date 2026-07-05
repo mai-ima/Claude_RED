@@ -1,0 +1,161 @@
+/* ==========================================================================
+   SUZAKU Animations — スクロールリビール・キーフレーム・演出
+   ========================================================================== */
+
+/* --- スクロールリビール(IntersectionObserverが .is-inview を付与) --- */
+.reveal,
+.reveal-l,
+.reveal-r,
+.reveal-scale {
+  opacity: 0;
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal { transform: translateY(34px); }
+.reveal-l { transform: translateX(-40px); }
+.reveal-r { transform: translateX(40px); }
+.reveal-scale { transform: scale(0.92); }
+
+.is-inview.reveal,
+.is-inview.reveal-l,
+.is-inview.reveal-r,
+.is-inview.reveal-scale {
+  opacity: 1;
+  transform: none;
+}
+
+/* 子要素を順番に出す */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+
+.reveal-stagger.is-inview > * { opacity: 1; transform: none; }
+
+.reveal-stagger.is-inview > :nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger.is-inview > :nth-child(2) { transition-delay: 0.14s; }
+.reveal-stagger.is-inview > :nth-child(3) { transition-delay: 0.23s; }
+.reveal-stagger.is-inview > :nth-child(4) { transition-delay: 0.32s; }
+.reveal-stagger.is-inview > :nth-child(5) { transition-delay: 0.41s; }
+.reveal-stagger.is-inview > :nth-child(6) { transition-delay: 0.5s; }
+.reveal-stagger.is-inview > :nth-child(7) { transition-delay: 0.59s; }
+.reveal-stagger.is-inview > :nth-child(8) { transition-delay: 0.68s; }
+
+/* --- キーフレーム --- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cue-drop {
+  0% { opacity: 0; transform: translate(-50%, 0); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, 12px); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 18px rgba(232, 68, 46, 0.25); }
+  50% { box-shadow: 0 0 42px rgba(232, 68, 46, 0.55); }
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ember-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-110vh) scale(0.2); opacity: 0; }
+}
+
+.anim-float { animation: float-y 6s ease-in-out infinite; }
+.anim-pulse { animation: pulse-glow 3.2s ease-in-out infinite; }
+
+.anim-shimmer {
+  background: linear-gradient(110deg, var(--su-gold) 20%, #fff2d4 40%, var(--su-gold) 60%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ヒーローの初期登場(ページロード時) */
+.hero-enter > * {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: rise-in 1s var(--ease-out) forwards;
+}
+
+.hero-enter > :nth-child(1) { animation-delay: 0.1s; }
+.hero-enter > :nth-child(2) { animation-delay: 0.25s; }
+.hero-enter > :nth-child(3) { animation-delay: 0.4s; }
+.hero-enter > :nth-child(4) { animation-delay: 0.55s; }
+.hero-enter > :nth-child(5) { animation-delay: 0.7s; }
+
+/* スティッキーショーケース(Apple風) */
+.showcase {
+  position: relative;
+}
+
+.showcase__sticky {
+  position: sticky;
+  top: var(--header-h);
+  min-height: calc(100svh - var(--header-h));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* ローディングスピナー */
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+/* --- reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal,
+  .reveal-l,
+  .reveal-r,
+  .reveal-scale,
+  .reveal-stagger > *,
+  .hero-enter > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1,0 +1,76 @@
+<!--META {"title": "Cooling API リファレンス", "desc": "SUZAKU GameKit Cooling APIのリファレンス。旋風ファン制御、氷嵐クーラー連携、温度イベントの購読。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["ドキュメント", "/developers/docs/"], ["Cooling API", null]], "group": "開発者"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">API REFERENCE — SUZAKU OS 3.0+</p>
+    <h1 class="t-h1">Cooling API</h1>
+    <p class="t-soft" style="max-width:640px">重要局面の前に、先回りで冷やす。冷却ハードウェアをゲームから制御するAPIです。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="doc-layout">
+      <aside class="doc-side">
+        <p class="doc-side__title">ガイド</p>
+        <a href="/developers/docs/">ドキュメント トップ</a>
+        <a href="/developers/docs/getting-started/">クイックスタート</a>
+        <p class="doc-side__title">APIリファレンス</p>
+        <a href="/developers/docs/performance-api/">Performance API</a>
+        <a href="/developers/docs/cooling-api/" class="is-active">Cooling API</a>
+        <p class="doc-side__title">リソース</p>
+        <a href="/developers/sdk/">SDKダウンロード</a>
+      </aside>
+      <div class="stack stack--lg">
+        <div class="stack">
+          <h2 class="t-h3">プリクール(先回り冷却)</h2>
+          <p class="t-small t-soft">レイド戦・ガチャ演出・マップロードなど高負荷が予見できる局面の直前に呼ぶと、旋風ファンが先に回転を上げ、ピーク温度を平均4.2℃抑制できます。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>PreCool.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre><span class="tk-k">val</span> cooling = SuzakuGameKit.<span class="tk-f">cooling</span>(context)
+
+<span class="tk-c">// ボス戦ロード開始時に10秒間のプリクールを要求</span>
+cooling.<span class="tk-f">preCool</span>(durationMs = <span class="tk-s">10_000</span>, level = FanLevel.<span class="tk-s">HIGH</span>)</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">FanLevel</h2>
+          <div class="scroll-x"><table class="spec-table"><tbody>
+            <tr><th scope="row">OFF</th><td>停止。静音を最優先する演出シーン向け。</td></tr>
+            <tr><th scope="row">QUIET</th><td>〜12,000rpm(28dB以下)。常用可能な静音動作。</td></tr>
+            <tr><th scope="row">HIGH</th><td>〜20,000rpm。高負荷戦闘向け。</td></tr>
+            <tr><th scope="row">MAX</th><td>最大回転(24,000rpm)。ユーザー許可が必要。</td></tr>
+          </tbody></table></div>
+          <p class="t-micro t-faint">※ 実際の回転数は端末世代・温度・電池残量によりOSが最終決定します。ユーザーが「陣」で設定した上限を超えることはありません。</p>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">外付けクーラー連携</h2>
+          <p class="t-small t-soft"><a href="/products/accessories/hyoran-cooler/" style="color:var(--accent)">氷嵐クーラー</a>が装着されている場合、ゲームからペルチェ強度を提案できます。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>ExternalCooler.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre><span class="tk-k">if</span> (cooling.externalCooler.<span class="tk-f">isAttached</span>()) {
+    cooling.externalCooler.<span class="tk-f">suggestLevel</span>(CoolerLevel.<span class="tk-s">TURBO</span>)
+}</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">温度イベントの購読</h2>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>ThermalEvents.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre>cooling.<span class="tk-f">onThermalEvent</span> { event -&gt;
+    <span class="tk-k">when</span> (event) {
+        ThermalEvent.<span class="tk-s">WARNING</span>  -&gt; hud.<span class="tk-f">showTempIcon</span>()
+        ThermalEvent.<span class="tk-s">CRITICAL</span> -&gt; game.<span class="tk-f">autoSave</span>()
+        ThermalEvent.<span class="tk-s">RECOVERED</span> -&gt; hud.<span class="tk-f">hideTempIcon</span>()
+    }
+}</pre>
+          </div>
+        </div>
+        <div class="spread">
+          <a class="btn btn--ghost" href="/developers/docs/performance-api/">← Performance API</a>
+          <a class="btn btn--primary" href="/developers/sdk/">SDKをダウンロード →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

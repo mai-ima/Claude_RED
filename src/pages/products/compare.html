@@ -1,0 +1,35 @@
+<!--META {"title": "製品を比較する", "desc": "SUZAKUの全スマートフォン・タブレットを最大3機種まで並べてスペック比較。ディスプレイ、SoC、冷却、バッテリーを一覧で。", "theme": "dark", "crumbs": [["製品", "/products/"], ["比較", null]], "group": "製品"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">COMPARE</p>
+    <h1 class="t-h1">どのモデルが、あなた向き?</h1>
+    <p class="t-soft" style="max-width:640px">スマートフォン・タブレット全機種(歴代モデル含む)を最大3台まで並べて比較できます。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container" id="compareTool">
+    <div class="compare-picker" style="margin-bottom:32px">
+      <div class="field"><label>モデル 1</label><select class="select compare-select" aria-label="比較する機種1"></select></div>
+      <div class="field"><label>モデル 2</label><select class="select compare-select" aria-label="比較する機種2"></select></div>
+      <div class="field"><label>モデル 3</label><select class="select compare-select" aria-label="比較する機種3"></select></div>
+    </div>
+    <div id="compareResult" aria-live="polite"></div>
+    <div class="chart-grid" style="margin-top:var(--sp-6)">
+      <figure class="chart" id="compareRadar" hidden></figure>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="card card--flame t-center reveal" style="padding:clamp(40px,6vw,64px)">
+      <h2 class="t-h2">決まったら、ストアへ。</h2>
+      <div class="cluster cluster--center" style="margin-top:12px">
+        <a class="btn btn--primary" href="/store/">ストアで購入する</a>
+        <a class="btn btn--ghost" href="/support/contact/">購入相談をする</a>
+      </div>
+    </div>
+  </div>
+</section>

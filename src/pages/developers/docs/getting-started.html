@@ -1,0 +1,77 @@
+<!--META {"title": "クイックスタート — GameKit SDK", "desc": "SUZAKU GameKit SDKのクイックスタート。依存関係の追加から性能契約の宣言、実機での確認まで15分で完了します。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["ドキュメント", "/developers/docs/"], ["クイックスタート", null]], "group": "開発者"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">GUIDE — 所要時間 約15分</p>
+    <h1 class="t-h1">クイックスタート</h1>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="doc-layout">
+      <aside class="doc-side">
+        <p class="doc-side__title">ガイド</p>
+        <a href="/developers/docs/">ドキュメント トップ</a>
+        <a href="/developers/docs/getting-started/" class="is-active">クイックスタート</a>
+        <p class="doc-side__title">APIリファレンス</p>
+        <a href="/developers/docs/performance-api/">Performance API</a>
+        <a href="/developers/docs/cooling-api/">Cooling API</a>
+        <p class="doc-side__title">リソース</p>
+        <a href="/developers/sdk/">SDKダウンロード</a>
+      </aside>
+      <div class="stack stack--lg">
+        <div class="stack">
+          <h2 class="t-h3">1. 依存関係を追加する</h2>
+          <p class="t-small t-soft">GameKitはMaven Centralで配布しています。<code style="color:var(--accent)">build.gradle.kts</code>に1行追加してください。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>build.gradle.kts</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre>dependencies {
+    <span class="tk-f">implementation</span>(<span class="tk-s">"jp.suzaku.gamekit:gamekit:4.2.0"</span>)
+}</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">2. 対応端末かを確認する</h2>
+          <p class="t-small t-soft">すべてのAPIは非対応端末でno-opになりますが、UI表示の分岐には<code style="color:var(--accent)">isSupported</code>を使います。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>MainActivity.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre><span class="tk-k">import</span> jp.suzaku.gamekit.SuzakuGameKit
+
+<span class="tk-k">if</span> (SuzakuGameKit.<span class="tk-f">isSupported</span>(context)) {
+    <span class="tk-c">// SUZAKU端末: 専用設定メニューを表示</span>
+    settingsMenu.<span class="tk-f">add</span>(SuzakuSection())
+}</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">3. 性能契約を宣言する</h2>
+          <p class="t-small t-soft">ゲームのメインループ開始時に、目標フレームレートと性能モードを宣言します。OSはこの「契約」を守るようにクロック・冷却・メモリを調停します。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>GameSession.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre><span class="tk-k">val</span> perf = SuzakuGameKit.<span class="tk-f">performance</span>(context)
+
+perf.<span class="tk-f">requestContract</span> {
+    targetFps = <span class="tk-s">120</span>
+    mode = PerfMode.<span class="tk-s">PERFORMANCE</span>
+    allowFan = <span class="tk-k">true</span>          <span class="tk-c">// 旋風ファンの使用を許可</span>
+    frameBoost = <span class="tk-k">true</span>        <span class="tk-c">// AIフレーム生成(OS 4.0+)</span>
+}
+
+<span class="tk-c">// ゲーム終了時に解放</span>
+<span class="tk-k">override fun</span> <span class="tk-f">onDestroy</span>() { perf.<span class="tk-f">release</span>() }</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">4. 実機で確認する</h2>
+          <p class="t-small t-soft">ゲームスペース「陣」のオーバーレイ(開発者モード)で、契約状態・実効fps・サーマルヘッドルームをリアルタイム表示できます。「陣」→ 設定 → 開発者オーバーレイをONにしてください。</p>
+          <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> 検証機をお持ちでない場合、開発者プログラム登録者には検証機の貸出を行っています。<a href="/support/contact/" style="text-decoration:underline">お問い合わせ</a>からご依頼ください。</div>
+        </div>
+        <div class="spread">
+          <a class="btn btn--ghost" href="/developers/docs/">← ドキュメント トップ</a>
+          <a class="btn btn--primary" href="/developers/docs/performance-api/">次: Performance API →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

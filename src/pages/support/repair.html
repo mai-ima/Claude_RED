@@ -1,0 +1,84 @@
+<!--META {"title": "修理のお申し込み", "desc": "SUZAKU製品の修理Web受付。配送修理・秋葉原持ち込み修理に対応。画面交換・電池交換の概算料金一覧も掲載。", "theme": "light", "crumbs": [["サポート", "/support/"], ["修理のお申し込み", null]], "group": "サポート"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">REPAIR</p>
+    <h1 class="t-h1">修理のお申し込み</h1>
+    <p class="t-soft" style="max-width:640px">Webから3分で受付完了。配送修理は端末到着から5〜7営業日、秋葉原サービスセンターなら画面・電池交換は最短即日です。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div id="repairDone" hidden>
+      <div class="card t-center stack" style="justify-items:center;padding:clamp(32px,5vw,56px)">
+        <h2 class="t-h2">修理を受け付けました。</h2>
+        <p class="t-soft">受付番号: <strong id="repairNo" class="t-h3 grad-text" style="display:block;margin-block:8px"></strong>
+        配送修理の場合、2営業日以内に集荷キット(送付用箱)を発送します。進捗は受付番号で照会できます。</p>
+        <div class="cluster cluster--center">
+          <a class="btn btn--primary" href="/support/status/">修理状況を確認する</a>
+          <a class="btn btn--ghost" href="/support/">サポートトップへ</a>
+        </div>
+      </div>
+    </div>
+    <form id="repairForm" class="stack stack--lg" novalidate>
+      <div class="grid grid--2">
+        <div class="field"><label for="rpModel">対象機種 <span class="req">必須</span></label>
+          <select class="select" id="rpModel" required>
+            <option value="">選択してください</option>
+            <optgroup label="スマートフォン">
+              <option>SUZAKU 4</option><option>SUZAKU 3</option><option>SUZAKU 2</option><option>SUZAKU One</option>
+              <option>SUZAKU Neo 3</option><option>SUZAKU Neo 2</option><option>SUZAKU Neo</option>
+              <option>TSUBAME 3</option><option>TSUBAME 2</option><option>TSUBAME</option>
+              <option>TSUBAME Lite 2</option><option>TSUBAME Lite</option>
+            </optgroup>
+            <optgroup label="タブレット">
+              <option>SUZAKU Pad 2</option><option>SUZAKU Pad</option><option>SUZAKU Pad Neo</option>
+              <option>TSUBAME Pad 2</option><option>TSUBAME Pad</option><option>TSUBAME Pad Lite</option>
+            </optgroup>
+            <optgroup label="アクセサリ"><option>アクセサリ製品</option></optgroup>
+          </select><p class="field__error">選択してください</p></div>
+        <div class="field"><label for="rpSymptom">症状 <span class="req">必須</span></label>
+          <select class="select" id="rpSymptom" required>
+            <option value="">選択してください</option>
+            <option>画面の割れ・表示不良</option><option>バッテリーの劣化・膨張</option><option>充電できない</option>
+            <option>電源が入らない</option><option>カメラの不具合</option><option>ファン・冷却の異音</option>
+            <option>水濡れ</option><option>その他</option>
+          </select><p class="field__error">選択してください</p></div>
+      </div>
+      <div class="field"><label>修理方法 <span class="req">必須</span></label>
+        <div class="choice-grid">
+          <label class="choice"><input type="radio" name="rpMethod" value="配送修理" checked><span class="choice__radio"></span>
+            <span class="choice__body"><span class="choice__title">配送修理</span><span class="choice__desc">集荷キットをお送りします。端末到着から5〜7営業日で返送。</span></span></label>
+          <label class="choice"><input type="radio" name="rpMethod" value="持ち込み修理(秋葉原)"><span class="choice__radio"></span>
+            <span class="choice__body"><span class="choice__title">持ち込み修理(秋葉原サービスセンター)</span><span class="choice__desc">画面交換・電池交換は最短即日でお渡し。</span></span></label>
+        </div></div>
+      <div class="grid grid--2">
+        <div class="field"><label for="rpName">お名前 <span class="req">必須</span></label>
+          <input class="input" id="rpName" required placeholder="朱雀 太郎"><p class="field__error">入力してください</p></div>
+        <div class="field"><label for="rpEmail">メールアドレス <span class="req">必須</span></label>
+          <input class="input" id="rpEmail" type="email" required placeholder="taro@example.com"><p class="field__error">形式が正しくありません</p></div>
+      </div>
+      <div class="field"><label for="rpDetail">症状の詳細</label>
+        <textarea class="textarea" id="rpDetail" rows="4" placeholder="いつから・どんな操作で発生するか等をご記入いただくと診断がスムーズです。"></textarea></div>
+      <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.5"/></svg> 修理の際は、可能であれば事前にデータのバックアップと「探す」機能の解除をお願いします。修理過程でデータが初期化される場合があります。</div>
+      <div><button class="btn btn--primary btn--lg" type="submit">受付番号を発行する</button></div>
+    </form>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">PRICING</p><h2 class="t-h2">概算修理料金(税込)</h2></div>
+    <div class="prose reveal">
+      <table>
+        <tr><th>修理内容</th><th>SUZAKU 4</th><th>SUZAKU 3 / Neo 3</th><th>TSUBAME 3</th><th>TSUBAME Lite 2</th></tr>
+        <tr><th>ディスプレイ交換</th><td>¥33,000</td><td>¥28,600</td><td>¥24,200</td><td>¥15,400</td></tr>
+        <tr><th>バッテリー交換</th><td>¥12,100</td><td>¥11,000</td><td>¥9,900</td><td>¥8,800</td></tr>
+        <tr><th>背面ガラス交換</th><td>¥14,300</td><td>¥12,100</td><td>¥9,900</td><td>—</td></tr>
+        <tr><th>旋風ファン交換</th><td>¥8,800</td><td>¥8,800</td><td>—</td><td>—</td></tr>
+      </table>
+      <p class="t-micro t-faint">※ <a href="/support/warranty/">SUZAKU Care+</a>加入時は画面・背面修理が1回あたり12,100円、バッテリー交換が無償になります。保証期間内の自然故障は無償修理です。正確な料金は診断後にご案内します。</p>
+    </div>
+  </div>
+</section>

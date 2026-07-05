@@ -1,0 +1,528 @@
+/* ==========================================================================
+   SUZAKU store.js — カート / 製品構成 / ストア一覧 / チェックアウト / 注文照会 / 比較
+   すべて localStorage で完結する実動作モック。
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var $ = function (sel, root) { return (root || document).querySelector(sel); };
+  var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  var SZ = window.SZ || { products: [], tax: 0.1, freeShipping: 5000, shippingFee: 550 };
+
+  function yen(n) { return "¥" + Math.round(n).toLocaleString("ja-JP"); }
+  function product(id) {
+    return SZ.products.filter(function (p) { return p.id === id; })[0] || null;
+  }
+  function unitPrice(p, storageIdx) {
+    var d = (p.storage && p.storage[storageIdx]) ? p.storage[storageIdx].delta : 0;
+    return p.price + d;
+  }
+
+  /* ---------------- カート ---------------- */
+  function getCart() { return window.szStore.get("sz_cart", []); }
+  function setCart(c) { window.szStore.set("sz_cart", c); window.szUpdateCartBadge(); }
+
+  function addToCart(id, colorIdx, storageIdx, qty) {
+    var cart = getCart();
+    var hit = cart.filter(function (x) {
+      return x.id === id && x.color === colorIdx && x.storage === storageIdx;
+    })[0];
+    if (hit) hit.qty = Math.min(9, hit.qty + qty);
+    else cart.push({ id: id, color: colorIdx, storage: storageIdx, qty: qty });
+    setCart(cart);
+  }
+  window.szAddToCart = addToCart;
+
+  function cartTotals() {
+    var cart = getCart();
+    var sub = 0;
+    cart.forEach(function (x) {
+      var p = product(x.id);
+      if (p) sub += unitPrice(p, x.storage) * x.qty;
+    });
+    var ship = sub === 0 || sub >= SZ.freeShipping ? 0 : SZ.shippingFee;
+    return { sub: sub, ship: ship, total: sub + ship, count: cart.reduce(function (a, x) { return a + x.qty; }, 0) };
+  }
+
+  /* ---------------- 製品ページ: 構成選択 ---------------- */
+  var buyBox = $(".buy-grid[data-product]");
+  if (buyBox) {
+    var pid = buyBox.getAttribute("data-product");
+    var p = product(pid);
+    var colorIdx = 0;
+    function storageIdx() {
+      var r = buyBox.querySelector("input[name=storage]:checked");
+      return r ? parseInt(r.value, 10) : 0;
+    }
+    function refresh() {
+      if (!p) return;
+      var img = $("#buyImage");
+      if (img) img.src = "/assets/img/products/" + pid + "-" + colorIdx + ".svg";
+      var cn = $("#colorName");
+      if (cn && p.colors[colorIdx]) cn.textContent = p.colors[colorIdx].name;
+      var priceEl = $("#buyPrice");
+      if (priceEl) priceEl.textContent = yen(unitPrice(p, storageIdx()));
+    }
+    $$(".swatch", buyBox).forEach(function (sw) {
+      sw.addEventListener("click", function () {
+        $$(".swatch", buyBox).forEach(function (s) { s.classList.remove("is-active"); });
+        sw.classList.add("is-active");
+        colorIdx = parseInt(sw.getAttribute("data-color-index"), 10);
+        refresh();
+      });
+    });
+    $$("input[name=storage]", buyBox).forEach(function (r) {
+      r.addEventListener("change", refresh);
+    });
+    var addBtn = $("#addToCart");
+    if (addBtn) {
+      addBtn.addEventListener("click", function () {
+        addToCart(pid, colorIdx, storageIdx(), 1);
+        window.szToast(p.name + " をカートに追加しました");
+      });
+    }
+    refresh();
+  }
+
+  /* ---------------- ストア一覧 ---------------- */
+  var storeGrid = $("#storeGrid");
+  if (storeGrid) {
+    var cat = "all";
+    var sort = "featured";
+    function storeCard(p) {
+      var badge = p.flag === "new" ? '<span class="badge badge--new">NEW</span>' : "";
+      return '<div class="product-card">' +
+        '<a class="product-card__media" href="' + p.url + '" aria-label="' + p.name + '"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></a>' +
+        '<div class="product-card__body">' +
+        '<p class="product-card__tag">' + p.lineLabel + " / " + p.year + "</p>" +
+        '<p class="product-card__name">' + p.name + " " + badge + "</p>" +
+        '<p class="product-card__copy">' + p.tagline + "</p>" +
+        '<p class="product-card__price">' + yen(p.price) + ' <small>(税込)〜</small></p>' +
+        '<div class="cluster" style="margin-top:6px">' +
+        '<button class="btn btn--primary btn--sm" data-quick-add="' + p.id + '">カートに追加</button>' +
+        '<a class="btn btn--ghost btn--sm" href="' + p.url + '">詳細</a>' +
+        "</div></div></div>";
+    }
+    function renderStore() {
+      var items = SZ.products.filter(function (p) { return p.status === "current"; });
+      if (cat !== "all") items = items.filter(function (p) { return p.cat === cat; });
+      if (sort === "price-asc") items.sort(function (a, b) { return a.price - b.price; });
+      else if (sort === "price-desc") items.sort(function (a, b) { return b.price - a.price; });
+      else if (sort === "new") items.sort(function (a, b) { return b.year - a.year; });
+      else items.sort(function (a, b) { return (b.flag === "new") - (a.flag === "new") || b.price - a.price; });
+      storeGrid.innerHTML = items.map(storeCard).join("");
+      var count = $("#storeCount");
+      if (count) count.textContent = items.length + "件の製品";
+    }
+    $$("#storeTabs .tab").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        $$("#storeTabs .tab").forEach(function (t) { t.classList.remove("is-active"); });
+        tab.classList.add("is-active");
+        cat = tab.getAttribute("data-cat");
+        renderStore();
+      });
+    });
+    var sortSel = $("#storeSort");
+    if (sortSel) sortSel.addEventListener("change", function () { sort = sortSel.value; renderStore(); });
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-quick-add]");
+      if (!btn) return;
+      var p = product(btn.getAttribute("data-quick-add"));
+      addToCart(p.id, 0, 0, 1);
+      window.szToast(p.name + " をカートに追加しました");
+    });
+    renderStore();
+  }
+
+  /* ---------------- カートページ ---------------- */
+  var cartList = $("#cartList");
+  if (cartList) {
+    function renderCart() {
+      var cart = getCart();
+      var t = cartTotals();
+      if (!cart.length) {
+        cartList.innerHTML = '<div class="empty"><p class="empty__icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h13l-1.5 9h-10z"/><path d="M6 7L5 4H2.5"/><circle cx="9" cy="20" r="1.6"/><circle cx="16" cy="20" r="1.6"/></svg></p><p>カートは空です。</p><a class="btn btn--primary" href="/store/">ストアで製品を見る</a></div>';
+      } else {
+        cartList.innerHTML = cart.map(function (x, i) {
+          var p = product(x.id);
+          if (!p) return "";
+          var conf = [];
+          if (p.colors[x.color]) conf.push(p.colors[x.color].name);
+          if (p.storage && p.storage[x.storage]) conf.push(p.storage[x.storage].label);
+          return '<div class="cart-line">' +
+            '<a class="cart-line__thumb" href="' + p.url + '"><img src="/assets/img/products/' + p.id + "-" + (x.color || 0) + '.svg" alt=""></a>' +
+            '<div class="stack" style="gap:4px">' +
+            '<p style="font-weight:800;color:var(--text-strong)">' + p.name + "</p>" +
+            '<p class="t-micro t-faint">' + (conf.join(" / ") || "標準構成") + "</p>" +
+            '<button class="cart-line__remove" data-remove="' + i + '" style="justify-self:start">削除</button>' +
+            "</div>" +
+            '<div class="stack" style="gap:8px;justify-items:end">' +
+            '<p style="font-weight:800;color:var(--text-strong)">' + yen(unitPrice(p, x.storage) * x.qty) + "</p>" +
+            '<div class="qty"><button data-qty="' + i + ':-1" aria-label="数量を減らす">−</button><output>' + x.qty + '</output><button data-qty="' + i + ':1" aria-label="数量を増やす">+</button></div>' +
+            "</div></div>";
+        }).join("");
+      }
+      var box = $("#cartSummary");
+      if (box) {
+        box.innerHTML =
+          '<h2 class="t-h4">ご注文内容</h2>' +
+          '<div class="summary-box__row"><span>小計(税込)</span><span>' + yen(t.sub) + "</span></div>" +
+          '<div class="summary-box__row"><span>配送料</span><span>' + (t.ship ? yen(t.ship) : "無料") + "</span></div>" +
+          '<div class="summary-box__row summary-box__row--total"><span>合計</span><span>' + yen(t.total) + "</span></div>" +
+          '<p class="t-micro t-faint">合計金額には消費税10%が含まれています。' + (t.ship ? "あと" + yen(SZ.freeShipping - t.sub) + "で送料無料。" : "") + "</p>" +
+          (t.count ? '<a class="btn btn--primary btn--block" href="/store/checkout/">レジに進む</a>' : '<button class="btn btn--primary btn--block" disabled>レジに進む</button>') +
+          '<a class="btn btn--ghost btn--block" href="/store/">買い物を続ける</a>';
+      }
+    }
+    cartList.addEventListener("click", function (e) {
+      var rm = e.target.closest("[data-remove]");
+      var qb = e.target.closest("[data-qty]");
+      var cart = getCart();
+      if (rm) {
+        cart.splice(parseInt(rm.getAttribute("data-remove"), 10), 1);
+        setCart(cart); renderCart();
+      } else if (qb) {
+        var parts = qb.getAttribute("data-qty").split(":");
+        var item = cart[parseInt(parts[0], 10)];
+        if (item) {
+          item.qty = Math.max(1, Math.min(9, item.qty + parseInt(parts[1], 10)));
+          setCart(cart); renderCart();
+        }
+      }
+    });
+    renderCart();
+  }
+
+  /* ---------------- チェックアウト ---------------- */
+  var checkout = $("#checkout");
+  if (checkout) {
+    var stepIdx = 0;
+    var order = { customer: {}, shipping: {}, payment: {} };
+    var stepsEl = $$("#checkoutSteps li");
+    var panels = $$(".checkout-panel");
+
+    var t0 = cartTotals();
+    if (t0.count === 0) {
+      checkout.innerHTML = '<div class="empty"><p class="empty__icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h13l-1.5 9h-10z"/><path d="M6 7L5 4H2.5"/><circle cx="9" cy="20" r="1.6"/><circle cx="16" cy="20" r="1.6"/></svg></p><p>カートが空のため、チェックアウトに進めません。</p><a class="btn btn--primary" href="/store/">ストアへ戻る</a></div>';
+      return;
+    }
+
+    function goto(i) {
+      stepIdx = i;
+      stepsEl.forEach(function (li, k) {
+        li.classList.toggle("is-current", k === i);
+        li.classList.toggle("is-done", k < i);
+      });
+      panels.forEach(function (pn, k) { pn.classList.toggle("is-active", k === i); });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (i === 3) renderConfirm();
+    }
+
+    function fieldError(input, msg) {
+      var field = input.closest(".field");
+      if (!field) return;
+      field.classList.toggle("has-error", !!msg);
+      var err = field.querySelector(".field__error");
+      if (err && msg) err.textContent = msg;
+    }
+    function validatePanel(panel) {
+      var ok = true;
+      $$("input[required], select[required], textarea[required]", panel).forEach(function (inp) {
+        if (inp.offsetParent === null && inp.type !== "radio") return; // 非表示はスキップ
+        var v = inp.value.trim();
+        var msg = "";
+        if (!v) msg = "入力してください";
+        else if (inp.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = "メールアドレスの形式が正しくありません";
+        else if (inp.dataset.kind === "tel" && !/^0\d{9,10}$/.test(v.replace(/[-\s]/g, ""))) msg = "電話番号の形式が正しくありません(例: 09012345678)";
+        else if (inp.dataset.kind === "postal" && !/^\d{3}-?\d{4}$/.test(v)) msg = "郵便番号は 123-4567 の形式で入力してください";
+        if (msg) ok = false;
+        fieldError(inp, msg);
+      });
+      return ok;
+    }
+
+    /* クレジットカード */
+    function luhn(num) {
+      var s = 0, alt = false;
+      for (var i = num.length - 1; i >= 0; i--) {
+        var d = parseInt(num[i], 10);
+        if (alt) { d *= 2; if (d > 9) d -= 9; }
+        s += d; alt = !alt;
+      }
+      return s % 10 === 0;
+    }
+    var ccNum = $("#ccNumber");
+    if (ccNum) {
+      ccNum.addEventListener("input", function () {
+        var v = ccNum.value.replace(/\D/g, "").slice(0, 16);
+        ccNum.value = v.replace(/(.{4})/g, "$1 ").trim();
+      });
+    }
+    var ccExp = $("#ccExpiry");
+    if (ccExp) {
+      ccExp.addEventListener("input", function () {
+        var v = ccExp.value.replace(/\D/g, "").slice(0, 4);
+        ccExp.value = v.length > 2 ? v.slice(0, 2) + "/" + v.slice(2) : v;
+      });
+    }
+    function validateCard() {
+      var ok = true;
+      var num = ccNum.value.replace(/\s/g, "");
+      if (!/^\d{14,16}$/.test(num) || !luhn(num)) { fieldError(ccNum, "カード番号が正しくありません"); ok = false; }
+      else fieldError(ccNum, "");
+      var m = ccExp.value.match(/^(\d{2})\/(\d{2})$/);
+      var expOk = false;
+      if (m) {
+        var mm = parseInt(m[1], 10), yy = 2000 + parseInt(m[2], 10);
+        expOk = mm >= 1 && mm <= 12 && (yy > 2026 || (yy === 2026 && mm >= 7));
+      }
+      if (!expOk) { fieldError(ccExp, "有効期限が正しくありません(MM/YY)"); ok = false; }
+      else fieldError(ccExp, "");
+      var cvv = $("#ccCvv");
+      if (!/^\d{3,4}$/.test(cvv.value)) { fieldError(cvv, "セキュリティコードは3〜4桁です"); ok = false; }
+      else fieldError(cvv, "");
+      var nm = $("#ccName");
+      if (!nm.value.trim()) { fieldError(nm, "入力してください"); ok = false; }
+      else fieldError(nm, "");
+      return ok;
+    }
+
+    function payMethod() {
+      var r = checkout.querySelector("input[name=payMethod]:checked");
+      return r ? r.value : "card";
+    }
+    $$("input[name=payMethod]", checkout).forEach(function (r) {
+      r.addEventListener("change", function () {
+        var cardBox = $("#cardFields");
+        if (cardBox) cardBox.hidden = payMethod() !== "card";
+        var instBox = $("#installmentBox");
+        if (instBox) instBox.hidden = payMethod() !== "card";
+      });
+    });
+
+    function payLabel() {
+      var map = {
+        card: "クレジットカード",
+        cvs: "コンビニ払い(払込票)",
+        cod: "代金引換(手数料 ¥330)"
+      };
+      var label = map[payMethod()];
+      if (payMethod() === "card") {
+        var inst = $("#installments");
+        var n = inst ? inst.value : "1";
+        label += n === "1" ? "(一括払い)" : "(" + n + "回分割)";
+      }
+      return label;
+    }
+
+    function renderConfirm() {
+      var t = cartTotals();
+      var cod = payMethod() === "cod" ? 330 : 0;
+      var cart = getCart();
+      var lines = cart.map(function (x) {
+        var p = product(x.id);
+        var conf = [];
+        if (p.colors[x.color]) conf.push(p.colors[x.color].name);
+        if (p.storage && p.storage[x.storage]) conf.push(p.storage[x.storage].label);
+        return "<div class='summary-box__row'><span>" + p.name + (conf.length ? "(" + conf.join("/") + ")" : "") + " × " + x.qty + "</span><span>" + yen(unitPrice(p, x.storage) * x.qty) + "</span></div>";
+      }).join("");
+      var c = order.customer, s = order.shipping;
+      $("#confirmBox").innerHTML =
+        '<h3 class="t-h4">ご注文商品</h3>' + lines +
+        '<div class="summary-box__row"><span>配送料</span><span>' + (t.ship ? yen(t.ship) : "無料") + "</span></div>" +
+        (cod ? '<div class="summary-box__row"><span>代引手数料</span><span>' + yen(cod) + "</span></div>" : "") +
+        '<div class="summary-box__row summary-box__row--total"><span>合計(税込)</span><span>' + yen(t.total + cod) + "</span></div>" +
+        '<hr class="divider">' +
+        '<h3 class="t-h4">お届け先</h3>' +
+        "<p class='t-small'>〒" + c.postal + " " + c.address + "<br>" + c.name + " 様 / " + c.tel + "<br>" + c.email + "</p>" +
+        '<h3 class="t-h4">配送方法</h3>' +
+        "<p class='t-small'>" + s.method + " / お届け希望: " + s.date + " " + s.time + "</p>" +
+        '<h3 class="t-h4">お支払い方法</h3>' +
+        "<p class='t-small'>" + payLabel() + "</p>";
+    }
+
+    $$("[data-step-next]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var panel = panels[stepIdx];
+        if (!validatePanel(panel)) { window.szToast("入力内容をご確認ください"); return; }
+        if (stepIdx === 0) {
+          order.customer = {
+            name: $("#coName").value.trim(),
+            postal: $("#coPostal").value.trim(),
+            address: $("#coAddress").value.trim(),
+            tel: $("#coTel").value.trim(),
+            email: $("#coEmail").value.trim()
+          };
+        } else if (stepIdx === 1) {
+          order.shipping = {
+            method: checkout.querySelector("input[name=shipMethod]:checked").value,
+            date: $("#shipDate").value || "指定なし",
+            time: $("#shipTime").value
+          };
+        } else if (stepIdx === 2) {
+          if (payMethod() === "card" && !validateCard()) { window.szToast("カード情報をご確認ください"); return; }
+        }
+        goto(stepIdx + 1);
+      });
+    });
+    $$("[data-step-back]").forEach(function (btn) {
+      btn.addEventListener("click", function () { goto(Math.max(0, stepIdx - 1)); });
+    });
+
+    var placeBtn = $("#placeOrder");
+    if (placeBtn) {
+      placeBtn.addEventListener("click", function () {
+        var agree = $("#agreeTerms");
+        if (agree && !agree.checked) { window.szToast("利用規約と販売条件への同意が必要です"); return; }
+        placeBtn.disabled = true;
+        placeBtn.innerHTML = '<span class="spinner"></span> 注文を処理しています…';
+        setTimeout(function () {
+          var t = cartTotals();
+          var cod = payMethod() === "cod" ? 330 : 0;
+          var no = "SZ-" + new Date().getFullYear() + "-" + String(Math.floor(100000 + Math.random() * 900000));
+          var orders = window.szStore.get("sz_orders", []);
+          orders.unshift({
+            no: no,
+            date: new Date().toISOString(),
+            items: getCart(),
+            total: t.total + cod,
+            pay: payLabel(),
+            customer: order.customer,
+            shipping: order.shipping,
+            status: "受付完了"
+          });
+          window.szStore.set("sz_orders", orders);
+          setCart([]);
+          $("#orderNumber").textContent = no;
+          $("#orderEmail").textContent = order.customer.email;
+          goto(4);
+        }, 1400);
+      });
+    }
+
+    /* 配送日の選択肢(明後日〜14日後)を生成 */
+    var shipDate = $("#shipDate");
+    if (shipDate) {
+      var days = ["日", "月", "火", "水", "木", "金", "土"];
+      for (var d = 2; d <= 14; d++) {
+        var dt = new Date();
+        dt.setDate(dt.getDate() + d);
+        var opt = document.createElement("option");
+        opt.value = (dt.getMonth() + 1) + "月" + dt.getDate() + "日(" + days[dt.getDay()] + ")";
+        opt.textContent = opt.value;
+        shipDate.appendChild(opt);
+      }
+    }
+    goto(0);
+  }
+
+  /* ---------------- 注文照会 ---------------- */
+  var orderLookup = $("#orderLookupForm");
+  if (orderLookup) {
+    orderLookup.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var no = $("#orderNo").value.trim().toUpperCase();
+      var orders = window.szStore.get("sz_orders", []);
+      var hit = orders.filter(function (o) { return o.no === no; })[0];
+      var box = $("#orderResult");
+      if (!hit) {
+        box.innerHTML = '<div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> 注文番号「' + no.replace(/[<>&"]/g, "") + '」は見つかりませんでした。この端末で行われたご注文のみ照会できます(デモ仕様)。</div>';
+        return;
+      }
+      var placed = new Date(hit.date);
+      var hours = (Date.now() - placed.getTime()) / 36e5;
+      var steps = [
+        { t: "ご注文受付", done: true },
+        { t: "お支払い確認", done: hours > 0.01 },
+        { t: "出荷準備中", done: hours > 12 },
+        { t: "出荷済み", done: hours > 36 },
+        { t: "お届け完了", done: hours > 96 }
+      ];
+      var timeline = steps.map(function (s) {
+        return '<li class="' + (s.done ? "is-done" : "") + '"><span>' + s.t + "</span></li>";
+      }).join("");
+      var items = hit.items.map(function (x) {
+        var p = product(x.id);
+        return "<li>" + (p ? p.name : x.id) + " × " + x.qty + "</li>";
+      }).join("");
+      box.innerHTML =
+        '<div class="card" style="margin-top:24px">' +
+        '<p class="eyebrow">注文番号 ' + hit.no + "</p>" +
+        '<p class="t-small t-soft">注文日時: ' + placed.toLocaleString("ja-JP") + " / お支払い: " + hit.pay + "</p>" +
+        '<ol class="order-track">' + timeline + "</ol>" +
+        '<h3 class="t-h4">ご注文商品</h3><ul class="t-small t-soft" style="display:grid;gap:4px">' + items + "</ul>" +
+        '<p class="summary-box__row summary-box__row--total"><span>合計(税込)</span><span>' + yen(hit.total) + "</span></p>" +
+        "</div>";
+    });
+  }
+
+  /* ---------------- 比較ツール ---------------- */
+  var compare = $("#compareTool");
+  if (compare) {
+    var devices = SZ.products.filter(function (p) { return p.cmp; });
+    var sels = $$(".compare-select", compare);
+    var defaults = ["suzaku-4", "neo-3", "tsubame-3"];
+    sels.forEach(function (sel, i) {
+      sel.innerHTML = '<option value="">— 機種を選択 —</option>' + devices.map(function (p) {
+        return '<option value="' + p.id + '">' + p.name + "(" + p.year + ")</option>";
+      }).join("");
+      sel.value = defaults[i] || "";
+      sel.addEventListener("change", renderCompare);
+    });
+    var ROWS = ["発売日", "価格", "ディスプレイ", "リフレッシュレート", "SoC", "GPU", "メモリ", "ストレージ", "冷却", "バッテリー", "充電", "重量", "OS"];
+    function renderCompare() {
+      var chosen = sels.map(function (s) { return product(s.value); }).filter(Boolean);
+      var box = $("#compareResult");
+      if (chosen.length < 2) {
+        box.innerHTML = '<div class="empty"><p>2機種以上を選択すると比較表が表示されます。</p></div>';
+        return;
+      }
+      var head = "<tr><th></th>" + chosen.map(function (p) {
+        return '<th scope="col"><a href="' + p.url + '" style="color:var(--accent)">' + p.name + "</a></th>";
+      }).join("") + "</tr>";
+      var imgs = "<tr><th></th>" + chosen.map(function (p) {
+        return '<td><img src="' + p.img + '" alt="' + p.name + '" style="max-height:150px;margin-inline:auto"></td>';
+      }).join("") + "</tr>";
+      var rows = ROWS.map(function (key) {
+        return '<tr><th scope="row">' + key + "</th>" + chosen.map(function (p) {
+          return "<td>" + (p.cmp[key] || "—") + "</td>";
+        }).join("") + "</tr>";
+      }).join("");
+      box.innerHTML = '<div class="scroll-x"><table class="spec-table compare-table"><thead>' + head + "</thead><tbody>" + imgs + rows + "</tbody></table></div>";
+      // 5軸レーダーチャートで重ね比較
+      var radarBox = $("#compareRadar");
+      if (radarBox && window.szCharts) {
+        var series = chosen.filter(function (p) { return p.radar; }).map(function (p) {
+          return { name: p.name, values: p.radar };
+        });
+        if (series.length >= 1) {
+          radarBox.hidden = false;
+          window.szCharts.renderInto(radarBox, {
+            type: "radar",
+            title: "性能バランス比較(5軸・当社評価)",
+            axes: ["性能", "カメラ", "バッテリー", "冷却", "コスパ"],
+            series: series
+          });
+        } else {
+          radarBox.hidden = true;
+        }
+      }
+    }
+    renderCompare();
+  }
+
+  /* ---------------- フローティング購入バー(製品ページ) ---------------- */
+  var buyFloat = $("#buyFloat");
+  if (buyFloat) {
+    var buySection = $("#buy");
+    var onScrollFloat = function () {
+      if (!buySection) return;
+      var r = buySection.getBoundingClientRect();
+      var show = r.bottom < 0;
+      buyFloat.classList.toggle("is-visible", show);
+      buyFloat.setAttribute("aria-hidden", String(!show));
+    };
+    window.addEventListener("scroll", onScrollFloat, { passive: true });
+    onScrollFloat();
+  }
+})();

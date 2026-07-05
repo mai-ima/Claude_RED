@@ -1,0 +1,57 @@
+<!--META {"title": "法人お問い合わせ", "desc": "SUZAKU for Businessの導入相談・お見積もり依頼フォーム。台数・用途に合わせて専任担当がご提案します。", "theme": "light", "crumbs": [["法人のお客様", "/business/"], ["お問い合わせ", null]], "group": "法人"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">BUSINESS CONTACT</p>
+    <h1 class="t-h1">法人お問い合わせ</h1>
+    <p class="t-soft" style="max-width:640px">導入のご相談・お見積もり・実機検証のご依頼はこちらから。営業日4時間以内に専任担当からご連絡します。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <form class="stack stack--lg" data-mock-form="#bizFormDone" novalidate>
+      <div class="grid grid--2">
+        <div class="field"><label for="bzCompany">会社名・団体名 <span class="req">必須</span></label>
+          <input class="input" id="bzCompany" required placeholder="株式会社サンプル"><p class="field__error">入力してください</p></div>
+        <div class="field"><label for="bzName">ご担当者名 <span class="req">必須</span></label>
+          <input class="input" id="bzName" required placeholder="朱雀 太郎"><p class="field__error">入力してください</p></div>
+      </div>
+      <div class="grid grid--2">
+        <div class="field"><label for="bzEmail">メールアドレス <span class="req">必須</span></label>
+          <input class="input" id="bzEmail" type="email" required placeholder="taro@example.co.jp"><p class="field__error">メールアドレスの形式が正しくありません</p></div>
+        <div class="field"><label for="bzTel">電話番号</label>
+          <input class="input" id="bzTel" inputmode="tel" placeholder="0312345678"></div>
+      </div>
+      <div class="grid grid--2">
+        <div class="field"><label for="bzCount">ご検討台数 <span class="req">必須</span></label>
+          <select class="select" id="bzCount" required>
+            <option value="">選択してください</option><option>10〜49台</option><option>50〜199台</option><option>200台以上</option><option>未定・相談したい</option>
+          </select><p class="field__error">選択してください</p></div>
+        <div class="field"><label for="bzUse">ご用途</label>
+          <select class="select" id="bzUse">
+            <option>eスポーツ・アミューズメント</option><option>教育機関</option><option>映像・クリエイティブ</option><option>現場業務(建設・物流など)</option><option>社用端末・その他</option>
+          </select></div>
+      </div>
+      <div class="field"><label for="bzMsg">ご相談内容 <span class="req">必須</span></label>
+        <textarea class="textarea" id="bzMsg" rows="6" required placeholder="導入時期、ご予算感、検証機の要否などをご記入ください。"></textarea>
+        <p class="field__error">入力してください</p></div>
+      <label class="choice" style="align-items:center">
+        <input type="checkbox" required>
+        <span class="choice__radio" style="border-radius:6px"></span>
+        <span class="choice__body"><span class="choice__title"><a href="/legal/privacy/" target="_blank" style="color:var(--accent);text-decoration:underline">プライバシーポリシー</a>に同意します <span class="req">必須</span></span></span>
+      </label>
+      <div><button class="btn btn--primary btn--lg" type="submit">送信する</button></div>
+    </form>
+    <div id="bizFormDone" hidden>
+      <div class="card t-center stack" style="justify-items:center;padding:clamp(32px,5vw,56px)">
+        <h2 class="t-h2">お問い合わせを受け付けました。</h2>
+        <p class="t-soft">受付番号: <strong data-ref-no class="t-strong"></strong><br>営業日4時間以内に、ご入力のメールアドレス宛に専任担当からご連絡します(デモのため実際の連絡は行われません)。</p>
+        <div class="cluster cluster--center">
+          <a class="btn btn--primary" href="/business/">法人トップへ戻る</a>
+          <a class="btn btn--ghost" href="/business/cases/">導入事例を見る</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

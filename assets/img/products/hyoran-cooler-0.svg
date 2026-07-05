@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label=""><defs>
+<radialGradient id="ag" cx="0.5" cy="0.4" r="0.8">
+  <stop offset="0" stop-color="#d9a441" stop-opacity="0.75"/>
+  <stop offset="0.55" stop-color="#d9a441" stop-opacity="0.18"/>
+  <stop offset="1" stop-color="#d9a441" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="al" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#d9a441" stop-opacity="0"/>
+  <stop offset="0.5" stop-color="#d9a441"/>
+  <stop offset="1" stop-color="#d9a441" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<rect width="480" height="360" fill="#0b0b10"/>
+<ellipse cx="240" cy="170" rx="220" ry="140" fill="url(#ag)"/><rect x="150" y="76" width="180" height="220" rx="26" fill="#10101a" stroke="#d9a441" stroke-opacity="0.6" stroke-width="2"/>
+<circle cx="240" cy="176" r="78" fill="#07070b" stroke="#d9a441" stroke-width="2.5"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(0 240 176)"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(51 240 176)"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(103 240 176)"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(154 240 176)"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(206 240 176)"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(257 240 176)"/><path d="M240 176 q28 -30 64 -18" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" opacity="0.9" transform="rotate(308 240 176)"/>
+<circle cx="240" cy="176" r="20" fill="#07070b" stroke="#d9a441" stroke-width="2.5"/>
+<rect x="216" y="300" width="48" height="10" rx="5" fill="#3d3d4e"/></svg>

@@ -1,0 +1,74 @@
+<!--META {"title": "Performance API リファレンス", "desc": "SUZAKU GameKit Performance APIのリファレンス。性能契約、PerfMode、ThermalHeadroom、フレーム統計の取得。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["ドキュメント", "/developers/docs/"], ["Performance API", null]], "group": "開発者"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">API REFERENCE — SUZAKU OS 2.0+</p>
+    <h1 class="t-h1">Performance API</h1>
+    <p class="t-soft" style="max-width:640px">ゲームと端末が「性能の契約」を結ぶためのAPI。fps目標の宣言、モード制御、熱余裕の監視を提供します。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="doc-layout">
+      <aside class="doc-side">
+        <p class="doc-side__title">ガイド</p>
+        <a href="/developers/docs/">ドキュメント トップ</a>
+        <a href="/developers/docs/getting-started/">クイックスタート</a>
+        <p class="doc-side__title">APIリファレンス</p>
+        <a href="/developers/docs/performance-api/" class="is-active">Performance API</a>
+        <a href="/developers/docs/cooling-api/">Cooling API</a>
+        <p class="doc-side__title">リソース</p>
+        <a href="/developers/sdk/">SDKダウンロード</a>
+      </aside>
+      <div class="stack stack--lg">
+        <div class="stack">
+          <h2 class="t-h3">PerfMode</h2>
+          <div class="scroll-x"><table class="spec-table"><tbody>
+            <tr><th scope="row">ECO</th><td>省電力優先。クロック上限を抑え、ファンは停止。カジュアルタイトル向け。</td></tr>
+            <tr><th scope="row">BALANCED</th><td>既定値。OSが負荷に応じて自動調停。</td></tr>
+            <tr><th scope="row">PERFORMANCE</th><td>持続性能優先。ファン自動制御が有効。</td></tr>
+            <tr><th scope="row">SUZAKU</th><td>朱雀モード。全制限解除。ユーザーの明示的な許可が必要(権限ダイアログをOSが表示)。</td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">サーマルヘッドルームの監視</h2>
+          <p class="t-small t-soft"><code style="color:var(--accent)">onThermalHeadroom</code>は0.0(スロットリング直前)〜1.0(完全に冷えた状態)を0.01刻みで通知します。0.15を下回る前に描画負荷を下げるのが推奨パターンです。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>ThermalAware.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre>perf.<span class="tk-f">onThermalHeadroom</span>(intervalMs = <span class="tk-s">1000</span>) { h -&gt;
+    <span class="tk-k">when</span> {
+        h &lt; <span class="tk-s">0.10f</span> -&gt; quality.<span class="tk-f">set</span>(Quality.<span class="tk-s">LOW</span>)
+        h &lt; <span class="tk-s">0.25f</span> -&gt; quality.<span class="tk-f">set</span>(Quality.<span class="tk-s">MEDIUM</span>)
+        <span class="tk-k">else</span>      -&gt; quality.<span class="tk-f">set</span>(Quality.<span class="tk-s">HIGH</span>)
+    }
+}</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">フレーム統計</h2>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>FrameStats.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre><span class="tk-k">val</span> stats = perf.<span class="tk-f">frameStats</span>()
+log(<span class="tk-s">"実効fps: ${stats.effectiveFps}"</span>)
+log(<span class="tk-s">"AI生成フレーム比率: ${stats.boostRatio}"</span>)
+log(<span class="tk-s">"jank発生率: ${stats.jankPercent}%"</span>)</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <h2 class="t-h3">ベストプラクティス</h2>
+          <ul class="check-list">
+            <li>契約はシーン単位で更新する(ロビーは60fps、戦闘は165fps等)</li>
+            <li>SUZAKUモードはユーザー操作起点でのみリクエストする</li>
+            <li>ヘッドルーム連動の品質制御を必ず実装する(契約は保証ではなく優先度)</li>
+            <li>バックグラウンド遷移時は<code style="color:var(--accent)">release()</code>を呼ぶ</li>
+          </ul>
+        </div>
+        <div class="spread">
+          <a class="btn btn--ghost" href="/developers/docs/getting-started/">← クイックスタート</a>
+          <a class="btn btn--primary" href="/developers/docs/cooling-api/">次: Cooling API →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+<!--META {"title": "カート", "desc": "SUZAKUストアのショッピングカート。数量の変更、削除、合計金額の確認ができます。", "theme": "dark", "crumbs": [["ストア", "/store/"], ["カート", null]], "group": "ストア"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">CART</p>
+    <h1 class="t-h1">カート</h1>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:var(--sp-6);align-items:start" class="cart-layout">
+      <div id="cartList" aria-live="polite"></div>
+      <aside class="summary-box" id="cartSummary" style="position:sticky;top:calc(var(--header-h) + 24px)"></aside>
+    </div>
+    <style>@media(max-width:900px){.cart-layout{grid-template-columns:1fr !important}.cart-layout aside{position:static !important}}</style>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> カートの内容はこの端末(ブラウザ)に保存されます。本サイトはデモのため、実際の決済・配送は行われません。</div>
+  </div>
+</section>

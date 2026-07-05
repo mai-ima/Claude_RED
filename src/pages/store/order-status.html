@@ -1,0 +1,31 @@
+<!--META {"title": "注文状況の確認", "desc": "注文番号を入力して、ご注文の処理状況・配送状況を確認できます。", "theme": "dark", "crumbs": [["ストア", "/store/"], ["注文状況の確認", null]], "group": "ストア"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">ORDER STATUS</p>
+    <h1 class="t-h1">注文状況の確認</h1>
+    <p class="t-soft" style="max-width:600px">ご注文完了時に発行された注文番号(例: SZ-2026-123456)を入力してください。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <form id="orderLookupForm" class="cluster" style="align-items:stretch">
+      <input class="input" id="orderNo" placeholder="SZ-2026-XXXXXX" style="flex:1;min-width:220px" required aria-label="注文番号">
+      <button class="btn btn--primary" type="submit">照会する</button>
+    </form>
+    <div id="orderResult" aria-live="polite"></div>
+    <div class="notice" style="margin-top:32px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> デモ仕様のため、この端末(ブラウザ)で行われたご注文のみ照会できます。修理の受付番号(SZR-)は<a href="/support/status/" style="text-decoration:underline">修理状況の確認</a>をご利用ください。</div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <h2 class="t-h3" style="margin-bottom:20px">お困りの場合</h2>
+    <div class="grid grid--3 reveal-stagger">
+      <a class="card card--hover" href="/store/guide/"><h3 class="t-h4">購入ガイド</h3><p class="t-small t-soft">配送・支払い・返品の詳細。</p></a>
+      <a class="card card--hover" href="/support/faq/"><h3 class="t-h4">よくあるご質問</h3><p class="t-small t-soft">注文・配送に関するFAQ。</p></a>
+      <a class="card card--hover" href="/support/contact/"><h3 class="t-h4">お問い合わせ</h3><p class="t-small t-soft">解決しない場合はこちら。</p></a>
+    </div>
+  </div>
+</section>

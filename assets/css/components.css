@@ -1859,6 +1859,28 @@ body.has-maint-bar { padding-top: var(--maint-h, 34px); }
 body.has-maint-bar .drawer { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 body.has-maint-bar .localnav { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 
+/* 管理者プレビューチップ(制御中ページを管理者が閲覧しているときの表示) */
+.admin-preview {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: var(--z-toast);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(92vw, 480px);
+  padding: 10px 16px;
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, #1c2c4a, #24406e);
+  color: #cfe0ff;
+  border: 1px solid rgba(120, 160, 255, 0.45);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-preview .ic { flex: none; }
+
 /* 認証フォームカード */
 .auth-card {
   max-width: 460px;

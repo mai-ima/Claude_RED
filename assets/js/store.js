@@ -22,7 +22,16 @@
   function getCart() { return window.szStore.get("sz_cart", []); }
   function setCart(c) { window.szStore.set("sz_cart", c); window.szUpdateCartBadge(); }
 
+  function shopStopped() {
+    var g = window.szStore.get("sz_global", {});
+    return !!g.shopStop;
+  }
+
   function addToCart(id, colorIdx, storageIdx, qty) {
+    if (shopStopped()) {
+      window.szToast("現在、ご購入の受付を停止しています。再開までお待ちください");
+      return false;
+    }
     var cart = getCart();
     var hit = cart.filter(function (x) {
       return x.id === id && x.color === colorIdx && x.storage === storageIdx;
@@ -30,6 +39,7 @@
     if (hit) hit.qty = Math.min(9, hit.qty + qty);
     else cart.push({ id: id, color: colorIdx, storage: storageIdx, qty: qty });
     setCart(cart);
+    return true;
   }
   window.szAddToCart = addToCart;
 
@@ -77,8 +87,7 @@
     var addBtn = $("#addToCart");
     if (addBtn) {
       addBtn.addEventListener("click", function () {
-        addToCart(pid, colorIdx, storageIdx(), 1);
-        window.szToast(p.name + " をカートに追加しました");
+        if (addToCart(pid, colorIdx, storageIdx(), 1)) window.szToast(p.name + " をカートに追加しました");
       });
     }
     refresh();
@@ -128,8 +137,7 @@
       var btn = e.target.closest("[data-quick-add]");
       if (!btn) return;
       var p = product(btn.getAttribute("data-quick-add"));
-      addToCart(p.id, 0, 0, 1);
-      window.szToast(p.name + " をカートに追加しました");
+      if (addToCart(p.id, 0, 0, 1)) window.szToast(p.name + " をカートに追加しました");
     });
     renderStore();
   }
@@ -375,6 +383,10 @@
         var maint = window.szStore.get("sz_maintenance", { on: false });
         if (maint.on) {
           window.szToast("メンテナンス中のため、ご注文を一時停止しています");
+          return;
+        }
+        if (shopStopped()) {
+          window.szToast("現在、ご注文の受付を停止しています。再開までお待ちください");
           return;
         }
         var agree = $("#agreeTerms");

@@ -51,6 +51,94 @@
 
       <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
         <div class="card">
+          <p class="eyebrow">GLOBAL CONTROL</p>
+          <h2 class="t-h4">全体制御</h2>
+          <p class="t-small t-soft">サイト全体・購入・お問い合わせを個別に停止できます。管理者は停止中も全ページを閲覧できます。</p>
+          <div class="consent-row" style="border-top:0;padding-top:6px">
+            <div><p class="consent-row__title">全サイト立ち入り禁止</p><p class="t-micro t-faint">一般の訪問者を稼働状況ページへ誘導します</p></div>
+            <label class="switch"><input type="checkbox" id="glbLockdown"><span class="switch__track"></span></label>
+          </div>
+          <div class="field"><label for="glbLockMsg">閉鎖時の告知メッセージ(任意)</label>
+            <input class="input" id="glbLockMsg" placeholder="例: システム全面刷新のため、7月中はサイトを閉鎖しています。"></div>
+          <div class="consent-row">
+            <div><p class="consent-row__title">購入の停止</p><p class="t-micro t-faint">カート追加と注文確定を停止します</p></div>
+            <label class="switch"><input type="checkbox" id="glbShopStop"><span class="switch__track"></span></label>
+          </div>
+          <div class="consent-row">
+            <div><p class="consent-row__title">お問い合わせの停止</p><p class="t-micro t-faint">各種お問い合わせフォームの送信を停止します</p></div>
+            <label class="switch"><input type="checkbox" id="glbContactStop"><span class="switch__track"></span></label>
+          </div>
+          <div class="spread" style="margin-top:12px"><p id="glbState"></p>
+            <button class="btn btn--primary btn--sm" id="glbSave" type="button">全体制御を保存</button></div>
+        </div>
+        <div class="card">
+          <p class="eyebrow">SERVICE STATUS</p>
+          <h2 class="t-h4">サービス別状況</h2>
+          <p class="t-small t-soft">公開の<a href="/maintenance/">稼働状況ページ</a>に即時反映されます。「修理受付・照会」を停止にすると修理フォームの送信も止まります。</p>
+          <div class="stack" style="gap:10px">
+            <div class="spread"><label class="t-small" for="svcStore">オンラインストア</label><select class="select" id="svcStore" data-svc="store" style="max-width:180px"><option value="ok">稼働中</option><option value="degraded">一部機能低下</option><option value="down">停止中</option></select></div>
+            <div class="spread"><label class="t-small" for="svcRepair">修理受付・照会</label><select class="select" id="svcRepair" data-svc="repair" style="max-width:180px"><option value="ok">稼働中</option><option value="degraded">一部機能低下</option><option value="down">停止中</option></select></div>
+            <div class="spread"><label class="t-small" for="svcOs">OS アップデート配信</label><select class="select" id="svcOs" data-svc="os" style="max-width:180px"><option value="ok">稼働中</option><option value="degraded">一部機能低下</option><option value="down">停止中</option></select></div>
+            <div class="spread"><label class="t-small" for="svcJin">陣 オンライン機能</label><select class="select" id="svcJin" data-svc="jin" style="max-width:180px"><option value="ok">稼働中</option><option value="degraded">一部機能低下</option><option value="down">停止中</option></select></div>
+            <div class="spread"><label class="t-small" for="svcApi">開発者API(GameKit)</label><select class="select" id="svcApi" data-svc="api" style="max-width:180px"><option value="ok">稼働中</option><option value="degraded">一部機能低下</option><option value="down">停止中</option></select></div>
+          </div>
+          <div style="margin-top:14px;text-align:right"><button class="btn btn--primary btn--sm" id="svcSave" type="button">サービス状況を保存</button></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:var(--sp-5)">
+        <p class="eyebrow">PAGE CONTROL</p>
+        <h2 class="t-h4">ページ別ステータス制御</h2>
+        <p class="t-small t-soft">個別ページを「会員限定」「管理者限定」「メンテナンス中」「非公開(404)」にできます。管理者は設定中もプレビュー閲覧できます(画面下部に表示)。</p>
+        <div class="cluster" style="align-items:flex-end;gap:10px">
+          <div class="field" style="flex:2;min-width:240px;margin:0"><label for="pcSelect">対象ページ</label><select class="select" id="pcSelect"></select></div>
+          <div class="field" style="flex:1;min-width:170px;margin:0"><label for="pcStatus">ステータス</label>
+            <select class="select" id="pcStatus">
+              <option value="members">会員限定(要ログイン)</option>
+              <option value="admin">管理者限定</option>
+              <option value="maint">メンテナンス中</option>
+              <option value="gone">非公開(404に転送)</option>
+            </select></div>
+          <button class="btn btn--primary btn--sm" id="pcAdd" type="button" style="margin-bottom:2px">設定する</button>
+        </div>
+        <div id="pcList" style="margin-top:14px"></div>
+      </div>
+
+      <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
+        <div class="card">
+          <p class="eyebrow">NEWSROOM</p>
+          <h2 class="t-h4">ニュース作成</h2>
+          <p class="t-small t-soft">公開すると<a href="/news/">ニュースルーム</a>の一覧に掲載され、専用記事ページが生成されます。</p>
+          <div class="field"><label for="anTitle">タイトル</label><input class="input" id="anTitle" placeholder="例: SUZAKU 4 の予約が過去最高を記録"></div>
+          <div class="cluster" style="gap:10px">
+            <div class="field" style="flex:1;min-width:130px"><label for="anCat">カテゴリ</label>
+              <select class="select" id="anCat"><option>製品</option><option>技術</option><option>企業</option><option>お知らせ</option></select></div>
+            <div class="field" style="flex:1;min-width:150px"><label for="anDate">日付</label><input class="input" id="anDate" type="date"></div>
+          </div>
+          <div class="field"><label for="anExcerpt">概要(一覧に表示・省略可)</label><input class="input" id="anExcerpt" placeholder="未入力の場合は本文の先頭から自動生成"></div>
+          <div class="field"><label for="anBody">本文(空行で段落を区切ります)</label><textarea class="textarea" id="anBody" rows="6" placeholder="本文を入力してください。"></textarea></div>
+          <div style="text-align:right"><button class="btn btn--primary btn--sm" id="anPublish" type="button">ニュースを公開</button></div>
+        </div>
+        <div class="card">
+          <p class="eyebrow">PUBLISHED</p>
+          <h2 class="t-h4">作成したニュース</h2>
+          <p class="t-small t-soft">この端末のブラウザに保存されているデモ記事の管理です。</p>
+          <div id="anList"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:var(--sp-5)">
+        <p class="eyebrow">USERS</p>
+        <h2 class="t-h4">ユーザー管理</h2>
+        <p class="t-small t-soft">この端末に登録されている全アカウントです。パスワードの表示・アカウントの削除ができます(デモ実装のため平文を保持しています。実サービスでは絶対に行いません)。</p>
+        <div class="scroll-x"><table class="spec-table quick-table">
+          <thead><tr><th scope="col">名前</th><th scope="col">メールアドレス</th><th scope="col">権限</th><th scope="col">登録日</th><th scope="col">パスワード</th><th scope="col">操作</th></tr></thead>
+          <tbody id="userRows"></tbody>
+        </table></div>
+      </div>
+
+      <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
+        <div class="card">
           <p class="eyebrow">ORDERS</p>
           <h2 class="t-h4">最近の注文</h2>
           <div class="scroll-x"><table class="spec-table quick-table">

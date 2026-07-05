@@ -264,7 +264,12 @@
       <button class="btn btn--primary btn--lg btn--block" type="submit">ログイン</button>
       <p class="t-small t-soft t-center">アカウントをお持ちでない方は <a href="/account/register/" style="color:var(--accent);font-weight:700">新規作成(無料)</a></p>
       <hr class="divider">
-      <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> <span><strong>デモ用アカウント</strong><br>管理者: admin@suzaku.example.jp / suzaku-admin<br>一般会員はこの端末で新規作成できます。認証はブラウザ内で完結し、外部送信はありません。</span></div>
+      <p class="t-micro t-faint" style="letter-spacing:var(--ls-wide);font-weight:700">デモ用アカウントで試す(ワンタップ入力)</p>
+      <div class="cluster" style="gap:8px">
+        <button class="btn btn--soft btn--sm" type="button" id="fillAdmin"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> 管理者の情報を入力</button>
+        <button class="btn btn--soft btn--sm" type="button" id="fillUser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-3.5 4.5-5.5 8-5.5s6.5 2 8 5.5"/></svg> 一般会員の情報を入力</button>
+      </div>
+      <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> <span><strong>デモ用アカウント</strong><br>管理者: admin@suzaku.example.jp / suzaku-admin<br>一般会員: user@suzaku.example.jp / suzaku-user<br>新規作成も可能です。認証はブラウザ内で完結し、外部送信はありません。</span></div>
     </form>
   </div>
 </section>

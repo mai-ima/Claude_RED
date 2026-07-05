@@ -63,12 +63,22 @@
   }
 
   /* ---------------- ニュース一覧 ---------------- */
+  /* 管理ボードで作成されたニュース(localStorage)を静的ニュースとマージ */
+  function adminNewsItems() {
+    return (window.szStore ? window.szStore.get("sz_admin_news", []) : []).map(function (n) {
+      return { date: n.date, cat: n.cat, title: n.title, excerpt: n.excerpt, url: "/news/article/?id=" + encodeURIComponent(n.id) };
+    });
+  }
+  function mergedNews() {
+    return adminNewsItems().concat(SZ.news).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+  }
   var newsList = $("#newsList");
   if (newsList) {
+    var NEWS_ALL = mergedNews();
     var nYear = "all";
     var nCat = "all";
     function renderNews() {
-      var items = SZ.news.filter(function (n) {
+      var items = NEWS_ALL.filter(function (n) {
         if (nYear !== "all" && n.date.slice(0, 4) !== nYear) return false;
         if (nCat !== "all" && n.cat !== nCat) return false;
         return true;
@@ -88,7 +98,7 @@
     var yearBox = $("#newsYears");
     if (yearBox) {
       var years = ["all"];
-      SZ.news.forEach(function (n) {
+      NEWS_ALL.forEach(function (n) {
         var y = n.date.slice(0, 4);
         if (years.indexOf(y) === -1) years.push(y);
       });
@@ -99,7 +109,7 @@
     var catBox = $("#newsCats");
     if (catBox) {
       var ncats = ["all"];
-      SZ.news.forEach(function (n) { if (ncats.indexOf(n.cat) === -1) ncats.push(n.cat); });
+      NEWS_ALL.forEach(function (n) { if (ncats.indexOf(n.cat) === -1) ncats.push(n.cat); });
       catBox.innerHTML = ncats.map(function (c, i) {
         return '<button class="tab' + (i === 0 ? " is-active" : "") + '" data-news-cat="' + c + '">' + (c === "all" ? "すべて" : c) + "</button>";
       }).join("");
@@ -120,6 +130,26 @@
       }
     });
     renderNews();
+  }
+
+  /* ---------------- 管理ボード作成ニュースの記事ページ ---------------- */
+  var customArticle = $("#customArticle");
+  if (customArticle) {
+    var caId = new URLSearchParams(window.location.search).get("id") || "";
+    var caList = window.szStore ? window.szStore.get("sz_admin_news", []) : [];
+    var ca = caList.filter(function (n) { return n.id === caId; })[0];
+    if (!ca) {
+      customArticle.innerHTML = '<div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> この記事は見つかりませんでした(削除された可能性があります)。</div>' +
+        '<div style="margin-top:20px"><a class="btn btn--ghost" href="/news/">ニュース一覧へ戻る</a></div>';
+    } else {
+      document.title = ca.title + " | SUZAKU(朱雀)";
+      customArticle.innerHTML =
+        '<p class="t-micro t-faint">' + ca.date.replace(/-/g, ".") + ' <span class="badge" style="margin-left:8px">' + escHtml(ca.cat) + "</span></p>" +
+        '<h1 class="t-h2" style="margin:10px 0 24px">' + escHtml(ca.title) + "</h1>" +
+        '<div class="prose">' + ca.body.split(/\n{2,}|\n/).filter(Boolean).map(function (p) { return "<p>" + escHtml(p) + "</p>"; }).join("") + "</div>" +
+        '<p class="t-micro t-faint" style="margin-top:28px">この記事は管理ボードから作成されたデモ記事です(この端末のブラウザ内にのみ保存されています)。</p>' +
+        '<div style="margin-top:20px"><a class="btn btn--ghost" href="/news/">ニュース一覧へ戻る</a></div>';
+    }
   }
 
   /* ---------------- サイト内検索 ---------------- */
@@ -186,11 +216,32 @@
     doSearch(q0);
   }
 
+  /* ---------------- 停止制御(管理ボード設定の参照) ---------------- */
+  function ctrlGlobal() { return window.szStore ? window.szStore.get("sz_global", {}) : {}; }
+  function svcStatus(key) {
+    var s = window.szStore ? window.szStore.get("sz_services", {}) : {};
+    return s[key] || "ok";
+  }
+  function stopNotice(form, msg) {
+    var n = form.querySelector(".stop-notice");
+    if (!n) {
+      n = document.createElement("div");
+      n.className = "notice stop-notice";
+      form.insertBefore(n, form.firstChild);
+    }
+    n.innerHTML = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> ' + msg;
+    window.szToast(msg);
+  }
+
   /* ---------------- 修理受付フォーム ---------------- */
   var repairForm = $("#repairForm");
   if (repairForm) {
     repairForm.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (svcStatus("repair") === "down") {
+        stopNotice(repairForm, "現在、修理受付を停止しています。復旧までお待ちください。");
+        return;
+      }
       var ok = true;
       $$("input[required], select[required], textarea[required]", repairForm).forEach(function (inp) {
         var field = inp.closest(".field");
@@ -322,6 +373,10 @@
   $$("form[data-mock-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (ctrlGlobal().contactStop) {
+        stopNotice(form, "現在、お問い合わせの受付を停止しています。復旧までお待ちください。");
+        return;
+      }
       var ok = true;
       $$("input[required], select[required], textarea[required]", form).forEach(function (inp) {
         var field = inp.closest(".field");

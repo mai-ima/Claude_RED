@@ -846,7 +846,7 @@ def build_product_page(p):
 <section class="section section--sm">
   <div class="container">
     <div class="section-head"><p class="eyebrow">RELATED</p><h2 class="t-h2">あわせて見たい製品</h2></div>
-    <div class="grid grid--3 reveal-stagger">{related_cards}</div>
+    <div class="grid grid--3 grid--cards reveal-stagger">{related_cards}</div>
   </div>
 </section>""" if related_cards else ""
 
@@ -1149,7 +1149,7 @@ def build_tech_page(t):
         prods_html = f"""
 <div id="products" style="scroll-margin-top:90px">
   <h2 class="t-h3" style="margin-bottom:18px">{esc(t['name'])} 搭載製品</h2>
-  <div class="grid grid--3 reveal-stagger">{''.join(product_card(x) for x in prods[:3])}</div>
+  <div class="grid grid--3 grid--cards reveal-stagger">{''.join(product_card(x) for x in prods[:3])}</div>
 </div>"""
 
     siblings = sorted([x for x in TECHS if x["hub"] == t["hub"] and x["id"] != t["id"]], key=lambda x: -x["year"])
@@ -1422,7 +1422,7 @@ def build_line_section(cat, line_key, blurb):
     <div class="section-head"><p class="eyebrow">{line['label']}</p>
     <h2 class="t-h2">{esc(items[0]['name'].rsplit(' ', 1)[0]) if line_key != 'suzaku' else 'SUZAKU'} シリーズ</h2>
     <p class="t-soft">{blurb}</p></div>
-    <div class="grid grid--{cols} reveal-stagger">{cards}</div>
+    <div class="grid grid--{cols} grid--cards reveal-stagger">{cards}</div>
   </div>
 </section>"""
 
@@ -1515,7 +1515,7 @@ def build_product_hubs():
     <p class="t-lead" style="max-width:660px">冷却・操作・音・電力。SUZAKU製品のために設計された、公式アクセサリ。</p>
   </div>
 </section>
-<section class="section--sm"><div class="container"><div class="grid grid--3 reveal-stagger">{acc_cards}</div></div></section>
+<section class="section--sm"><div class="container"><div class="grid grid--3 grid--cards reveal-stagger">{acc_cards}</div></div></section>
 {cta_band('本体と一緒に、そろえる。', 'ストアなら本体とアクセサリをまとめて購入できます。', [('ストアで見る', '/store/', 'btn--primary')])}
 """
     render_page("/products/accessories/", "純正アクセサリ",
@@ -1550,7 +1550,7 @@ def build_product_hubs():
 <section class="section--sm">
   <div class="container">
     <div class="section-head"><p class="eyebrow">2026 NEW</p><h2 class="t-h2">2026年の新製品</h2></div>
-    <div class="grid grid--4 reveal-stagger">{feat_cards}</div>
+    <div class="grid grid--4 grid--cards reveal-stagger">{feat_cards}</div>
   </div>
 </section>
 {cta_band('どの一台から、始める?', '比較ツールとストアで、あなたの一台を見つけてください。', [('ストアで見る', '/store/', 'btn--primary'), ('比較ツール', '/products/compare/', 'btn--ghost')])}

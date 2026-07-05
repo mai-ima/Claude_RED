@@ -2,12 +2,12 @@
 <defs>
 <linearGradient id="scrpad20" x1="0" y1="0" x2="1" y2="1">
   <stop offset="0" stop-color="#1b1b26"/>
-  <stop offset="0.45" stop-color="#e8442e" stop-opacity="0.55"/>
+  <stop offset="0.45" stop-color="#e8442e" stop-opacity="0.34"/>
   <stop offset="1" stop-color="#07070b"/>
 </linearGradient>
 <radialGradient id="flarepad20" cx="0.5" cy="0.35" r="0.75">
-  <stop offset="0" stop-color="#e8442e" stop-opacity="0.9"/>
-  <stop offset="0.5" stop-color="#e8442e" stop-opacity="0.25"/>
+  <stop offset="0" stop-color="#e8442e" stop-opacity="0.42"/>
+  <stop offset="0.55" stop-color="#e8442e" stop-opacity="0.12"/>
   <stop offset="1" stop-color="#e8442e" stop-opacity="0"/>
 </radialGradient>
 <linearGradient id="metalpad20" x1="0" y1="0" x2="0" y2="1">
@@ -20,7 +20,7 @@
 <rect x="40" y="30" width="560" height="420" rx="30" fill="url(#metalpad20)"/>
 <rect x="40.8" y="30.8" width="558.4" height="418.4" rx="29.2" fill="none" stroke="#e8442e" stroke-opacity="0.5" stroke-width="1.6"/>
 <rect x="54" y="44" width="532" height="392" rx="20" fill="url(#scrpad20)"/>
-<ellipse cx="320" cy="200" rx="260" ry="150" fill="url(#flarepad20)"/>
+<ellipse cx="320" cy="195" rx="190" ry="115" fill="url(#flarepad20)"/>
 <path d="M320 120 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="#e8442e" stroke-width="4.5" stroke-linejoin="round"/>
 <circle cx="320" cy="210" r="10" fill="#e8442e"/>
 <text x="320" y="286" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">SUZAKU Pad 2</text>

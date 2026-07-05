@@ -61,6 +61,15 @@
     });
   });
 
+  /* フッターのアコーディオン(スマートフォンのみ挙動、PCではCSSで常時展開) */
+  $$(".footer-map__title").forEach(function (title) {
+    title.addEventListener("click", function () {
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        title.parentElement.classList.toggle("is-open");
+      }
+    });
+  });
+
   /* ---------- スクロールリビール ---------- */
   var revealTargets = $$(".reveal, .reveal-l, .reveal-r, .reveal-scale, .reveal-stagger");
   if ("IntersectionObserver" in window && revealTargets.length) {

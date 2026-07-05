@@ -10,12 +10,12 @@ def _defs(gid, glow):
     return f"""<defs>
 <linearGradient id="scr{gid}" x1="0" y1="0" x2="1" y2="1">
   <stop offset="0" stop-color="#1b1b26"/>
-  <stop offset="0.45" stop-color="{glow}" stop-opacity="0.55"/>
+  <stop offset="0.45" stop-color="{glow}" stop-opacity="0.34"/>
   <stop offset="1" stop-color="#07070b"/>
 </linearGradient>
 <radialGradient id="flare{gid}" cx="0.5" cy="0.35" r="0.75">
-  <stop offset="0" stop-color="{glow}" stop-opacity="0.9"/>
-  <stop offset="0.5" stop-color="{glow}" stop-opacity="0.25"/>
+  <stop offset="0" stop-color="{glow}" stop-opacity="0.42"/>
+  <stop offset="0.55" stop-color="{glow}" stop-opacity="0.12"/>
   <stop offset="1" stop-color="{glow}" stop-opacity="0"/>
 </radialGradient>
 <linearGradient id="metal{gid}" x1="0" y1="0" x2="0" y2="1">
@@ -35,7 +35,7 @@ def svg_phone(pid, body_hex, glow, label, kana=""):
 <rect x="70" y="20" width="220" height="600" rx="38" fill="url(#metal{gid})"/>
 <rect x="70.8" y="20.8" width="218.4" height="598.4" rx="37.2" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="1.6"/>
 <rect x="80" y="30" width="200" height="580" rx="30" fill="url(#scr{gid})"/>
-<ellipse cx="180" cy="240" rx="150" ry="170" fill="url(#flare{gid})"/>
+<ellipse cx="180" cy="235" rx="110" ry="130" fill="url(#flare{gid})"/>
 <path d="M180 150 c-10 42 -52 60 -52 104 a52 52 0 0 0 104 0 c0 -44 -42 -62 -52 -104z" fill="none" stroke="{glow}" stroke-width="5" stroke-linejoin="round" opacity="0.95"/>
 <circle cx="180" cy="262" r="13" fill="{glow}"/>
 <text x="180" y="352" font-family="'Noto Sans JP',sans-serif" font-size="26" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>
@@ -55,7 +55,7 @@ def svg_tablet(pid, body_hex, glow, label, kana=""):
 <rect x="40" y="30" width="560" height="420" rx="30" fill="url(#metal{gid})"/>
 <rect x="40.8" y="30.8" width="558.4" height="418.4" rx="29.2" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.6"/>
 <rect x="54" y="44" width="532" height="392" rx="20" fill="url(#scr{gid})"/>
-<ellipse cx="320" cy="200" rx="260" ry="150" fill="url(#flare{gid})"/>
+<ellipse cx="320" cy="195" rx="190" ry="115" fill="url(#flare{gid})"/>
 <path d="M320 120 c-8 34 -42 48 -42 84 a42 42 0 0 0 84 0 c0 -36 -34 -50 -42 -84z" fill="none" stroke="{glow}" stroke-width="4.5" stroke-linejoin="round"/>
 <circle cx="320" cy="210" r="10" fill="{glow}"/>
 <text x="320" y="286" font-family="'Noto Sans JP',sans-serif" font-size="24" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>

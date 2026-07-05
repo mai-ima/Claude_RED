@@ -635,7 +635,7 @@ def footer_html():
     <div class="footer-map">{''.join(cols)}</div>
     <div class="site-footer__legal">
       <p>本サイトは、架空の企業「株式会社朱雀(SUZAKU Inc.)」のデモンストレーションサイトです。掲載されている製品・価格・技術・サービスはすべてフィクションであり、実在の商品・役務の販売を行うものではありません。</p>
-      <div class="site-footer__legal-links">{legal}<button type="button" class="cookie-settings-link" id="cookieSettingsBtn">Cookie設定</button><button type="button" class="cookie-settings-link" id="clearCacheBtn">キャッシュを削除</button></div>
+      <div class="site-footer__legal-links">{legal}<button type="button" class="cookie-settings-link" id="cookieSettingsBtn">Cookie設定</button></div>
       <div class="spread">
         <p>Copyright © 2022-2026 SUZAKU Inc. All rights reserved.</p>
         <p>日本 — 東京都千代田区外神田(秋葉原)</p>
@@ -676,6 +676,7 @@ def footer_html():
       <button class="btn btn--primary" id="consentSave">選択を保存</button>
       <button class="btn btn--ghost" id="consentModalClose">閉じる</button>
     </div>
+    <p class="t-micro t-faint">表示が崩れる、更新した内容が反映されない場合は<button type="button" class="cookie-settings-link clear-cache-trigger">キャッシュを削除</button>できます。</p>
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>"""

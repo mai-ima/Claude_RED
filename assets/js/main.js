@@ -347,12 +347,10 @@
     if (t) { e.preventDefault(); openModal(); }
   });
 
-  /* ---------- キャッシュの手動削除 ---------- */
-  var clearCacheBtn = $("#clearCacheBtn");
-  if (clearCacheBtn) {
+  /* ---------- キャッシュの手動削除(Cookie設定ページ・Cookie設定モーダルの両方に配置) ---------- */
+  $$(".clear-cache-trigger").forEach(function (clearCacheBtn) {
     clearCacheBtn.addEventListener("click", function () {
       clearCacheBtn.disabled = true;
-      var origLabel = clearCacheBtn.textContent;
       clearCacheBtn.textContent = "削除しています…";
       Promise.resolve()
         .then(function () {
@@ -382,7 +380,7 @@
           }, 500);
         });
     });
-  }
+  });
 
   /* ---------- 検索ボックス(ヘッダー以外の共通) ---------- */
   $$("form[data-search-form]").forEach(function (form) {

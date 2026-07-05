@@ -11,6 +11,7 @@
 
 Next.js移行時は、この出力ディレクトリ構造が app/ ルータのルートに1:1対応する。
 """
+import hashlib
 import json
 import re
 import sys
@@ -28,6 +29,24 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src" / "pages"
 SITE_NAME = "SUZAKU(朱雀)"
 BASE_URL = "https://suzaku.example.jp"
+
+
+def _asset_version():
+    """assets/css・assets/js の内容から短いハッシュを作り、キャッシュバスティング用の
+    クエリ文字列(?v=...)に使う。CSS/JSを更新してもCDN・ブラウザキャッシュにより
+    古いファイルが混在して表示が壊れるのを防ぐ。"""
+    h = hashlib.sha256()
+    for sub in ("css", "js"):
+        d = ROOT / "assets" / sub
+        if not d.exists():
+            continue
+        for f in sorted(d.glob("*")):
+            if f.is_file():
+                h.update(f.read_bytes())
+    return h.hexdigest()[:10]
+
+
+ASSET_V = _asset_version()
 
 PAGES = []  # 検索インデックス + sitemap 用 {url,title,desc,group}
 
@@ -698,10 +717,10 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 <meta name="theme-color" content="{'#0b0b10' if theme == 'dark' else '#fafafc'}">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
 {HEAD_FONTS}
-<link rel="stylesheet" href="/assets/css/tokens.css">
-<link rel="stylesheet" href="/assets/css/base.css">
-<link rel="stylesheet" href="/assets/css/components.css">
-<link rel="stylesheet" href="/assets/css/animations.css">
+<link rel="stylesheet" href="/assets/css/tokens.css?v={ASSET_V}">
+<link rel="stylesheet" href="/assets/css/base.css?v={ASSET_V}">
+<link rel="stylesheet" href="/assets/css/components.css?v={ASSET_V}">
+<link rel="stylesheet" href="/assets/css/animations.css?v={ASSET_V}">
 </head>
 <body class="page{url.rstrip('/').replace('/', '-') or '-home'}">
 {header_html()}
@@ -710,12 +729,12 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 {body}
 </main>
 {footer_html()}
-<script src="/data/products.js" defer></script>
-<script src="/assets/js/main.js" defer></script>
-<script src="/assets/js/charts.js" defer></script>
-<script src="/assets/js/store.js" defer></script>
-<script src="/assets/js/pages.js" defer></script>
-<script src="/assets/js/auth.js" defer></script>
+<script src="/data/products.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/main.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/charts.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/store.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/pages.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/auth.js?v={ASSET_V}" defer></script>
 </body>
 </html>"""
 

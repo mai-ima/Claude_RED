@@ -1716,6 +1716,26 @@ a.card:hover,
   .localnav { display: none; } /* モバイルは下部の購入バーが担当 */
 }
 
+/* ヒーロー内の実機レンダー(Apple式) */
+.hero-device {
+  display: block;
+  margin-top: clamp(10px, 2vw, 26px);
+  max-height: min(50svh, 440px);
+  width: auto;
+  filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.55));
+}
+
+@media (max-width: 768px) {
+  .hero-device { max-height: 320px; }
+}
+
+/* ライトバンド(ダークページに挟むApple式の明るい帯) */
+.band-light {
+  background: var(--bg);
+  color: var(--text);
+  border-block: 1px solid var(--line);
+}
+
 /* 注記(Apple式footnotes) */
 .footnotes {
   list-style: decimal;

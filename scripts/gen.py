@@ -543,6 +543,7 @@ def footer_html():
         col("サポート", [
             ("サポートトップ", "/support/"),
             ("よくあるご質問", "/support/faq/"),
+            ("トラブルシューティング", "/support/troubleshooting/"),
             ("修理のお申し込み", "/support/repair/"),
             ("修理状況の確認", "/support/status/"),
             ("保証について", "/support/warranty/"),
@@ -785,6 +786,63 @@ def cta_band(title, sub, buttons):
 # 製品ページ
 # ==========================================================================
 
+
+def related_news_section(keywords, eyebrow="NEWSROOM", title="関連ニュース"):
+    """キーワードに合致するニュース記事カード(最大3件)。合致なしなら空。"""
+    hits = [n for n in NEWS if any(k and (k in n["title"] or k in n["excerpt"]) for k in keywords)][:3]
+    if not hits:
+        return ""
+    cards = "".join(
+        f'''<a class="card card--hover" href="/news/{n['id']}/">
+<p class="t-micro t-faint">{n['date'].replace('-', '.')} <span class="badge" style="margin-left:8px">{n['cat']}</span></p>
+<h3 class="t-h4">{esc(n['title'])}</h3>
+<p class="t-small t-soft">{esc(n['excerpt'][:72])}…</p>
+<p class="link-arrow">読む</p></a>'''
+        for n in hits)
+    return f'''
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">{eyebrow}</p><h2 class="t-h2">{title}</h2></div>
+    <div class="grid grid--3 reveal-stagger">{cards}</div>
+  </div>
+</section>'''
+
+
+def lineage_section(p):
+    """同一ラインの系譜表(2世代以上あるデバイスのみ)。"""
+    gens = sorted([x for x in ALL_PRODUCTS if x["cat"] == p["cat"] and x["line"] == p["line"]], key=lambda x: -x["year"])
+    if len(gens) < 2:
+        return ""
+    rows = ""
+    for g in gens:
+        cur = g["id"] == p["id"]
+        state = '<strong style="color:var(--accent)">現行</strong>' if g["status"] == "current" else '<span class="t-faint">販売終了</span>'
+        name_cell = (f'<strong>{esc(g["name"])}(このページ)</strong>' if cur
+                     else f'<a href="{product_url(g)}" style="color:var(--accent);font-weight:700">{esc(g["name"])}</a>')
+        rows += (f'<tr><td>{name_cell}</td><td>{g["release"]}</td><td>{yen(g["price"])}</td>'
+                 f'<td>{esc(get_spec(g, ["性能"], "SoC").split("(")[0])}</td><td>{state}</td></tr>')
+    line = LINES[p["line"]]
+    return f'''
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">LINEAGE</p><h2 class="t-h2">{line['label']}ラインの系譜</h2>
+    <p class="t-soft t-small">初代から最新世代まで、このラインの歩みです。販売終了モデルのページもアーカイブとして公開しています。</p></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">モデル</th><th scope="col">発売日</th><th scope="col">発売時価格</th><th scope="col">SoC</th><th scope="col">販売状況</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table></div>
+  </div>
+</section>'''
+
+
+def cta_minimal(title, links):
+    """カード帯を使わない軽い結び(技術ページ用 — 使い回し感の低減)。"""
+    l = "".join(f'<a class="link-arrow" href="{h}">{txt}</a>' for txt, h in links)
+    return (f'<section class="section--sm"><div class="container t-center" '
+            f'style="display:grid;gap:16px;justify-items:center"><hr class="divider" style="width:min(320px,60%)">' 
+            f'<h2 class="t-h3">{title}</h2><div class="cluster cluster--center" style="gap:26px">{l}</div></div></section>')
+
+
 def build_product_page(p):
     line = LINES[p["line"]]
     glow = line["glow"]
@@ -930,6 +988,7 @@ def build_product_page(p):
         f'<div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body"><p>{a}</p></div></div></div></div>'
         for q, a in faq_items)
     extras = f"""
+<div class="band-light" data-theme="light">
 <section class="section--sm">
   <div class="container">
     <div class="feature-split" style="align-items:start">
@@ -971,7 +1030,8 @@ def build_product_page(p):
         <h3 class="t-h4">使い終わったら無償回収</h3><p class="t-small t-soft">古い端末はメーカー問わず無償回収。資源の96%を再利用します。</p><p class="link-arrow">回収について</p></a>
     </div>
   </div>
-</section>"""
+</section>
+</div>"""
 
     # --- カラーギャラリー(2色以上のデバイス) ---
     color_gallery = ""
@@ -1051,6 +1111,7 @@ def build_product_page(p):
       {'<a class="btn btn--primary btn--lg" href="#buy">' + yen(p['price']) + '(税込)〜 購入へ</a>' if p['status'] == 'current' else '<span class="badge badge--end">販売終了モデル</span>'}
       {chip_link}
     </div>
+    {f'<img class="hero-device" src="/assets/img/products/{p["id"]}-0.svg" alt="{esc(p["name"])}" width="340" height="600">' if is_device else ''}
   </div>
 </section>
 <section class="section--sm"><div class="container">{stats_html(p['stats'])}</div></section>
@@ -1059,10 +1120,18 @@ def build_product_page(p):
 {color_gallery}
 {sections_html(p['sections'], glow)}
 {data_section}
+{lineage_section(p) if is_device else ''}
 {extras}
 {f'''<section class="section--sm"><div class="container"><div class="card t-center" style="padding:clamp(32px,5vw,56px)"><h2 class="t-h3">すべての仕様を確認する</h2><p class="t-soft">サイズ・性能・カメラ・通信仕様の完全なリストをご用意しています。</p><div class="cluster cluster--center"><a class="btn btn--primary" href="{url}specs/">{esc(p['name'])} の仕様を見る</a><a class="btn btn--ghost" href="/products/compare/">他のモデルと比較する</a></div></div></div></section>''' if is_device else ''}
 {related}
-{cta_band('SUZAKU ストアで、次の一台を。', '全国送料無料(5,000円以上)。14日間の返品保証と1年間のメーカー保証付き。', [('ストアで見る', '/store/', 'btn--primary'), ('購入ガイド', '/store/guide/', 'btn--ghost')])}
+{related_news_section([p['name']], title=f"{esc(p['name'])} のニュース")}
+{cta_band(*(
+    ('次の勝利は、ストアから。', '全国送料無料。氷嵐クーラーやGrip Proとの同時購入で、装備を一気にそろえられます。')
+    if p['line'] in GAMING_LINES else
+    ('毎日の相棒を、ストアで。', '全国送料無料(5,000円以上)。14日間の返品保証と1年間のメーカー保証付き。')
+    if p['line'] in LIFE_LINES else
+    ('本体と、そろえて。', 'ストアなら本体とアクセサリをまとめて一度に受け取れます。5,000円以上で送料無料。')
+), [('ストアで見る', '/store/', 'btn--primary'), ('購入ガイド', '/store/guide/', 'btn--ghost')])}
 {footnotes}
 {localnav}
 {buy_float}
@@ -1270,7 +1339,8 @@ def build_tech_page(t):
     </div>
   </div>
 </section>
-{cta_band('技術は、体験のためにある。', 'SUZAKUの全技術は、製品の上ではじめて意味を持ちます。搭載製品をストアでご覧ください。', [('ストアで見る', '/store/', 'btn--primary'), ('テクノロジー トップ', '/tech/', 'btn--ghost')])}
+{related_news_section([t['name'], t['en']], title=f"{esc(t['name'])} 関連ニュース")}
+{cta_minimal('技術は、体験のためにある。', [('搭載製品をストアで見る', '/store/'), (hub['title'] + ' トップ', hub['path']), ('テクノロジー トップ', '/tech/')])}
 """
     crumbs = [("テクノロジー", "/tech/"), (hub["title"], hub["path"]), (t["name"], None)]
     render_page(url, f"{t['name']} — {t['tagline']}", t["sub"], body, "dark", crumbs, "テクノロジー")

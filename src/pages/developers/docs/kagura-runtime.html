@@ -1,0 +1,85 @@
+<!--META {"title": "KAGURA Runtime — オンデバイス推論", "desc": "神楽NPUでオンデバイス推論を行うKAGURA Runtimeのドキュメント。モデルの量子化、ロード、推論、フレーム生成連携までを解説します。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["ドキュメント", "/developers/docs/"], ["KAGURA Runtime", null]], "group": "開発者"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">API REFERENCE</p>
+    <h1 class="t-h1">KAGURA Runtime</h1>
+    <p class="t-soft t-small" style="max-width:640px">神楽NPU上でモデルを実行する、オンデバイス推論ランタイム。最大120 TOPSの演算をゲームやアプリから直接利用できます。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="doc-layout">
+      <aside class="doc-side">
+        <p class="doc-side__title">ガイド</p>
+        <a href="/developers/docs/">ドキュメント トップ</a>
+        <a href="/developers/docs/getting-started/">クイックスタート</a>
+        <p class="doc-side__title">APIリファレンス</p>
+        <a href="/developers/docs/performance-api/">Performance API</a>
+        <a href="/developers/docs/cooling-api/">Cooling API</a>
+        <a href="/developers/docs/kagura-runtime/" class="is-active">KAGURA Runtime</a>
+        <p class="doc-side__title">リソース</p>
+        <a href="/developers/guidelines/">最適化ガイドライン</a>
+        <a href="/developers/changelog/">リリースノート</a>
+        <a href="/developers/sdk/">SDKダウンロード</a>
+      </aside>
+      <div class="stack stack--lg">
+        <div class="stack">
+          <h2 class="t-h3">概要</h2>
+          <p class="t-small t-soft">KAGURA Runtimeは、SUZAKU端末に搭載された神楽NPU上でニューラルネットワークを実行するためのランタイムです。CPU/GPUを占有せずに推論を行えるため、ゲームの描画性能を落とさずにAI処理(超解像、被写体認識、フレーム生成の補助等)を組み込めます。対応形式はONNXおよび当社独自の量子化フォーマット(.kgr)です。</p>
+        </div>
+
+        <div class="stack">
+          <h2 class="t-h3">対応NPUと性能</h2>
+          <div class="scroll-x"><table class="spec-table quick-table">
+            <thead><tr><th scope="col">SoC世代</th><th scope="col">NPU</th><th scope="col">性能</th><th scope="col">対応精度</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">雷 RAI-G4</th><td>神楽 v4</td><td>120 TOPS</td><td>INT8 / INT4 / FP16</td></tr>
+              <tr><th scope="row">雷 RAI-G3</th><td>神楽 v3</td><td>75 TOPS</td><td>INT8 / FP16</td></tr>
+              <tr><th scope="row">雷 RAI-E2</th><td>神楽 lite</td><td>12 TOPS</td><td>INT8</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="stack">
+          <h2 class="t-h3">1. モデルを量子化する</h2>
+          <p class="t-small t-soft">付属のCLI <code style="color:var(--accent)">kagura-quant</code> でONNXモデルをNPU向けに量子化します。キャリブレーション用データセットを渡すと、精度低下を抑えたINT8/INT4量子化を行います。</p>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>terminal</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre>$ kagura-quant model.onnx \
+    <span class="tk-s">--precision int8</span> \
+    <span class="tk-s">--calib ./calib_images</span> \
+    <span class="tk-s">-o model.kgr</span></pre>
+          </div>
+        </div>
+
+        <div class="stack">
+          <h2 class="t-h3">2. モデルをロードして推論する</h2>
+          <div class="codeblock">
+            <div class="codeblock__bar"><span>Upscaler.kt</span><button class="copy-btn" type="button">コピー</button></div>
+            <pre><span class="tk-k">val</span> runtime = SuzakuGameKit.<span class="tk-f">kagura</span>(context)
+<span class="tk-k">val</span> model = runtime.<span class="tk-f">load</span>(<span class="tk-s">"model.kgr"</span>)
+
+<span class="tk-c">// フレームバッファを入力に推論(NPUで実行)</span>
+<span class="tk-k">val</span> output = model.<span class="tk-f">run</span>(inputTensor)
+
+<span class="tk-c">// 使い終わったら解放</span>
+model.<span class="tk-f">close</span>()</pre>
+          </div>
+        </div>
+
+        <div class="stack">
+          <h2 class="t-h3">3. フレーム生成と連携する(OS 4.0+)</h2>
+          <p class="t-small t-soft">Performance APIで <code style="color:var(--accent)">frameBoost</code> を有効にすると、OS側のAIフレーム生成が働きます。独自の後処理モデルを挟みたい場合は、KAGURA Runtimeのフックを利用します。ユーザーの安全に関わる制御は回避できません(<a href="/legal/terms/">利用規約</a>参照)。</p>
+          <div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> オンデバイス推論のため、入力データが端末外へ送信されることはありません。プライバシーに配慮した設計です(<a href="/legal/ai/" style="text-decoration:underline">AI利用方針</a>)。</div>
+        </div>
+
+        <div class="spread">
+          <a class="btn btn--ghost" href="/developers/docs/cooling-api/">← Cooling API</a>
+          <a class="btn btn--primary" href="/developers/guidelines/">次: 最適化ガイドライン →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

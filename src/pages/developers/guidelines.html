@@ -1,0 +1,46 @@
+<!--META {"title": "「SUZAKU最適化」認定ガイドライン", "desc": "ストアで「SUZAKU最適化」バッジを取得するための最適化ガイドライン。性能契約・冷却・入力遅延・電力効率の推奨基準と認定プロセス。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["最適化ガイドライン", null]], "group": "開発者"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">OPTIMIZATION GUIDELINES</p>
+    <h1 class="t-h1">「SUZAKU最適化」認定ガイドライン</h1>
+    <p class="t-soft" style="max-width:660px">「SUZAKU最適化」バッジは、SUZAKU端末で最良の体験を提供するタイトルの証です。取得のための推奨基準と認定プロセスをまとめました。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">CRITERIA</p><h2 class="t-h2">認定の推奨基準</h2></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">領域</th><th scope="col">推奨基準</th><th scope="col">確認方法</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">性能契約</th><td>起動時に Performance API で目標fpsを宣言し、実効fpsが目標の95%以上を維持</td><td>「陣」開発者オーバーレイ</td></tr>
+        <tr><th scope="row">冷却</th><td>高負荷シーンで Cooling API による事前冷却を実装し、30分プレイでサーマルスロットリングが発生しない</td><td>持続性能テスト</td></tr>
+        <tr><th scope="row">入力遅延</th><td>タッチ〜描画のエンドツーエンド遅延が高リフレッシュレート時に基準値以下</td><td>遅延計測ツール</td></tr>
+        <tr><th scope="row">電力効率</th><td>目標fps達成時の消費電力が、最適化前比で改善していること</td><td>電力プロファイラ</td></tr>
+        <tr><th scope="row">解像度・HUD</th><td>高解像度パネル(2K/175Hz)およびパンチホール/ノッチのセーフエリアに対応</td><td>UI検証</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-head" style="margin-top:var(--sp-7)"><p class="eyebrow">PROCESS</p><h2 class="t-h2">認定までの流れ</h2></div>
+    <div class="timeline reveal-stagger">
+      <div class="timeline__item"><p class="timeline__date">STEP 1</p><h3 class="t-h4">開発者プログラムに登録</h3><p class="t-small t-soft">無料で登録し、SDKと検証機貸出を利用します。</p></div>
+      <div class="timeline__item"><p class="timeline__date">STEP 2</p><h3 class="t-h4">セルフチェック</h3><p class="t-small t-soft">上記の基準を「陣」オーバーレイと計測ツールで自己確認します。</p></div>
+      <div class="timeline__item"><p class="timeline__date">STEP 3</p><h3 class="t-h4">申請とレビュー</h3><p class="t-small t-soft">ビルドと計測レポートを提出。当社エンジニアが実機で検証します(目安10営業日)。</p></div>
+      <div class="timeline__item"><p class="timeline__date">STEP 4</p><h3 class="t-h4">バッジ付与</h3><p class="t-small t-soft">基準を満たしたタイトルに「SUZAKU最適化」バッジを付与し、ストアで訴求します。</p></div>
+    </div>
+
+    <div class="card" style="margin-top:var(--sp-6)">
+      <h2 class="t-h4">認定タイトルの特典</h2>
+      <ul class="check-list">
+        <li>SUZAKUストア・製品ページでの「SUZAKU最適化」バッジ表示</li>
+        <li>年次発表会「SUZAKU IGNITE」での紹介機会</li>
+        <li>新SoC・新OSの早期アクセスプログラムへの招待</li>
+      </ul>
+      <div class="cluster" style="margin-top:16px">
+        <a class="btn btn--primary" href="/developers/sdk/">SDKをダウンロード</a>
+        <a class="btn btn--ghost" href="/developers/showcase/">認定タイトルを見る</a>
+      </div>
+    </div>
+  </div>
+</section>

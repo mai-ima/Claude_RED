@@ -615,6 +615,8 @@ def footer_html():
             ("法人お問い合わせ", "/business/contact/"),
             ("開発者向け", "/developers/"),
             ("ドキュメント", "/developers/docs/"),
+            ("最適化ガイドライン", "/developers/guidelines/"),
+            ("対応タイトル", "/developers/showcase/"),
             ("SDKダウンロード", "/developers/sdk/"),
         ]),
     ]

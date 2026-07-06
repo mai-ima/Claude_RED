@@ -1,0 +1,60 @@
+<!--META {"title": "SDK リリースノート", "desc": "SUZAKU GameKit SDKのリリースノート。各バージョンの新機能・改善・非互換変更・非推奨のお知らせ。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["リリースノート", null]], "group": "開発者"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow">SDK RELEASE NOTES</p>
+    <h1 class="t-h1">リリースノート</h1>
+    <p class="t-soft" style="max-width:640px">SUZAKU GameKit SDKの変更履歴です。セマンティックバージョニングに従い、メジャー更新でのみ非互換変更を行います。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div class="timeline reveal-stagger">
+      <div class="timeline__item">
+        <p class="timeline__date">v4.2.0 — 2026.05.29</p>
+        <h2 class="t-h4">RAI-G4 / KAGURA v4 対応</h2>
+        <ul class="check-list">
+          <li>KAGURA Runtimeが神楽NPU v4(120 TOPS)とINT4量子化に対応</li>
+          <li>Performance APIに <code style="color:var(--accent)">frameBoost</code>(AIフレーム生成連携)を追加</li>
+          <li>Unreal Engine 5.5プラグインを同梱</li>
+        </ul>
+      </div>
+      <div class="timeline__item">
+        <p class="timeline__date">v4.0.0 — 2026.05.14</p>
+        <h2 class="t-h4">SUZAKU OS 4.0「不知火」対応(メジャー)</h2>
+        <ul class="check-list">
+          <li><strong>非互換:</strong> <code style="color:var(--accent)">PerfMode.TURBO</code> を廃止し <code style="color:var(--accent)">PerfMode.PERFORMANCE</code> / <code style="color:var(--accent)">SUZAKU</code> に統合</li>
+          <li>サーマルヘッドルームのコールバック粒度を改善</li>
+          <li>最小対応をAndroid 12(API 31)に引き上げ</li>
+        </ul>
+      </div>
+      <div class="timeline__item">
+        <p class="timeline__date">v3.4.0 — 2025.11.06</p>
+        <h2 class="t-h4">法人向けデバイス管理連携</h2>
+        <ul class="check-list">
+          <li>MDMプロファイルからの性能ポリシー適用に対応</li>
+          <li>Cooling APIに外付け「氷嵐クーラー」連携イベントを追加</li>
+        </ul>
+      </div>
+      <div class="timeline__item">
+        <p class="timeline__date">v3.0.0 — 2025.05.30</p>
+        <h2 class="t-h4">RAI-G3 / 3nm世代対応(メジャー)</h2>
+        <ul class="check-list">
+          <li>KAGURA Runtimeを初公開(神楽 v3・75 TOPS)</li>
+          <li>ハードウェアレイトレーシング補助APIを追加</li>
+          <li><strong>非推奨:</strong> 旧 <code style="color:var(--accent)">ThermalListener</code> を <code style="color:var(--accent)">onThermalHeadroom</code> に置き換え(v4で削除済み)</li>
+        </ul>
+      </div>
+      <div class="timeline__item">
+        <p class="timeline__date">v1.0.0 — 2024.09.03</p>
+        <h2 class="t-h4">GameKit SDK 初公開</h2>
+        <ul class="check-list">
+          <li>Performance API・Cooling APIを一般公開</li>
+          <li>Kotlin / C++ / Unity バインディングを提供</li>
+        </ul>
+      </div>
+    </div>
+    <div class="notice" style="margin-top:24px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> 非推奨APIは、告知から最低1メジャーバージョンの猶予期間を設けてから削除します。移行方法は各リリースの詳細ドキュメントに記載します。</div>
+  </div>
+</section>

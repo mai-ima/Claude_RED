@@ -39,11 +39,49 @@
         <h3 class="t-h3">Cooling API</h3>
         <p class="t-small t-soft">旋風ファンの制御、氷嵐クーラーの連携、温度イベントの購読。重要局面の前に、先回りで冷やせます。</p>
         <p class="link-arrow">ドキュメント</p></a>
-      <a class="card card--hover" href="/developers/docs/">
+      <a class="card card--hover" href="/developers/docs/kagura-runtime/">
         <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/></svg></div>
         <h3 class="t-h3">KAGURA Runtime</h3>
         <p class="t-small t-soft">神楽NPUでのオンデバイス推論。モデルの量子化ツールチェーンとランタイムを提供します。</p>
         <p class="link-arrow">ドキュメント</p></a>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">RESOURCES</p><h2 class="t-h1">開発者リソース</h2></div>
+    <div class="grid grid--4 reveal-stagger">
+      <a class="card card--hover" href="/developers/docs/getting-started/"><h3 class="t-h4">クイックスタート</h3><p class="t-small t-soft">15分で最初の性能契約を宣言。</p><p class="link-arrow">開く</p></a>
+      <a class="card card--hover" href="/developers/guidelines/"><h3 class="t-h4">最適化ガイドライン</h3><p class="t-small t-soft">「SUZAKU最適化」バッジの取得基準と認定プロセス。</p><p class="link-arrow">開く</p></a>
+      <a class="card card--hover" href="/developers/showcase/"><h3 class="t-h4">対応タイトル</h3><p class="t-small t-soft">最適化事例と開発者の声。</p><p class="link-arrow">開く</p></a>
+      <a class="card card--hover" href="/developers/changelog/"><h3 class="t-h4">リリースノート</h3><p class="t-small t-soft">SDKの新機能・非互換変更・非推奨。</p><p class="link-arrow">開く</p></a>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">SDK MATRIX</p><h2 class="t-h2">対応バージョン</h2></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">SDK</th><th scope="col">最小OS</th><th scope="col">言語 / エンジン</th><th scope="col">主な対応SoC</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">GameKit v4.2</th><td>Android 12(API 31)</td><td>Kotlin / C++ / Unity / Unreal 5.5</td><td>RAI-G4 / G3 / E2</td></tr>
+        <tr><th scope="row">GameKit v3.x(保守)</th><td>Android 11(API 30)</td><td>Kotlin / C++ / Unity</td><td>RAI-G3 / G2</td></tr>
+      </tbody>
+    </table></div>
+    <p class="t-micro t-faint" style="margin-top:12px">非互換変更の方針は<a href="/developers/changelog/">リリースノート</a>を、利用条件は<a href="/legal/terms/">利用規約</a>第7条をご確認ください。</p>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">FAQ</p><h2 class="t-h2">開発者向けFAQ</h2></div>
+    <div class="accordion">
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>非対応端末ではどう動作しますか?</span></button><div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">すべてのAPIは非SUZAKU端末で安全にno-op(何もしない)になります。1つのAPKで全Android端末に配布でき、分岐が必要な場合は <code style="color:var(--accent)">isSupported</code> をご利用ください。</div></div></div></div>
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>ライセンス費用はかかりますか?</span></button><div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">GameKit SDKは無償・非独占のライセンスで提供し、商用利用も許諾されます。詳細は<a href="/legal/terms/">利用規約</a>第7条をご覧ください。</div></div></div></div>
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>検証機を借りられますか?</span></button><div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">開発者プログラム登録者には検証機の貸出を行っています。<a href="/support/contact/">お問い合わせ</a>よりご依頼ください。</div></div></div></div>
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>脆弱性を見つけた場合の報告先は?</span></button><div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body"><a href="/legal/vulnerability-disclosure/">脆弱性開示ポリシー</a>に沿ってご報告ください。誠実な報告にはセーフハーバーを適用します。</div></div></div></div>
     </div>
   </div>
 </section>

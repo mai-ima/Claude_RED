@@ -455,6 +455,34 @@ def mega_company():
 </div>"""
 
 
+# カラーテーマの選択肢(単一ソース)。テーマを追加・変更する場合はここだけを編集すれば、
+# ヘッダーのドロップダウンとドロワーのセグメント切替の両方に反映される。
+# 各要素: (value, スウォッチのCSS, 正式名称(aria/トースト), 短縮名(ドロワー用))
+THEME_OPTS = [
+    ("auto", "linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)", "ページ既定", "既定"),
+    ("light", "#fafafc", "ライト", "ライト"),
+    ("dark", "#0b0b10", "ダーク", "ダーク"),
+    ("g", "linear-gradient(135deg,#00e68a,#00c2ff)", "Gモード", "G"),
+    ("suzaku", "linear-gradient(135deg,#e8442e,#d9a441)", "朱雀モード", "朱雀"),
+]
+
+
+def theme_menu_buttons():
+    """ヘッダーのテーマドロップダウン用ボタン列。"""
+    return "".join(
+        f'<button type="button" data-theme-opt="{v}" role="menuitemradio"><i style="background:{sw}"></i>{full}</button>'
+        for v, sw, full, short in THEME_OPTS
+    )
+
+
+def theme_seg_buttons():
+    """ドロワー(モバイル)のテーマセグメント用ボタン列。"""
+    return "".join(
+        f'<button type="button" data-theme-opt="{v}" data-theme-label="{full}"><i style="background:{sw}"></i>{short}</button>'
+        for v, sw, full, short in THEME_OPTS
+    )
+
+
 def header_html():
     return f"""
 <a class="skip-link" href="#main">本文へスキップ</a>
@@ -476,11 +504,7 @@ def header_html():
         </button>
         <div class="theme-menu__panel" role="menu" aria-label="カラーテーマ">
           <p class="theme-menu__title">カラーテーマ</p>
-          <button type="button" data-theme-opt="auto" role="menuitemradio"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>ページ既定</button>
-          <button type="button" data-theme-opt="light" role="menuitemradio"><i style="background:#fafafc"></i>ライト</button>
-          <button type="button" data-theme-opt="dark" role="menuitemradio"><i style="background:#0b0b10"></i>ダーク</button>
-          <button type="button" data-theme-opt="g" role="menuitemradio"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>Gモード</button>
-          <button type="button" data-theme-opt="suzaku" role="menuitemradio"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀モード</button>
+          {theme_menu_buttons()}
         </div>
       </div>
       <a class="icon-btn" href="/search/" aria-label="検索">{svg_art.ICONS['search']}</a>
@@ -550,11 +574,7 @@ def header_html():
   <div class="drawer__theme">
     <p class="drawer__sub">カラーテーマ</p>
     <div class="theme-seg" role="group" aria-label="カラーテーマ">
-      <button type="button" data-theme-opt="auto" data-theme-label="ページ既定"><i style="background:linear-gradient(90deg,#fafafc 50%,#0b0b10 50%)"></i>既定</button>
-      <button type="button" data-theme-opt="light" data-theme-label="ライト"><i style="background:#fafafc"></i>ライト</button>
-      <button type="button" data-theme-opt="dark" data-theme-label="ダーク"><i style="background:#0b0b10"></i>ダーク</button>
-      <button type="button" data-theme-opt="g" data-theme-label="Gモード"><i style="background:linear-gradient(135deg,#00e68a,#00c2ff)"></i>G</button>
-      <button type="button" data-theme-opt="suzaku" data-theme-label="朱雀モード"><i style="background:linear-gradient(135deg,#e8442e,#d9a441)"></i>朱雀</button>
+      {theme_seg_buttons()}
     </div>
   </div>
 </nav>"""

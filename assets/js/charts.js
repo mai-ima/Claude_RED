@@ -80,6 +80,7 @@
 
   /* ---------- 折れ線グラフ(SVG) ---------- */
   function renderLine(el, cfg) {
+    if (!cfg.series || !cfg.series.length || !cfg.labels) return;
     var W = 560, H = 240, PL = 46, PR = 16, PT = 14, PB = 30;
     var series = cfg.series;
     var all = [];
@@ -121,6 +122,7 @@
 
   /* ---------- レーダーチャート(SVG) ---------- */
   function renderRadar(el, cfg) {
+    if (!cfg.axes || !cfg.axes.length || !cfg.series || !cfg.series.length) return;
     var W = 360, H = 320, cx = W / 2, cy = H / 2 + 6, R = 108;
     var n = cfg.axes.length;
     function pt(i, r) {
@@ -152,6 +154,7 @@
 
   /* ---------- ドーナツ/ゲージ(SVG) ---------- */
   function renderDonut(el, cfg) {
+    if (typeof cfg.value !== "number" || typeof cfg.max !== "number" || !cfg.max) return;
     var R = 62, C = 2 * Math.PI * R;
     var ratio = Math.max(0, Math.min(1, cfg.value / cfg.max));
     el.innerHTML = header(cfg) +
@@ -164,15 +167,22 @@
       "</div>" + dataTable(cfg);
   }
 
-  /* ---------- 起動 ---------- */
+  /* ---------- 起動 ----------
+     チャート種別はマップで管理する。新しい種別を追加するときは
+     render関数を書いて RENDERERS に1行足すだけでよい。 */
+  var RENDERERS = { bar: renderBar, line: renderLine, radar: renderRadar, donut: renderDonut };
   function render(el) {
     var cfg;
     try { cfg = JSON.parse(el.getAttribute("data-chart")); } catch (e) { return; }
-    if (cfg.type === "bar") renderBar(el, cfg);
-    else if (cfg.type === "line") renderLine(el, cfg);
-    else if (cfg.type === "radar") renderRadar(el, cfg);
-    else if (cfg.type === "donut") renderDonut(el, cfg);
-    el.classList.add("is-rendered");
+    var fn = cfg && RENDERERS[cfg.type];
+    if (!fn) return;
+    /* 1つのチャートの不備でページ全体のスクリプトが止まらないよう隔離する */
+    try {
+      fn(el, cfg);
+      el.classList.add("is-rendered");
+    } catch (e) {
+      if (window.console && console.warn) console.warn("SUZAKU charts: 描画をスキップしました", e);
+    }
   }
 
   function animate(el) {

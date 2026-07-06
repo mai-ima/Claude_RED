@@ -51,7 +51,34 @@ python3 scripts/check_links.py
 Cookie同意バナー(カテゴリ別設定) / カート / 多段チェックアウト(Luhn検証・
 支払方法・配送日時指定・注文番号発行) / 注文照会 / 修理受付と照会 / 比較ツール
 (スペック表+レーダーチャート) / FAQ検索 / ニュースフィルタ / サイト内検索 /
-各種お問い合わせフォーム / SVGチャート(棒・折れ線・レーダー・ドーナツ、表フォールバック付き)
+各種お問い合わせフォーム / SVGチャート(棒・折れ線・レーダー・ドーナツ、表フォールバック付き) /
+アカウント・ログイン・管理ボード(ニュース作成・ページ別制御・全体制御・ユーザー管理) /
+メンテナンスシステム / 表示設定(`/settings/`)
+
+### 表示設定システム(`window.szPrefs`)
+
+`assets/js/main.js` の `PREF_SCHEMA` が単一ソース。項目を追加するには
+`{ default, apply }` を1行足すだけでよく、`applyPrefs()` が全項目を
+`<html>` の `data-*` 属性へ自動反映する(個別配線は不要)。現在の項目:
+`footerMode`(フッターの折りたたみ/常時展開)・`density`(文字とUIの大きさ)・
+`motion`(アニメーション低減)。設定は `sz_prefs`(localStorage)に保存される。
+設定ページ(`src/pages/settings.html`)側は `data-pref` / `data-pref-value`
+属性だけで動く汎用配線のため、HTMLにグループを追加するだけで新項目に対応できる。
+
+### カラーテーマの単一ソース
+
+テーマ選択肢は `scripts/gen.py` の `THEME_OPTS` にのみ定義し、
+ヘッダーのドロップダウン(`theme_menu_buttons()`)とドロワーの
+セグメント切替(`theme_seg_buttons()`)を同じ配列から生成する。
+テーマを追加・変更する場合は `THEME_OPTS` だけを編集すればよい。
+
+### キャッシュバスティング
+
+`scripts/gen.py` はビルド時に `assets/css` と `assets/js` の内容ハッシュ
+(`ASSET_V`)を計算し、全 `<link>` / `<script>` に `?v=<hash>` を付与する。
+資産が変わるたびにURLが変わるため、CDN・ブラウザの古いキャッシュを確実に回避
+できる(`vercel.json` の `/assets/` は `immutable` で長期キャッシュ)。
+利用者は Cookie設定ページ(`/legal/cookie/`)からキャッシュを手動削除もできる。
 
 ## Next.js(App Router)への移行ガイド
 

@@ -2252,8 +2252,10 @@ body.has-announce-bar .drawer { top: calc(var(--header-h) + var(--announce-h, 32
 
 /* 印刷 = 実PDF出力: 紙面のみを出力 */
 @media print {
+  /* .section--sm はサイト全体で本文の主要ラッパーとして使われる汎用クラスのため
+     印刷非表示対象から外し、ビューア専用の非コンテンツ領域のみ .viewer-library で指定する。 */
   .site-header, .drawer, .viewer-bar, .site-footer, .cookie-banner, .modal-backdrop,
-  .toast, .breadcrumb, .maint-bar, .section--sm, .localnav, .buy-float { display: none !important; }
+  .toast, .breadcrumb, .maint-bar, .announce-bar, .viewer-library, .localnav, .buy-float { display: none !important; }
   body { background: #fff !important; padding: 0 !important; }
   .viewer-stage { border: 0; background: #fff; }
   .viewer-scroll { max-height: none; overflow: visible; padding: 0; }

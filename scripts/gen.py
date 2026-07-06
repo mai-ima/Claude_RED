@@ -32,9 +32,10 @@ BASE_URL = "https://suzaku.example.jp"
 
 
 def _asset_version():
-    """assets/css・assets/js の内容から短いハッシュを作り、キャッシュバスティング用の
-    クエリ文字列(?v=...)に使う。CSS/JSを更新してもCDN・ブラウザキャッシュにより
-    古いファイルが混在して表示が壊れるのを防ぐ。"""
+    """assets/css・assets/js・data_*.py(/data/products.js の生成元)の内容から
+    短いハッシュを作り、キャッシュバスティング用のクエリ文字列(?v=...)に使う。
+    CSS/JSはもちろん、商品データだけを更新した場合でも /data/products.js が
+    古いキャッシュのまま配信され続けないよう、生成元データもハッシュ対象に含める。"""
     h = hashlib.sha256()
     for sub in ("css", "js"):
         d = ROOT / "assets" / sub
@@ -43,6 +44,8 @@ def _asset_version():
         for f in sorted(d.glob("*")):
             if f.is_file():
                 h.update(f.read_bytes())
+    for f in sorted((ROOT / "scripts").glob("data_*.py")):
+        h.update(f.read_bytes())
     return h.hexdigest()[:10]
 
 

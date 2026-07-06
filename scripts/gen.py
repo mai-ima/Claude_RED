@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from data_products import ALL_PRODUCTS, PHONES, TABLETS, ACCESSORIES, LINES  # noqa: E402
+from data_collab import COLLABS  # noqa: E402
 from data_tech import TECHS, OS_VERSIONS  # noqa: E402
 from data_misc import NEWS, FAQ, HISTORY  # noqa: E402
 from data_docs import DOCS  # noqa: E402
@@ -77,7 +78,7 @@ def chart(cfg, cls=""):
 
 
 # ベンチマーク・技術トレンドの単一ソース(架空値)
-ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385}   # 万点(旗艦G系)
+ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385, "rai-g4-sig": 405}   # 万点(旗艦G系。-sig はコラボ限定の特別選別ビン)
 ANTUTU_E = {"rai-e1": 62, "rai-e2": 85}                                   # 万点(エントリーE系)
 TFLOPS_L = {"homura-l1": 0.35, "homura-l2": 0.5}                          # Lite GPU
 CLOCK = {"rai-g1": 3.2, "rai-g2": 3.3, "rai-g3": 3.5, "rai-g4": 3.8}    # GHz
@@ -108,7 +109,7 @@ def product_antutu(p):
 
 def radar_values(p):
     """5軸(性能/カメラ/バッテリー/冷却/コスパ)を仕様から算出、0-100。"""
-    perf = round((product_antutu(p) or 100) / 385 * 100)
+    perf = round(min(100, (product_antutu(p) or 100) / 385 * 100))
     cam_s = get_spec(p, ["カメラ"], "リアカメラ")
     cam = 95 if "RS-2+" in cam_s else 86 if "RS-2" in cam_s else 72 if "RS-1" in cam_s else 50
     bat = num(get_spec(p, ["バッテリー"], "バッテリー容量"))
@@ -130,7 +131,7 @@ def box_items(p):
     """同梱物リスト。カテゴリ・ラインごとに現実的な内容を生成。"""
     if p["cat"] == "phone":
         items = ["本体", "USB Type-C to C ケーブル(1m)", "SIMピン", "クイックスタートガイド / 保証のご案内", "SUZAKUステッカー"]
-        if p["line"] in ("suzaku", "neo"):
+        if p["line"] in ("suzaku", "neo", "collab"):
             watt = num(get_spec(p, ["バッテリー"], "有線充電")) or 65
             items.insert(1, f"雷速チャージャー {watt}W(同梱)")
             items += ["クリアソフトケース", "画面保護フィルム(貼付済み)"]
@@ -226,8 +227,16 @@ LINE_FAQ["pad"] = LINE_FAQ["suzaku"]
 LINE_FAQ["pad-neo"] = LINE_FAQ["neo"]
 LINE_FAQ["t-pad"] = LINE_FAQ["tsubame"]
 LINE_FAQ["t-pad-lite"] = LINE_FAQ["lite"]
+LINE_FAQ["collab"] = [
+    ("コラボモデルは数量限定・期間限定ですか?",
+     "はい。各コラボレーションモデルは数量限定生産・期間限定販売です。特設ページに残りの販売枠と受付終了までのカウントダウンを表示しています。上限に達した場合は期間内でも販売を終了します。"),
+    ("性能は通常モデルと違いますか?",
+     "コラボモデルは歩留まり上位の個体を選び抜いた特別選別ビン「雷 RAI-G4 選別版」を搭載し、最大3.9GHz・AnTuTu 405万点と当社史上最高性能です。冷却・カメラ・ディスプレイは通常のSUZAKU 4に準じます。"),
+    ("同梱のゲーム内アイテムコードは実際に使えますか?",
+     "本サイトは架空のデモです。コラボレーション企画・同梱コードはデモ表記であり、実在の商品・提携・引き換えを示すものではありません。"),
+] + LINE_FAQ["suzaku"]
 
-GAMING_LINES = {"suzaku", "neo", "pad", "pad-neo"}
+GAMING_LINES = {"suzaku", "neo", "pad", "pad-neo", "collab"}
 LIFE_LINES = {"tsubame", "lite", "t-pad", "t-pad-lite"}
 
 # チップ世代別 タイトル実測fps: (平均fps, 30分後fps) ×4ジャンル(架空タイトル)
@@ -242,6 +251,7 @@ GAME_FPS = {
     "rai-g2": [(59, 55), (116, 108), (142, 137), (108, 101)],
     "rai-g3": [(60, 59), (143, 138), (164, 160), (132, 127)],
     "rai-g4": [(60, 60), (172, 170), (175, 175), (158, 155)],
+    "rai-g4-sig": [(60, 60), (175, 174), (175, 175), (161, 159)],
 }
 
 
@@ -364,11 +374,11 @@ def mega_products():
     <div>
       <p class="mega__group-title">ショッピング</p>
       <ul class="mega__list">
+        {li('/collab/', 'コラボレーション', '数量限定・期間限定', True)}
         {li('/store/', 'SUZAKU ストア')}
         {li('/products/compare/', '製品を比較する')}
         {li('/store/guide/', '購入ガイド')}
         {li('/store/order-status/', '注文状況の確認')}
-        {li('/store/cart/', 'カートを見る')}
       </ul>
     </div>
   </div>
@@ -596,6 +606,7 @@ def footer_html():
             ("TSUBAME 3", "/products/phone/tsubame-3/"),
             ("SUZAKU Pad 2", "/products/tablet/pad-2/"),
             ("アクセサリ", "/products/accessories/"),
+            ("コラボレーション", "/collab/"),
             ("SUZAKU ストア", "/store/"),
             ("製品を比較する", "/products/compare/"),
             ("購入ガイド", "/store/guide/"),
@@ -722,9 +733,22 @@ HEAD_FONTS = """<link rel="preconnect" href="https://fonts.googleapis.com">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"></noscript>"""
 
 
-def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その他", noindex=False):
-    """共通レイアウトでページを組み立ててディスクに書き出す。"""
+def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その他", noindex=False,
+                layout=None, collab=None):
+    """共通レイアウトでページを組み立ててディスクに書き出す。
+
+    layout=="collab" のとき、コラボ特設専用のスタイル(collab.css)・スクリプト(collab.js)を
+    そのページだけ注入し、collab(=data_collab.py の設定dict)の tokens を CSS変数として
+    <body> にインライン注入する。色替えは tokens の1行編集で確実に効く。通常ページには一切影響しない。"""
     full_title = f"{title} | {SITE_NAME}" if url != "/" else f"{SITE_NAME} 公式サイト | {title}"
+    collab_head = collab_body_class = collab_body_attr = collab_script = ""
+    if layout == "collab" and collab:
+        tok = collab["tokens"]
+        collab_head = f'<link rel="stylesheet" href="/assets/css/collab.css?v={ASSET_V}">'
+        collab_body_class = f' collab-page collab--{collab["slug"]}'
+        style_vars = ";".join(f"--cl-{k}:{v}" for k, v in tok.items())
+        collab_body_attr = f' data-motif="{collab["motif"]}" style="{style_vars}"'
+        collab_script = f'<script src="/assets/js/collab.js?v={ASSET_V}" defer></script>'
     crumb_html = ""
     if crumbs:
         items = [('ホーム', '/')] + list(crumbs)
@@ -754,8 +778,9 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 <link rel="stylesheet" href="/assets/css/base.css?v={ASSET_V}">
 <link rel="stylesheet" href="/assets/css/components.css?v={ASSET_V}">
 <link rel="stylesheet" href="/assets/css/animations.css?v={ASSET_V}">
+{collab_head}
 </head>
-<body class="page{url.rstrip('/').replace('/', '-') or '-home'}">
+<body class="page{url.rstrip('/').replace('/', '-') or '-home'}{collab_body_class}"{collab_body_attr}>
 {header_html()}
 {crumb_html}
 <main id="main">
@@ -774,6 +799,7 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 <script src="/assets/js/auth-account.js?v={ASSET_V}" defer></script>
 <script src="/assets/js/auth-admin.js?v={ASSET_V}" defer></script>
 <script src="/assets/js/auth-status.js?v={ASSET_V}" defer></script>
+{collab_script}
 </body>
 </html>"""
 
@@ -838,7 +864,9 @@ def spec_tables_html(specs):
 def product_card(p, show_price=True):
     line = LINES[p["line"]]
     badge = ""
-    if p.get("flag") == "new":
+    if p.get("flag") == "limited":
+        badge = '<span class="badge badge--limited">数量限定</span>'
+    elif p.get("flag") == "new":
         badge = '<span class="badge badge--new">NEW</span>'
     elif p["status"] == "old":
         badge = '<span class="badge badge--end">販売終了</span>'
@@ -1012,8 +1040,11 @@ def build_product_page(p):
 
     chip_link = ""
     if p.get("chip"):
-        chip = next(t for t in TECHS if t["id"] == p["chip"])
-        chip_link = f'<a class="btn btn--ghost" href="/tech/cpu/{p["chip"]}/">搭載SoC {esc(chip["name"])} を見る</a>'
+        # コラボ限定の特別選別ビン(例 rai-g4-sig)は技術ページを持たないため、ベースのチップにリンクする
+        base_chip = p["chip"][:-4] if p["chip"].endswith("-sig") else p["chip"]
+        chip = next((t for t in TECHS if t["id"] == base_chip), None)
+        if chip:
+            chip_link = f'<a class="btn btn--ghost" href="/tech/cpu/{base_chip}/">搭載SoC {esc(chip["name"])} を見る</a>'
 
     # --- データセクション(グラフ+表) ---
     data_section = ""
@@ -1662,6 +1693,188 @@ def build_news_pages():
 
 
 # ==========================================================================
+# コラボレーション特設(data_collab.py の COLLABS を単一テンプレートで生成)
+# ==========================================================================
+
+def build_collab_page(cfg):
+    """コラボ特設LP(1コラボ1ページ)。骨格は全コラボ共通、色/文言は cfg 由来。"""
+    slug = cfg["slug"]
+    hero = cfg["hero"]
+    lim = cfg["limited"]
+    phone = next((p for p in ALL_PRODUCTS if p["id"] == cfg["phone_id"]), None)
+    accs = [p for p in ALL_PRODUCTS if p["id"] in cfg.get("accessory_ids", [])]
+
+    badges = "".join(f'<span class="cl-tag">{t}</span>' for t in ("数量限定", "期間限定", "史上最高性能"))
+
+    # スペック早見(コラボスマホの stats を流用)
+    stat_cells = ""
+    if phone:
+        stat_cells = "".join(
+            f'<div class="cl-stat"><span class="cl-stat__v">{esc(str(s["v"]))}<i>{esc(s["u"])}</i></span>'
+            f'<span class="cl-stat__l">{esc(s["l"])}</span></div>'
+            for s in phone.get("stats", []))
+
+    feats = "".join(
+        f'<div class="cl-feat"><h3 class="cl-feat__t">{esc(h["title"])}</h3>'
+        f'<p class="cl-feat__b">{esc(h["body"])}</p></div>'
+        for h in cfg.get("highlights", []))
+
+    bundle = "".join(
+        f'<li class="cl-bundle__i"><strong>{esc(b["title"])}</strong><span>{esc(b["desc"])}</span></li>'
+        for b in cfg.get("bundle", []))
+
+    gallery = "".join(
+        f'<figure class="cl-tile cl-tile--{i % 4}"><figcaption>{esc(cap)}</figcaption></figure>'
+        for i, cap in enumerate(cfg.get("gallery", [])))
+
+    # 購入導線(実際の製品ページへ)
+    buy = ""
+    if phone:
+        buy = (f'<a class="cl-btn cl-btn--primary" href="{product_url(phone)}">製品詳細・購入へ</a>'
+               f'<a class="cl-btn cl-btn--ghost" href="/products/compare/">通常モデルと比較</a>')
+        price_html = f'<span class="cl-buy__price">{yen(phone["price"])}<small>(税込)〜</small></span>'
+    else:
+        price_html = ""
+
+    acc_cards = ""
+    for a in accs:
+        acc_cards += (
+            f'<a class="cl-acc" href="{product_url(a)}">'
+            f'<div class="cl-acc__media"><img src="/assets/img/products/{a["id"]}-0.svg" alt="{esc(a["name"])}" loading="lazy" width="240" height="240"></div>'
+            f'<div class="cl-acc__body"><p class="cl-acc__name">{esc(a["name"])}</p>'
+            f'<p class="cl-acc__copy">{esc(a["tagline"])}</p>'
+            f'<p class="cl-acc__price">{yen(a["price"])} <small>(税込)〜</small></p></div></a>')
+
+    body = f"""
+<section class="cl-hero" aria-label="{esc(cfg['game'])} コラボレーション">
+  <div class="cl-hero__aura" aria-hidden="true"></div>
+  <div class="cl-hero__deco" aria-hidden="true"></div>
+  <div class="cl-hero__inner">
+    <p class="cl-hero__eyebrow">{esc(hero['eyebrow'])}</p>
+    <h1 class="cl-hero__title">{hero['title']}</h1>
+    <p class="cl-hero__lead">{esc(hero['lead'])}</p>
+    <div class="cl-hero__tags">{badges}</div>
+    <div class="cl-hero__cta">{buy}</div>
+    <p class="cl-hero__world">{esc(cfg['world'])}</p>
+  </div>
+</section>
+
+<section class="cl-section cl-limited">
+  <div class="cl-wrap cl-limited__grid">
+    <div class="cl-count" data-until="{lim['until']}" role="timer" aria-label="受付終了までの残り時間">
+      <p class="cl-eyebrow">受付終了まで</p>
+      <div class="cl-count__row">
+        <span class="cl-count__unit"><b data-c="d">--</b><i>日</i></span>
+        <span class="cl-count__unit"><b data-c="h">--</b><i>時間</i></span>
+        <span class="cl-count__unit"><b data-c="m">--</b><i>分</i></span>
+        <span class="cl-count__unit"><b data-c="s">--</b><i>秒</i></span>
+      </div>
+      <p class="cl-count__end">{esc(lim['until'][:10])} まで</p>
+    </div>
+    <div class="cl-stock" data-qty="{lim['qty']}" data-sold="{lim['sold']}">
+      <p class="cl-eyebrow">数量限定 生産数</p>
+      <div class="cl-stock__bar"><span class="cl-stock__fill"></span></div>
+      <p class="cl-stock__meta"><b class="cl-stock__remain">--</b> / {lim['qty']:,} 台 が販売可能</p>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">EDITION</p><h2 class="cl-h2">{esc(cfg['edition'])}</h2></div>
+    <div class="cl-stats">{stat_cells}</div>
+  </div>
+</section>
+
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">HIGHLIGHTS</p><h2 class="cl-h2">このエディションだけの特別。</h2></div>
+    <div class="cl-feats">{feats}</div>
+  </div>
+</section>
+
+<section class="cl-section">
+  <div class="cl-wrap cl-split">
+    <div class="cl-bundle">
+      <div class="cl-head"><p class="cl-eyebrow">IN THE BOX</p><h2 class="cl-h2">同梱バンドル</h2></div>
+      <ul class="cl-bundle__list">{bundle}</ul>
+    </div>
+    <div class="cl-gallery-wrap">
+      <div class="cl-head"><p class="cl-eyebrow">GALLERY</p><h2 class="cl-h2">ギャラリー</h2></div>
+      <div class="cl-gallery">{gallery}</div>
+    </div>
+  </div>
+</section>
+
+{('<section class="cl-section"><div class="cl-wrap"><div class="cl-head"><p class="cl-eyebrow">COLLAB ACCESSORY</p><h2 class="cl-h2">コラボアクセサリ</h2></div><div class="cl-accs">' + acc_cards + '</div></div></section>') if acc_cards else ''}
+
+<section class="cl-section cl-buy">
+  <div class="cl-wrap cl-buy__inner">
+    <div>
+      <p class="cl-eyebrow">数量限定・期間限定</p>
+      <h2 class="cl-h2">{esc(cfg['edition'])}</h2>
+      {price_html}
+    </div>
+    <div class="cl-buy__cta">{buy}</div>
+  </div>
+</section>
+
+<p class="cl-note">{esc(cfg['note'])} 本サイトは架空企業「株式会社朱雀」のデモンストレーションであり、実在の商品・価格・提携・販売を示すものではありません。</p>
+<div class="cl-backlink"><a href="/collab/">← すべてのコラボレーションを見る</a></div>
+"""
+    desc = f"SUZAKU × {cfg['game']} の数量限定・期間限定コラボレーションモデル「{cfg['edition']}」特設ページ。{hero['lead']}"
+    render_page(f"/collab/{slug}/", f"{cfg['edition']} — SUZAKU × {cfg['game']}",
+                desc, body, theme="dark", crumbs=None, group="コラボレーション",
+                layout="collab", collab=cfg)
+
+
+def build_collab_hub():
+    cards = ""
+    for cfg in COLLABS:
+        tok = cfg["tokens"]
+        style = f"--cl-accent:{tok['accent']};--cl-accent2:{tok['accent2']};--cl-bg2:{tok['bg2']}"
+        if cfg.get("active"):
+            cards += (
+                f'<a class="collab-card" style="{style}" href="/collab/{cfg["slug"]}/">'
+                f'<span class="collab-card__game">{esc(cfg["game"])}</span>'
+                f'<span class="collab-card__edition">{esc(cfg["edition"])}</span>'
+                f'<span class="collab-card__tag">数量限定・期間限定 — 受付中</span>'
+                f'<span class="collab-card__go">特設ページへ →</span></a>')
+        else:
+            cards += (
+                f'<div class="collab-card collab-card--soon" style="{style}">'
+                f'<span class="collab-card__game">{esc(cfg["game"])}</span>'
+                f'<span class="collab-card__edition">{esc(cfg["edition"])}</span>'
+                f'<span class="collab-card__tag">近日公開</span></div>')
+    body = f"""
+<section class="hero hero--sub">
+  <div class="hero__bg hero__bg--glow"></div>
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow eyebrow--center">COLLABORATION</p>
+    <h1 class="t-hero">コラボレーションモデル</h1>
+    <p class="t-lead" style="max-width:680px">人気ゲームタイトルとSUZAKUの、数量限定・期間限定コラボレーション。各作品の世界観をまとった特別なフラッグシップと、専用アクセサリ。</p>
+  </div>
+</section>
+<section class="section--sm">
+  <div class="container">
+    <div class="collab-grid">{cards}</div>
+    <p class="t-micro t-faint" style="margin-top:24px;text-align:center">※ 掲載のコラボレーションはすべてデモ用の架空企画です。各作品名・権利は各社に帰属します。</p>
+  </div>
+</section>
+"""
+    render_page("/collab/", "コラボレーションモデル — SUZAKU × ゲーム",
+                "SUZAKUと人気ゲームタイトルの数量限定・期間限定コラボレーションモデル一覧。原神・鳴潮・NTE・エンドフィールド。",
+                body, "dark", [("コラボレーション", None)], "コラボレーション")
+
+
+def build_collab_pages():
+    build_collab_hub()
+    for cfg in COLLABS:
+        if cfg.get("active"):
+            build_collab_page(cfg)
+
+
+# ==========================================================================
 # 製品ハブ
 # ==========================================================================
 
@@ -1676,7 +1889,7 @@ def build_line_section(cat, line_key, blurb):
 <section class="section--sm" id="{line_key}">
   <div class="container">
     <div class="section-head"><p class="eyebrow">{line['label']}</p>
-    <h2 class="t-h2">{esc(items[0]['name'].rsplit(' ', 1)[0]) if line_key != 'suzaku' else 'SUZAKU'} シリーズ</h2>
+    <h2 class="t-h2">{'コラボレーション モデル' if line_key == 'collab' else (esc(items[0]['name'].rsplit(' ', 1)[0]) + ' シリーズ' if line_key != 'suzaku' else 'SUZAKU シリーズ')}</h2>
     <p class="t-soft">{blurb}</p></div>
     <div class="grid grid--{cols} grid--cards reveal-stagger">{cards}</div>
   </div>
@@ -1724,10 +1937,12 @@ def build_product_hubs():
       <a class="btn btn--soft btn--sm" href="#neo">Neo</a>
       <a class="btn btn--soft btn--sm" href="#tsubame">TSUBAME</a>
       <a class="btn btn--soft btn--sm" href="#lite">Lite</a>
+      <a class="btn btn--soft btn--sm" href="#collab">コラボ</a>
       <a class="btn btn--ghost btn--sm" href="/products/compare/">比較する</a>
     </div>
   </div>
 </section>
+{build_line_section('phone', 'collab', '人気ゲームタイトルとの数量限定・期間限定コラボレーション。史上最高性能の特別選別チップと、作品世界をまとった限定デザイン。')}
 {build_line_section('phone', 'suzaku', '自社SoC・多層冷却・独自OSのすべてを注ぎ込む、SUZAKUの旗艦ライン。2023年の初代から毎年更新。')}
 {build_line_section('phone', 'neo', '前年フラッグシップの技術を受け継ぎ、価格を抑えたゲーミングスタンダード。「去年の頂点を、今年の普通に」。')}
 {build_line_section('phone', 'tsubame', 'ゲーミングで培った技術を日常へ。軽さ・カメラ・電池持ちを磨いた一般向けライン。')}
@@ -1936,6 +2151,7 @@ def main():
         build_tech_hub(hub)
     build_os_pages()
     build_news_pages()
+    build_collab_pages()
     build_product_hubs()
     build_fragments()
     build_client_data()  # PAGES確定後

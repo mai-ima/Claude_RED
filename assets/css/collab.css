@@ -1,0 +1,256 @@
+/* ==========================================================================
+   SUZAKU collab.css — コラボレーション特設 専用スタイル
+   ・すべてのルールを .collab-page 配下にスコープ(通常ページには一切影響しない)
+   ・色はすべて var(--cl-*) 参照。トークンは data_collab.py の tokens が
+     <body style="--cl-bg:..;--cl-accent:..;..."> としてインライン注入する。
+     → 色を変えるには data_collab.py の tokens を1行編集するだけでよい。
+   ・見た目の差分(モチーフ)は .collab-page[data-motif="..."] で出し分ける。
+   ========================================================================== */
+
+.collab-page {
+  --cl-bg: #0d0f12;
+  --cl-bg2: #14171c;
+  --cl-ink: #f3f5f8;
+  --cl-soft: #b6c0cc;
+  --cl-accent: #e8442e;
+  --cl-accent2: #e5c07b;
+  --cl-line: rgba(255, 255, 255, 0.14);
+  --cl-glow: var(--cl-accent);
+  background: var(--cl-bg);
+  color: var(--cl-ink);
+}
+
+/* ヘッダー/フッターは共通のまま残しつつ、コラボ背景になじませる */
+.collab-page .breadcrumb { display: none; }
+
+.collab-page .cl-wrap {
+  width: min(1120px, 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+.collab-page .cl-section { padding: clamp(48px, 8vw, 96px) 0; }
+.collab-page .cl-eyebrow {
+  font-size: var(--fs-micro); letter-spacing: 0.22em; text-transform: uppercase;
+  font-weight: 800; color: var(--cl-accent); margin: 0 0 10px;
+}
+.collab-page .cl-head { margin-bottom: clamp(22px, 4vw, 40px); }
+.collab-page .cl-h2 {
+  font-size: clamp(1.5rem, 1rem + 2.6vw, 2.5rem); font-weight: 800; line-height: 1.15; margin: 0;
+}
+
+/* ---------- 没入ヒーロー ---------- */
+.collab-page .cl-hero {
+  position: relative; overflow: hidden;
+  min-height: min(88vh, 760px);
+  display: grid; align-items: center;
+  padding: clamp(80px, 14vh, 160px) 0 clamp(48px, 8vw, 96px);
+  background: linear-gradient(180deg, var(--cl-bg2), var(--cl-bg));
+  isolation: isolate;
+}
+.collab-page .cl-hero__aura {
+  position: absolute; inset: -20% -10% auto -10%; height: 80%; z-index: -2;
+  background:
+    radial-gradient(60% 60% at 25% 20%, color-mix(in srgb, var(--cl-accent) 55%, transparent), transparent 70%),
+    radial-gradient(55% 55% at 82% 30%, color-mix(in srgb, var(--cl-accent2) 45%, transparent), transparent 70%);
+  filter: blur(10px); opacity: 0.75;
+}
+.collab-page .cl-hero__deco { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.5; }
+.collab-page .cl-hero__inner { width: min(960px, 100% - 2 * var(--gutter)); margin-inline: auto; }
+.collab-page .cl-hero__eyebrow {
+  font-size: var(--fs-small); letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 800; color: var(--cl-accent2); margin: 0 0 18px;
+}
+.collab-page .cl-hero__title {
+  font-size: clamp(2.2rem, 1rem + 7vw, 5rem); font-weight: 900; line-height: 1.05; margin: 0 0 20px;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 40px color-mix(in srgb, var(--cl-glow) 40%, transparent);
+}
+.collab-page .cl-hero__lead {
+  font-size: clamp(1rem, 0.9rem + 0.8vw, 1.4rem); color: var(--cl-soft); max-width: 640px; margin: 0 0 26px;
+}
+.collab-page .cl-hero__world {
+  margin-top: 28px; max-width: 620px; font-size: var(--fs-small); color: var(--cl-soft); opacity: 0.85;
+  border-left: 2px solid var(--cl-accent); padding-left: 14px;
+}
+.collab-page .cl-hero__tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+.collab-page .cl-tag {
+  font-size: var(--fs-micro); font-weight: 800; padding: 6px 14px; border-radius: var(--r-full);
+  color: var(--cl-bg); background: linear-gradient(90deg, var(--cl-accent), var(--cl-accent2));
+}
+.collab-page .cl-hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ---------- ボタン ---------- */
+.collab-page .cl-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 50px; padding: 0 26px; border-radius: var(--r-full);
+  font-weight: 800; font-size: var(--fs-small); transition: transform var(--dur-fast), box-shadow var(--dur-fast), opacity var(--dur-fast);
+}
+.collab-page .cl-btn--primary {
+  color: var(--cl-bg); background: linear-gradient(90deg, var(--cl-accent), var(--cl-accent2));
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--cl-glow) 40%, transparent);
+}
+.collab-page .cl-btn--ghost { color: var(--cl-ink); border: 1px solid var(--cl-line); }
+.collab-page .cl-btn:hover { transform: translateY(-2px); }
+.collab-page .cl-btn--ghost:hover { border-color: var(--cl-accent); }
+
+/* ---------- 期間限定カウントダウン + 数量メーター ---------- */
+.collab-page .cl-limited__grid {
+  display: grid; gap: 20px; grid-template-columns: 1fr 1fr;
+}
+.collab-page .cl-count, .collab-page .cl-stock {
+  padding: 26px; border: 1px solid var(--cl-line); border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--cl-bg2) 80%, transparent);
+}
+.collab-page .cl-count__row { display: flex; gap: 14px; margin-top: 6px; }
+.collab-page .cl-count__unit { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+.collab-page .cl-count__unit b {
+  font-size: clamp(1.8rem, 1rem + 3vw, 3rem); font-weight: 900; font-variant-numeric: tabular-nums;
+  color: var(--cl-accent2); line-height: 1;
+}
+.collab-page .cl-count__unit i { font-style: normal; font-size: var(--fs-micro); color: var(--cl-soft); margin-top: 6px; }
+.collab-page .cl-count__end { margin-top: 14px; font-size: var(--fs-micro); color: var(--cl-soft); }
+.collab-page .cl-stock__bar {
+  height: 14px; border-radius: var(--r-full); background: color-mix(in srgb, var(--cl-ink) 12%, transparent);
+  overflow: hidden; margin: 12px 0;
+}
+.collab-page .cl-stock__fill {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--cl-accent), var(--cl-accent2));
+  transition: width 1.2s var(--ease-out, ease);
+}
+.collab-page .cl-stock__meta { font-size: var(--fs-small); color: var(--cl-soft); }
+.collab-page .cl-stock__remain { color: var(--cl-accent2); font-weight: 900; font-size: var(--fs-h4); }
+
+/* ---------- スペック早見 ---------- */
+.collab-page .cl-stats {
+  display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.collab-page .cl-stat {
+  padding: 20px; border: 1px solid var(--cl-line); border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--cl-bg2) 60%, transparent);
+}
+.collab-page .cl-stat__v { display: block; font-size: clamp(1.6rem, 1rem + 2vw, 2.4rem); font-weight: 900; color: var(--cl-ink); }
+.collab-page .cl-stat__v i { font-style: normal; font-size: 0.5em; color: var(--cl-accent); margin-left: 4px; }
+.collab-page .cl-stat__l { display: block; margin-top: 6px; font-size: var(--fs-micro); color: var(--cl-soft); }
+
+/* ---------- ハイライト ---------- */
+.collab-page .cl-feats { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.collab-page .cl-feat {
+  padding: 26px; border: 1px solid var(--cl-line); border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--cl-bg2) 70%, transparent); position: relative; overflow: hidden;
+}
+.collab-page .cl-feat::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 3px;
+  background: linear-gradient(180deg, var(--cl-accent), var(--cl-accent2));
+}
+.collab-page .cl-feat__t { font-size: var(--fs-h4); font-weight: 800; margin: 0 0 10px; color: var(--cl-ink); }
+.collab-page .cl-feat__b { font-size: var(--fs-small); color: var(--cl-soft); margin: 0; }
+
+/* ---------- バンドル + ギャラリー ---------- */
+.collab-page .cl-split { display: grid; gap: 40px; grid-template-columns: 1fr 1fr; align-items: start; }
+.collab-page .cl-bundle__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.collab-page .cl-bundle__i {
+  display: flex; flex-direction: column; gap: 3px; padding: 16px 18px;
+  border: 1px solid var(--cl-line); border-radius: var(--r-md); background: color-mix(in srgb, var(--cl-bg2) 55%, transparent);
+}
+.collab-page .cl-bundle__i strong { color: var(--cl-ink); }
+.collab-page .cl-bundle__i span { font-size: var(--fs-micro); color: var(--cl-soft); }
+.collab-page .cl-gallery { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+.collab-page .cl-tile {
+  position: relative; aspect-ratio: 4 / 3; margin: 0; border-radius: var(--r-md); overflow: hidden;
+  border: 1px solid var(--cl-line); display: flex; align-items: flex-end;
+  background:
+    radial-gradient(120% 100% at 20% 10%, color-mix(in srgb, var(--cl-accent) 40%, transparent), transparent 60%),
+    linear-gradient(150deg, var(--cl-bg2), var(--cl-bg));
+}
+.collab-page .cl-tile--1 { background: radial-gradient(120% 100% at 80% 10%, color-mix(in srgb, var(--cl-accent2) 45%, transparent), transparent 60%), linear-gradient(150deg, var(--cl-bg2), var(--cl-bg)); }
+.collab-page .cl-tile--2 { background: radial-gradient(120% 120% at 50% 100%, color-mix(in srgb, var(--cl-accent) 35%, transparent), transparent 60%), linear-gradient(30deg, var(--cl-bg2), var(--cl-bg)); }
+.collab-page .cl-tile--3 { background: radial-gradient(120% 100% at 10% 90%, color-mix(in srgb, var(--cl-accent2) 40%, transparent), transparent 60%), linear-gradient(210deg, var(--cl-bg2), var(--cl-bg)); }
+.collab-page .cl-tile figcaption {
+  width: 100%; padding: 10px 14px; font-size: var(--fs-micro); font-weight: 700;
+  color: var(--cl-ink); background: linear-gradient(0deg, color-mix(in srgb, var(--cl-bg) 85%, transparent), transparent);
+}
+
+/* ---------- コラボアクセサリ ---------- */
+.collab-page .cl-accs { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.collab-page .cl-acc {
+  display: flex; gap: 14px; align-items: center; padding: 16px;
+  border: 1px solid var(--cl-line); border-radius: var(--r-lg); background: color-mix(in srgb, var(--cl-bg2) 60%, transparent);
+  color: var(--cl-ink); transition: transform var(--dur-fast), border-color var(--dur-fast);
+}
+.collab-page .cl-acc:hover { transform: translateY(-3px); border-color: var(--cl-accent); }
+.collab-page .cl-acc__media { width: 84px; height: 84px; flex: none; }
+.collab-page .cl-acc__media img { width: 100%; height: 100%; object-fit: contain; }
+.collab-page .cl-acc__name { font-weight: 800; font-size: var(--fs-small); margin: 0 0 2px; }
+.collab-page .cl-acc__copy { font-size: var(--fs-micro); color: var(--cl-soft); margin: 0 0 4px; }
+.collab-page .cl-acc__price { font-size: var(--fs-small); color: var(--cl-accent2); font-weight: 800; margin: 0; }
+
+/* ---------- 購入バンド ---------- */
+.collab-page .cl-buy {
+  background: linear-gradient(120deg, var(--cl-bg2), var(--cl-bg));
+  border-top: 1px solid var(--cl-line); border-bottom: 1px solid var(--cl-line);
+}
+.collab-page .cl-buy__inner { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+.collab-page .cl-buy__price { display: block; margin-top: 10px; font-size: clamp(1.4rem, 1rem + 2vw, 2rem); font-weight: 900; color: var(--cl-accent2); }
+.collab-page .cl-buy__price small { font-size: 0.5em; color: var(--cl-soft); margin-left: 6px; }
+.collab-page .cl-buy__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ---------- 注記・戻る ---------- */
+.collab-page .cl-note {
+  width: min(1120px, 100% - 2 * var(--gutter)); margin: 32px auto 0;
+  font-size: var(--fs-micro); color: var(--cl-soft); opacity: 0.8; line-height: 1.7;
+}
+.collab-page .cl-backlink { width: min(1120px, 100% - 2 * var(--gutter)); margin: 18px auto 64px; }
+.collab-page .cl-backlink a { color: var(--cl-accent); font-weight: 700; font-size: var(--fs-small); }
+
+/* ==========================================================================
+   モチーフ別の装飾差分(骨格は共通・雰囲気だけ変える)
+   ========================================================================== */
+
+/* fantasy(原神): 元素の輪・柔らかな金の光 */
+.collab-page[data-motif="fantasy"] .cl-hero__deco {
+  background:
+    radial-gradient(closest-side, transparent 60%, color-mix(in srgb, var(--cl-accent2) 30%, transparent) 61%, transparent 66%) 78% 24% / 260px 260px no-repeat,
+    conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--cl-accent) 22%, transparent), transparent) 78% 24% / 260px 260px no-repeat;
+}
+.collab-page[data-motif="fantasy"] .cl-hero__title { text-shadow: 0 2px 50px color-mix(in srgb, var(--cl-accent2) 45%, transparent); }
+
+/* techwear(鳴潮): 斜めのスキャンライン + HUD角 */
+.collab-page[data-motif="techwear"] .cl-hero__deco {
+  background: repeating-linear-gradient(115deg, transparent 0 22px, color-mix(in srgb, var(--cl-accent) 8%, transparent) 22px 23px);
+}
+.collab-page[data-motif="techwear"] .cl-feat,
+.collab-page[data-motif="techwear"] .cl-count,
+.collab-page[data-motif="techwear"] .cl-stock { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%); }
+
+/* neon(NTE): ネオングリッド + 強いグロー */
+.collab-page[data-motif="neon"] .cl-hero__deco {
+  background:
+    linear-gradient(color-mix(in srgb, var(--cl-accent) 12%, transparent) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, color-mix(in srgb, var(--cl-accent2) 12%, transparent) 1px, transparent 1px) 0 0 / 40px 100%;
+  mask-image: linear-gradient(180deg, #000, transparent);
+}
+.collab-page[data-motif="neon"] .cl-hero__title { text-shadow: 0 0 24px color-mix(in srgb, var(--cl-accent) 70%, transparent), 0 0 60px color-mix(in srgb, var(--cl-accent2) 40%, transparent); }
+.collab-page[data-motif="neon"] .cl-tag { box-shadow: 0 0 16px color-mix(in srgb, var(--cl-accent) 60%, transparent); }
+
+/* industrial(エンドフィールド): ハザードストライプ + モノスペース見出し */
+.collab-page[data-motif="industrial"] .cl-hero__deco {
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--cl-accent) 14%, transparent) 0 18px, transparent 18px 36px);
+  inset: auto 0 0 0; height: 40%;
+}
+.collab-page[data-motif="industrial"] .cl-eyebrow,
+.collab-page[data-motif="industrial"] .cl-count__unit i,
+.collab-page[data-motif="industrial"] .cl-hero__eyebrow { font-family: var(--font-mono, ui-monospace, monospace); }
+.collab-page[data-motif="industrial"] .cl-feat::before { background: repeating-linear-gradient(180deg, var(--cl-accent) 0 8px, transparent 8px 16px); }
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 720px) {
+  .collab-page .cl-limited__grid,
+  .collab-page .cl-split,
+  .collab-page .cl-gallery { grid-template-columns: 1fr; }
+  .collab-page .cl-count__unit { min-width: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collab-page .cl-stock__fill { transition: none; }
+  .collab-page .cl-btn:hover, .collab-page .cl-acc:hover, a.collab-card:hover { transform: none; }
+}

@@ -486,6 +486,31 @@ a.card:hover,
 .badge--new { background: var(--grad-flame); border: 0; color: var(--accent-contrast); }
 .badge--gold { background: rgba(217, 164, 65, 0.14); border-color: rgba(217, 164, 65, 0.45); color: var(--su-gold); }
 .badge--end { opacity: 0.75; }
+.badge--limited { background: linear-gradient(90deg, #b8862b, #e5c07b); border: 0; color: #1a1206; font-weight: 800; }
+
+/* コラボレーション ハブ(通常スタイルのページ内で使う入口カード) */
+.collab-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.collab-card {
+  position: relative; display: flex; flex-direction: column; gap: 8px;
+  min-height: 180px; padding: 22px 22px 20px;
+  border: 1px solid var(--cl-accent, var(--line-strong)); border-radius: var(--r-lg);
+  background: linear-gradient(150deg, var(--cl-bg2, var(--surface-2)), var(--surface));
+  color: var(--text-strong); overflow: hidden; transition: transform var(--dur-fast), box-shadow var(--dur-fast);
+}
+.collab-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
+  background: linear-gradient(90deg, var(--cl-accent, var(--accent)), var(--cl-accent2, var(--su-gold)));
+}
+a.collab-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.collab-card__game { font-size: var(--fs-h4); font-weight: 800; }
+.collab-card__edition { font-size: var(--fs-small); color: var(--text-soft); flex: 1; }
+.collab-card__tag {
+  align-self: flex-start; font-size: var(--fs-micro); font-weight: 800; padding: 3px 10px; border-radius: var(--r-full);
+  color: var(--cl-accent, var(--accent)); border: 1px solid var(--cl-accent, var(--accent));
+}
+.collab-card__go { font-size: var(--fs-small); font-weight: 700; color: var(--cl-accent, var(--accent)); }
+.collab-card--soon { opacity: 0.72; }
+.collab-card--soon .collab-card__tag { color: var(--text-faint); border-color: var(--line-strong); }
 
 /* --------------------------------------------------------------------------
    ヒーロー

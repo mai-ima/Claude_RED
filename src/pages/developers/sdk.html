@@ -1,15 +1,54 @@
 <!--META {"title": "SDKダウンロード", "desc": "SUZAKU GameKit SDK、KAGURA量子化ツールチェーン、Unity/Unrealプラグイン、エミュレータプロファイルのダウンロード。", "theme": "dark", "crumbs": [["開発者向け", "/developers/"], ["SDKダウンロード", null]], "group": "開発者"} -->
 
 <section class="hero hero--page">
-  <div class="hero__inner hero-enter">
+  <div class="hero__inner hero-enter" style="width:100%">
     <p class="eyebrow">DOWNLOADS</p>
     <h1 class="t-h1">SDK・開発ツール</h1>
-    <p class="t-soft" style="max-width:640px">すべて無償。商用タイトルでのご利用にもライセンス費用はかかりません。</p>
+    <p class="t-soft" style="max-width:640px">すべて無償。商用タイトルでのご利用にもライセンス費用はかかりません。1つのAARで全Android端末に配布でき、非SUZAKU端末では安全にno-opになります。</p>
   </div>
 </section>
 
 <section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="stat-row reveal-stagger" style="--stat-cols:4">
+      <div class="stat"><p class="stat__value">v<span data-count>4.2</span></p><p class="stat__label">最新 GameKit SDK</p></div>
+      <div class="stat"><p class="stat__value" data-count>3<span class="unit">言語</span></p><p class="stat__label">Kotlin / Java / C++</p></div>
+      <div class="stat"><p class="stat__value" data-count>120<span class="unit">本+</span></p><p class="stat__label">導入タイトル</p></div>
+      <div class="stat"><p class="stat__value">¥<span data-count>0</span></p><p class="stat__label">ライセンス費用</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
   <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">SDK MATRIX</p><h2 class="t-h2">動作環境・対応表</h2></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">コンポーネント</th><th scope="col">最新版</th><th scope="col">対応環境</th><th scope="col">サイズ</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">GameKit SDK(コア)</th><td>v4.2.0</td><td>Android 11+ / minSdk 30 / Kotlin・Java・C++(NDK)</td><td>42MB</td></tr>
+        <tr><th scope="row">Unity プラグイン</th><td>v4.2.0</td><td>Unity 2022.3 LTS 〜 6000(UPM)</td><td>8MB</td></tr>
+        <tr><th scope="row">Unreal プラグイン</th><td>v4.2.0</td><td>UE 5.3 〜 5.5</td><td>12MB</td></tr>
+        <tr><th scope="row">KAGURA 量子化ツールチェーン</th><td>v2.1</td><td>Linux / macOS(x64・arm64)</td><td>156MB</td></tr>
+        <tr><th scope="row">エミュレータ プロファイル</th><td>—</td><td>Android Emulator(SUZAKU 4 / TSUBAME 3)</td><td>3MB</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">QUICK ADD</p><h2 class="t-h2">1行で導入</h2>
+    <p class="t-soft t-small">Maven Central から追加するだけ。初回ビルド時に開発者条項の同意画面が表示されます。</p></div>
+    <div class="codeblock reveal">
+      <div class="codeblock__bar"><span>build.gradle.kts</span><button class="copy-btn" type="button">コピー</button></div>
+      <pre><code><span class="tk-fn">implementation</span>(<span class="tk-str">"jp.suzaku.gamekit:sdk:4.2.0"</span>)</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">DOWNLOADS</p><h2 class="t-h2">個別ダウンロード</h2></div>
     <div class="stack">
       <div class="card reveal"><div class="spread">
         <div class="stack" style="gap:6px"><p class="eyebrow">CORE</p><h2 class="t-h4">SUZAKU GameKit SDK v4.2.0</h2>
@@ -33,6 +72,23 @@
         <button class="btn btn--soft" type="button" onclick="szToast('デモ環境のため、ダウンロードは無効化されています')">ダウンロード</button></div></div>
     </div>
     <div class="notice" style="margin-top:28px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg> SDKの利用には<a href="/legal/terms/" style="text-decoration:underline">利用規約</a>(開発者条項)への同意が必要です。Maven Central経由の導入では、初回ビルド時に同意画面が表示されます。</div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">ARCHIVE</p><h2 class="t-h2">過去バージョン</h2>
+    <p class="t-soft t-small">サポート期間中の旧バージョンをアーカイブとして公開しています。変更点は<a href="/developers/changelog/">変更履歴</a>をご覧ください。</p></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">バージョン</th><th scope="col">公開日</th><th scope="col">対応OS</th><th scope="col">状態</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">GameKit SDK v4.2.0</th><td>2026-06-18</td><td>SUZAKU OS 4.0</td><td><span class="badge badge--new">最新</span></td></tr>
+        <tr><th scope="row">GameKit SDK v4.1.2</th><td>2026-03-04</td><td>SUZAKU OS 4.0</td><td><span class="badge">サポート中</span></td></tr>
+        <tr><th scope="row">GameKit SDK v3.4.0</th><td>2025-05-15</td><td>SUZAKU OS 3.x</td><td><span class="badge">サポート中</span></td></tr>
+        <tr><th scope="row">GameKit SDK v2.6.1</th><td>2024-09-03</td><td>SUZAKU OS 2.x</td><td><span class="badge badge--end">EOL</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="t-micro t-faint" style="margin-top:10px">※ バージョン・日付は架空のデモコンテンツです。</p>
   </div>
 </section>
 

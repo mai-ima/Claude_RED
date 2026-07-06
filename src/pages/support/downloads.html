@@ -1,7 +1,7 @@
 <!--META {"title": "ダウンロード — OSアップデート・マニュアル", "desc": "SUZAKU OSのアップデート配信状況、取扱説明書(PDF)、PC接続ツールのダウンロード。", "theme": "light", "crumbs": [["サポート", "/support/"], ["ダウンロード", null]], "group": "サポート"} -->
 
 <section class="hero hero--page">
-  <div class="hero__inner hero-enter">
+  <div class="hero__inner hero-enter" style="width:100%">
     <p class="eyebrow">DOWNLOADS</p>
     <h1 class="t-h1">ダウンロード</h1>
     <p class="t-soft" style="max-width:640px">OSアップデートの配信状況、取扱説明書、各種ツールはこちらから。</p>
@@ -9,19 +9,34 @@
 </section>
 
 <section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container">
+    <div class="stat-row reveal-stagger" style="--stat-cols:4">
+      <div class="stat"><p class="stat__value">4.0<span class="unit">.3</span></p><p class="stat__label">最新 SUZAKU OS</p></div>
+      <div class="stat"><p class="stat__value" data-count>14<span class="unit">機種</span></p><p class="stat__label">サポート対象</p></div>
+      <div class="stat"><p class="stat__value" data-count>3<span class="unit">世代</span></p><p class="stat__label">OSアップデート保証</p></div>
+      <div class="stat"><p class="stat__value" data-count>87<span class="unit">%</span></p><p class="stat__label">最新OS適用率</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
   <div class="container container--narrow">
     <div class="section-head"><p class="eyebrow">OS UPDATE</p><h2 class="t-h2">SUZAKU OS 配信状況</h2></div>
-    <div class="prose reveal">
-      <table>
-        <tr><th>機種</th><th>最新バージョン</th><th>配信状況</th></tr>
-        <tr><th>SUZAKU 4 / SUZAKU Pad 2</th><td>SUZAKU OS 4.0.3「不知火」</td><td>配信中(2026.06.20〜)</td></tr>
-        <tr><th>SUZAKU 3 / Neo 3 / Pad Neo</th><td>SUZAKU OS 4.0.3</td><td>配信中(2026.06.27〜)</td></tr>
-        <tr><th>TSUBAME 3 / TSUBAME Pad 2</th><td>SUZAKU OS 4.0.2</td><td>配信中(2026.06.13〜)</td></tr>
-        <tr><th>SUZAKU 2 / Neo 2 / TSUBAME 2 / Lite系</th><td>SUZAKU OS 4.0.1</td><td>段階配信中(2026.07 順次)</td></tr>
-        <tr><th>SUZAKU One / Neo / TSUBAME(初代)</th><td>SUZAKU OS 3.2.8(最終)+ セキュリティ更新</td><td>セキュリティ更新のみ</td></tr>
-      </table>
-      <p class="t-micro t-faint">アップデートは端末の「設定 → システム → ソフトウェア更新」から適用できます。バージョン詳細は<a href="/os/">SUZAKU OSページ</a>をご覧ください。</p>
+    <div class="chart-grid" style="margin-bottom:var(--sp-5)">
+      <figure class="chart reveal" data-chart='{"type":"donut","title":"SUZAKU OS 4.0 への更新率(全稼働台数)","value":87,"max":100,"unit":"%","label":"適用済み"}'></figure>
+      <figure class="chart reveal" data-chart='{"type":"line","title":"配信開始からの更新適用率の推移","unit":"%","area":true,"max":100,"labels":["1週","2週","3週","4週","5週","6週"],"series":[{"name":"適用率","values":[31,54,68,77,83,87]}]}'></figure>
     </div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">機種</th><th scope="col">最新バージョン</th><th scope="col">配信状況</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">SUZAKU 4 / SUZAKU Pad 2</th><td>SUZAKU OS 4.0.3「不知火」</td><td>配信中(2026.06.20〜)</td></tr>
+        <tr><th scope="row">SUZAKU 3 / Neo 3 / Pad Neo</th><td>SUZAKU OS 4.0.3</td><td>配信中(2026.06.27〜)</td></tr>
+        <tr><th scope="row">TSUBAME 3 / TSUBAME Pad 2</th><td>SUZAKU OS 4.0.2</td><td>配信中(2026.06.13〜)</td></tr>
+        <tr><th scope="row">SUZAKU 2 / Neo 2 / TSUBAME 2 / Lite系</th><td>SUZAKU OS 4.0.1</td><td>段階配信中(2026.07 順次)</td></tr>
+        <tr><th scope="row">SUZAKU One / Neo / TSUBAME(初代)</th><td>SUZAKU OS 3.2.8(最終)+ セキュリティ更新</td><td>セキュリティ更新のみ</td></tr>
+      </tbody>
+    </table></div>
+    <p class="t-micro t-faint" style="margin-top:10px">アップデートは端末の「設定 → システム → ソフトウェア更新」から適用できます。バージョン詳細は<a href="/os/">SUZAKU OSページ</a>をご覧ください。</p>
   </div>
 </section>
 

@@ -246,17 +246,30 @@ FAQ = [
      "a": "はい。全モデルを対象に無償回収・リサイクルプログラムを実施しています。回収端末はデータ消去証明書を発行のうえ、資源として再利用します。詳細は<a href='/sustainability/recycle/'>回収・リサイクル</a>をご覧ください。"},
 ]
 
-# 沿革(会社ページ・歴史ページで使用)
+# 沿革(会社ページ・沿革ページで使用する単一ソース)
+# body は内部リンクを含むHTML可。news は関連ニュースID(沿革ページのレンダラが
+# 「→ 関連ニュース」リンクを自動付与)。news=None のエントリはリンクなし。
 HISTORY = [
-    {"date": "2022年5月1日", "title": "株式会社朱雀 設立", "body": "東京都千代田区外神田(秋葉原)にて創業。「限界を、燃やし尽くせ。」を掲げ、ゲーミングデバイスの自社開発を開始。", "news": "2022-05-founding"},
-    {"date": "2022年11月", "title": "R&Dセンター開設・SoC「雷」プロジェクト始動", "body": "半導体設計エンジニア約80名を集約し、CPU・GPU・NPU・ISPを自社アーキテクチャで統合するファブレス体制を構築。", "news": "2022-11-rd-center"},
-    {"date": "2023年5月1日", "title": "初製品「SUZAKU One」発表", "body": "創業1周年の日に、自社SoC「雷 RAI-G1」・冷却「氷刃 V1」・独自OS「SUZAKU OS 1.0 暁」を搭載した第1号機を発表。", "news": "2023-05-suzaku-one"},
-    {"date": "2024年5月", "title": "初の年次発表会「SUZAKU IGNITE 2024」", "body": "SUZAKU 2・初のタブレット・TSUBAME・Neo・アクセサリを同日一挙発表、翌日一斉発売。以後、新製品発表は毎年5月のIGNITEに集約。", "news": "2024-05-suzaku2"},
-    {"date": "2024年9月", "title": "開発者プログラム開始", "body": "Performance API / Cooling APIを公開し、ゲーム開発者との共創を開始。対応タイトル120本超。", "news": "2024-09-devprogram"},
-    {"date": "2025年5月", "title": "SUZAKU IGNITE 2025 — 全ライン刷新", "body": "6機種+アクセサリ2種を同日発表・5月30日一斉発売。自社メモリ「疾風」・ストレージ「瞬」・エントリーSoC「RAI-E」にも参入。", "news": "2025-05-suzaku3"},
-    {"date": "2025年11月", "title": "法人事業「SUZAKU for Business」開始", "body": "eスポーツ施設・教育・現場業務向けに、端末導入からMDM・サポートまでをワンストップ提供。", "news": "2025-11-business"},
-    {"date": "2026年5月", "title": "SUZAKU IGNITE 2026", "body": "SUZAKU 4を筆頭に2026年の全新製品を同日発表・5月29日一斉発売。RAI-G4/E2、疾風M2、瞬S2、OS 4.0「不知火」も公開。", "news": "2026-05-suzaku4"},
-    {"date": "2026年6月", "title": "次世代能動液冷「水龍」技術発表", "body": "厚さ1.1mmのマイクロポンプ式水冷ループを発表。2027年の次期フラッグシップに搭載予定。", "news": "2026-06-suiryu"},
+    {"date": "2022.05.01", "title": "株式会社朱雀 設立",
+     "body": "東京都千代田区外神田(秋葉原)にて創業。「限界を、燃やし尽くせ。」を掲げ、ゲーミングデバイスの自社開発を開始。", "news": "2022-05-founding"},
+    {"date": "2022.11.10", "title": "R&Dセンター開設・SoC「雷」プロジェクト始動",
+     "body": "半導体設計エンジニア約80名を集約。CPU・GPU・NPU・ISPを自社アーキテクチャで統合するファブレス体制を構築。", "news": "2022-11-rd-center"},
+    {"date": "2023.05.01", "title": "初製品「SUZAKU One」発表・同日発売 — 創業からちょうど1年",
+     "body": "自社SoC<a href='/tech/cpu/rai-g1/'>雷 RAI-G1</a>、冷却<a href='/tech/cooling/hyojin/'>氷刃 V1</a>、独自OS<a href='/os/v1/'>SUZAKU OS 1.0「暁」</a>を搭載した第1号機を、<a href='/products/accessories/buds/'>SUZAKU Buds</a>などの純正アクセサリとともに一挙発表。この「1日にすべてを見せる」発表が、のちの年次発表会の原点になりました。", "news": "2023-05-suzaku-one"},
+    {"date": "2024.05.16", "title": "初の年次発表会「SUZAKU IGNITE 2024」開催",
+     "body": "<a href='/products/phone/suzaku-2/'>SUZAKU 2</a>・初のタブレット<a href='/products/tablet/pad/'>SUZAKU Pad</a>・一般向け<a href='/products/phone/tsubame/'>TSUBAME</a>・廉価ゲーミング<a href='/products/phone/neo/'>Neo</a>を同日一挙発表、翌5月17日に一斉発売。液体金属<a href='/tech/cooling/ekien/'>液焔</a>、自社カメラセンサー<a href='/tech/camera/tengan-rs1/'>天眼 RS-1</a>、ゲームスペース<a href='/os/game-space/'>「陣」</a>もこの日に公開。以後、新製品発表は毎年5月の<a href='/company/ignite/'>IGNITE</a>に集約されます。", "news": "2024-05-suzaku2"},
+    {"date": "2024.09.03", "title": "開発者プログラム開始",
+     "body": "Performance API / Cooling APIを公開。対応タイトルは発表時点で120本超。<a href='/developers/'>開発者向けページ</a>で共創を進めています。", "news": "2024-09-devprogram"},
+    {"date": "2025.05.15", "title": "SUZAKU IGNITE 2025 — 全ライン刷新と半導体の垂直統合",
+     "body": "<a href='/products/phone/suzaku-3/'>SUZAKU 3</a>を筆頭に6機種+アクセサリ2種を同日発表、5月30日一斉発売。初の3nm SoC<a href='/tech/cpu/rai-g3/'>雷 RAI-G3</a>に加え、自社メモリ<a href='/tech/memory/hayate-m1/'>疾風</a>・ストレージ<a href='/tech/storage/shun-s1/'>瞬</a>・エントリーSoC<a href='/tech/cpu/rai-e1/'>RAI-E</a>に参入し、<a href='/products/phone/tsubame-lite/'>TSUBAME Lite</a>と<a href='/products/tablet/pad-neo/'>SUZAKU Pad Neo</a>で4ライン体制が完成。", "news": "2025-05-suzaku3"},
+    {"date": "2025.11.06", "title": "法人事業「SUZAKU for Business」開始",
+     "body": "eスポーツ施設・教育・現場業務向けに、端末導入からMDM・サポートまでをワンストップ提供。詳しくは<a href='/business/'>法人のお客様</a>へ。", "news": "2025-11-business"},
+    {"date": "2026.05.14", "title": "SUZAKU IGNITE 2026 — 2026年の新製品すべてを、この一日で",
+     "body": "<a href='/products/phone/suzaku-4/'>SUZAKU 4</a>・雷 RAI-G4・LPDDR6メモリ<a href='/tech/memory/hayate-m2/'>疾風 M2</a>・<a href='/os/v4/'>OS 4.0「不知火」</a>をはじめ、スマートフォン4機種・タブレット2機種・アクセサリを同日発表。5月29日一斉発売。", "news": "2026-05-suzaku4"},
+    {"date": "2026.06.25", "title": "次世代能動液冷「水龍」技術発表",
+     "body": "厚さ1.1mmのマイクロポンプ式水冷ループを発表。2027年の次期フラッグシップに搭載予定。<a href='/tech/cooling/suiryu/'>水龍 技術ページ</a>をご覧ください。", "news": "2026-06-suiryu"},
+    {"date": "そして——", "title": "物語は、続く。",
+     "body": "次の限界を燃やし尽くすために。最新情報は<a href='/news/'>ニュースルーム</a>でお知らせします。", "news": None},
 ]
 
 

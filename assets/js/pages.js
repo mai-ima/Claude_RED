@@ -285,18 +285,17 @@
       }
       var placed = new Date(hit.date);
       var hours = (Date.now() - placed.getTime()) / 36e5;
-      var steps = [
-        { t: "受付完了", done: true },
-        { t: "端末到着・診断中", done: hours > 24 },
-        { t: "修理作業中", done: hours > 48 },
-        { t: "修理完了・返送", done: hours > 96 },
-        { t: "お届け完了", done: hours > 144 }
-      ];
+      var stages = (window.szStages && window.szStages.repair) || ["受付完了", "診断中", "修理作業中", "返送手配", "お届け完了"];
+      /* 管理ボードで明示的に設定したステータスを優先。未設定なら経過時間から推定。 */
+      var reached = typeof hit.statusIdx === "number"
+        ? hit.statusIdx
+        : (hours > 144 ? 4 : hours > 96 ? 3 : hours > 48 ? 2 : hours > 24 ? 1 : 0);
       box.innerHTML = '<div class="card" style="margin-top:24px">' +
         '<p class="eyebrow">受付番号 ' + hit.no + "</p>" +
-        '<p class="t-small t-soft">受付日時: ' + placed.toLocaleString("ja-JP") + " / 対象機種: " + escHtml(hit.model) + " / 方法: " + escHtml(hit.method) + "</p>" +
-        '<ol class="order-track">' + steps.map(function (s) {
-          return '<li class="' + (s.done ? "is-done" : "") + '"><span>' + s.t + "</span></li>";
+        '<p class="t-small t-soft">受付日時: ' + placed.toLocaleString("ja-JP") + " / 対象機種: " + escHtml(hit.model) + " / 方法: " + escHtml(hit.method) +
+        ' / 現在の状況: <strong style="color:var(--accent)">' + escHtml(stages[reached]) + "</strong></p>" +
+        '<ol class="order-track">' + stages.map(function (t, i) {
+          return '<li class="' + (i <= reached ? "is-done" : "") + '"><span>' + escHtml(t) + "</span></li>";
         }).join("") + "</ol></div>";
     });
   }

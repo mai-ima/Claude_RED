@@ -63,12 +63,29 @@
     for (var k in SVC_DEFAULT) out[k] = s[k] || SVC_DEFAULT[k];
     return out;
   }
+  /* サービス別状況を、管理者の設定(全体制御・メンテナンス)と同期させた
+     「実効状態」に変換する。公開の稼働状況ページはこの実効状態を表示するため、
+     立入禁止・購入停止・メンテナンスの設定が自動的にサービス状況へ反映される。 */
+  function effectiveServices() {
+    var sv = services();
+    var g = globalCtrl();
+    var m = get("sz_maintenance", { on: false });
+    var out = {};
+    for (var k in sv) out[k] = sv[k];
+    if (m.on && out.store === "ok") out.store = "degraded";
+    if (g.shopStop) out.store = "down";
+    if (g.contactStop && out.repair === "ok") out.repair = "degraded";
+    if (g.lockdown) { for (var k2 in out) out[k2] = "down"; }
+    return out;
+  }
+
   window.szCtrl = {
     global: globalCtrl,
     setGlobal: function (v) { set("sz_global", v); },
     pages: pageCtrl,
     setPages: function (v) { set("sz_page_ctrl", v); },
     services: services,
+    effectiveServices: effectiveServices,
     setServices: function (v) { set("sz_services", v); }
   };
 
@@ -98,6 +115,28 @@
     acctLink.setAttribute("aria-label", u0.name + " のアカウント");
     acctLink.classList.add("is-logged-in");
   }
+
+  /* ログイン中は、どのページからでもログアウトできるよう
+     ドロワー(モバイルメニュー)の項目を「マイページ」+「ログアウト」に切り替える。 */
+  (function drawerAccount() {
+    var drawerLogin = document.querySelector('.drawer a[href="/account/login/"]');
+    if (!drawerLogin) return;
+    if (u0) {
+      drawerLogin.textContent = u0.role === "admin" ? "管理ボード / マイページ" : "マイページ";
+      drawerLogin.setAttribute("href", u0.role === "admin" ? "/admin/" : "/account/");
+      var lo = document.createElement("a");
+      lo.className = "drawer__direct";
+      lo.href = "#logout";
+      lo.textContent = "ログアウト";
+      lo.addEventListener("click", function (e) {
+        e.preventDefault();
+        logout();
+        window.szToast("ログアウトしました");
+        setTimeout(function () { window.location.href = "/"; }, 400);
+      });
+      drawerLogin.parentNode.insertBefore(lo, drawerLogin.nextSibling);
+    }
+  })();
 
   /* ---------- アクセス制御(全体立入禁止・ページ別ステータス) ---------- */
   var path = window.location.pathname;
@@ -221,6 +260,38 @@
     get: function () { return get("sz_maintenance", { on: false, msg: "" }); },
     set: function (v) { set("sz_maintenance", v); }
   };
+
+  /* ---------- サイトお知らせバナー(メンテナンスとは別の告知) ---------- */
+  (function announceBar() {
+    var ann = get("sz_announce", { on: false, msg: "", kind: "info", link: "" });
+    if (!ann.on || !ann.msg) return;
+    if (path.indexOf("/admin") === 0) return;
+    if (document.querySelector(".site-block")) return; // 閉鎖オーバーレイ時は出さない
+    if (document.body.classList.contains("has-maint-bar")) return; // メンテバー優先
+    var seen = get("sz_announce_seen", "");
+    if (seen === ann.msg) return; // 同じ内容を閉じたら再表示しない
+    var bar = document.createElement("div");
+    bar.className = "announce-bar announce-bar--" + (ann.kind || "info");
+    bar.setAttribute("role", "status");
+    var inner = esc(ann.msg);
+    if (ann.link) inner = '<a href="' + esc(ann.link) + '">' + inner + "</a>";
+    bar.innerHTML = '<span>' + inner + "</span>" +
+      '<button type="button" class="announce-bar__close" aria-label="閉じる"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+    document.body.insertBefore(bar, document.body.firstChild);
+    document.body.classList.add("has-announce-bar");
+    var syncAnnH = function () {
+      document.documentElement.style.setProperty("--announce-h", bar.offsetHeight + "px");
+    };
+    syncAnnH();
+    window.addEventListener("resize", syncAnnH);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncAnnH);
+    bar.querySelector(".announce-bar__close").addEventListener("click", function () {
+      set("sz_announce_seen", ann.msg);
+      bar.remove();
+      document.body.classList.remove("has-announce-bar");
+      document.documentElement.style.setProperty("--announce-h", "0px");
+    });
+  })();
 
   /* ---------- ログインページ ---------- */
   var loginForm = $("#loginForm");
@@ -363,19 +434,131 @@
     $("#admTickets").textContent = tickets2.length;
     $("#admUsers").textContent = members.length;
 
-    // 注文テーブル
-    $("#admOrderRows").innerHTML = orders2.length
-      ? orders2.slice(0, 8).map(function (o) {
-          return "<tr><th scope='row'>" + o.no + "</th><td>" + new Date(o.date).toLocaleString("ja-JP") + "</td><td>" +
-            o.items.reduce(function (a, x) { return a + x.qty; }, 0) + "点</td><td>" + yen(o.total) + "</td><td>" + esc(o.status) + "</td></tr>";
-        }).join("")
-      : '<tr><td colspan="5" class="t-soft">この端末での注文データはありません(デモはlocalStorage単位)。</td></tr>';
+    /* ---- 操作履歴(監査ログ) ---- */
+    function adminLog() { return get("sz_admin_log", []); }
+    function logAction(text) {
+      var log = adminLog();
+      log.unshift({ t: text, at: new Date().toISOString() });
+      set("sz_admin_log", log.slice(0, 60));
+      renderActivity();
+    }
+    function renderActivity() {
+      var box = $("#admActivity");
+      if (!box) return;
+      var log = adminLog();
+      box.innerHTML = log.length
+        ? log.slice(0, 12).map(function (e) {
+            return '<div class="activity-log__row"><span>' + esc(e.t) + '</span><span class="t-micro t-faint">' + new Date(e.at).toLocaleString("ja-JP") + "</span></div>";
+          }).join("")
+        : '<p class="t-small t-soft">まだ操作履歴はありません。</p>';
+    }
+    renderActivity();
 
-    $("#admTicketRows").innerHTML = tickets2.length
-      ? tickets2.slice(0, 8).map(function (t) {
-          return "<tr><th scope='row'>" + t.no + "</th><td>" + esc(t.model) + "</td><td>" + esc(t.symptom) + "</td><td>" + esc(t.method) + "</td></tr>";
-        }).join("")
-      : '<tr><td colspan="4" class="t-soft">修理受付データはありません。</td></tr>';
+    /* ---- クイック操作(ログアウトもここから) ---- */
+    (function renderQuick() {
+      var box = $("#admQuick");
+      if (!box) return;
+      var mOn = window.szMaint.get().on;
+      box.innerHTML =
+        '<button class="btn btn--' + (mOn ? "primary" : "soft") + ' btn--sm" id="qkMaint" type="button">' + (mOn ? "メンテナンスを解除" : "メンテナンスを開始") + "</button>" +
+        '<a class="btn btn--soft btn--sm" href="/?preview=user" target="_blank" rel="noopener">一般ユーザーとして確認</a>' +
+        '<button class="btn btn--soft btn--sm" id="qkNews" type="button">ニュースを作成</button>' +
+        '<button class="btn btn--ghost btn--sm" id="qkLogout" type="button">ログアウト</button>';
+      $("#qkMaint").addEventListener("click", function () {
+        var m = window.szMaint.get();
+        window.szMaint.set({ on: !m.on, msg: m.msg || "" });
+        logAction(!m.on ? "メンテナンスを開始しました" : "メンテナンスを解除しました");
+        window.szToast("メンテナンスを" + (!m.on ? "開始" : "解除") + "しました");
+        setTimeout(function () { window.location.reload(); }, 600);
+      });
+      $("#qkNews").addEventListener("click", function () {
+        var t = $('[data-admin-tab="news"]');
+        if (t) t.click();
+        var f = $("#anTitle");
+        if (f) f.focus();
+      });
+      $("#qkLogout").addEventListener("click", function () {
+        logout();
+        window.szToast("ログアウトしました");
+        setTimeout(function () { window.location.href = "/"; }, 400);
+      });
+    })();
+
+    /* ---- 注文テーブル(ステータス変更可) ---- */
+    var ORDER_STAGES = (window.szStages && window.szStages.order) || [];
+    function renderOrderRows() {
+      var orders = get("sz_orders", []);
+      $("#admOrderRows").innerHTML = orders.length
+        ? orders.slice(0, 12).map(function (o, i) {
+            var reached = typeof o.statusIdx === "number" ? o.statusIdx : 0;
+            var opts = ORDER_STAGES.map(function (s, k) {
+              return '<option value="' + k + '"' + (k === reached ? " selected" : "") + ">" + esc(s) + "</option>";
+            }).join("");
+            var sel = o.cancelled
+              ? '<span class="badge badge--new">キャンセル</span>'
+              : '<select class="select select--mini" data-order-idx="' + i + '">' + opts + "</select>";
+            var cancelBtn = o.cancelled ? "" : ' <button class="btn btn--ghost btn--sm" type="button" data-order-cancel="' + i + '">取消</button>';
+            return "<tr><th scope='row'>" + o.no + "</th><td>" + new Date(o.date).toLocaleString("ja-JP") + "</td><td>" +
+              o.items.reduce(function (a, x) { return a + x.qty; }, 0) + "点</td><td>" + yen(o.total) + "</td><td>" + sel + cancelBtn + "</td></tr>";
+          }).join("")
+        : '<tr><td colspan="5" class="t-soft">この端末での注文データはありません(デモはlocalStorage単位)。</td></tr>';
+    }
+    renderOrderRows();
+    $("#admOrderRows").addEventListener("change", function (e) {
+      var sel = e.target.closest("[data-order-idx]");
+      if (!sel) return;
+      var orders = get("sz_orders", []);
+      var i = +sel.getAttribute("data-order-idx");
+      if (!orders[i]) return;
+      orders[i].statusIdx = +sel.value;
+      orders[i].status = ORDER_STAGES[+sel.value];
+      set("sz_orders", orders);
+      logAction("注文 " + orders[i].no + " を「" + ORDER_STAGES[+sel.value] + "」に更新");
+      window.szToast("注文ステータスを更新しました(照会画面に反映)");
+    });
+    $("#admOrderRows").addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-order-cancel]");
+      if (!btn) return;
+      if (!window.confirm("この注文をキャンセル扱いにしますか?")) return;
+      var orders = get("sz_orders", []);
+      var i = +btn.getAttribute("data-order-cancel");
+      if (!orders[i]) return;
+      orders[i].cancelled = true;
+      orders[i].status = "キャンセル";
+      set("sz_orders", orders);
+      logAction("注文 " + orders[i].no + " をキャンセル");
+      renderOrderRows();
+      window.szToast("注文をキャンセルしました");
+    });
+
+    /* ---- 修理テーブル(ステータス変更可) ---- */
+    var REPAIR_STAGES = (window.szStages && window.szStages.repair) || [];
+    function renderTicketRows() {
+      var tickets = get("sz_tickets", []);
+      $("#admTicketRows").innerHTML = tickets.length
+        ? tickets.slice(0, 12).map(function (t, i) {
+            var reached = typeof t.statusIdx === "number" ? t.statusIdx : 0;
+            var opts = REPAIR_STAGES.map(function (s, k) {
+              return '<option value="' + k + '"' + (k === reached ? " selected" : "") + ">" + esc(s) + "</option>";
+            }).join("");
+            return "<tr><th scope='row'>" + t.no + "</th><td>" + esc(t.model) + "</td><td>" + esc(t.symptom) +
+              '</td><td><select class="select select--mini" data-ticket-idx="' + i + '">' + opts + "</select></td></tr>";
+          }).join("")
+        : '<tr><td colspan="4" class="t-soft">修理受付データはありません。</td></tr>';
+    }
+    renderTicketRows();
+    $("#admTicketRows").addEventListener("change", function (e) {
+      var sel = e.target.closest("[data-ticket-idx]");
+      if (!sel) return;
+      var tickets = get("sz_tickets", []);
+      var i = +sel.getAttribute("data-ticket-idx");
+      if (!tickets[i]) return;
+      tickets[i].statusIdx = +sel.value;
+      tickets[i].status = REPAIR_STAGES[+sel.value];
+      set("sz_tickets", tickets);
+      logAction("修理 " + tickets[i].no + " を「" + REPAIR_STAGES[+sel.value] + "」に更新");
+      window.szToast("修理ステータスを更新しました(照会画面に反映)");
+    });
 
     // 売上チャート(実データ+デモ基礎値)
     if (window.szCharts) {
@@ -422,7 +605,9 @@
       ? '<span class="badge badge--new">メンテナンス中</span>'
       : '<span class="badge">通常稼働中</span>';
     $("#maintSave").addEventListener("click", function () {
-      window.szMaint.set({ on: $("#maintToggle").checked, msg: $("#maintMsg").value.trim() });
+      var on = $("#maintToggle").checked;
+      window.szMaint.set({ on: on, msg: $("#maintMsg").value.trim() });
+      logAction("メンテナンスを" + (on ? "開始" : "解除"));
       window.szToast("メンテナンス設定を保存しました");
       setTimeout(function () { window.location.reload(); }, 600);
     });
@@ -451,6 +636,9 @@
       });
       glbBadge();
       renderLiveStatus();
+      logAction("全体制御を更新(立入禁止:" + ($("#glbLockdown").checked ? "ON" : "OFF") +
+        " / 購入停止:" + ($("#glbShopStop").checked ? "ON" : "OFF") +
+        " / 問い合わせ停止:" + ($("#glbContactStop").checked ? "ON" : "OFF") + ")");
       window.szToast("全体制御を保存しました");
     });
 
@@ -462,6 +650,7 @@
       $$("[data-svc]").forEach(function (sel) { v[sel.getAttribute("data-svc")] = sel.value; });
       window.szCtrl.setServices(v);
       renderLiveStatus();
+      logAction("サービス別状況を更新");
       window.szToast("サービス別状況を保存しました(公開ステータスページに反映)");
     });
 
@@ -490,6 +679,7 @@
       ctrl[pcSelect.value] = $("#pcStatus").value;
       window.szCtrl.setPages(ctrl);
       renderPageCtrl();
+      logAction("ページ制御を設定: " + pcSelect.value + " → " + $("#pcStatus").value);
       window.szToast("ページ制御を設定しました: " + pcSelect.value);
     });
     $("#pcList").addEventListener("click", function (e) {
@@ -534,6 +724,7 @@
       set("sz_admin_news", list);
       $("#anTitle").value = ""; $("#anExcerpt").value = ""; $("#anBody").value = "";
       renderAdminNews();
+      logAction("ニュースを公開: " + title);
       window.szToast("ニュースを公開しました(ニュースルームに掲載)");
     });
     $("#anList").addEventListener("click", function (e) {
@@ -546,34 +737,93 @@
     });
 
     /* ---- ユーザー管理(閲覧・パスワード表示・削除) ---- */
+    var userQuery = "";
+    function adminCount() { return users().filter(function (x) { return x.role === "admin"; }).length; }
     function renderUsers() {
-      var us = users();
-      $("#userRows").innerHTML = us.map(function (u, i) {
+      var us = users().filter(function (u) {
+        if (!userQuery) return true;
+        return (u.name + " " + u.email).toLowerCase().indexOf(userQuery) !== -1;
+      });
+      $("#userRows").innerHTML = us.length ? us.map(function (u) {
         var pw = u.pwPlain ? esc(u.pwPlain) : "(ハッシュのみ保存)";
-        var canDel = u.role !== "admin";
+        var isAdmin = u.role === "admin";
+        var lastAdmin = isAdmin && adminCount() <= 1;
+        var roleBtn = isAdmin
+          ? '<button class="btn btn--ghost btn--sm" type="button" data-user-role="' + esc(u.email) + '" data-to="member"' + (lastAdmin ? " disabled title=\"最後の管理者は変更できません\"" : "") + ">メンバーに</button>"
+          : '<button class="btn btn--ghost btn--sm" type="button" data-user-role="' + esc(u.email) + '" data-to="admin">管理者に</button>';
+        var delBtn = (isAdmin && lastAdmin)
+          ? '<span class="t-micro t-faint">削除不可</span>'
+          : '<button class="btn btn--ghost btn--sm" type="button" data-user-del="' + esc(u.email) + '">削除</button>';
         return "<tr><th scope='row'>" + esc(u.name) + "</th><td>" + esc(u.email) + "</td><td>" +
-          (u.role === "admin" ? '<span class="badge badge--new">管理者</span>' : '<span class="badge">会員</span>') + "</td><td>" +
+          (isAdmin ? '<span class="badge badge--new">管理者</span>' : '<span class="badge">会員</span>') + "</td><td>" +
           new Date(u.created).toLocaleDateString("ja-JP") + "</td>" +
-          '<td><span class="pw-mask" data-pw-idx="' + i + '" data-pw="' + pw + '">••••••••</span> ' +
-          '<button class="btn btn--ghost btn--sm" type="button" data-pw-show="' + i + '">表示</button></td><td>' +
-          (canDel ? '<button class="btn btn--ghost btn--sm" type="button" data-user-del="' + esc(u.email) + '">削除</button>' : '<span class="t-micro t-faint">削除不可</span>') +
-          "</td></tr>";
-      }).join("");
-      $("#admUsers").textContent = us.filter(function (x) { return x.role !== "admin"; }).length;
+          '<td><span class="pw-mask" data-pw="' + pw + '">••••••••</span> ' +
+          '<button class="btn btn--ghost btn--sm" type="button" data-pw-show>表示</button></td>' +
+          '<td><span class="cluster" style="gap:6px">' + roleBtn + delBtn + "</span></td></tr>";
+      }).join("") : '<tr><td colspan="6" class="t-soft">該当する会員がいません。</td></tr>';
+      $("#admUsers").textContent = users().filter(function (x) { return x.role !== "admin"; }).length;
     }
     renderUsers();
+    var userSearch = $("#userSearch");
+    if (userSearch) userSearch.addEventListener("input", function () { userQuery = userSearch.value.trim().toLowerCase(); renderUsers(); });
+
+    /* 会員を追加 */
+    var auAdd = $("#auAdd");
+    if (auAdd) {
+      auAdd.addEventListener("click", function () {
+        var name = $("#auName").value.trim();
+        var email = $("#auEmail").value.trim().toLowerCase();
+        var pw = $("#auPw").value;
+        var role = $("#auRole").value;
+        var err = $("#auError");
+        var bad = "";
+        if (!name) bad = "お名前を入力してください。";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) bad = "メールアドレスの形式が正しくありません。";
+        else if (pw.length < 8) bad = "パスワードは8文字以上で設定してください。";
+        else if (users().some(function (x) { return x.email === email; })) bad = "このメールアドレスは既に登録されています。";
+        if (bad) { err.textContent = bad; err.style.display = "block"; return; }
+        err.style.display = "none";
+        var us = users();
+        us.push({ name: name, email: email, pw: hash(pw), pwPlain: pw, role: role, created: new Date().toISOString() });
+        set("sz_users", us);
+        $("#auName").value = ""; $("#auEmail").value = ""; $("#auPw").value = "";
+        renderUsers();
+        logAction("会員 " + email + " を追加(" + (role === "admin" ? "管理者" : "メンバー") + ")");
+        window.szToast("会員を追加しました");
+      });
+    }
+
     $("#userRows").addEventListener("click", function (e) {
       var show = e.target.closest("[data-pw-show]");
       if (show) {
-        var mask = $('[data-pw-idx="' + show.getAttribute("data-pw-show") + '"]');
+        var mask = show.closest("td").querySelector(".pw-mask");
         var revealed = mask.textContent !== "••••••••";
         mask.textContent = revealed ? "••••••••" : mask.getAttribute("data-pw");
         show.textContent = revealed ? "表示" : "隠す";
         return;
       }
+      var role = e.target.closest("[data-user-role]");
+      if (role) {
+        var em = role.getAttribute("data-user-role");
+        var to = role.getAttribute("data-to");
+        var us = users();
+        var target = us.filter(function (u) { return u.email === em; })[0];
+        if (!target) return;
+        if (target.role === "admin" && to === "member" && adminCount() <= 1) { window.szToast("最後の管理者は変更できません"); return; }
+        target.role = to;
+        set("sz_users", us);
+        var s0 = session();
+        if (s0 && s0.email === em) { s0.role = to; set("sz_session", s0); }
+        renderUsers();
+        logAction("会員 " + em + " の権限を" + (to === "admin" ? "管理者" : "メンバー") + "に変更");
+        window.szToast("権限を変更しました");
+        return;
+      }
       var del = e.target.closest("[data-user-del]");
       if (del) {
         var email = del.getAttribute("data-user-del");
+        var t2 = users().filter(function (u) { return u.email === email; })[0];
+        if (t2 && t2.role === "admin" && adminCount() <= 1) { window.szToast("最後の管理者は削除できません"); return; }
         if (!window.confirm("アカウント「" + email + "」を削除します。よろしいですか?")) return;
         set("sz_users", users().filter(function (u) { return u.email !== email; }));
         if (email === DEMO_EMAIL) {
@@ -583,14 +833,131 @@
         var s = session();
         if (s && s.email === email) { try { localStorage.removeItem("sz_session"); } catch (err) { /* noop */ } }
         renderUsers();
+        logAction("会員 " + email + " を削除");
         window.szToast("アカウントを削除しました");
       }
     });
 
+    /* ---- 分析 ---- */
+    (function renderAnalytics() {
+      var us = users();
+      var orders = get("sz_orders", []);
+      var news = adminNews();
+      $("#anaMembers").textContent = us.filter(function (x) { return x.role !== "admin"; }).length;
+      $("#anaOrders").textContent = orders.length;
+      var rev = orders.reduce(function (a, o) { return a + (o.total || 0); }, 0);
+      $("#anaAov").textContent = yen(orders.length ? rev / orders.length : 0);
+      $("#anaNews").textContent = news.length;
+      if (!window.szCharts) return;
+      // 会員登録の月別推移(直近6か月)
+      var labels = [], counts = [];
+      var now = new Date();
+      for (var m = 5; m >= 0; m--) {
+        var d = new Date(now.getFullYear(), now.getMonth() - m, 1);
+        labels.push((d.getMonth() + 1) + "月");
+        var key = d.getFullYear() + "-" + d.getMonth();
+        counts.push(us.filter(function (u) {
+          var c = new Date(u.created);
+          return c.getFullYear() + "-" + c.getMonth() === key;
+        }).length);
+      }
+      window.szCharts.renderInto($("#anaMemberChart"), {
+        type: "line", title: "会員登録数(月別)", unit: "人", area: true, labels: labels,
+        series: [{ name: "新規登録", values: counts }]
+      });
+      var adminN = us.filter(function (x) { return x.role === "admin"; }).length;
+      var memberN = us.length - adminN;
+      window.szCharts.renderInto($("#anaRoleChart"), {
+        type: "donut", title: "権限の内訳", value: memberN, max: us.length || 1, unit: "人", label: "会員"
+      });
+    })();
+
+    /* ---- サイトお知らせバナー設定 ---- */
+    var ann0 = get("sz_announce", { on: false, msg: "", kind: "info", link: "" });
+    if ($("#annOn")) {
+      $("#annOn").checked = !!ann0.on;
+      $("#annMsg").value = ann0.msg || "";
+      $("#annKind").value = ann0.kind || "info";
+      $("#annLink").value = ann0.link || "";
+      var annBadge = function () {
+        var a = get("sz_announce", { on: false });
+        $("#annState").innerHTML = a.on ? '<span class="badge badge--new">表示中</span>' : '<span class="badge">非表示</span>';
+      };
+      annBadge();
+      $("#annSave").addEventListener("click", function () {
+        var v = { on: $("#annOn").checked, msg: $("#annMsg").value.trim(), kind: $("#annKind").value, link: $("#annLink").value.trim() };
+        set("sz_announce", v);
+        try { localStorage.removeItem("sz_announce_seen"); } catch (e) { /* noop */ } // 新しい内容は再表示
+        annBadge();
+        logAction("お知らせバナーを" + (v.on ? "表示ON" : "非表示"));
+        window.szToast("お知らせバナーを保存しました");
+      });
+    }
+
+    /* ---- ストア設定(送料) ---- */
+    var cfg0 = get("sz_store_cfg", {});
+    if ($("#cfgFree")) {
+      var defFree = (window.SZ && window.SZ.freeShipping) || 5000;
+      var defShip = (window.SZ && window.SZ.shippingFee) || 550;
+      $("#cfgFree").value = typeof cfg0.freeShipping === "number" ? cfg0.freeShipping : defFree;
+      $("#cfgShip").value = typeof cfg0.shippingFee === "number" ? cfg0.shippingFee : defShip;
+      $("#cfgSave").addEventListener("click", function () {
+        var free = parseInt($("#cfgFree").value, 10);
+        var ship = parseInt($("#cfgShip").value, 10);
+        if (isNaN(free) || free < 0 || isNaN(ship) || ship < 0) { window.szToast("正しい金額を入力してください"); return; }
+        set("sz_store_cfg", { freeShipping: free, shippingFee: ship });
+        logAction("ストア設定を更新(送料無料 " + free + "円 / 送料 " + ship + "円)");
+        window.szToast("ストア設定を保存しました(カートに反映)");
+      });
+    }
+
+    /* ---- バックアップ(エクスポート/インポート) ---- */
+    var BACKUP_KEYS = ["sz_users", "sz_orders", "sz_tickets", "sz_maintenance", "sz_global",
+      "sz_page_ctrl", "sz_services", "sz_admin_news", "sz_seed_del", "sz_announce", "sz_store_cfg", "sz_admin_log"];
+    var admExport = $("#admExport");
+    if (admExport) {
+      admExport.addEventListener("click", function () {
+        var dump = { _app: "SUZAKU-admin-backup", _at: new Date().toISOString() };
+        BACKUP_KEYS.forEach(function (k) {
+          try { var v = localStorage.getItem(k); if (v !== null) dump[k] = JSON.parse(v); } catch (e) { /* noop */ }
+        });
+        var blob = new Blob([JSON.stringify(dump, null, 2)], { type: "application/json" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "suzaku-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        $("#admBackupMsg").textContent = "バックアップを書き出しました。";
+        logAction("データをエクスポート");
+      });
+    }
+    var admImportFile = $("#admImportFile");
+    if (admImportFile) {
+      admImportFile.addEventListener("change", function () {
+        var file = admImportFile.files && admImportFile.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          var data;
+          try { data = JSON.parse(reader.result); } catch (e) { $("#admBackupMsg").textContent = "読み込みに失敗しました(JSON形式ではありません)。"; return; }
+          if (!data || data._app !== "SUZAKU-admin-backup") { $("#admBackupMsg").textContent = "SUZAKUのバックアップファイルではありません。"; return; }
+          if (!window.confirm("現在のデータをこのバックアップで置き換えます。よろしいですか?")) { admImportFile.value = ""; return; }
+          BACKUP_KEYS.forEach(function (k) {
+            if (Object.prototype.hasOwnProperty.call(data, k)) set(k, data[k]);
+          });
+          logAction("データをインポート(復元)");
+          window.szToast("バックアップを復元しました");
+          setTimeout(function () { window.location.reload(); }, 700);
+        };
+        reader.readAsText(file);
+      });
+    }
+
     $("#admReset").addEventListener("click", function () {
       if (!window.confirm("この端末のデモデータ(注文・修理・会員・メンテ状態・各種制御・作成ニュース)をすべて削除します。よろしいですか?")) return;
       ["sz_orders", "sz_tickets", "sz_users", "sz_maintenance", "sz_cart",
-       "sz_global", "sz_page_ctrl", "sz_services", "sz_admin_news", "sz_seed_del"].forEach(function (k) {
+       "sz_global", "sz_page_ctrl", "sz_services", "sz_admin_news", "sz_seed_del",
+       "sz_admin_log", "sz_announce", "sz_announce_seen", "sz_store_cfg"].forEach(function (k) {
         try { localStorage.removeItem(k); } catch (e) { /* noop */ }
       });
       window.szToast("デモデータをリセットしました");
@@ -608,7 +975,7 @@
   if (maintPage) {
     var mm = window.szMaint.get();
     var gg = globalCtrl();
-    var sv = services();
+    var sv = effectiveServices(); // 管理設定(立入禁止・購入停止・メンテ)と同期した実効状態
     var anyDown = Object.keys(sv).some(function (k) { return sv[k] !== "ok"; });
     if (gg.lockdown) {
       maintPage.innerHTML = '<div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> <strong>現在、サイト全体を一時閉鎖しています。</strong> ' +

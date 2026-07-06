@@ -15,10 +15,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=bd54c9af6a">
-<link rel="stylesheet" href="/assets/css/base.css?v=bd54c9af6a">
-<link rel="stylesheet" href="/assets/css/components.css?v=bd54c9af6a">
-<link rel="stylesheet" href="/assets/css/animations.css?v=bd54c9af6a">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=49c1d6617c">
+<link rel="stylesheet" href="/assets/css/base.css?v=49c1d6617c">
+<link rel="stylesheet" href="/assets/css/components.css?v=49c1d6617c">
+<link rel="stylesheet" href="/assets/css/animations.css?v=49c1d6617c">
 </head>
 <body class="page-admin">
 
@@ -276,17 +276,31 @@
         <button class="admin-tab" type="button" role="tab" data-admin-tab="ops">稼働制御</button>
         <button class="admin-tab" type="button" role="tab" data-admin-tab="pages">ページ制御</button>
         <button class="admin-tab" type="button" role="tab" data-admin-tab="news">ニュース</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="site">サイト</button>
         <button class="admin-tab" type="button" role="tab" data-admin-tab="users">会員</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="analytics">分析</button>
         <button class="admin-tab" type="button" role="tab" data-admin-tab="records">記録・ツール</button>
       </div>
 
       <!-- 概要 -->
       <div class="admin-panel is-active" data-admin-panel="overview">
         <div class="card">
-          <p class="eyebrow">SALES</p>
-          <h2 class="t-h4">曜日別売上</h2>
-          <figure class="chart" id="admChart"></figure>
-          <p class="t-micro t-faint" style="margin-top:10px">数値はデモ基礎値に、この端末での実際のご注文を加算したものです。各機能は上のタブから操作できます。</p>
+          <p class="eyebrow">QUICK ACTIONS</p>
+          <h2 class="t-h4">クイック操作</h2>
+          <div class="cluster" id="admQuick" style="margin-top:6px"></div>
+        </div>
+        <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
+          <div class="card">
+            <p class="eyebrow">SALES</p>
+            <h2 class="t-h4">曜日別売上</h2>
+            <figure class="chart" id="admChart"></figure>
+            <p class="t-micro t-faint" style="margin-top:10px">数値はデモ基礎値に、この端末での実際のご注文を加算したものです。</p>
+          </div>
+          <div class="card">
+            <p class="eyebrow">ACTIVITY LOG</p>
+            <h2 class="t-h4">最近の操作履歴</h2>
+            <div id="admActivity" class="activity-log"></div>
+          </div>
         </div>
       </div>
 
@@ -394,16 +408,78 @@
         </div>
       </div>
 
+      <!-- サイト -->
+      <div class="admin-panel" data-admin-panel="site" hidden>
+        <div class="card">
+          <p class="eyebrow">ANNOUNCEMENT</p>
+          <h2 class="t-h4">サイトお知らせバナー</h2>
+          <p class="t-small t-soft">全ページの上部に、キャンペーンや障害情報などのお知らせバーを表示します。閲覧者は各自で閉じられます(メンテナンスとは別に使えます)。</p>
+          <div class="consent-row" style="border-top:0;padding-top:6px">
+            <div><p class="consent-row__title">お知らせバナーを表示</p><p id="annState" class="t-micro t-faint"></p></div>
+            <label class="switch"><input type="checkbox" id="annOn"><span class="switch__track"></span></label>
+          </div>
+          <div class="cluster" style="gap:10px">
+            <div class="field" style="flex:0;min-width:150px"><label for="annKind">種類</label>
+              <select class="select" id="annKind"><option value="info">お知らせ(青)</option><option value="promo">キャンペーン(朱)</option><option value="warn">注意(金)</option></select></div>
+            <div class="field" style="flex:1;min-width:200px"><label for="annLink">リンク先(任意)</label><input class="input" id="annLink" placeholder="/store/ など"></div>
+          </div>
+          <div class="field"><label for="annMsg">メッセージ</label><input class="input" id="annMsg" placeholder="例: 夏の感謝祭 開催中!対象アクセサリが20%オフ。"></div>
+          <div class="cluster">
+            <button class="btn btn--primary btn--sm" id="annSave" type="button">お知らせを保存</button>
+            <a class="btn btn--soft btn--sm" href="/?preview=user" target="_blank" rel="noopener">一般ユーザーとして確認</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--sp-5)">
+          <p class="eyebrow">STORE SETTINGS</p>
+          <h2 class="t-h4">ストア設定</h2>
+          <p class="t-small t-soft">送料無料のしきい値と配送料を変更できます。カート・チェックアウトに即時反映されます。</p>
+          <div class="cluster" style="gap:14px;align-items:flex-end">
+            <div class="field" style="flex:1;min-width:180px;margin:0"><label for="cfgFree">送料無料のしきい値(円・税込)</label><input class="input" id="cfgFree" type="number" min="0" step="100" placeholder="5000"></div>
+            <div class="field" style="flex:1;min-width:150px;margin:0"><label for="cfgShip">配送料(円・税込)</label><input class="input" id="cfgShip" type="number" min="0" step="10" placeholder="550"></div>
+            <button class="btn btn--primary btn--sm" id="cfgSave" type="button" style="margin-bottom:2px">ストア設定を保存</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 会員 -->
       <div class="admin-panel" data-admin-panel="users" hidden>
         <div class="card">
+          <p class="eyebrow">ADD USER</p>
+          <h2 class="t-h4">会員を追加</h2>
+          <p class="t-small t-soft">管理者がアカウントを直接発行します(デモ)。</p>
+          <div class="cluster" style="gap:10px;align-items:flex-end">
+            <div class="field" style="flex:1;min-width:130px;margin:0"><label for="auName">お名前</label><input class="input" id="auName" placeholder="朱雀 花子"></div>
+            <div class="field" style="flex:1.4;min-width:180px;margin:0"><label for="auEmail">メールアドレス</label><input class="input" id="auEmail" type="email" placeholder="hanako@example.com"></div>
+            <div class="field" style="flex:1;min-width:120px;margin:0"><label for="auPw">パスワード</label><input class="input" id="auPw" placeholder="8文字以上"></div>
+            <div class="field" style="flex:0;min-width:120px;margin:0"><label for="auRole">権限</label><select class="select" id="auRole"><option value="member">メンバー</option><option value="admin">管理者</option></select></div>
+            <button class="btn btn--primary btn--sm" id="auAdd" type="button" style="margin-bottom:2px">追加</button>
+          </div>
+          <p id="auError" class="field__error" style="display:none;margin-top:8px"></p>
+        </div>
+        <div class="card" style="margin-top:var(--sp-5)">
           <p class="eyebrow">USERS</p>
           <h2 class="t-h4">ユーザー管理</h2>
-          <p class="t-small t-soft">この端末に登録されている全アカウントです。パスワードの表示・アカウントの削除ができます(デモ実装のため平文を保持しています。実サービスでは絶対に行いません)。</p>
+          <p class="t-small t-soft">この端末に登録されている全アカウントです。権限の変更・パスワードの表示・削除ができます(デモ実装のため平文を保持しています。実サービスでは絶対に行いません)。</p>
+          <div class="field" style="max-width:280px"><label for="userSearch">検索(名前・メール)</label><input class="input" id="userSearch" placeholder="キーワードで絞り込み"></div>
           <div class="scroll-x"><table class="spec-table quick-table">
             <thead><tr><th scope="col">名前</th><th scope="col">メールアドレス</th><th scope="col">権限</th><th scope="col">登録日</th><th scope="col">パスワード</th><th scope="col">操作</th></tr></thead>
             <tbody id="userRows"></tbody>
           </table></div>
+        </div>
+      </div>
+
+      <!-- 分析 -->
+      <div class="admin-panel" data-admin-panel="analytics" hidden>
+        <div class="stat-row" style="--stat-cols:4;margin-bottom:var(--sp-5)">
+          <div class="stat"><p class="stat__value" id="anaMembers">0</p><p class="stat__label">会員数</p></div>
+          <div class="stat"><p class="stat__value" id="anaOrders">0</p><p class="stat__label">注文件数</p></div>
+          <div class="stat"><p class="stat__value" id="anaAov" style="font-size:clamp(1.4rem,1rem+1.8vw,2.2rem)">¥0</p><p class="stat__label">平均注文額</p></div>
+          <div class="stat"><p class="stat__value" id="anaNews">0</p><p class="stat__label">作成ニュース</p></div>
+        </div>
+        <div class="grid grid--2" style="align-items:start">
+          <div class="card"><p class="eyebrow">MEMBERS</p><h2 class="t-h4">会員登録の推移(月別)</h2><figure class="chart" id="anaMemberChart"></figure></div>
+          <div class="card"><p class="eyebrow">ROLES</p><h2 class="t-h4">権限の内訳</h2><figure class="chart" id="anaRoleChart"></figure></div>
         </div>
       </div>
 
@@ -428,12 +504,23 @@
           </div>
         </div>
         <div class="card" style="margin-top:var(--sp-5)">
+          <p class="eyebrow">BACKUP</p>
+          <h2 class="t-h4">データのバックアップ</h2>
+          <p class="t-small t-soft">この端末の管理データ(注文・修理・会員・ニュース・各種設定)をJSONファイルとして書き出し、別の端末やブラウザに復元できます。</p>
+          <div class="cluster">
+            <button class="btn btn--primary btn--sm" id="admExport" type="button">エクスポート(書き出し)</button>
+            <label class="btn btn--soft btn--sm" for="admImportFile" style="cursor:pointer">インポート(読み込み)</label>
+            <input type="file" id="admImportFile" accept="application/json,.json" hidden>
+          </div>
+          <p id="admBackupMsg" class="t-micro t-faint" style="margin-top:10px"></p>
+        </div>
+
+        <div class="card" style="margin-top:var(--sp-5)">
           <p class="eyebrow">TOOLS</p>
           <h2 class="t-h4">管理ツール</h2>
           <div class="cluster">
             <a class="btn btn--soft btn--sm" href="/coming-soon/">コンテンツ管理(作成中)</a>
             <a class="btn btn--soft btn--sm" href="/coming-soon/">在庫管理(作成中)</a>
-            <a class="btn btn--soft btn--sm" href="/coming-soon/">会員分析(作成中)</a>
             <button class="btn btn--ghost btn--sm" id="admReset" type="button">デモデータをリセット</button>
             <button class="btn btn--ghost btn--sm" id="admLogout" type="button">ログアウト</button>
           </div>
@@ -495,11 +582,11 @@
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="/data/products.js?v=bd54c9af6a" defer></script>
-<script src="/assets/js/main.js?v=bd54c9af6a" defer></script>
-<script src="/assets/js/charts.js?v=bd54c9af6a" defer></script>
-<script src="/assets/js/store.js?v=bd54c9af6a" defer></script>
-<script src="/assets/js/pages.js?v=bd54c9af6a" defer></script>
-<script src="/assets/js/auth.js?v=bd54c9af6a" defer></script>
+<script src="/data/products.js?v=49c1d6617c" defer></script>
+<script src="/assets/js/main.js?v=49c1d6617c" defer></script>
+<script src="/assets/js/charts.js?v=49c1d6617c" defer></script>
+<script src="/assets/js/store.js?v=49c1d6617c" defer></script>
+<script src="/assets/js/pages.js?v=49c1d6617c" defer></script>
+<script src="/assets/js/auth.js?v=49c1d6617c" defer></script>
 </body>
 </html>

@@ -9,6 +9,12 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
   var SZ = window.SZ || { products: [], tax: 0.1, freeShipping: 5000, shippingFee: 550 };
 
+  /* 注文・修理の進行段階(管理ボードと照会画面で共有する単一ソース) */
+  window.szStages = {
+    order: ["ご注文受付", "お支払い確認", "出荷準備中", "出荷済み", "お届け完了"],
+    repair: ["受付完了", "診断中", "修理作業中", "返送手配", "お届け完了"]
+  };
+
   function yen(n) { return "¥" + Math.round(n).toLocaleString("ja-JP"); }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -55,8 +61,12 @@
       var p = product(x.id);
       if (p) sub += unitPrice(p, x.storage) * x.qty;
     });
-    var ship = sub === 0 || sub >= SZ.freeShipping ? 0 : SZ.shippingFee;
-    return { sub: sub, ship: ship, total: sub + ship, count: cart.reduce(function (a, x) { return a + x.qty; }, 0) };
+    // 管理ボードのストア設定(送料無料しきい値・配送料)があれば優先する
+    var cfg = window.szStore.get("sz_store_cfg", {});
+    var freeAt = typeof cfg.freeShipping === "number" ? cfg.freeShipping : SZ.freeShipping;
+    var fee = typeof cfg.shippingFee === "number" ? cfg.shippingFee : SZ.shippingFee;
+    var ship = sub === 0 || sub >= freeAt ? 0 : fee;
+    return { sub: sub, ship: ship, total: sub + ship, count: cart.reduce(function (a, x) { return a + x.qty; }, 0), freeAt: freeAt };
   }
 
   /* ---------------- 製品ページ: 構成選択 ---------------- */
@@ -192,7 +202,7 @@
           '<div class="summary-box__row"><span>小計(税込)</span><span>' + yen(t.sub) + "</span></div>" +
           '<div class="summary-box__row"><span>配送料</span><span>' + (t.ship ? yen(t.ship) : "無料") + "</span></div>" +
           '<div class="summary-box__row summary-box__row--total"><span>合計</span><span>' + yen(t.total) + "</span></div>" +
-          '<p class="t-micro t-faint">合計金額には消費税10%が含まれています。' + (t.ship ? "あと" + yen(SZ.freeShipping - t.sub) + "で送料無料。" : "") + "</p>" +
+          '<p class="t-micro t-faint">合計金額には消費税10%が含まれています。' + (t.ship ? "あと" + yen(t.freeAt - t.sub) + "で送料無料。" : "") + "</p>" +
           checkoutBtn +
           '<a class="btn btn--ghost btn--block" href="/store/">買い物を続ける</a>';
       }
@@ -478,15 +488,19 @@
       }
       var placed = new Date(hit.date);
       var hours = (Date.now() - placed.getTime()) / 36e5;
-      var steps = [
-        { t: "ご注文受付", done: true },
-        { t: "お支払い確認", done: hours > 0.01 },
-        { t: "出荷準備中", done: hours > 12 },
-        { t: "出荷済み", done: hours > 36 },
-        { t: "お届け完了", done: hours > 96 }
-      ];
-      var timeline = steps.map(function (s) {
-        return '<li class="' + (s.done ? "is-done" : "") + '"><span>' + s.t + "</span></li>";
+      var stages = window.szStages.order;
+      /* 管理ボードで明示的にステータスを設定していればそれを優先。
+         未設定なら経過時間から推定する(デモの自動進行)。 */
+      var reached = typeof hit.statusIdx === "number"
+        ? hit.statusIdx
+        : (hours > 96 ? 4 : hours > 36 ? 3 : hours > 12 ? 2 : hours > 0.01 ? 1 : 0);
+      if (hit.cancelled) {
+        box.innerHTML = '<div class="card" style="margin-top:24px"><p class="eyebrow">注文番号 ' + hit.no + "</p>" +
+          '<div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> このご注文はキャンセルされました。ご不明な点は<a href="/support/contact/">お問い合わせ</a>ください。</div></div>';
+        return;
+      }
+      var timeline = stages.map(function (t, i) {
+        return '<li class="' + (i <= reached ? "is-done" : "") + '"><span>' + t + "</span></li>";
       }).join("");
       var items = hit.items.map(function (x) {
         var p = product(x.id);
@@ -495,7 +509,8 @@
       box.innerHTML =
         '<div class="card" style="margin-top:24px">' +
         '<p class="eyebrow">注文番号 ' + hit.no + "</p>" +
-        '<p class="t-small t-soft">注文日時: ' + placed.toLocaleString("ja-JP") + " / お支払い: " + hit.pay + "</p>" +
+        '<p class="t-small t-soft">注文日時: ' + placed.toLocaleString("ja-JP") + " / お支払い: " + hit.pay +
+        ' / 現在の状況: <strong style="color:var(--accent)">' + stages[reached] + "</strong></p>" +
         '<ol class="order-track">' + timeline + "</ol>" +
         '<h3 class="t-h4">ご注文商品</h3><ul class="t-small t-soft" style="display:grid;gap:4px">' + items + "</ul>" +
         '<p class="summary-box__row summary-box__row--total"><span>合計(税込)</span><span>' + yen(hit.total) + "</span></p>" +

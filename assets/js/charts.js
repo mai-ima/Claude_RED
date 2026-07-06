@@ -87,6 +87,7 @@
     series.forEach(function (s) { all = all.concat(s.values); });
     var maxV = cfg.max || Math.max.apply(null, all) * 1.1;
     var minV = cfg.min !== undefined ? cfg.min : 0;
+    if (!(maxV > minV)) maxV = minV + 1; // 全て同値(全ゼロ等)でのゼロ除算・NaNを防ぐ
     var n = cfg.labels.length;
     function X(i) { return PL + (i / Math.max(1, n - 1)) * (W - PL - PR); }
     function Y(v) { return PT + (1 - (v - minV) / (maxV - minV)) * (H - PT - PB); }
@@ -193,15 +194,18 @@
       if (reduced) { bar.style.width = w; return; }
       setTimeout(function () { bar.style.width = w; }, 80 * i);
     });
-    // 折れ線: ダッシュで描画
+    // 折れ線: ダッシュで描画。非表示要素(タブ内など)では getTotalLength が
+    // 例外を投げるため、try/catch で保護し、描画自体は静的に成立させる。
     Array.prototype.forEach.call(el.querySelectorAll(".chart-line__path"), function (path) {
       if (reduced) return;
-      var len = path.getTotalLength();
-      path.style.strokeDasharray = len;
-      path.style.strokeDashoffset = len;
-      path.getBoundingClientRect();
-      path.style.transition = "stroke-dashoffset 1.4s cubic-bezier(0.22,1,0.36,1)";
-      path.style.strokeDashoffset = "0";
+      try {
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
+        path.getBoundingClientRect();
+        path.style.transition = "stroke-dashoffset 1.4s cubic-bezier(0.22,1,0.36,1)";
+        path.style.strokeDashoffset = "0";
+      } catch (e) { /* 非表示要素: アニメーションはスキップ(描画は済んでいる) */ }
     });
     // ドーナツ
     Array.prototype.forEach.call(el.querySelectorAll(".chart-donut__fill"), function (c) {

@@ -330,6 +330,15 @@
   var banner = $("#cookieBanner");
   var modal = $("#consentModal");
 
+  /* Cookieバナーの実高を測ってCSS変数に反映する。表示中の管理者プレビュー
+     チップ(.admin-preview)がモバイルでバナーと重ならないよう、バナー側の
+     高さをチップのbottomオフセット計算に使う(--maint-h/--announce-hと同じ手法)。 */
+  function syncCookieH() {
+    var h = (banner && banner.classList.contains("is-visible")) ? banner.offsetHeight : 0;
+    document.documentElement.style.setProperty("--cookie-h", h + "px");
+  }
+  window.addEventListener("resize", syncCookieH);
+
   function saveConsent(analytics, marketing) {
     lsSet(CONSENT_KEY, {
       necessary: true,
@@ -339,6 +348,7 @@
       version: 2
     });
     if (banner) banner.classList.remove("is-visible");
+    syncCookieH();
     closeModal();
     window.szToast("Cookie設定を保存しました");
     renderConsentState();
@@ -375,7 +385,7 @@
   }
 
   if (!lsGet(CONSENT_KEY, null) && banner) {
-    setTimeout(function () { banner.classList.add("is-visible"); }, 900);
+    setTimeout(function () { banner.classList.add("is-visible"); syncCookieH(); }, 900);
   }
   var btnA = $("#consentAcceptAll");
   var btnR = $("#consentRejectAll");

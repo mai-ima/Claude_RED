@@ -1885,7 +1885,7 @@ body.drawer-open .cookie-banner {
 }
 
 .opt-group button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: var(--r-sm);
   font-size: var(--fs-small);
@@ -2085,9 +2085,11 @@ body.is-blocked .cookie-banner { display: none !important; }
 .announce-bar--warn { background: linear-gradient(90deg, #b8862b, #d9a441); color: #241a04; }
 .announce-bar__close {
   position: absolute;
+  top: 50%;
   right: 10px;
+  transform: translateY(-50%);
   display: inline-flex;
-  padding: 4px;
+  padding: 14px;
   color: inherit;
   opacity: 0.85;
 }
@@ -2116,7 +2118,8 @@ body.has-announce-bar .drawer { top: calc(var(--header-h) + var(--announce-h, 32
 .admin-preview {
   position: fixed;
   left: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  /* Cookieバナー表示中はその高さ分だけ押し上げ、モバイルでの重なりを防ぐ */
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px));
   z-index: var(--z-toast);
   display: inline-flex;
   align-items: center;

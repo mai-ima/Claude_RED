@@ -8,11 +8,7 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
   var SZ = window.SZ || { products: [], news: [], faq: [], pages: [] };
 
-  function escHtml(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
-  }
+  var esc = window.szFmt.esc;
 
   /* ---------------- FAQ ---------------- */
   var faqList = $("#faqList");
@@ -30,7 +26,7 @@
         return;
       }
       faqList.innerHTML = '<div class="accordion">' + items.map(function (f) {
-        return '<div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span><span class="badge" style="margin-right:10px">' + f.cat + "</span>" + escHtml(f.q) + "</span></button>" +
+        return '<div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span><span class="badge" style="margin-right:10px">' + f.cat + "</span>" + esc(f.q) + "</span></button>" +
           '<div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">' + f.a + "</div></div></div></div>";
       }).join("") + "</div>";
       var count = $("#faqCount");
@@ -90,8 +86,8 @@
       newsList.innerHTML = items.map(function (n) {
         return '<a class="card card--hover" href="' + n.url + '">' +
           '<p class="t-micro t-faint">' + n.date.replace(/-/g, ".") + ' <span class="badge" style="margin-left:8px">' + n.cat + "</span></p>" +
-          '<h2 class="t-h4">' + escHtml(n.title) + "</h2>" +
-          '<p class="t-small t-soft">' + escHtml(n.excerpt) + "</p>" +
+          '<h2 class="t-h4">' + esc(n.title) + "</h2>" +
+          '<p class="t-small t-soft">' + esc(n.excerpt) + "</p>" +
           '<p class="link-arrow">読む</p></a>';
       }).join("");
     }
@@ -144,9 +140,9 @@
     } else {
       document.title = ca.title + " | SUZAKU(朱雀)";
       customArticle.innerHTML =
-        '<p class="t-micro t-faint">' + ca.date.replace(/-/g, ".") + ' <span class="badge" style="margin-left:8px">' + escHtml(ca.cat) + "</span></p>" +
-        '<h1 class="t-h2" style="margin:10px 0 24px">' + escHtml(ca.title) + "</h1>" +
-        '<div class="prose">' + ca.body.split(/\n{2,}|\n/).filter(Boolean).map(function (p) { return "<p>" + escHtml(p) + "</p>"; }).join("") + "</div>" +
+        '<p class="t-micro t-faint">' + ca.date.replace(/-/g, ".") + ' <span class="badge" style="margin-left:8px">' + esc(ca.cat) + "</span></p>" +
+        '<h1 class="t-h2" style="margin:10px 0 24px">' + esc(ca.title) + "</h1>" +
+        '<div class="prose">' + ca.body.split(/\n{2,}|\n/).filter(Boolean).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
         '<p class="t-micro t-faint" style="margin-top:28px">この記事は管理ボードから作成されたデモ記事です(この端末のブラウザ内にのみ保存されています)。</p>' +
         '<div style="margin-top:20px"><a class="btn btn--ghost" href="/news/">ニュース一覧へ戻る</a></div>';
     }
@@ -205,8 +201,8 @@
       }
       searchResults.innerHTML = hits.map(function (h) {
         return '<a class="card card--hover" href="' + h.item.url + '">' +
-          '<p class="t-micro" style="color:var(--accent);font-weight:700">' + escHtml(h.item.type) + "</p>" +
-          '<h2 class="t-h4">' + escHtml(h.item.title) + "</h2>" +
+          '<p class="t-micro" style="color:var(--accent);font-weight:700">' + esc(h.item.type) + "</p>" +
+          '<h2 class="t-h4">' + esc(h.item.title) + "</h2>" +
           '<p class="t-micro t-faint">' + h.item.url + "</p></a>";
       }).join("");
     }
@@ -280,7 +276,7 @@
       var hit = tickets.filter(function (t) { return t.no === no; })[0];
       var box = $("#ticketResult");
       if (!hit) {
-        box.innerHTML = '<div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> 受付番号「' + escHtml(no) + '」は見つかりませんでした。この端末で行われたお申し込みのみ照会できます(デモ仕様)。</div>';
+        box.innerHTML = '<div class="notice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> 受付番号「' + esc(no) + '」は見つかりませんでした。この端末で行われたお申し込みのみ照会できます(デモ仕様)。</div>';
         return;
       }
       var placed = new Date(hit.date);
@@ -292,10 +288,10 @@
         : (hours > 144 ? 4 : hours > 96 ? 3 : hours > 48 ? 2 : hours > 24 ? 1 : 0);
       box.innerHTML = '<div class="card" style="margin-top:24px">' +
         '<p class="eyebrow">受付番号 ' + hit.no + "</p>" +
-        '<p class="t-small t-soft">受付日時: ' + placed.toLocaleString("ja-JP") + " / 対象機種: " + escHtml(hit.model) + " / 方法: " + escHtml(hit.method) +
-        ' / 現在の状況: <strong style="color:var(--accent)">' + escHtml(stages[reached]) + "</strong></p>" +
+        '<p class="t-small t-soft">受付日時: ' + placed.toLocaleString("ja-JP") + " / 対象機種: " + esc(hit.model) + " / 方法: " + esc(hit.method) +
+        ' / 現在の状況: <strong style="color:var(--accent)">' + esc(stages[reached]) + "</strong></p>" +
         '<ol class="order-track">' + stages.map(function (t, i) {
-          return '<li class="' + (i <= reached ? "is-done" : "") + '"><span>' + escHtml(t) + "</span></li>";
+          return '<li class="' + (i <= reached ? "is-done" : "") + '"><span>' + esc(t) + "</span></li>";
         }).join("") + "</ol></div>";
     });
   }
@@ -308,15 +304,15 @@
     var doc = docs.filter(function (d) { return d.id === docId; })[0] || docs[0];
 
     function block(b) {
-      if (b.t === "h1") return "<h1>" + escHtml(b.v) + "</h1>";
-      if (b.t === "h2") return "<h2>" + escHtml(b.v) + "</h2>";
-      if (b.t === "p") return "<p>" + escHtml(b.v) + "</p>";
-      if (b.t === "note") return '<p class="doc-note">' + escHtml(b.v) + "</p>";
-      if (b.t === "list") return "<ul>" + b.v.map(function (x) { return "<li>" + escHtml(x) + "</li>"; }).join("") + "</ul>";
+      if (b.t === "h1") return "<h1>" + esc(b.v) + "</h1>";
+      if (b.t === "h2") return "<h2>" + esc(b.v) + "</h2>";
+      if (b.t === "p") return "<p>" + esc(b.v) + "</p>";
+      if (b.t === "note") return '<p class="doc-note">' + esc(b.v) + "</p>";
+      if (b.t === "list") return "<ul>" + b.v.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
       if (b.t === "table") {
         return '<table>' + b.v.map(function (row, i) {
           var tag = i === 0 && b.v.length > 2 && b.v[0].length > 2 ? "th" : "td";
-          return "<tr>" + row.map(function (c) { return "<" + tag + ">" + escHtml(c) + "</" + tag + ">"; }).join("") + "</tr>";
+          return "<tr>" + row.map(function (c) { return "<" + tag + ">" + esc(c) + "</" + tag + ">"; }).join("") + "</tr>";
         }).join("") + "</table>";
       }
       return "";
@@ -328,7 +324,7 @@
       document.title = doc.title + " | SUZAKU(朱雀)";
       docPages.innerHTML = doc.pages.map(function (pg, i) {
         return '<article class="doc-page" data-page="' + (i + 1) + '">' +
-          '<header class="doc-page__head"><span>SUZAKU — ' + escHtml(doc.title) + "</span><span>" + escHtml(doc.version) + "</span></header>" +
+          '<header class="doc-page__head"><span>SUZAKU — ' + esc(doc.title) + "</span><span>" + esc(doc.version) + "</span></header>" +
           pg.map(block).join("") +
           '<footer class="doc-page__foot"><span>© 2022-2026 SUZAKU Inc.(架空のデモ文書)</span><span>' + (i + 1) + " / " + doc.pages.length + "</span></footer></article>";
       }).join("");
@@ -361,8 +357,8 @@
       lib.innerHTML = docs.map(function (d) {
         var cur = doc && d.id === doc.id;
         return '<a class="card card--hover' + (cur ? " is-current-doc" : "") + '" href="/viewer/?doc=' + d.id + '">' +
-          '<div class="spread"><div><p class="eyebrow">' + escHtml(d.category) + "</p><h3 class='t-h4'>" + escHtml(d.title) +
-          (cur ? ' <span class="badge">表示中</span>' : "") + "</h3><p class='t-micro t-faint'>" + escHtml(d.version) + " / " + d.pages.length + "ページ</p></div>" +
+          '<div class="spread"><div><p class="eyebrow">' + esc(d.category) + "</p><h3 class='t-h4'>" + esc(d.title) +
+          (cur ? ' <span class="badge">表示中</span>' : "") + "</h3><p class='t-micro t-faint'>" + esc(d.version) + " / " + d.pages.length + "ページ</p></div>" +
           '<span class="link-arrow">開く</span></div></a>';
       }).join("");
     }
@@ -440,21 +436,28 @@
       sz_page_ctrl: "ページ別制御(管理者)",
       sz_services: "サービス状況(管理者)",
       sz_admin_news: "管理ボードで作成したニュース",
-      sz_seed_del: "削除済みデモ会員の記録"
+      sz_seed_del: "削除済みデモ会員の記録",
+      sz_announce: "お知らせバナー設定(管理者)",
+      sz_store_cfg: "ストア設定(管理者)",
+      sz_admin_log: "管理ボードの操作記録",
+      sz_announce_seen: "お知らせバナーの既読状態"
     };
+    /* 対象キーは szKeys レジストリを情報源とし、STORAGE_LABELS 側の記載漏れで
+       表示から抜け落ちないようにする(ラベル未登録キーはキー名をそのまま表示)。 */
+    var STORAGE_KEYS = [].concat(window.szKeys.PREF, window.szKeys.DATA, window.szKeys.VOLATILE, ["sz_session"]);
     function renderStorageInfo() {
       var box = $("#storageInfo", settingsPage);
       if (!box) return;
       var rows = [];
-      for (var key in STORAGE_LABELS) {
+      STORAGE_KEYS.forEach(function (key) {
         var raw = null;
         try { raw = localStorage.getItem(key); } catch (e) { /* noop */ }
-        if (raw === null) continue;
+        if (raw === null) return;
         var bytes = raw.length;
         var size = bytes < 1024 ? bytes + " B" : (bytes / 1024).toFixed(1) + " KB";
-        rows.push('<div class="storage-list__row"><span>' + escHtml(STORAGE_LABELS[key]) +
-          ' <code class="t-micro t-faint">' + escHtml(key) + '</code></span><span class="t-micro t-faint">' + size + "</span></div>");
-      }
+        rows.push('<div class="storage-list__row"><span>' + esc(STORAGE_LABELS[key] || key) +
+          ' <code class="t-micro t-faint">' + esc(key) + '</code></span><span class="t-micro t-faint">' + size + "</span></div>");
+      });
       box.innerHTML = rows.length
         ? rows.join("")
         : '<p class="t-small t-soft">保存されているデータはありません。</p>';

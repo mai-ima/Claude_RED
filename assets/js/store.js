@@ -15,12 +15,8 @@
     repair: ["受付完了", "診断中", "修理作業中", "返送手配", "お届け完了"]
   };
 
-  function yen(n) { return "¥" + Math.round(n).toLocaleString("ja-JP"); }
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
-  }
+  var yen = window.szFmt.yen;
+  var esc = window.szFmt.esc;
   function product(id) {
     return SZ.products.filter(function (p) { return p.id === id; })[0] || null;
   }

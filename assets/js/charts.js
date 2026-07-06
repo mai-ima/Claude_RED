@@ -12,11 +12,7 @@
   var PALETTE = ["#e8442e", "#3d8bff", "#b8862b"]; // 検証済み固定順(朱→青→金)
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
-  }
+  var esc = window.szFmt.esc;
   function fmt(v) {
     return Number(v).toLocaleString("ja-JP");
   }

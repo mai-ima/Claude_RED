@@ -10,12 +10,8 @@
   var get = function (k, f) { return window.szStore.get(k, f); };
   var set = function (k, v) { window.szStore.set(k, v); };
 
-  function yen(n) { return "¥" + Math.round(n).toLocaleString("ja-JP"); }
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
-  }
+  var yen = window.szFmt.yen;
+  var esc = window.szFmt.esc;
 
   /* ---------- パスワードハッシュ(デモ用の簡易実装) ---------- */
   function hash(str) {
@@ -912,8 +908,7 @@
     }
 
     /* ---- バックアップ(エクスポート/インポート) ---- */
-    var BACKUP_KEYS = ["sz_users", "sz_orders", "sz_tickets", "sz_maintenance", "sz_global",
-      "sz_page_ctrl", "sz_services", "sz_admin_news", "sz_seed_del", "sz_announce", "sz_store_cfg", "sz_admin_log"];
+    var BACKUP_KEYS = window.szKeys.BACKUP;
     var admExport = $("#admExport");
     if (admExport) {
       admExport.addEventListener("click", function () {
@@ -955,9 +950,7 @@
 
     $("#admReset").addEventListener("click", function () {
       if (!window.confirm("この端末のデモデータ(注文・修理・会員・メンテ状態・各種制御・作成ニュース)をすべて削除します。よろしいですか?")) return;
-      ["sz_orders", "sz_tickets", "sz_users", "sz_maintenance", "sz_cart",
-       "sz_global", "sz_page_ctrl", "sz_services", "sz_admin_news", "sz_seed_del",
-       "sz_admin_log", "sz_announce", "sz_announce_seen", "sz_store_cfg"].forEach(function (k) {
+      window.szKeys.RESET.forEach(function (k) {
         try { localStorage.removeItem(k); } catch (e) { /* noop */ }
       });
       window.szToast("デモデータをリセットしました");

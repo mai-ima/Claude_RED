@@ -762,6 +762,8 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 {body}
 </main>
 {footer_html()}
+<script src="/assets/js/keys.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/fmt.js?v={ASSET_V}" defer></script>
 <script src="/data/products.js?v={ASSET_V}" defer></script>
 <script src="/assets/js/main.js?v={ASSET_V}" defer></script>
 <script src="/assets/js/charts.js?v={ASSET_V}" defer></script>

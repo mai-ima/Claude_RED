@@ -769,7 +769,11 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
 <script src="/assets/js/charts.js?v={ASSET_V}" defer></script>
 <script src="/assets/js/store.js?v={ASSET_V}" defer></script>
 <script src="/assets/js/pages.js?v={ASSET_V}" defer></script>
-<script src="/assets/js/auth.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/auth-core.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/auth-guard.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/auth-account.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/auth-admin.js?v={ASSET_V}" defer></script>
+<script src="/assets/js/auth-status.js?v={ASSET_V}" defer></script>
 </body>
 </html>"""
 

@@ -69,4 +69,52 @@
   document.querySelectorAll(".collab-page .cl-tile").forEach(function (tile) {
     tile.addEventListener("click", function () { tile.classList.toggle("is-active"); });
   });
+
+  /* ---------- fantasy(原神): 七元素ホイール ---------- */
+  var elemStage = document.querySelector("[data-elem-stage]");
+  if (elemStage) {
+    var orb = elemStage.querySelector(".cl-elem-orb");
+    var nameEl = elemStage.querySelector(".cl-elem-name");
+    elemStage.querySelectorAll(".cl-elem").forEach(function (btn) {
+      var apply = function () {
+        var col = getComputedStyle(btn).getPropertyValue("--el");
+        if (orb) orb.style.setProperty("--el", col);
+        if (nameEl) nameEl.textContent = btn.getAttribute("data-elem") + "元素";
+        elemStage.querySelectorAll(".cl-elem").forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+      };
+      btn.addEventListener("mouseenter", apply);
+      btn.addEventListener("click", apply);
+      btn.addEventListener("focus", apply);
+    });
+  }
+
+  /* ---------- industrial(エンドフィールド): ターミナル起動ログ ---------- */
+  var term = document.querySelector("[data-terminal]");
+  if (term) {
+    var out = term.querySelector(".cl-terminal__out");
+    var lines = (term.getAttribute("data-lines") || "").split("|").filter(Boolean);
+    if (out && lines.length) {
+      var run = function () {
+        out.textContent = "";
+        var li = 0, ci = 0;
+        var type = function () {
+          if (li >= lines.length) { out.innerHTML += '<span class="cl-cursor">▋</span>'; return; }
+          var line = lines[li];
+          if (ci === 0 && li > 0) out.textContent += "\n";
+          out.textContent += line.charAt(ci);
+          ci++;
+          if (ci >= line.length) { li++; ci = 0; setTimeout(type, 260); }
+          else { setTimeout(type, reduce ? 4 : 22); }
+        };
+        type();
+      };
+      if (reduce) { out.textContent = lines.join("\n"); }
+      else if ("IntersectionObserver" in window) {
+        var io2 = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) { run(); io2.disconnect(); } });
+        }, { threshold: 0.3 });
+        io2.observe(term);
+      } else { run(); }
+    }
+  }
 })();

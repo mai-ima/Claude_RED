@@ -78,7 +78,9 @@ def chart(cfg, cls=""):
 
 
 # ベンチマーク・技術トレンドの単一ソース(架空値)
-ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385, "rai-g4-sig": 405}   # 万点(旗艦G系。-sig はコラボ限定の特別選別ビン)
+ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385,
+          # コラボ限定の特別選別ビン(機種ごとに突出軸が異なる。鳴潮=生性能最強)
+          "rai-g4-genshin": 402, "rai-g4-wuwa": 412, "rai-g4-nte": 405, "rai-g4-endfield": 400}   # 万点(旗艦G系)
 ANTUTU_E = {"rai-e1": 62, "rai-e2": 85}                                   # 万点(エントリーE系)
 TFLOPS_L = {"homura-l1": 0.35, "homura-l2": 0.5}                          # Lite GPU
 CLOCK = {"rai-g1": 3.2, "rai-g2": 3.3, "rai-g3": 3.5, "rai-g4": 3.8}    # GHz
@@ -108,7 +110,10 @@ def product_antutu(p):
 
 
 def radar_values(p):
-    """5軸(性能/カメラ/バッテリー/冷却/コスパ)を仕様から算出、0-100。"""
+    """5軸(性能/カメラ/バッテリー/冷却/コスパ)を仕様から算出、0-100。
+    コラボ限定モデルは突出軸が機種ごとに異なるため、radar_override を優先する。"""
+    if p.get("radar_override"):
+        return p["radar_override"]
     perf = round(min(100, (product_antutu(p) or 100) / 385 * 100))
     cam_s = get_spec(p, ["カメラ"], "リアカメラ")
     cam = 95 if "RS-2+" in cam_s else 86 if "RS-2" in cam_s else 72 if "RS-1" in cam_s else 50
@@ -251,7 +256,10 @@ GAME_FPS = {
     "rai-g2": [(59, 55), (116, 108), (142, 137), (108, 101)],
     "rai-g3": [(60, 59), (143, 138), (164, 160), (132, 127)],
     "rai-g4": [(60, 60), (172, 170), (175, 175), (158, 155)],
-    "rai-g4-sig": [(60, 60), (175, 174), (175, 175), (161, 159)],
+    "rai-g4-genshin": [(60, 60), (174, 172), (175, 175), (159, 157)],
+    "rai-g4-wuwa": [(60, 60), (175, 175), (175, 175), (163, 162)],
+    "rai-g4-nte": [(60, 60), (174, 173), (175, 175), (160, 158)],
+    "rai-g4-endfield": [(60, 60), (173, 172), (175, 175), (158, 157)],
 }
 
 
@@ -1058,8 +1066,8 @@ def build_product_page(p):
 
     chip_link = ""
     if p.get("chip"):
-        # コラボ限定の特別選別ビン(例 rai-g4-sig)は技術ページを持たないため、ベースのチップにリンクする
-        base_chip = p["chip"][:-4] if p["chip"].endswith("-sig") else p["chip"]
+        # コラボ限定の特別選別ビン(例 rai-g4-genshin)は技術ページを持たないため、ベースのチップにリンクする
+        base_chip = re.sub(r"-(sig|genshin|wuwa|nte|endfield)$", "", p["chip"])
         chip = next((t for t in TECHS if t["id"] == base_chip), None)
         if chip:
             chip_link = f'<a class="btn btn--ghost" href="/tech/cpu/{base_chip}/">搭載SoC {esc(chip["name"])} を見る</a>'
@@ -1714,6 +1722,93 @@ def build_news_pages():
 # コラボレーション特設(data_collab.py の COLLABS を単一テンプレートで生成)
 # ==========================================================================
 
+def collab_signature_section(cfg, phone):
+    """motif ごとに全く異なる「その作品を感じる」固有セクションを返す。
+    共通骨格(カウントダウン/在庫/購入)とは別に、作品体験の差を作る中核。"""
+    motif = cfg.get("motif", "")
+    focus = phone.get("spec_focus", "") if phone else ""
+    excl = None
+    if phone:
+        for s in phone.get("sections", []):
+            if s.get("eyebrow") in ("ELEMENTAL BACKGLOW", "RESONANCE HAPTICS", "NEON ADAPTIVE LIGHT", "TERMINAL HUD"):
+                excl = s
+                break
+    excl_title = excl["title"] if excl else ""
+    excl_body = esc(excl["body"]) if excl else ""
+
+    if motif == "fantasy":
+        elems = [("風", "#4dd6c1"), ("岩", "#e5b53a"), ("雷", "#b18bff"), ("草", "#8bd450"),
+                 ("水", "#3fb6ff"), ("炎", "#ff6a4d"), ("氷", "#7fe8ff")]
+        chips = "".join(
+            f'<button type="button" class="cl-elem" data-elem="{e}" style="--el:{c}" aria-label="{e}元素"><span>{e}</span></button>'
+            for e, c in elems)
+        return f"""
+<section class="cl-section cl-sig cl-sig--fantasy">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SEVEN ELEMENTS</p><h2 class="cl-h2">七元素と、響き合う一台。</h2>
+    <p class="cl-sig__lead">{focus}。元素を選ぶと、背面リアクティブグローの色が切り替わります(プレビュー)。</p></div>
+    <div class="cl-elem-stage" data-elem-stage><div class="cl-elem-orb" aria-hidden="true"></div>
+      <div class="cl-elems" role="group" aria-label="七元素">{chips}</div>
+      <p class="cl-elem-name" aria-live="polite">元素を選んでください</p>
+    </div>
+    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
+  </div>
+</section>"""
+
+    if motif == "techwear":
+        bars = "".join(f'<span style="--i:{i}"></span>' for i in range(28))
+        chips = ""
+        if phone:
+            chips = "".join(f'<div class="cl-hud-chip"><b>{esc(str(s["v"]))}<i>{esc(s["u"])}</i></b><span>{esc(s["l"])}</span></div>'
+                            for s in phone.get("stats", [])[:3])
+        return f"""
+<section class="cl-section cl-sig cl-sig--techwear">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">RESONANCE HUD</p><h2 class="cl-h2">戦況を、波形で掴む。</h2>
+    <p class="cl-sig__lead">{focus}。共鳴の波形が、攻撃と応答をリアルタイムに可視化します。</p></div>
+    <div class="cl-wave" data-wave aria-hidden="true">{bars}</div>
+    <div class="cl-hud-chips">{chips}</div>
+    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
+  </div>
+</section>"""
+
+    if motif == "neon":
+        bld = "".join(f'<span class="cl-bldg" style="--h:{h}%;--d:{d}s"></span>'
+                      for h, d in [(60, 2.1), (85, 3.2), (45, 1.7), (95, 2.6), (70, 3.8), (55, 2.3),
+                                   (80, 1.9), (40, 2.9), (90, 3.4), (65, 2.0)])
+        return f"""
+<section class="cl-section cl-sig cl-sig--neon">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">NEON CITY</p><h2 class="cl-h2">眠らない街の、光の中へ。</h2>
+    <p class="cl-sig__lead">{focus}。夜想ナイトISPが、ネオンの滲みも遠くの看板も写し取ります。</p></div>
+    <div class="cl-city" data-city aria-hidden="true"><div class="cl-city__sky"></div>{bld}<div class="cl-city__road"></div></div>
+    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
+  </div>
+</section>"""
+
+    if motif == "industrial":
+        lines = [
+            "> SUZAKU TERMINAL v4.0  //  ENDFIELD EDITION",
+            "> boot: 雷 RAI-G4 開拓選別版 ......... OK",
+            "> battery: 8200mAh ................. 100%",
+            "> durability: IP68 / MIL-STD-810H ... PASS",
+            "> sustained-performance-mode ....... ENABLED",
+            "> ready. 現場の相棒、起動完了。",
+        ]
+        data_lines = "|".join(lines)
+        return f"""
+<section class="cl-section cl-sig cl-sig--industrial">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">TERMINAL BOOT</p><h2 class="cl-h2">ターミナル、起動。</h2>
+    <p class="cl-sig__lead">{focus}。常時表示の稼働計器HUDが、現場の状態を一目で伝えます。</p></div>
+    <div class="cl-terminal" data-terminal data-lines="{esc(data_lines)}"><pre class="cl-terminal__out" aria-label="起動ログ"></pre></div>
+    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
+  </div>
+</section>"""
+
+    return ""
+
+
 def build_collab_page(cfg):
     """コラボ特設LP(1コラボ1ページ)。骨格は全コラボ共通、色/文言は cfg 由来。"""
     slug = cfg["slug"]
@@ -1763,6 +1858,9 @@ def build_collab_page(cfg):
             f'<p class="cl-acc__copy">{esc(a["tagline"])}</p>'
             f'<p class="cl-acc__price">{yen(a["price"])} <small>(税込)〜</small></p></div></a>')
 
+    # 作品ごとの固有セクション(motif別に構成が変わる中核)
+    sig_section = collab_signature_section(cfg, phone)
+
     body = f"""
 <section class="cl-hero" aria-label="{esc(cfg['game'])} コラボレーション">
   <div class="cl-hero__aura" aria-hidden="true"></div>
@@ -1810,6 +1908,8 @@ def build_collab_page(cfg):
     <div class="cl-feats">{feats}</div>
   </div>
 </section>
+
+{sig_section}
 
 <section class="cl-section">
   <div class="cl-wrap cl-split">

@@ -58,6 +58,10 @@
 
   /* ---------- 横棒グラフ(HTML) ---------- */
   function renderBar(el, cfg) {
+    /* 横棒は単系列(cfg.values)を正とするが、単一系列を series 形式で渡された
+       場合も許容して values に正規化する(記述ゆれによる描画エラーの防止)。 */
+    if (!cfg.values && cfg.series && cfg.series.length) cfg.values = cfg.series[0].values;
+    if (!cfg.values || !cfg.labels) return;
     var max = cfg.max || Math.max.apply(null, cfg.values) * 1.06;
     var rows = cfg.labels.map(function (label, i) {
       var v = cfg.values[i];

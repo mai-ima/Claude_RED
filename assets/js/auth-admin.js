@@ -35,20 +35,42 @@
     $("#adminDenied").hidden = true;
     adminPage.hidden = false;
 
-    /* タブ切替(スマートフォンで縦に長くなりすぎないよう機能を分割) */
+    /* タブ切替(スマートフォンで縦に長くなりすぎないよう機能を分割)
+       WAI-ARIA Tabsパターン(automatic activation): 矢印キーでのフォーカス移動と
+       同時にタブを切り替える。roving tabindex(選択中のみ0、他は-1)を維持する。 */
     var adminTabs = $("#adminTabs");
     if (adminTabs) {
-      adminTabs.addEventListener("click", function (e) {
-        var t = e.target.closest("[data-admin-tab]");
-        if (!t) return;
-        var name = t.getAttribute("data-admin-tab");
-        $$(".admin-tab", adminPage).forEach(function (b) {
-          b.classList.toggle("is-active", b === t);
-          b.setAttribute("aria-selected", String(b === t));
+      var tabButtons = $$(".admin-tab", adminPage);
+      var activateTab = function (tab) {
+        tabButtons.forEach(function (b) {
+          var active = b === tab;
+          b.classList.toggle("is-active", active);
+          b.setAttribute("aria-selected", String(active));
+          b.tabIndex = active ? 0 : -1;
         });
+        var name = tab.getAttribute("data-admin-tab");
         $$(".admin-panel", adminPage).forEach(function (p) {
           p.hidden = p.getAttribute("data-admin-panel") !== name;
         });
+      };
+      adminTabs.addEventListener("click", function (e) {
+        var t = e.target.closest("[data-admin-tab]");
+        if (!t) return;
+        activateTab(t);
+      });
+      adminTabs.addEventListener("keydown", function (e) {
+        var current = e.target.closest("[data-admin-tab]");
+        if (!current) return;
+        var idx = tabButtons.indexOf(current);
+        var next = null;
+        if (e.key === "ArrowRight") next = tabButtons[(idx + 1) % tabButtons.length];
+        else if (e.key === "ArrowLeft") next = tabButtons[(idx - 1 + tabButtons.length) % tabButtons.length];
+        else if (e.key === "Home") next = tabButtons[0];
+        else if (e.key === "End") next = tabButtons[tabButtons.length - 1];
+        if (!next) return;
+        e.preventDefault();
+        next.focus();
+        activateTab(next);
       });
     }
 

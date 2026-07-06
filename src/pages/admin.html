@@ -33,18 +33,18 @@
       </div>
 
       <div class="admin-tabs" id="adminTabs" role="tablist">
-        <button class="admin-tab is-active" type="button" role="tab" data-admin-tab="overview">概要</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="ops">稼働制御</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="pages">ページ制御</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="news">ニュース</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="site">サイト</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="users">会員</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="analytics">分析</button>
-        <button class="admin-tab" type="button" role="tab" data-admin-tab="records">記録・ツール</button>
+        <button class="admin-tab is-active" type="button" role="tab" id="admtab-overview" aria-controls="admpanel-overview" aria-selected="true" tabindex="0" data-admin-tab="overview">概要</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-ops" aria-controls="admpanel-ops" aria-selected="false" tabindex="-1" data-admin-tab="ops">稼働制御</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-pages" aria-controls="admpanel-pages" aria-selected="false" tabindex="-1" data-admin-tab="pages">ページ制御</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-news" aria-controls="admpanel-news" aria-selected="false" tabindex="-1" data-admin-tab="news">ニュース</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-site" aria-controls="admpanel-site" aria-selected="false" tabindex="-1" data-admin-tab="site">サイト</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-users" aria-controls="admpanel-users" aria-selected="false" tabindex="-1" data-admin-tab="users">会員</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-analytics" aria-controls="admpanel-analytics" aria-selected="false" tabindex="-1" data-admin-tab="analytics">分析</button>
+        <button class="admin-tab" type="button" role="tab" id="admtab-records" aria-controls="admpanel-records" aria-selected="false" tabindex="-1" data-admin-tab="records">記録・ツール</button>
       </div>
 
       <!-- 概要 -->
-      <div class="admin-panel is-active" data-admin-panel="overview">
+      <div class="admin-panel is-active" data-admin-panel="overview" id="admpanel-overview" role="tabpanel" aria-labelledby="admtab-overview">
         <div class="card">
           <p class="eyebrow">QUICK ACTIONS</p>
           <h2 class="t-h4">クイック操作</h2>
@@ -66,7 +66,7 @@
       </div>
 
       <!-- 稼働制御 -->
-      <div class="admin-panel" data-admin-panel="ops" hidden>
+      <div class="admin-panel" data-admin-panel="ops" id="admpanel-ops" role="tabpanel" aria-labelledby="admtab-ops" hidden>
         <div class="card">
           <p class="eyebrow">MAINTENANCE</p>
           <h2 class="t-h4">メンテナンスシステム</h2>
@@ -125,7 +125,7 @@
       </div>
 
       <!-- ページ制御 -->
-      <div class="admin-panel" data-admin-panel="pages" hidden>
+      <div class="admin-panel" data-admin-panel="pages" id="admpanel-pages" role="tabpanel" aria-labelledby="admtab-pages" hidden>
         <div class="card">
           <p class="eyebrow">PAGE CONTROL</p>
           <h2 class="t-h4">ページ別ステータス制御</h2>
@@ -146,7 +146,7 @@
       </div>
 
       <!-- ニュース -->
-      <div class="admin-panel" data-admin-panel="news" hidden>
+      <div class="admin-panel" data-admin-panel="news" id="admpanel-news" role="tabpanel" aria-labelledby="admtab-news" hidden>
         <div class="card">
           <p class="eyebrow">NEWSROOM</p>
           <h2 class="t-h4">ニュース作成</h2>
@@ -170,7 +170,7 @@
       </div>
 
       <!-- サイト -->
-      <div class="admin-panel" data-admin-panel="site" hidden>
+      <div class="admin-panel" data-admin-panel="site" id="admpanel-site" role="tabpanel" aria-labelledby="admtab-site" hidden>
         <div class="card">
           <p class="eyebrow">ANNOUNCEMENT</p>
           <h2 class="t-h4">サイトお知らせバナー</h2>
@@ -204,7 +204,7 @@
       </div>
 
       <!-- 会員 -->
-      <div class="admin-panel" data-admin-panel="users" hidden>
+      <div class="admin-panel" data-admin-panel="users" id="admpanel-users" role="tabpanel" aria-labelledby="admtab-users" hidden>
         <div class="card">
           <p class="eyebrow">ADD USER</p>
           <h2 class="t-h4">会員を追加</h2>
@@ -231,7 +231,7 @@
       </div>
 
       <!-- 分析 -->
-      <div class="admin-panel" data-admin-panel="analytics" hidden>
+      <div class="admin-panel" data-admin-panel="analytics" id="admpanel-analytics" role="tabpanel" aria-labelledby="admtab-analytics" hidden>
         <div class="stat-row" style="--stat-cols:4;margin-bottom:var(--sp-5)">
           <div class="stat"><p class="stat__value" id="anaMembers">0</p><p class="stat__label">会員数</p></div>
           <div class="stat"><p class="stat__value" id="anaOrders">0</p><p class="stat__label">注文件数</p></div>
@@ -245,7 +245,7 @@
       </div>
 
       <!-- 記録・ツール -->
-      <div class="admin-panel" data-admin-panel="records" hidden>
+      <div class="admin-panel" data-admin-panel="records" id="admpanel-records" role="tabpanel" aria-labelledby="admtab-records" hidden>
         <div class="grid grid--2" style="align-items:start">
           <div class="card">
             <p class="eyebrow">ORDERS</p>

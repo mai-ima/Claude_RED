@@ -1978,6 +1978,22 @@ body.has-maint-bar { padding-top: var(--maint-h, 34px); }
 body.has-maint-bar .drawer { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 body.has-maint-bar .localnav { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 
+/* 管理ボード先頭の現在の稼働状態バナー */
+.admin-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  font-size: var(--fs-small);
+  margin-bottom: var(--sp-5);
+}
+
+.admin-status .ic { flex: none; margin-top: 2px; }
+.admin-status--ok { border-color: rgba(0, 200, 120, 0.4); background: rgba(0, 200, 120, 0.08); color: var(--text-strong); }
+.admin-status--alert { border-color: rgba(232, 68, 46, 0.45); background: rgba(232, 68, 46, 0.09); color: var(--text-strong); }
+
 /* 管理者プレビューチップ(制御中ページを管理者が閲覧しているときの表示) */
 .admin-preview {
   position: fixed;

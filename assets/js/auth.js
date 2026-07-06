@@ -115,13 +115,19 @@
     document.body.appendChild(chip);
   }
 
+  /* 管理者が「一般ユーザーとしての見え方」を確認するためのプレビュー。
+     URLに ?preview=user が付いている場合、管理者でも一般ユーザー扱いにして
+     立入禁止・メンテ・ページ制御の実際の挙動(リダイレクト等)を再現する。 */
+  var previewAsUser = /[?&]preview=user(&|$)/.test(window.location.search);
+  var effectiveAdmin = isAdmin0 && !previewAsUser;
+
   (function accessControl() {
     var glob = globalCtrl();
     var ctrl = pageCtrl()[normPath];
     /* 常時アクセス可能(締め出し防止): アカウント系(ログイン・ログアウト導線)・メンテ案内・404・管理ボード */
     var alwaysOpen = normPath.indexOf("/account/") === 0 || normPath === "/maintenance/" ||
       normPath === "/404.html" || normPath.indexOf("/admin") === 0;
-    if (isAdmin0) {
+    if (effectiveAdmin) {
       /* 管理者はすべて閲覧可能。制御中のページではプレビュー表示 */
       if (glob.lockdown && normPath.indexOf("/admin") !== 0) {
         adminPreviewChip("全サイト立入禁止 設定中(管理者として閲覧しています)");
@@ -130,14 +136,16 @@
       }
       return;
     }
+    if (previewAsUser) adminPreviewChip("プレビュー: 一般ユーザーとしての表示です");
     if (glob.lockdown && !alwaysOpen) {
-      window.location.replace("/maintenance/");
+      window.location.replace("/maintenance/" + (previewAsUser ? "?preview=user" : ""));
       return;
     }
     if (!ctrl || alwaysOpen) return;
-    if (ctrl === "gone" || ctrl === "admin") window.location.replace("/404.html");
-    else if (ctrl === "maint") window.location.replace("/maintenance/");
-    else if (ctrl === "members" && !me0) window.location.replace("/account/login/");
+    var q = previewAsUser ? "?preview=user" : "";
+    if (ctrl === "gone" || ctrl === "admin") window.location.replace("/404.html" + q);
+    else if (ctrl === "maint") window.location.replace("/maintenance/" + q);
+    else if (ctrl === "members" && !me0) window.location.replace("/account/login/" + q);
   })();
 
   /* ---------- メンテナンスシステム ---------- */
@@ -314,6 +322,32 @@
       });
     }
 
+    // 現在の稼働状態バナー(保存済みの実効状態を一目で確認できる)
+    function renderLiveStatus() {
+      var box = $("#admLiveStatus");
+      if (!box) return;
+      var mm = window.szMaint.get();
+      var gg = globalCtrl();
+      var sv = services();
+      var flags = [];
+      if (gg.lockdown) flags.push("全サイト立入禁止");
+      if (mm.on) flags.push("メンテナンス中");
+      if (gg.shopStop) flags.push("購入停止");
+      if (gg.contactStop) flags.push("お問い合わせ停止");
+      Object.keys(sv).forEach(function (k) { if (sv[k] === "down") flags.push("一部サービス停止"); });
+      if (flags.length) {
+        box.className = "admin-status admin-status--alert";
+        box.innerHTML = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg>' +
+          '<span><strong>現在、一般ユーザーに制限が適用されています:</strong> ' + flags.join(" / ") +
+          '。管理者であるあなたは制限を受けません。実際の見え方は各カードの「一般ユーザーとして確認」でご覧いただけます。</span>';
+      } else {
+        box.className = "admin-status admin-status--ok";
+        box.innerHTML = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>' +
+          '<span>すべて通常稼働中です。一般ユーザーへの制限はかかっていません。</span>';
+      }
+    }
+    renderLiveStatus();
+
     // メンテナンス制御
     var m = window.szMaint.get();
     $("#maintToggle").checked = !!m.on;
@@ -350,6 +384,7 @@
         contactStop: $("#glbContactStop").checked
       });
       glbBadge();
+      renderLiveStatus();
       window.szToast("全体制御を保存しました");
     });
 
@@ -360,6 +395,7 @@
       var v = {};
       $$("[data-svc]").forEach(function (sel) { v[sel.getAttribute("data-svc")] = sel.value; });
       window.szCtrl.setServices(v);
+      renderLiveStatus();
       window.szToast("サービス別状況を保存しました(公開ステータスページに反映)");
     });
 

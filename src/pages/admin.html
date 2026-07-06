@@ -23,6 +23,8 @@
     </div>
 
     <div id="adminPage" hidden>
+      <div id="admLiveStatus" class="admin-status" aria-live="polite"></div>
+
       <div class="stat-row reveal-stagger" style="--stat-cols:4;margin-bottom:var(--sp-6)">
         <div class="stat"><p class="stat__value" id="admOrders">0</p><p class="stat__label">注文件数(この端末)</p></div>
         <div class="stat"><p class="stat__value" id="admRevenue" style="font-size:clamp(1.4rem,1rem+1.8vw,2.2rem)">¥0</p><p class="stat__label">売上合計(この端末)</p></div>
@@ -34,7 +36,7 @@
         <div class="card">
           <p class="eyebrow">MAINTENANCE</p>
           <h2 class="t-h4">メンテナンスシステム</h2>
-          <p class="t-small t-soft">有効にすると全ページに告知バーが表示され、ストアの注文確定が停止します(管理ページを除く)。</p>
+          <p class="t-small t-soft">有効にすると全ページに告知バーが表示され、ストアの注文確定が停止します(管理ページを除く)。管理者は停止中も操作できるため、効果は下の「一般ユーザーとして確認」でご覧いただけます。</p>
           <div class="consent-row" style="border-top:0;padding-top:6px">
             <div><p class="consent-row__title">メンテナンスモード</p><p id="maintState"></p></div>
             <label class="switch"><input type="checkbox" id="maintToggle"><span class="switch__track"></span></label>
@@ -43,6 +45,7 @@
             <input class="input" id="maintMsg" placeholder="例: 7月10日 2:00-5:00 システム更新のため注文を停止しています。"></div>
           <div class="cluster">
             <button class="btn btn--primary btn--sm" id="maintSave" type="button">設定を保存</button>
+            <a class="btn btn--soft btn--sm" href="/?preview=user" target="_blank" rel="noopener">一般ユーザーとして確認</a>
             <a class="btn btn--ghost btn--sm" href="/maintenance/">公開ステータスページ</a>
           </div>
         </div>
@@ -68,8 +71,11 @@
             <div><p class="consent-row__title">お問い合わせの停止</p><p class="t-micro t-faint">各種お問い合わせフォームの送信を停止します</p></div>
             <label class="switch"><input type="checkbox" id="glbContactStop"><span class="switch__track"></span></label>
           </div>
-          <div class="spread" style="margin-top:12px"><p id="glbState"></p>
-            <button class="btn btn--primary btn--sm" id="glbSave" type="button">全体制御を保存</button></div>
+          <div class="cluster" style="margin-top:12px;justify-content:space-between"><p id="glbState"></p>
+            <span class="cluster" style="gap:8px">
+              <a class="btn btn--soft btn--sm" href="/products/phone/?preview=user" target="_blank" rel="noopener">一般ユーザーとして確認</a>
+              <button class="btn btn--primary btn--sm" id="glbSave" type="button">全体制御を保存</button>
+            </span></div>
         </div>
         <div class="card">
           <p class="eyebrow">SERVICE STATUS</p>

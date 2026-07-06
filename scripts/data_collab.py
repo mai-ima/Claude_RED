@@ -57,7 +57,7 @@ COLLABS = [
     },
     {
         "slug": "wuwa", "game": "鳴潮", "studio": "Kuro Games",
-        "active": False, "motif": "techwear",
+        "active": True, "motif": "techwear",
         "tokens": {
             "bg": "#0e1216", "bg2": "#131a20", "ink": "#eaf6ff", "soft": "#9fb3c2",
             "accent": "#00e0ff", "accent2": "#8b5cf6", "line": "rgba(0,224,255,.28)",
@@ -89,7 +89,7 @@ COLLABS = [
     },
     {
         "slug": "nte", "game": "NTE(Neverness to Everness)", "studio": "Hotta Studio",
-        "active": False, "motif": "neon",
+        "active": True, "motif": "neon",
         "tokens": {
             "bg": "#0a0812", "bg2": "#120a1c", "ink": "#f4ecff", "soft": "#c3b3d6",
             "accent": "#ff2d78", "accent2": "#22d3ee", "line": "rgba(255,45,120,.30)",
@@ -121,7 +121,7 @@ COLLABS = [
     },
     {
         "slug": "endfield", "game": "アークナイツ: エンドフィールド", "studio": "Hypergryph",
-        "active": False, "motif": "industrial",
+        "active": True, "motif": "industrial",
         "tokens": {
             "bg": "#0d0f0e", "bg2": "#15130f", "ink": "#f2ede4", "soft": "#b9b3a6",
             "accent": "#ff7a1a", "accent2": "#ffb020", "line": "rgba(255,122,26,.30)",

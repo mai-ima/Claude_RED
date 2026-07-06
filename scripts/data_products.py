@@ -18,6 +18,105 @@ LINES = {
     "collab":     {"label": "コラボレーションモデル",   "glow": "#d4af37"},
 }
 
+
+def _collab_phone(pid, name, kana, release, tagline, sub, price, until, qty, sold,
+                  colors, signature, collab_slug, theme_name, edition_bits, sell):
+    """コラボスマホ(SUZAKU 4 ベース)を、テーマ差分だけ受け取って生成する。
+    冷却・カメラ・ディスプレイ等の共通スペックは SUZAKU 4 に準拠。"""
+    cname = " / ".join(c["name"] for c in colors)
+    return {
+        "id": pid, "cat": "phone", "line": "collab",
+        "name": name, "kana": kana,
+        "year": 2026, "release": release, "status": "current", "flag": "limited",
+        "tagline": tagline, "sub": sub, "price": price,
+        "limited": {"until": until, "qty": qty, "sold": sold},
+        "colors": colors,
+        "storage": [{"label": "16GB + 512GB", "delta": 0}, {"label": "24GB + 1TB", "delta": 30000}],
+        "chip": "rai-g4-sig", "gpu_id": "homura-x4", "os_v": "os-v4",
+        "stats": [
+            {"v": "3.9", "u": "GHz", "l": f"RAI-G4 {signature} 最大クロック"},
+            {"v": "405", "u": "万点", "l": "AnTuTu(史上最高)"},
+            {"v": f"{qty:,}", "u": "台", "l": "数量限定生産"},
+            {"v": "7600", "u": "mAh", "l": "シリコンカーボン電池"},
+        ],
+        "sections": [
+            {"eyebrow": "COLLABORATION", "art": "chip",
+             "title": f"{name.split('×')[-1].strip()}。<br>限定の、その先の性能。",
+             "body": f"歩留まり上位の個体だけを選び抜いた特別選別チップ「雷 RAI-G4 {signature}」を搭載。最大3.9GHz、AnTuTu 405万点という当社史上最高性能を、このコラボレーションエディションだけに。",
+             "points": [f"特別選別ビン RAI-G4 {signature}(最大3.9GHz)", "AnTuTuスコア 405万点(史上最高)", sell],
+             "link": (f"/collab/{collab_slug}/", "コラボ特設ページを見る")},
+            {"eyebrow": "SUZAKU OS 4.0", "art": "os",
+             "title": f"{theme_name}同梱。",
+             "body": "SUZAKU OS「陣」に、専用ロック画面・アイコン・起動音・ダイナミック壁紙を収録した限定テーマを同梱します。",
+             "points": ["限定ロック画面・アイコン・起動音", "ダイナミック壁紙", "限定ギフトコード(デモ表記)を同梱"],
+             "link": ("/os/v4/", "SUZAKU OS 4.0 を見る")},
+        ],
+        "specs": [
+            ("本体", [
+                ("サイズ", "高さ164.2mm × 幅76.5mm × 厚さ8.9mm"), ("重量", "229g"),
+                ("カラー", cname + "(コラボ限定)"),
+                ("素材", "アルミ合金フレーム + 専用蒸着ガラス背面"), ("防塵防水", "IP54"),
+            ]),
+            ("性能", [
+                ("SoC", f"雷 RAI-G4 {signature}(3nm・オクタコア・最大3.9GHz・特別選別ビン)"),
+                ("GPU", "焔 HOMURA-X4(ハードウェアレイトレーシング対応)"),
+                ("NPU", "神楽 KAGURA(120TOPS)"),
+                ("メモリ", "疾風 HAYATE-M2 LPDDR6 16GB / 24GB"),
+                ("ストレージ", "瞬 SHUN-S2 UFS 4.1 512GB / 1TB"),
+            ]),
+            ("ディスプレイ", [
+                ("パネル", "7.05インチ 燐光 RINKO 2 AMOLED(アンダーディスプレイカメラ)"),
+                ("解像度", "2688 × 1216(FHD+)"), ("リフレッシュレート", "最大175Hz(1〜175Hz可変)"),
+                ("タッチサンプリング", "最大2500Hz"), ("輝度", "通常1600nit / ピーク3000nit"),
+            ]),
+            ("冷却", [
+                ("冷却システム", "氷刃 V4 ベイパーチャンバー(12,800mm²)+ 旋風 第3世代ファン(24,000rpm)"),
+                ("熱伝導材", "液焔 2.0 リキッドメタル + グラフェンシート"),
+            ]),
+            ("カメラ", [
+                ("リアカメラ", "50MP 天眼 RS-2+ 広角(1/1.28型・OIS)+ 50MP 超広角 + 64MP ペリスコープ望遠(光学3.5倍・OIS)"),
+                ("フロントカメラ", "16MP(アンダーディスプレイ)"), ("動画撮影", "8K/30fps、4K/120fps"),
+            ]),
+            ("バッテリー・充電", [
+                ("バッテリー容量", "7600mAh(シリコンカーボン)"),
+                ("有線充電", "120W(16分で50%、34分で100%)"),
+                ("ワイヤレス充電", "80W(純正 SUZAKU Dock 使用時)"),
+            ]),
+            ("コラボレーション同梱", [
+                ("限定テーマ", theme_name + "(ロック画面・アイコン・起動音・壁紙)"),
+                ("同梱物", edition_bits),
+                ("販売形態", sell),
+            ]),
+        ],
+    }
+
+
+def _collab_battery(pid, name, kana, release, tagline, collab_slug, colors, sub):
+    """コラボ・モバイルバッテリー(10,000mAh・45Wワイヤレス)をテーマ差分だけで生成。"""
+    return {
+        "id": pid, "cat": "accessory", "line": "acc",
+        "name": name, "kana": kana,
+        "year": 2026, "release": release, "status": "current", "flag": "limited",
+        "tagline": tagline, "sub": sub, "price": 8980,
+        "colors": colors, "storage": [], "chip": None, "art": "charger",
+        "stats": [
+            {"v": "10000", "u": "mAh", "l": "大容量"},
+            {"v": "45", "u": "W", "l": "マグネット式ワイヤレス"},
+            {"v": "30", "u": "W", "l": "USB-C 有線出力"},
+            {"v": "限定", "u": "", "l": "数量限定・コラボ意匠"},
+        ],
+        "sections": [
+            {"eyebrow": "COLLAB POWER", "art": "charger",
+             "title": "貼りつけて、そのまま遊べる。",
+             "body": "背面にマグネット吸着し、ケーブルレスで充電しながらプレイ。コラボエディションとおそろいの限定意匠で、コレクションとしても手元に置きたい一台です。",
+             "points": ["MagSafe互換マグネット吸着", "パススルー充電対応", "コラボエディションとおそろいの限定2色"],
+             "link": (f"/collab/{collab_slug}/", "コラボ特設ページを見る")},
+        ],
+        "specs": [
+            ("基本", [("容量", "10,000mAh"), ("ワイヤレス出力", "最大45W(マグネット式)"), ("有線出力", "USB-C 最大30W"), ("販売形態", "数量限定")]),
+        ],
+    }
+
 PHONES = [
     # ============================ SUZAKU(旗艦) ============================
     {
@@ -751,6 +850,33 @@ PHONES = [
             ]),
         ],
     },
+    _collab_phone(
+        pid="suzaku-4-wuwa", name="SUZAKU 4 × 鳴潮 共鳴 Edition", kana="朱雀 4 × 鳴潮",
+        release="2026年8月8日", tagline="音濤の共鳴、この掌に。",
+        sub="史上最高性能の特別選別チップ「雷 RAI-G4 共鳴選別版」を搭載した数量限定コラボフラッグシップ。テックウェアの意匠をまとう。",
+        price=154800, until="2026-09-30T23:59:59", qty=7000, sold=3110,
+        colors=[{"name": "共鳴・蒼", "hex": "#0e5a6e"}, {"name": "共鳴・紫", "hex": "#5b4b8a"}],
+        signature="共鳴選別版", collab_slug="wuwa",
+        theme_name="共鳴テーマパック", edition_bits="共鳴 専用ケース / コレクターズボックス / 限定ギフトコード(デモ表記)",
+        sell="数量限定7,000台・期間限定(2026年9月30日まで)"),
+    _collab_phone(
+        pid="suzaku-4-nte", name="SUZAKU 4 × NTE ネオンシティ Edition", kana="朱雀 4 × NTE",
+        release="2026年9月12日", tagline="眠らない街の光を、掌に。",
+        sub="史上最高性能の特別選別チップ「雷 RAI-G4 夜想選別版」を搭載した数量限定コラボフラッグシップ。ネオンの夜をまとう。",
+        price=154800, until="2026-10-31T23:59:59", qty=6000, sold=1980,
+        colors=[{"name": "夜想・黒", "hex": "#141019"}, {"name": "夜想・桃", "hex": "#8a2352"}],
+        signature="夜想選別版", collab_slug="nte",
+        theme_name="ネオンシティ・テーマパック", edition_bits="ネオンシティ 専用ケース / コレクターズボックス / 限定ギフトコード(デモ表記)",
+        sell="数量限定6,000台・期間限定(2026年10月31日まで)"),
+    _collab_phone(
+        pid="suzaku-4-endfield", name="SUZAKU 4 × エンドフィールド 開拓 Edition", kana="朱雀 4 × エンドフィールド",
+        release="2026年10月17日", tagline="極地の産業を、掌のターミナルで。",
+        sub="史上最高性能の特別選別チップ「雷 RAI-G4 開拓選別版」を搭載した数量限定コラボフラッグシップ。インダストリアルSFの意匠。",
+        price=154800, until="2026-11-30T23:59:59", qty=6500, sold=2470,
+        colors=[{"name": "開拓・琥珀", "hex": "#8a5a12"}, {"name": "開拓・黒鉄", "hex": "#1b1c1e"}],
+        signature="開拓選別版", collab_slug="endfield",
+        theme_name="ターミナル・テーマパック", edition_bits="開拓 専用ケース / コレクターズボックス / 限定ギフトコード(デモ表記)",
+        sell="数量限定6,500台・期間限定(2026年11月30日まで)"),
 ]
 
 TABLETS = [
@@ -1136,6 +1262,18 @@ ACCESSORIES = [
             ("基本", [("容量", "10,000mAh"), ("ワイヤレス出力", "最大45W(マグネット式)"), ("有線出力", "USB-C 最大30W"), ("販売形態", "数量限定")]),
         ],
     },
+    _collab_battery("pb-wuwa", "鳴潮コラボ・モバイルバッテリー 共鳴デザイン", "めいちょうコラボ モバイルバッテリー",
+                    "2026年8月8日", "共鳴の光を、旅の相棒に。", "wuwa",
+                    [{"name": "共鳴・蒼", "hex": "#0e5a6e"}, {"name": "共鳴・紫", "hex": "#5b4b8a"}],
+                    "共鳴音濤を刻んだテックウェア意匠のマグネット式モバイルバッテリー。10,000mAh・最大45Wワイヤレス給電。"),
+    _collab_battery("pb-nte", "NTEコラボ・モバイルバッテリー ネオンデザイン", "エヌティーイーコラボ モバイルバッテリー",
+                    "2026年9月12日", "夜の街の灯を、持ち歩く。", "nte",
+                    [{"name": "夜想・黒", "hex": "#141019"}, {"name": "夜想・桃", "hex": "#8a2352"}],
+                    "ネオンサインをあしらった限定意匠のマグネット式モバイルバッテリー。10,000mAh・最大45Wワイヤレス給電。"),
+    _collab_battery("pb-endfield", "エンドフィールドコラボ・モバイルバッテリー ターミナルデザイン", "エンドフィールドコラボ モバイルバッテリー",
+                    "2026年10月17日", "現場の電力を、この一台に。", "endfield",
+                    [{"name": "開拓・琥珀", "hex": "#8a5a12"}, {"name": "開拓・黒鉄", "hex": "#1b1c1e"}],
+                    "ハザードストライプと計器意匠の無骨なマグネット式モバイルバッテリー。10,000mAh・最大45Wワイヤレス給電。"),
 ]
 
 ALL_PRODUCTS = PHONES + TABLETS + ACCESSORIES

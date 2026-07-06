@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label=""><defs>
+<radialGradient id="ag" cx="0.5" cy="0.4" r="0.8">
+  <stop offset="0" stop-color="#5b4b8a" stop-opacity="0.75"/>
+  <stop offset="0.55" stop-color="#5b4b8a" stop-opacity="0.18"/>
+  <stop offset="1" stop-color="#5b4b8a" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="al" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#5b4b8a" stop-opacity="0"/>
+  <stop offset="0.5" stop-color="#5b4b8a"/>
+  <stop offset="1" stop-color="#5b4b8a" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<rect width="480" height="360" fill="#0b0b10"/>
+<ellipse cx="240" cy="170" rx="220" ry="140" fill="url(#ag)"/><rect x="160" y="96" width="160" height="160" rx="30" fill="#10101a" stroke="#5b4b8a" stroke-opacity="0.7" stroke-width="2.5"/>
+<path d="M248 120 l-44 64 h30 l-16 56 l54 -72 h-30 l22 -48z" fill="#5b4b8a"/>
+<rect x="196" y="256" width="14" height="30" rx="4" fill="#3d3d4e"/>
+<rect x="268" y="256" width="14" height="30" rx="4" fill="#3d3d4e"/>
+<text x="240" y="320" font-family="sans-serif" font-size="17" font-weight="700" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">120W GaN</text></svg>

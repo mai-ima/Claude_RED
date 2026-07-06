@@ -1978,6 +1978,70 @@ body.has-maint-bar { padding-top: var(--maint-h, 34px); }
 body.has-maint-bar .drawer { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 body.has-maint-bar .localnav { top: calc(var(--header-h) + var(--maint-h, 34px)); }
 
+/* サイト制限のその場表示オーバーレイ(閉鎖中・会員限定・非公開・メンテ中) */
+.site-block {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) + 5);
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: var(--bg);
+}
+
+.site-block__card {
+  max-width: 460px;
+  text-align: center;
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.site-block__icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: rgba(232, 68, 46, 0.1);
+  border: 1px solid rgba(232, 68, 46, 0.3);
+}
+
+.site-block__icon svg { width: 34px; height: 34px; }
+body.is-blocked { overflow: hidden; }
+body.is-blocked .site-header,
+body.is-blocked .maint-bar,
+body.is-blocked .cookie-banner { display: none !important; }
+
+/* 管理ボードのタブ */
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--sp-5);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-tab {
+  flex: none;
+  padding: 11px 18px;
+  min-height: 44px;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--text-soft);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+
+.admin-tab:hover { color: var(--text-strong); }
+.admin-tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+.admin-panel[hidden] { display: none; }
+
 /* 管理ボード先頭の現在の稼働状態バナー */
 .admin-status {
   display: flex;

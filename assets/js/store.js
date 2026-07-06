@@ -10,6 +10,11 @@
   var SZ = window.SZ || { products: [], tax: 0.1, freeShipping: 5000, shippingFee: 550 };
 
   function yen(n) { return "¥" + Math.round(n).toLocaleString("ja-JP"); }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
   function product(id) {
     return SZ.products.filter(function (p) { return p.id === id; })[0] || null;
   }
@@ -172,13 +177,23 @@
       }
       var box = $("#cartSummary");
       if (box) {
+        var maintC = window.szStore.get("sz_maintenance", { on: false });
+        var paused = maintC.on || shopStopped();
+        var pausedNote = paused
+          ? '<div class="notice" style="margin-bottom:14px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.6 5L4 16.4V20h3.6l4.9-4.9a4 4 0 0 0 5-5.6L15 12l-3-3z"/></svg> <span>' +
+            (maintC.on ? "メンテナンス中のため、ただいまご注文いただけません。" : "ただいまご注文の受付を停止しています。") +
+            "カートの中身は保存されます。</span></div>"
+          : "";
+        var checkoutBtn = paused
+          ? '<button class="btn btn--primary btn--block" disabled>ただいま購入いただけません</button>'
+          : (t.count ? '<a class="btn btn--primary btn--block" href="/store/checkout/">レジに進む</a>' : '<button class="btn btn--primary btn--block" disabled>レジに進む</button>');
         box.innerHTML =
-          '<h2 class="t-h4">ご注文内容</h2>' +
+          '<h2 class="t-h4">ご注文内容</h2>' + pausedNote +
           '<div class="summary-box__row"><span>小計(税込)</span><span>' + yen(t.sub) + "</span></div>" +
           '<div class="summary-box__row"><span>配送料</span><span>' + (t.ship ? yen(t.ship) : "無料") + "</span></div>" +
           '<div class="summary-box__row summary-box__row--total"><span>合計</span><span>' + yen(t.total) + "</span></div>" +
           '<p class="t-micro t-faint">合計金額には消費税10%が含まれています。' + (t.ship ? "あと" + yen(SZ.freeShipping - t.sub) + "で送料無料。" : "") + "</p>" +
-          (t.count ? '<a class="btn btn--primary btn--block" href="/store/checkout/">レジに進む</a>' : '<button class="btn btn--primary btn--block" disabled>レジに進む</button>') +
+          checkoutBtn +
           '<a class="btn btn--ghost btn--block" href="/store/">買い物を続ける</a>';
       }
     }
@@ -212,6 +227,21 @@
     var t0 = cartTotals();
     if (t0.count === 0) {
       checkout.innerHTML = '<div class="empty"><p class="empty__icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h13l-1.5 9h-10z"/><path d="M6 7L5 4H2.5"/><circle cx="9" cy="20" r="1.6"/><circle cx="16" cy="20" r="1.6"/></svg></p><p>カートが空のため、チェックアウトに進めません。</p><a class="btn btn--primary" href="/store/">ストアへ戻る</a></div>';
+      return;
+    }
+
+    /* 購入受付が停止中(メンテナンス/購入停止)なら、情報入力の前に手続き自体を止めて
+       案内する。最後まで入力させてから弾く不親切さを避けるための先出しガード。 */
+    var maint0 = window.szStore.get("sz_maintenance", { on: false });
+    if (maint0.on || shopStopped()) {
+      var isMaint = !!maint0.on;
+      checkout.innerHTML = '<div class="empty">' +
+        '<p class="empty__icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.6 5L4 16.4V20h3.6l4.9-4.9a4 4 0 0 0 5-5.6L15 12l-3-3z"/></svg></p>' +
+        '<p><strong>' + (isMaint ? "ただいまメンテナンス中のため、ご注文を一時停止しています。" : "ただいまご注文の受付を一時停止しています。") + "</strong></p>" +
+        (isMaint && maint0.msg ? '<p class="t-small t-soft">' + esc(maint0.msg) + "</p>" : "") +
+        '<p class="t-small t-soft">カートの中身はそのまま保存されます。再開後にあらためてお手続きください。ご不便をおかけして申し訳ありません。</p>' +
+        '<div class="cluster cluster--center" style="margin-top:8px"><a class="btn btn--primary" href="/store/cart/">カートを見る</a><a class="btn btn--ghost" href="/maintenance/">稼働状況を見る</a></div>' +
+        "</div>";
       return;
     }
 

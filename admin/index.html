@@ -15,10 +15,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ae431d7844">
-<link rel="stylesheet" href="/assets/css/base.css?v=ae431d7844">
-<link rel="stylesheet" href="/assets/css/components.css?v=ae431d7844">
-<link rel="stylesheet" href="/assets/css/animations.css?v=ae431d7844">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=bd54c9af6a">
+<link rel="stylesheet" href="/assets/css/base.css?v=bd54c9af6a">
+<link rel="stylesheet" href="/assets/css/components.css?v=bd54c9af6a">
+<link rel="stylesheet" href="/assets/css/animations.css?v=bd54c9af6a">
 </head>
 <body class="page-admin">
 
@@ -264,18 +264,38 @@
     <div id="adminPage" hidden>
       <div id="admLiveStatus" class="admin-status" aria-live="polite"></div>
 
-      <div class="stat-row reveal-stagger" style="--stat-cols:4;margin-bottom:var(--sp-6)">
+      <div class="stat-row reveal-stagger" style="--stat-cols:4;margin-bottom:var(--sp-5)">
         <div class="stat"><p class="stat__value" id="admOrders">0</p><p class="stat__label">注文件数(この端末)</p></div>
         <div class="stat"><p class="stat__value" id="admRevenue" style="font-size:clamp(1.4rem,1rem+1.8vw,2.2rem)">¥0</p><p class="stat__label">売上合計(この端末)</p></div>
         <div class="stat"><p class="stat__value" id="admTickets">0</p><p class="stat__label">修理受付</p></div>
         <div class="stat"><p class="stat__value" id="admUsers">0</p><p class="stat__label">登録会員</p></div>
       </div>
 
-      <div class="grid grid--2" style="align-items:start">
+      <div class="admin-tabs" id="adminTabs" role="tablist">
+        <button class="admin-tab is-active" type="button" role="tab" data-admin-tab="overview">概要</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="ops">稼働制御</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="pages">ページ制御</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="news">ニュース</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="users">会員</button>
+        <button class="admin-tab" type="button" role="tab" data-admin-tab="records">記録・ツール</button>
+      </div>
+
+      <!-- 概要 -->
+      <div class="admin-panel is-active" data-admin-panel="overview">
+        <div class="card">
+          <p class="eyebrow">SALES</p>
+          <h2 class="t-h4">曜日別売上</h2>
+          <figure class="chart" id="admChart"></figure>
+          <p class="t-micro t-faint" style="margin-top:10px">数値はデモ基礎値に、この端末での実際のご注文を加算したものです。各機能は上のタブから操作できます。</p>
+        </div>
+      </div>
+
+      <!-- 稼働制御 -->
+      <div class="admin-panel" data-admin-panel="ops" hidden>
         <div class="card">
           <p class="eyebrow">MAINTENANCE</p>
           <h2 class="t-h4">メンテナンスシステム</h2>
-          <p class="t-small t-soft">有効にすると全ページに告知バーが表示され、ストアの注文確定が停止します(管理ページを除く)。管理者は停止中も操作できるため、効果は下の「一般ユーザーとして確認」でご覧いただけます。</p>
+          <p class="t-small t-soft">有効にすると全ページに告知バーが表示され、ストアの注文確定が停止します(管理ページを除く)。管理者は停止中も操作できるため、効果は「一般ユーザーとして確認」でご覧いただけます。</p>
           <div class="consent-row" style="border-top:0;padding-top:6px">
             <div><p class="consent-row__title">メンテナンスモード</p><p id="maintState"></p></div>
             <label class="switch"><input type="checkbox" id="maintToggle"><span class="switch__track"></span></label>
@@ -288,11 +308,8 @@
             <a class="btn btn--ghost btn--sm" href="/maintenance/">公開ステータスページ</a>
           </div>
         </div>
-        <figure class="chart" id="admChart"></figure>
-      </div>
 
-      <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
-        <div class="card">
+        <div class="card" style="margin-top:var(--sp-5)">
           <p class="eyebrow">GLOBAL CONTROL</p>
           <h2 class="t-h4">全体制御</h2>
           <p class="t-small t-soft">サイト全体・購入・お問い合わせを個別に停止できます。管理者は停止中も全ページを閲覧できます。</p>
@@ -310,13 +327,14 @@
             <div><p class="consent-row__title">お問い合わせの停止</p><p class="t-micro t-faint">各種お問い合わせフォームの送信を停止します</p></div>
             <label class="switch"><input type="checkbox" id="glbContactStop"><span class="switch__track"></span></label>
           </div>
-          <div class="cluster" style="margin-top:12px;justify-content:space-between"><p id="glbState"></p>
+          <div class="cluster" style="margin-top:12px;justify-content:space-between;gap:10px"><p id="glbState"></p>
             <span class="cluster" style="gap:8px">
               <a class="btn btn--soft btn--sm" href="/products/phone/?preview=user" target="_blank" rel="noopener">一般ユーザーとして確認</a>
               <button class="btn btn--primary btn--sm" id="glbSave" type="button">全体制御を保存</button>
             </span></div>
         </div>
-        <div class="card">
+
+        <div class="card" style="margin-top:var(--sp-5)">
           <p class="eyebrow">SERVICE STATUS</p>
           <h2 class="t-h4">サービス別状況</h2>
           <p class="t-small t-soft">公開の<a href="/maintenance/">稼働状況ページ</a>に即時反映されます。「修理受付・照会」を停止にすると修理フォームの送信も止まります。</p>
@@ -331,25 +349,29 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:var(--sp-5)">
-        <p class="eyebrow">PAGE CONTROL</p>
-        <h2 class="t-h4">ページ別ステータス制御</h2>
-        <p class="t-small t-soft">個別ページを「会員限定」「管理者限定」「メンテナンス中」「非公開(404)」にできます。管理者は設定中もプレビュー閲覧できます(画面下部に表示)。</p>
-        <div class="cluster" style="align-items:flex-end;gap:10px">
-          <div class="field" style="flex:2;min-width:240px;margin:0"><label for="pcSelect">対象ページ</label><select class="select" id="pcSelect"></select></div>
-          <div class="field" style="flex:1;min-width:170px;margin:0"><label for="pcStatus">ステータス</label>
-            <select class="select" id="pcStatus">
-              <option value="members">会員限定(要ログイン)</option>
-              <option value="admin">管理者限定</option>
-              <option value="maint">メンテナンス中</option>
-              <option value="gone">非公開(404に転送)</option>
-            </select></div>
-          <button class="btn btn--primary btn--sm" id="pcAdd" type="button" style="margin-bottom:2px">設定する</button>
+      <!-- ページ制御 -->
+      <div class="admin-panel" data-admin-panel="pages" hidden>
+        <div class="card">
+          <p class="eyebrow">PAGE CONTROL</p>
+          <h2 class="t-h4">ページ別ステータス制御</h2>
+          <p class="t-small t-soft">個別ページを「会員限定」「管理者限定」「メンテナンス中」「非公開(404)」にできます。管理者は設定中もプレビュー閲覧できます(画面下部に表示)。</p>
+          <div class="stack" style="gap:12px">
+            <div class="field" style="margin:0"><label for="pcSelect">対象ページ</label><select class="select" id="pcSelect"></select></div>
+            <div class="field" style="margin:0"><label for="pcStatus">ステータス</label>
+              <select class="select" id="pcStatus">
+                <option value="members">会員限定(要ログイン)</option>
+                <option value="admin">管理者限定</option>
+                <option value="maint">メンテナンス中</option>
+                <option value="gone">非公開(404に転送)</option>
+              </select></div>
+            <div><button class="btn btn--primary btn--sm" id="pcAdd" type="button">このページに設定する</button></div>
+          </div>
+          <div id="pcList" style="margin-top:16px"></div>
         </div>
-        <div id="pcList" style="margin-top:14px"></div>
       </div>
 
-      <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
+      <!-- ニュース -->
+      <div class="admin-panel" data-admin-panel="news" hidden>
         <div class="card">
           <p class="eyebrow">NEWSROOM</p>
           <h2 class="t-h4">ニュース作成</h2>
@@ -364,7 +386,7 @@
           <div class="field"><label for="anBody">本文(空行で段落を区切ります)</label><textarea class="textarea" id="anBody" rows="6" placeholder="本文を入力してください。"></textarea></div>
           <div style="text-align:right"><button class="btn btn--primary btn--sm" id="anPublish" type="button">ニュースを公開</button></div>
         </div>
-        <div class="card">
+        <div class="card" style="margin-top:var(--sp-5)">
           <p class="eyebrow">PUBLISHED</p>
           <h2 class="t-h4">作成したニュース</h2>
           <p class="t-small t-soft">この端末のブラウザに保存されているデモ記事の管理です。</p>
@@ -372,44 +394,49 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:var(--sp-5)">
-        <p class="eyebrow">USERS</p>
-        <h2 class="t-h4">ユーザー管理</h2>
-        <p class="t-small t-soft">この端末に登録されている全アカウントです。パスワードの表示・アカウントの削除ができます(デモ実装のため平文を保持しています。実サービスでは絶対に行いません)。</p>
-        <div class="scroll-x"><table class="spec-table quick-table">
-          <thead><tr><th scope="col">名前</th><th scope="col">メールアドレス</th><th scope="col">権限</th><th scope="col">登録日</th><th scope="col">パスワード</th><th scope="col">操作</th></tr></thead>
-          <tbody id="userRows"></tbody>
-        </table></div>
-      </div>
-
-      <div class="grid grid--2" style="align-items:start;margin-top:var(--sp-5)">
+      <!-- 会員 -->
+      <div class="admin-panel" data-admin-panel="users" hidden>
         <div class="card">
-          <p class="eyebrow">ORDERS</p>
-          <h2 class="t-h4">最近の注文</h2>
+          <p class="eyebrow">USERS</p>
+          <h2 class="t-h4">ユーザー管理</h2>
+          <p class="t-small t-soft">この端末に登録されている全アカウントです。パスワードの表示・アカウントの削除ができます(デモ実装のため平文を保持しています。実サービスでは絶対に行いません)。</p>
           <div class="scroll-x"><table class="spec-table quick-table">
-            <thead><tr><th scope="col">注文番号</th><th scope="col">日時</th><th scope="col">点数</th><th scope="col">金額</th><th scope="col">状態</th></tr></thead>
-            <tbody id="admOrderRows"></tbody>
-          </table></div>
-        </div>
-        <div class="card">
-          <p class="eyebrow">REPAIR</p>
-          <h2 class="t-h4">修理受付</h2>
-          <div class="scroll-x"><table class="spec-table quick-table">
-            <thead><tr><th scope="col">受付番号</th><th scope="col">機種</th><th scope="col">症状</th><th scope="col">方法</th></tr></thead>
-            <tbody id="admTicketRows"></tbody>
+            <thead><tr><th scope="col">名前</th><th scope="col">メールアドレス</th><th scope="col">権限</th><th scope="col">登録日</th><th scope="col">パスワード</th><th scope="col">操作</th></tr></thead>
+            <tbody id="userRows"></tbody>
           </table></div>
         </div>
       </div>
 
-      <div class="card" style="margin-top:var(--sp-5)">
-        <p class="eyebrow">TOOLS</p>
-        <h2 class="t-h4">管理ツール</h2>
-        <div class="cluster">
-          <a class="btn btn--soft btn--sm" href="/coming-soon/">コンテンツ管理(作成中)</a>
-          <a class="btn btn--soft btn--sm" href="/coming-soon/">在庫管理(作成中)</a>
-          <a class="btn btn--soft btn--sm" href="/coming-soon/">会員分析(作成中)</a>
-          <button class="btn btn--ghost btn--sm" id="admReset" type="button">デモデータをリセット</button>
-          <button class="btn btn--ghost btn--sm" id="admLogout" type="button">ログアウト</button>
+      <!-- 記録・ツール -->
+      <div class="admin-panel" data-admin-panel="records" hidden>
+        <div class="grid grid--2" style="align-items:start">
+          <div class="card">
+            <p class="eyebrow">ORDERS</p>
+            <h2 class="t-h4">最近の注文</h2>
+            <div class="scroll-x"><table class="spec-table quick-table">
+              <thead><tr><th scope="col">注文番号</th><th scope="col">日時</th><th scope="col">点数</th><th scope="col">金額</th><th scope="col">状態</th></tr></thead>
+              <tbody id="admOrderRows"></tbody>
+            </table></div>
+          </div>
+          <div class="card">
+            <p class="eyebrow">REPAIR</p>
+            <h2 class="t-h4">修理受付</h2>
+            <div class="scroll-x"><table class="spec-table quick-table">
+              <thead><tr><th scope="col">受付番号</th><th scope="col">機種</th><th scope="col">症状</th><th scope="col">方法</th></tr></thead>
+              <tbody id="admTicketRows"></tbody>
+            </table></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:var(--sp-5)">
+          <p class="eyebrow">TOOLS</p>
+          <h2 class="t-h4">管理ツール</h2>
+          <div class="cluster">
+            <a class="btn btn--soft btn--sm" href="/coming-soon/">コンテンツ管理(作成中)</a>
+            <a class="btn btn--soft btn--sm" href="/coming-soon/">在庫管理(作成中)</a>
+            <a class="btn btn--soft btn--sm" href="/coming-soon/">会員分析(作成中)</a>
+            <button class="btn btn--ghost btn--sm" id="admReset" type="button">デモデータをリセット</button>
+            <button class="btn btn--ghost btn--sm" id="admLogout" type="button">ログアウト</button>
+          </div>
         </div>
       </div>
     </div>
@@ -468,11 +495,11 @@
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="/data/products.js?v=ae431d7844" defer></script>
-<script src="/assets/js/main.js?v=ae431d7844" defer></script>
-<script src="/assets/js/charts.js?v=ae431d7844" defer></script>
-<script src="/assets/js/store.js?v=ae431d7844" defer></script>
-<script src="/assets/js/pages.js?v=ae431d7844" defer></script>
-<script src="/assets/js/auth.js?v=ae431d7844" defer></script>
+<script src="/data/products.js?v=bd54c9af6a" defer></script>
+<script src="/assets/js/main.js?v=bd54c9af6a" defer></script>
+<script src="/assets/js/charts.js?v=bd54c9af6a" defer></script>
+<script src="/assets/js/store.js?v=bd54c9af6a" defer></script>
+<script src="/assets/js/pages.js?v=bd54c9af6a" defer></script>
+<script src="/assets/js/auth.js?v=bd54c9af6a" defer></script>
 </body>
 </html>

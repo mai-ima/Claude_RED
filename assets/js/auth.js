@@ -115,6 +115,32 @@
     document.body.appendChild(chip);
   }
 
+  var BLOCK_ICON = {
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+    warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg>',
+    wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.6 5L4 16.4V20h3.6l4.9-4.9a4 4 0 0 0 5-5.6L15 12l-3-3z"/></svg>',
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-3.5 4.5-5.5 8-5.5s6.5 2 8 5.5"/></svg>'
+  };
+
+  /* サイト制限をその場で表示するオーバーレイ(ページ遷移をせず、いま見ている
+     ページ上に「閉鎖中」等を表示する)。締め出し感のある強制リダイレクトを避ける。 */
+  function showBlockOverlay(opts) {
+    if (document.querySelector(".site-block")) return;
+    var ov = document.createElement("div");
+    ov.className = "site-block";
+    ov.setAttribute("role", "alertdialog");
+    ov.setAttribute("aria-label", opts.title);
+    ov.innerHTML =
+      '<div class="site-block__card">' +
+      '<div class="site-block__icon">' + (opts.icon || BLOCK_ICON.warn) + "</div>" +
+      '<h1 class="t-h2">' + esc(opts.title) + "</h1>" +
+      (opts.msg ? '<p class="t-soft">' + esc(opts.msg) + "</p>" : "") +
+      (opts.actions ? '<div class="cluster cluster--center" style="margin-top:8px">' + opts.actions + "</div>" : "") +
+      "</div>";
+    document.body.appendChild(ov);
+    document.body.classList.add("is-blocked");
+  }
+
   /* 管理者が「一般ユーザーとしての見え方」を確認するためのプレビュー。
      URLに ?preview=user が付いている場合、管理者でも一般ユーザー扱いにして
      立入禁止・メンテ・ページ制御の実際の挙動(リダイレクト等)を再現する。 */
@@ -138,14 +164,37 @@
     }
     if (previewAsUser) adminPreviewChip("プレビュー: 一般ユーザーとしての表示です");
     if (glob.lockdown && !alwaysOpen) {
-      window.location.replace("/maintenance/" + (previewAsUser ? "?preview=user" : ""));
+      showBlockOverlay({
+        icon: BLOCK_ICON.lock,
+        title: "現在、サイトを一時閉鎖しています",
+        msg: glob.lockMsg || "システムメンテナンスのため、一時的にすべてのページをご利用いただけません。再開までしばらくお待ちください。",
+        actions: '<a class="btn btn--ghost" href="/maintenance/">稼働状況を見る</a>'
+      });
       return;
     }
     if (!ctrl || alwaysOpen) return;
-    var q = previewAsUser ? "?preview=user" : "";
-    if (ctrl === "gone" || ctrl === "admin") window.location.replace("/404.html" + q);
-    else if (ctrl === "maint") window.location.replace("/maintenance/" + q);
-    else if (ctrl === "members" && !me0) window.location.replace("/account/login/" + q);
+    if (ctrl === "gone" || ctrl === "admin") {
+      showBlockOverlay({
+        icon: BLOCK_ICON.warn,
+        title: "このページはご覧いただけません",
+        msg: "お探しのページは現在非公開に設定されています。時間をおいて再度お試しください。",
+        actions: '<a class="btn btn--primary" href="/">ホームへ戻る</a><a class="btn btn--ghost" href="/search/">検索する</a>'
+      });
+    } else if (ctrl === "maint") {
+      showBlockOverlay({
+        icon: BLOCK_ICON.wrench,
+        title: "このページはメンテナンス中です",
+        msg: "ただいまこのページの更新作業を行っています。ご不便をおかけしますが、しばらくお待ちください。",
+        actions: '<a class="btn btn--primary" href="/">ホームへ戻る</a><a class="btn btn--ghost" href="/maintenance/">稼働状況を見る</a>'
+      });
+    } else if (ctrl === "members" && !me0) {
+      showBlockOverlay({
+        icon: BLOCK_ICON.user,
+        title: "会員限定ページです",
+        msg: "このページをご覧いただくには、ログインが必要です。",
+        actions: '<a class="btn btn--primary" href="/account/login/">ログイン</a><a class="btn btn--ghost" href="/account/register/">新規登録(無料)</a>'
+      });
+    }
   })();
 
   /* ---------- メンテナンスシステム ---------- */
@@ -287,6 +336,23 @@
     }
     $("#adminDenied").hidden = true;
     adminPage.hidden = false;
+
+    /* タブ切替(スマートフォンで縦に長くなりすぎないよう機能を分割) */
+    var adminTabs = $("#adminTabs");
+    if (adminTabs) {
+      adminTabs.addEventListener("click", function (e) {
+        var t = e.target.closest("[data-admin-tab]");
+        if (!t) return;
+        var name = t.getAttribute("data-admin-tab");
+        $$(".admin-tab", adminPage).forEach(function (b) {
+          b.classList.toggle("is-active", b === t);
+          b.setAttribute("aria-selected", String(b === t));
+        });
+        $$(".admin-panel", adminPage).forEach(function (p) {
+          p.hidden = p.getAttribute("data-admin-panel") !== name;
+        });
+      });
+    }
 
     var orders2 = get("sz_orders", []);
     var tickets2 = get("sz_tickets", []);

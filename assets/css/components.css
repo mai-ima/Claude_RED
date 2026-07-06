@@ -512,6 +512,24 @@ a.collab-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg);
 .collab-card--soon { opacity: 0.72; }
 .collab-card--soon .collab-card__tag { color: var(--text-faint); border-color: var(--line-strong); }
 
+/* 製品セレクター(/products/finder/) */
+.finder { display: grid; gap: var(--sp-5); }
+.finder__q { display: grid; gap: 12px; }
+.finder__label { font-weight: 800; font-size: var(--fs-h4); display: flex; align-items: center; gap: 10px; margin: 0; }
+.finder__step {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px;
+  border-radius: var(--r-full); background: var(--grad-flame); color: var(--accent-contrast); font-size: var(--fs-small);
+}
+.finder__opts { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.finder__opt {
+  min-height: 52px; padding: 12px 16px; text-align: left; font-weight: 700; font-size: var(--fs-small);
+  border: 1px solid var(--line-strong); border-radius: var(--r-md); color: var(--text-strong);
+  background: var(--surface); transition: border-color var(--dur-fast), background-color var(--dur-fast), transform var(--dur-fast);
+}
+.finder__opt:hover { border-color: var(--accent); }
+.finder__opt.is-active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--text-strong); }
+.finder__opt.is-active::before { content: "✓ "; color: var(--accent); font-weight: 900; }
+
 /* --------------------------------------------------------------------------
    ヒーロー
    -------------------------------------------------------------------------- */

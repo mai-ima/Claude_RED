@@ -258,3 +258,53 @@ HISTORY = [
     {"date": "2026年5月", "title": "SUZAKU IGNITE 2026", "body": "SUZAKU 4を筆頭に2026年の全新製品を同日発表・5月29日一斉発売。RAI-G4/E2、疾風M2、瞬S2、OS 4.0「不知火」も公開。", "news": "2026-05-suzaku4"},
     {"date": "2026年6月", "title": "次世代能動液冷「水龍」技術発表", "body": "厚さ1.1mmのマイクロポンプ式水冷ループを発表。2027年の次期フラッグシップに搭載予定。", "news": "2026-06-suiryu"},
 ]
+
+
+# 用語集(独自ブランド語・技術用語の横断辞書。/support/glossary/ で使用)
+# 各エントリ: {term(見出し), reading(読み), cat(分類), desc(定義HTML可), link(関連ページ or None)}
+GLOSSARY = [
+    # --- シリコン ---
+    {"term": "雷 RAI", "reading": "らい", "cat": "シリコン",
+     "desc": "SUZAKUが自社設計するモバイルSoC(System on a Chip)のブランド。旗艦向けの「G系(RAI-G)」とエントリー向けの「E系(RAI-E)」があり、CPU・GPU・NPU・ISPを統合する。", "link": "/tech/cpu/"},
+    {"term": "焔 HOMURA", "reading": "ほむら", "cat": "シリコン",
+     "desc": "自社設計GPUのブランド。旗艦向け「X系」とLite向け「L系」があり、上位モデルはハードウェアレイトレーシングに対応する。", "link": "/tech/gpu/"},
+    {"term": "疾風 HAYATE", "reading": "はやて", "cat": "シリコン",
+     "desc": "自社が採用・最適化するモバイルメモリ(LPDDR)のブランド。M2世代はLPDDR6を採用し転送速度10,667Mbpsを実現。", "link": "/tech/memory/"},
+    {"term": "瞬 SHUN", "reading": "しゅん", "cat": "シリコン",
+     "desc": "自社ストレージ(UFS)のブランド。S2世代はUFS 4.1で読込5,800MB/sに達し、大型タイトルの起動を高速化する。", "link": "/tech/storage/"},
+    {"term": "神楽 KAGURA", "reading": "かぐら", "cat": "シリコン",
+     "desc": "SoCに統合されるNPU(AI演算ユニット)およびAIエンジンのブランド。RAI-G4では120TOPS。AIフレーム生成や演算フォトグラフィを担う。", "link": "/tech/ai/"},
+    # --- 冷却 ---
+    {"term": "氷刃 HYOJIN", "reading": "ひょうじん", "cat": "冷却",
+     "desc": "大型ベイパーチャンバー(蒸気室)のブランド。世代ごとに面積を拡大し、V4世代は12,800mm²。熱を面で受けて拡散する。", "link": "/tech/cooling/hyojin/"},
+    {"term": "旋風 SENPU", "reading": "せんぷう", "cat": "冷却",
+     "desc": "本体内蔵の超薄型遠心ファンのブランド。第3世代は毎分24,000回転。ベイパーチャンバーと組み合わせた能動冷却を行う。", "link": "/tech/cooling/senpu/"},
+    {"term": "液焔 EKIEN", "reading": "えきえん", "cat": "冷却",
+     "desc": "SoCとチャンバーの間に用いる液体金属(リキッドメタル)系の熱伝導材ブランド。2.0世代はグラフェンシートと併用する。", "link": "/tech/cooling/ekien/"},
+    {"term": "水龍 SUIRYU", "reading": "すいりゅう", "cat": "冷却",
+     "desc": "圧電マイクロポンプで冷媒を強制循環させる能動液冷技術。厚さ1.1mmの水冷ループで、受動輸送の物理的上限を超える。", "link": "/tech/cooling/suiryu/"},
+    # --- ディスプレイ・カメラ ---
+    {"term": "燐光 RINKO", "reading": "りんこう", "cat": "ディスプレイ",
+     "desc": "自社開発の発光材料を用いたAMOLEDパネルのブランド。RINKO 2は175Hz・ピーク3000nit・アンダーディスプレイカメラに対応。", "link": "/tech/display/"},
+    {"term": "天眼 TENGAN", "reading": "てんがん", "cat": "カメラ",
+     "desc": "自社カメラセンサー/イメージングシステムのブランド。RS-2+は1/1.28型の大型センサーで、神楽ISPと組んで演算フォトグラフィを行う。", "link": "/tech/camera/"},
+    # --- ソフトウェア ---
+    {"term": "SUZAKU OS", "reading": "すざくオーエス", "cat": "ソフトウェア",
+     "desc": "Androidベースの独自OS。ゲーム基準で起動・レスポンスを最適化し、3世代のアップデートを保証。最新は4.0「不知火」。", "link": "/os/"},
+    {"term": "陣 JIN", "reading": "じん", "cat": "ソフトウェア",
+     "desc": "SUZAKU OSのゲームランチャー/ゲームスペース。性能モード・マクロ・プラグイン・配信オーバーレイをタイトルごとに管理する。", "link": "/os/game-space/"},
+    {"term": "エアトリガー", "reading": "えあとりがー", "cat": "ソフトウェア",
+     "desc": "本体側面の静電容量式ショルダートリガー。肩ボタン感覚の操作を割り当てられ、「陣」から感度・機能を設定する。", "link": "/products/phone/suzaku-4/"},
+    # --- 製品ライン ---
+    {"term": "SUZAKU", "reading": "すざく", "cat": "製品ライン",
+     "desc": "ゲーミングフラッグシップの製品ライン。自社SoC・多層冷却・独自OSのすべてを注ぎ込む旗艦。2023年の初代から毎年更新。", "link": "/products/phone/"},
+    {"term": "TSUBAME", "reading": "つばめ", "cat": "製品ライン",
+     "desc": "ゲーミングで培った技術を日常向けに磨いたスタンダードライン。軽さ・カメラ・電池持ちを重視する。", "link": "/products/phone/"},
+    {"term": "コラボレーションモデル", "reading": "こらぼれーしょんもでる", "cat": "製品ライン",
+     "desc": "人気ゲームタイトルとの数量限定・期間限定コラボ端末。特別選別チップ(RAI-G4 選別版)を搭載し、作品世界をまとった限定デザインを持つ。", "link": "/collab/"},
+    # --- サービス ---
+    {"term": "IGNITE", "reading": "イグナイト", "cat": "イベント",
+     "desc": "SUZAKUの年次新製品発表会。2024年以降、新製品の発表は毎年5月のIGNITEに集約されている。", "link": "/company/ignite/"},
+    {"term": "バイパス充電", "reading": "ばいぱすじゅうでん", "cat": "バッテリー",
+     "desc": "充電しながらのプレイ時に、電力をバッテリーを経由させず直接システムへ供給する方式。発熱とバッテリー劣化を抑える。", "link": "/products/phone/suzaku-4/"},
+]

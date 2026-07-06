@@ -1,0 +1,50 @@
+<!--META {"title": "製品セレクター — あなたに合う一台", "desc": "3つの質問に答えるだけで、用途・予算・重視点からおすすめのSUZAKUスマートフォンを提案します。", "theme": "dark", "crumbs": [["製品", "/products/"], ["製品セレクター", null]], "group": "製品"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter" style="width:100%">
+    <p class="eyebrow">PRODUCT FINDER</p>
+    <h1 class="t-h1">3つの質問で、あなたの一台。</h1>
+    <p class="t-soft" style="max-width:640px">用途・予算・重視するポイントを選ぶだけ。全モデルのスペックデータから、あなたに合うSUZAKUスマートフォンを提案します。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div id="productFinder" class="finder">
+      <div class="finder__q" data-finder-q="use">
+        <p class="finder__label"><span class="finder__step">Q1</span> 主な使い方は?</p>
+        <div class="finder__opts">
+          <button class="finder__opt" type="button" data-q="use" data-val="game">がっつりゲーム</button>
+          <button class="finder__opt" type="button" data-q="use" data-val="balance">ゲームも日常もバランスよく</button>
+          <button class="finder__opt" type="button" data-q="use" data-val="daily">日常・写真がメイン</button>
+          <button class="finder__opt" type="button" data-q="use" data-val="first">はじめて・とにかく手頃に</button>
+        </div>
+      </div>
+      <div class="finder__q" data-finder-q="budget">
+        <p class="finder__label"><span class="finder__step">Q2</span> ご予算は?</p>
+        <div class="finder__opts">
+          <button class="finder__opt" type="button" data-q="budget" data-val="40000">〜4万円</button>
+          <button class="finder__opt" type="button" data-q="budget" data-val="80000">〜8万円</button>
+          <button class="finder__opt" type="button" data-q="budget" data-val="120000">〜12万円</button>
+          <button class="finder__opt" type="button" data-q="budget" data-val="999999">上限なし</button>
+        </div>
+      </div>
+      <div class="finder__q" data-finder-q="priority">
+        <p class="finder__label"><span class="finder__step">Q3</span> 特に重視するのは?</p>
+        <div class="finder__opts">
+          <button class="finder__opt" type="button" data-q="priority" data-val="perf">性能・処理速度</button>
+          <button class="finder__opt" type="button" data-q="priority" data-val="cam">カメラ</button>
+          <button class="finder__opt" type="button" data-q="priority" data-val="bat">バッテリー持ち</button>
+          <button class="finder__opt" type="button" data-q="priority" data-val="cost">価格の安さ</button>
+        </div>
+      </div>
+      <div class="cluster" style="margin-top:var(--sp-4)">
+        <button class="btn btn--primary" type="button" id="finderRun" disabled>おすすめを見る</button>
+        <button class="btn btn--ghost" type="button" id="finderReset">選び直す</button>
+      </div>
+      <p class="t-small t-faint" id="finderHint" style="margin-top:12px">3つすべて選ぶと結果を表示します。</p>
+    </div>
+
+    <div id="finderResult" class="stack" style="margin-top:var(--sp-6)" aria-live="polite"></div>
+  </div>
+</section>

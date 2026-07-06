@@ -473,4 +473,154 @@
       });
     }
   }
+
+  /* ---------------- 用語集(/support/glossary/) ---------------- */
+  var glossaryList = $("#glossaryList");
+  if (glossaryList) {
+    var terms = (SZ.glossary || []).slice().sort(function (a, b) {
+      return a.reading < b.reading ? -1 : a.reading > b.reading ? 1 : 0;
+    });
+    var cats = ["すべて"];
+    terms.forEach(function (t) { if (cats.indexOf(t.cat) === -1) cats.push(t.cat); });
+    var curCat = "すべて";
+    var query = "";
+    var slugify = function (t) { return t.replace(/[^0-9A-Za-z一-龠ぁ-んァ-ヶー]+/g, "-").toLowerCase(); };
+
+    var filtersBox = $("#glossaryFilters");
+    if (filtersBox) {
+      filtersBox.innerHTML = cats.map(function (c) {
+        return '<button class="tab' + (c === "すべて" ? " is-active" : "") + '" type="button" data-gcat="' + esc(c) + '">' + esc(c) + "</button>";
+      }).join("");
+    }
+
+    function render() {
+      var list = terms.filter(function (t) {
+        if (curCat !== "すべて" && t.cat !== curCat) return false;
+        if (query) {
+          var hay = (t.term + " " + t.reading + " " + t.cat + " " + t.desc).toLowerCase();
+          if (hay.indexOf(query) === -1) return false;
+        }
+        return true;
+      });
+      glossaryList.innerHTML = list.length
+        ? list.map(function (t) {
+            var link = t.link ? '<a class="link-arrow" href="' + esc(t.link) + '">関連ページを見る</a>' : "";
+            return '<article class="card reveal" id="term-' + slugify(t.term) + '">' +
+              '<div class="spread" style="align-items:baseline;gap:10px"><h2 class="t-h4">' + esc(t.term) +
+              ' <small class="t-faint" style="font-weight:400">' + esc(t.reading) + "</small></h2>" +
+              '<span class="badge">' + esc(t.cat) + "</span></div>" +
+              '<p class="t-soft t-small" style="margin-top:8px">' + t.desc + "</p>" +
+              (link ? '<div style="margin-top:10px">' + link + "</div>" : "") + "</article>";
+          }).join("")
+        : '<p class="t-soft">該当する用語が見つかりませんでした。</p>';
+      var info = $("#glossaryInfo");
+      if (info) info.textContent = list.length + " 件の用語" + (curCat !== "すべて" ? "(" + curCat + ")" : "");
+    }
+
+    if (filtersBox) {
+      filtersBox.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-gcat]");
+        if (!b) return;
+        curCat = b.getAttribute("data-gcat");
+        Array.prototype.forEach.call(filtersBox.querySelectorAll(".tab"), function (x) {
+          x.classList.toggle("is-active", x === b);
+        });
+        render();
+      });
+    }
+    var gSearch = $("#glossarySearch");
+    if (gSearch) gSearch.addEventListener("input", function () { query = gSearch.value.trim().toLowerCase(); render(); });
+    render();
+
+    // ハッシュ付きで来たら該当用語へスクロール
+    if (location.hash) {
+      var target = document.getElementById(location.hash.slice(1));
+      if (target) setTimeout(function () { target.scrollIntoView(); }, 100);
+    }
+  }
+
+  /* ---------------- 製品セレクター(/products/finder/) ---------------- */
+  var finder = $("#productFinder");
+  if (finder) {
+    var yen = window.szFmt.yen;
+    var answers = { use: null, budget: null, priority: null };
+    var runBtn = $("#finderRun");
+    var resultBox = $("#finderResult");
+
+    finder.addEventListener("click", function (e) {
+      var opt = e.target.closest(".finder__opt");
+      if (!opt) return;
+      var q = opt.getAttribute("data-q");
+      answers[q] = opt.getAttribute("data-val");
+      Array.prototype.forEach.call(finder.querySelectorAll('[data-q="' + q + '"]'), function (b) {
+        b.classList.toggle("is-active", b === opt);
+      });
+      var ready = answers.use && answers.budget && answers.priority;
+      if (runBtn) runBtn.disabled = !ready;
+      var hint = $("#finderHint");
+      if (hint) hint.textContent = ready ? "準備ができました。「おすすめを見る」を押してください。" : "3つすべて選ぶと結果を表示します。";
+    });
+
+    // 用途 → ライン優先度(高いほど加点)
+    var LINE_PREF = {
+      game:    { suzaku: 30, collab: 26, neo: 22, tsubame: 8, lite: 2 },
+      balance: { neo: 26, tsubame: 22, suzaku: 16, lite: 12, collab: 10 },
+      daily:   { tsubame: 28, lite: 20, neo: 12, suzaku: 8, collab: 4 },
+      first:   { lite: 32, tsubame: 16, neo: 6, suzaku: 0, collab: 0 }
+    };
+    // 重視点 → radar軸(0:性能 1:カメラ 2:電池 3:冷却 4:コスパ)
+    var PRIORITY_AXIS = { perf: 0, cam: 1, bat: 2, cost: 4 };
+    var PRIORITY_LABEL = { perf: "性能", cam: "カメラ", bat: "バッテリー", cost: "コストパフォーマンス" };
+
+    function recommend() {
+      var budget = parseInt(answers.budget, 10);
+      var axis = PRIORITY_AXIS[answers.priority];
+      var pref = LINE_PREF[answers.use] || {};
+      var phones = (SZ.products || []).filter(function (p) {
+        return p.cat === "phone" && p.status === "current" && p.radar;
+      });
+      var scored = phones.map(function (p) {
+        var score = 0;
+        score += (pref[p.line] || 0);
+        score += (p.radar[axis] || 0) * 0.8;
+        // 予算適合: 予算内は加点、超過は大きく減点
+        if (p.price <= budget) score += 18 - (budget - p.price) / 20000;
+        else score -= (p.price - budget) / 8000;
+        return { p: p, score: score };
+      }).sort(function (a, b) { return b.score - a.score; });
+      return scored.slice(0, 2).map(function (s) { return s.p; });
+    }
+
+    function card(p, best) {
+      var tag = best ? '<span class="badge badge--new">おすすめ No.1</span>' : '<span class="badge">次点</span>';
+      return '<a class="product-card" href="' + esc(p.url) + '">' +
+        '<div class="product-card__media"><img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy" width="360" height="640"></div>' +
+        '<div class="product-card__body"><p class="product-card__tag">' + esc(p.lineLabel) + " / " + p.year + " " + tag + "</p>" +
+        '<p class="product-card__name">' + esc(p.name) + "</p>" +
+        '<p class="product-card__copy">' + esc(p.tagline) + "</p>" +
+        '<p class="product-card__price">' + yen(p.price) + " <small>(税込)〜</small></p></div></a>";
+    }
+
+    if (runBtn) runBtn.addEventListener("click", function () {
+      var recs = recommend();
+      if (!recs.length) { resultBox.innerHTML = '<p class="t-soft">条件に合うモデルが見つかりませんでした。予算を広げてお試しください。</p>'; return; }
+      var reason = "「" + PRIORITY_LABEL[answers.priority] + "」重視・ご予算" +
+        (parseInt(answers.budget, 10) >= 999999 ? "上限なし" : "〜" + yen(parseInt(answers.budget, 10))) + "のあなたには、こちらがおすすめです。";
+      resultBox.innerHTML = '<div class="section-head"><p class="eyebrow">RESULT</p><h2 class="t-h2">あなたへのおすすめ</h2>' +
+        '<p class="t-soft">' + esc(reason) + "</p></div>" +
+        '<div class="grid grid--2 grid--cards">' + recs.map(function (p, i) { return card(p, i === 0); }).join("") + "</div>" +
+        '<div class="cluster" style="margin-top:18px"><a class="btn btn--ghost btn--sm" href="/products/compare/">さらに詳しく比較する</a></div>';
+      resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    var resetBtn2 = $("#finderReset");
+    if (resetBtn2) resetBtn2.addEventListener("click", function () {
+      answers = { use: null, budget: null, priority: null };
+      Array.prototype.forEach.call(finder.querySelectorAll(".finder__opt"), function (b) { b.classList.remove("is-active"); });
+      if (runBtn) runBtn.disabled = true;
+      resultBox.innerHTML = "";
+      var hint = $("#finderHint");
+      if (hint) hint.textContent = "3つすべて選ぶと結果を表示します。";
+    });
+  }
 })();

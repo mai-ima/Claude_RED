@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from data_products import ALL_PRODUCTS, PHONES, TABLETS, ACCESSORIES, LINES  # noqa: E402
 from data_collab import COLLABS  # noqa: E402
 from data_tech import TECHS, OS_VERSIONS  # noqa: E402
-from data_misc import NEWS, FAQ, HISTORY  # noqa: E402
+from data_misc import NEWS, FAQ, HISTORY, GLOSSARY  # noqa: E402
 from data_docs import DOCS  # noqa: E402
 import svg_art  # noqa: E402
 
@@ -349,6 +349,7 @@ def mega_products():
         {li('/products/phone/tsubame-3/', 'TSUBAME 3', 'スタンダード')}
         {li('/products/phone/tsubame-lite-2/', 'TSUBAME Lite 2', 'エントリー')}
         {li('/products/phone/', 'すべてのスマートフォン')}
+        {li('/products/finder/', '製品セレクター', '3問であなたの一台')}
       </ul>
     </div>
     <div>
@@ -442,6 +443,7 @@ def mega_company():
       <ul class="mega__list">
         <li><a href="/company/">会社概要</a></li>
         <li><a href="/company/history/">沿革 — SUZAKUの歴史</a></li>
+        <li><a href="/company/ignite/">IGNITE 発表会</a></li>
         <li><a href="/news/">ニュースルーム</a></li>
         <li><a href="/company/careers/">採用情報</a></li>
       </ul>
@@ -456,12 +458,12 @@ def mega_company():
       </ul>
     </div>
     <div>
-      <p class="mega__group-title">パートナー</p>
+      <p class="mega__group-title">パートナー・コミュニティ</p>
       <ul class="mega__list">
+        <li><a href="/community/">コミュニティ</a></li>
+        <li><a href="/community/esports/">eスポーツ・大会</a></li>
         <li><a href="/business/">法人のお客様</a></li>
-        <li><a href="/business/solutions/">法人向けソリューション</a></li>
         <li><a href="/developers/">開発者向け</a></li>
-        <li><a href="/developers/docs/">開発者ドキュメント</a></li>
       </ul>
     </div>
   </div>
@@ -508,6 +510,7 @@ def header_html():
       <div class="gnav__item"><a class="gnav__link" href="/os/">OS</a></div>
       <div class="gnav__item"><a class="gnav__link" href="/store/">ストア</a></div>
       <div class="gnav__item"><a class="gnav__link" href="/support/">サポート</a></div>
+      <div class="gnav__item"><a class="gnav__link" href="/community/">コミュニティ</a></div>
       <div class="gnav__item"><a class="gnav__link" href="/company/">企業情報</a>{mega_company()}</div>
     </nav>
     <div class="header-actions">
@@ -543,6 +546,8 @@ def header_html():
       <p class="drawer__sub">アクセサリ・ツール</p>
       <a href="/products/accessories/">すべてのアクセサリ</a>
       <a href="/products/compare/">製品を比較する</a>
+      <a href="/products/finder/">製品セレクター</a>
+      <a href="/collab/">コラボレーション</a>
     </div></div>
   </div>
   <div class="drawer__group">
@@ -569,6 +574,14 @@ def header_html():
   </div>
   <a class="drawer__direct" href="/store/">ストア</a>
   <a class="drawer__direct" href="/support/">サポート</a>
+  <div class="drawer__group">
+    <button class="drawer__summary">コミュニティ</button>
+    <div class="drawer__panel"><div class="drawer__panel-inner">
+      <a href="/community/">コミュニティ トップ</a>
+      <a href="/community/esports/">eスポーツ・大会</a>
+      <a href="/community/ambassador/">アンバサダープログラム</a>
+    </div></div>
+  </div>
   <div class="drawer__group">
     <button class="drawer__summary">企業情報</button>
     <div class="drawer__panel"><div class="drawer__panel-inner">
@@ -623,6 +636,7 @@ def footer_html():
         col("サポート", [
             ("サポートトップ", "/support/"),
             ("よくあるご質問", "/support/faq/"),
+            ("用語集", "/support/glossary/"),
             ("トラブルシューティング", "/support/troubleshooting/"),
             ("修理のお申し込み", "/support/repair/"),
             ("修理状況の確認", "/support/status/"),
@@ -637,8 +651,12 @@ def footer_html():
         col("SUZAKUについて", [
             ("会社概要", "/company/"),
             ("沿革", "/company/history/"),
+            ("IGNITE 発表会", "/company/ignite/"),
             ("ニュースルーム", "/news/"),
             ("採用情報", "/company/careers/"),
+            ("コミュニティ", "/community/"),
+            ("eスポーツ・大会", "/community/esports/"),
+            ("アンバサダー", "/community/ambassador/"),
             ("環境への取り組み", "/sustainability/"),
             ("回収・リサイクル", "/sustainability/recycle/"),
         ]),
@@ -2081,6 +2099,8 @@ def build_client_data():
         "news": news,
         "faq": FAQ,
         "docs": DOCS,
+        "glossary": GLOSSARY,
+        "history": HISTORY,
         "pages": PAGES,
         "tax": 0.10,
         "freeShipping": 5000,

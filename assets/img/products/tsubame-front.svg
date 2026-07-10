@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="TSUBAME 正面">
+<defs>
+<linearGradient id="frameftsubame" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#f5f4f1"/>
+  <stop offset="0.12" stop-color="#c5c4be"/>
+  <stop offset="0.5" stop-color="#5d5c59"/>
+  <stop offset="0.88" stop-color="#bab8b2"/>
+  <stop offset="1" stop-color="#f0efea"/>
+</linearGradient>
+<linearGradient id="scrftsubame" x1="0" y1="0" x2="0.8" y2="1">
+  <stop offset="0" stop-color="#171722"/>
+  <stop offset="0.5" stop-color="#0d0d14"/>
+  <stop offset="1" stop-color="#07070c"/>
+</linearGradient>
+<radialGradient id="flareftsubame" cx="0.5" cy="0.32" r="0.85">
+  <stop offset="0" stop-color="#3d8bff" stop-opacity="0.3"/>
+  <stop offset="0.55" stop-color="#3d8bff" stop-opacity="0.09"/>
+  <stop offset="1" stop-color="#3d8bff" stop-opacity="0"/>
+</radialGradient>
+<filter id="softftsubame" x="-40%" y="-40%" width="180%" height="180%">
+  <feGaussianBlur stdDeviation="7"/>
+</filter>
+<filter id="fzf" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
+<clipPath id="clipftsubame"><rect x="54" y="41" width="232" height="518" rx="37"/></clipPath>
+</defs>
+<ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.4" filter="url(#softftsubame)"/>
+<rect x="43" y="30" width="254" height="540" rx="47" fill="url(#frameftsubame)"/>
+<rect x="48" y="35" width="244" height="530" rx="42" fill="#06060a"/>
+<rect x="54" y="41" width="232" height="518" rx="37" fill="url(#scrftsubame)"/>
+<g clip-path="url(#clipftsubame)">
+<ellipse cx="170" cy="210" rx="180" ry="200" fill="url(#flareftsubame)"/>
+
+<text x="170" y="172" font-family="'Noto Sans JP',sans-serif" font-size="52" font-weight="300" fill="#ffffff" text-anchor="middle" letter-spacing="2">12:34</text>
+<text x="170" y="198" font-family="'Noto Sans JP',sans-serif" font-size="11" fill="#b9b9c8" text-anchor="middle" letter-spacing="2">7月10日(金)</text>
+<rect x="70" y="232" width="200" height="66" rx="16" fill="#ffffff" opacity="0.07"/>
+<circle cx="106" cy="265" r="15" fill="none" stroke="#f2c14e" stroke-width="2.5"/>
+<path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(0 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(45 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(90 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(135 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(180 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(225 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(270 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(315 106 265)"/>
+<text x="136" y="261" font-family="'Noto Sans JP',sans-serif" font-size="15" font-weight="800" fill="#ffffff">24℃</text>
+<text x="136" y="281" font-family="'Noto Sans JP',sans-serif" font-size="9.5" fill="#b9b9c8">東京 ・ 晴れ</text>
+<rect x="70" y="312" width="200" height="52" rx="14" fill="#ffffff" opacity="0.05"/>
+<path d="M92 352 c-3.5 -12 4 -19 8 -26 c4 7 11.5 14 8 26 a8 8 0 0 1 -16 0z" fill="none" stroke="#3d8bff" stroke-width="2"/>
+<text x="118" y="336" font-family="'Noto Sans JP',sans-serif" font-size="9.5" font-weight="700" fill="#ececf2">バッテリー 82%</text>
+<text x="118" y="352" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#9c9cb0">あと1日と4時間</text>
+<rect x="82" y="472" width="38" height="38" rx="11" fill="#3d8bff" opacity="0.85"/><rect x="128" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.14"/><rect x="174" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.11"/><rect x="220" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.14"/>
+
+<text x="70" y="72" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#e6e6ee">12:34</text>
+<rect x="222" y="70.0" width="3.5" height="5.0" rx="1" fill="#c9c9d6" opacity="0.55"/><rect x="228" y="67.5" width="3.5" height="7.5" rx="1" fill="#c9c9d6" opacity="0.7000000000000001"/><rect x="234" y="65.0" width="3.5" height="10.0" rx="1" fill="#c9c9d6" opacity="0.8500000000000001"/>
+<rect x="248" y="61.5" width="20" height="10" rx="3" fill="none" stroke="#c9c9d6" stroke-width="1.3"/>
+<rect x="250" y="63.5" width="13" height="6" rx="1.5" fill="#3d8bff"/>
+<rect x="268.6" y="64" width="2.4" height="5" rx="1" fill="#c9c9d6"/>
+<circle cx="170" cy="62" r="5.5" fill="#04040a" stroke="#2a2a36" stroke-width="1.4"/>
+<rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
+<path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
+</g>
+<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="36.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="#5d5c59"/>
+<rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="#5d5c59"/>
+</svg>

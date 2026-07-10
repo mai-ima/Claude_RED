@@ -864,7 +864,7 @@ def stats_html(stats, cols=4):
     return f'<div class="stat-row reveal-stagger" style="--stat-cols:{cols}">{cells}</div>'
 
 
-def sections_html(sections, glow="#e8442e"):
+def sections_html(sections, glow="#e8442e", motif=None):
     out = []
     for i, sec in enumerate(sections):
         rev = " feature-split--rev" if i % 2 else ""
@@ -872,7 +872,7 @@ def sections_html(sections, glow="#e8442e"):
         link = ""
         if sec.get("link"):
             link = f'<a class="link-arrow" href="{sec["link"][0]}">{sec["link"][1]}</a>'
-        art = svg_art.svg_art(sec.get("art", "chip"), glow)
+        art = svg_art.svg_art(sec.get("art", "chip"), glow, motif=motif)
         out.append(f"""
 <section class="section--sm">
   <div class="container">
@@ -1006,9 +1006,15 @@ def cta_minimal(title, links):
 
 def build_product_page(p):
     line = LINES[p["line"]]
-    glow = line["glow"]
+    glow = p.get("glow") or line["glow"]
     url = product_url(p)
     is_device = p["cat"] in ("phone", "tablet")
+    # コラボ製品はセクション図版にも作品意匠(motif)を引き継ぐ
+    p_motif = None
+    if p["id"].startswith("pb-"):
+        p_motif = p["id"][3:]
+    elif p["line"] == "collab" and p.get("chip"):
+        p_motif = p["chip"].rsplit("-", 1)[-1]
     cat_label = {"phone": "スマートフォン", "tablet": "タブレット", "accessory": "アクセサリ"}[p["cat"]]
     cat_url = {"phone": "/products/phone/", "tablet": "/products/tablet/", "accessory": "/products/accessories/"}[p["cat"]]
 
@@ -1200,13 +1206,14 @@ def build_product_page(p):
     # --- カラーギャラリー(2色以上のデバイス) ---
     color_gallery = ""
     if is_device and len(p["colors"]) >= 2:
-        gcards = "".join(
+        gcards = f"""<figure class="color-card reveal"><img src="/assets/img/products/{p['id']}-front.svg" alt="{esc(p['name'])} 正面ディスプレイ" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:var(--accent)"></i>正面ディスプレイ</figcaption></figure>"""
+        gcards += "".join(
             f"""<figure class="color-card reveal"><img src="/assets/img/products/{p['id']}-{i}.svg" alt="{esc(p['name'])} {esc(c['name'])}" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:{c['hex']}"></i>{esc(c['name'])}</figcaption></figure>"""
             for i, c in enumerate(p["colors"]))
         color_gallery = f"""
 <section class="section--sm" id="colors">
   <div class="container">
-    <div class="section-head"><p class="eyebrow">COLORS</p><h2 class="t-h2">{len(p['colors'])}つの色。どれも、{esc(p['kana'].split(' ')[0])}。</h2></div>
+    <div class="section-head"><p class="eyebrow">COLORS &amp; DISPLAY</p><h2 class="t-h2">{len(p['colors'])}つの色。どれも、{esc(p['kana'].split(' ')[0])}。</h2></div>
     <div class="color-gallery">{gcards}</div>
     {'<div class="cluster" style="margin-top:20px"><a class="btn btn--primary" href="#buy">カラーを選んで購入する</a></div>' if p['status'] == 'current' else ''}
   </div>
@@ -1282,7 +1289,7 @@ def build_product_page(p):
 {buy_box}
 {bleed}
 {color_gallery}
-{sections_html(p['sections'], glow)}
+{sections_html(p['sections'], glow, p_motif)}
 {data_section}
 {lineage_section(p) if is_device else ''}
 {extras}
@@ -2414,14 +2421,27 @@ def build_assets():
         # コラボモデルなどは製品個別のアクセント色(作品カラー)を優先する
         glow = p.get("glow") or LINES[p["line"]]["glow"]
         hz = f"{num(get_spec(p, ['ディスプレイ'], 'リフレッシュレート')) or 60}Hz" if p["cat"] in ("phone", "tablet") else "60Hz"
+        # コラボ意匠の出し分け(pb-{slug} アクセサリ / chip サフィックスのコラボ機)
+        motif = None
+        if p["id"].startswith("pb-"):
+            motif = p["id"][3:]
+        elif p["line"] == "collab" and p.get("chip"):
+            motif = p["chip"].rsplit("-", 1)[-1]
         for i, c in enumerate(p["colors"]):
             if p["cat"] == "phone":
                 svg = svg_art.svg_phone(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)
             elif p["cat"] == "tablet":
                 svg = svg_art.svg_tablet(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)
             else:
-                svg = svg_art.svg_art(p.get("art", "chip"), glow if i == 0 else c["hex"])
+                svg = svg_art.svg_art(p.get("art", "chip"), glow, c["hex"], motif)
             (img / "products" / f"{p['id']}-{i}.svg").write_text(svg, encoding="utf-8")
+        # デバイスは正面(ディスプレイ点灯)ビューも生成する
+        if p["cat"] == "phone":
+            front = svg_art.svg_phone_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif)
+            (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")
+        elif p["cat"] == "tablet":
+            front = svg_art.svg_tablet_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz)
+            (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")
 
 
 def history_timeline_html():

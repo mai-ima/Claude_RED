@@ -97,6 +97,10 @@ def _collab_phone(P):
     }
 
 
+# コラボアクセサリのビジュアルアクセント(作品カラー。コラボ機の glow と揃える)
+_COLLAB_GLOW = {"genshin": "#2fb9a3", "wuwa": "#00e0ff", "nte": "#ff2d78", "endfield": "#ff7a1a"}
+
+
 def _collab_battery(pid, name, kana, release, tagline, collab_slug, colors, sub):
     """コラボ・モバイルバッテリー(10,000mAh・45Wワイヤレス)をテーマ差分だけで生成。"""
     return {
@@ -104,7 +108,8 @@ def _collab_battery(pid, name, kana, release, tagline, collab_slug, colors, sub)
         "name": name, "kana": kana,
         "year": 2026, "release": release, "status": "current", "flag": "limited",
         "tagline": tagline, "sub": sub, "price": 8980,
-        "colors": colors, "storage": [], "chip": None, "art": "charger",
+        "colors": colors, "storage": [], "chip": None, "art": "powerbank",
+        "glow": _COLLAB_GLOW.get(collab_slug),
         "stats": [
             {"v": "10000", "u": "mAh", "l": "大容量"},
             {"v": "45", "u": "W", "l": "マグネット式ワイヤレス"},
@@ -112,7 +117,7 @@ def _collab_battery(pid, name, kana, release, tagline, collab_slug, colors, sub)
             {"v": "限定", "u": "", "l": "数量限定・コラボ意匠"},
         ],
         "sections": [
-            {"eyebrow": "COLLAB POWER", "art": "charger",
+            {"eyebrow": "COLLAB POWER", "art": "powerbank",
              "title": "貼りつけて、そのまま遊べる。",
              "body": "背面にマグネット吸着し、ケーブルレスで充電しながらプレイ。コラボエディションとおそろいの限定意匠で、コレクションとしても手元に置きたい一台です。",
              "points": ["MagSafe互換マグネット吸着", "パススルー充電対応", "コラボエディションとおそろいの限定2色"],
@@ -1288,7 +1293,7 @@ ACCESSORIES = [
         "sub": "テイワットの七天神像をあしらった数量限定のマグネット式モバイルバッテリー。10,000mAh・最大45Wワイヤレス給電。",
         "price": 8980,
         "colors": [{"name": "元素・翠", "hex": "#1f7a6b"}, {"name": "元素・金", "hex": "#b8862b"}],
-        "storage": [], "chip": None, "art": "charger",
+        "storage": [], "chip": None, "art": "powerbank", "glow": _COLLAB_GLOW["genshin"],
         "stats": [
             {"v": "10000", "u": "mAh", "l": "大容量"},
             {"v": "45", "u": "W", "l": "マグネット式ワイヤレス"},
@@ -1296,7 +1301,7 @@ ACCESSORIES = [
             {"v": "限定", "u": "", "l": "数量限定・神像意匠"},
         ],
         "sections": [
-            {"eyebrow": "COLLAB POWER", "art": "charger",
+            {"eyebrow": "COLLAB POWER", "art": "powerbank",
              "title": "貼りつけて、そのまま遊べる。",
              "body": "背面にマグネット吸着し、ケーブルレスで充電しながらプレイ。七天神像をエンボス加工した限定意匠で、コレクションとしても手元に置きたい一台です。",
              "points": ["MagSafe互換マグネット吸着", "パススルー充電対応", "元素の頂 Edition とおそろいの限定2色"],

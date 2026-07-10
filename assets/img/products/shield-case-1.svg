@@ -1,19 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label=""><defs>
-<radialGradient id="ag" cx="0.5" cy="0.4" r="0.8">
-  <stop offset="0" stop-color="#8e2418" stop-opacity="0.75"/>
-  <stop offset="0.55" stop-color="#8e2418" stop-opacity="0.18"/>
-  <stop offset="1" stop-color="#8e2418" stop-opacity="0"/>
+<radialGradient id="agcased9a4418e2418" cx="0.5" cy="0.4" r="0.8">
+  <stop offset="0" stop-color="#d9a441" stop-opacity="0.7"/>
+  <stop offset="0.55" stop-color="#d9a441" stop-opacity="0.16"/>
+  <stop offset="1" stop-color="#d9a441" stop-opacity="0"/>
 </radialGradient>
-<linearGradient id="al" x1="0" y1="0" x2="1" y2="0">
-  <stop offset="0" stop-color="#8e2418" stop-opacity="0"/>
-  <stop offset="0.5" stop-color="#8e2418"/>
-  <stop offset="1" stop-color="#8e2418" stop-opacity="0"/>
+<linearGradient id="alcased9a4418e2418" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#d9a441" stop-opacity="0"/>
+  <stop offset="0.5" stop-color="#d9a441"/>
+  <stop offset="1" stop-color="#d9a441" stop-opacity="0"/>
 </linearGradient>
+<linearGradient id="mbcased9a4418e2418" x1="0" y1="0" x2="0.85" y2="1">
+  <stop offset="0" stop-color="#bb7c74"/>
+  <stop offset="0.3" stop-color="#9e4338"/>
+  <stop offset="0.65" stop-color="#8e2418"/>
+  <stop offset="1" stop-color="#55160e"/>
+</linearGradient>
+<linearGradient id="mtcased9a4418e2418" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0.3"/>
+  <stop offset="0.4" stop-color="#ffffff" stop-opacity="0.05"/>
+  <stop offset="1" stop-color="#000000" stop-opacity="0.3"/>
+</linearGradient>
+<radialGradient id="glcased9a4418e2418" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#39414f"/>
+  <stop offset="0.4" stop-color="#12151d"/>
+  <stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<filter id="fzcased9a4418e2418" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
 </defs>
 <rect width="480" height="360" fill="#0b0b10"/>
-<ellipse cx="240" cy="170" rx="220" ry="140" fill="url(#ag)"/><rect x="150" y="60" width="180" height="252" rx="30" fill="#10101a" stroke="#8e2418" stroke-width="2.5"/>
-<rect x="166" y="76" width="148" height="220" rx="20" fill="#07070b"/>
-<circle cx="196" cy="110" r="17" fill="none" stroke="#8e2418" stroke-width="2.5"/>
-<circle cx="240" cy="110" r="17" fill="none" stroke="#8e2418" stroke-width="2.5"/>
-<path d="M186 160 L294 160" stroke="#8e2418" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/><path d="M186 182 L294 182" stroke="#8e2418" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/><path d="M186 204 L294 204" stroke="#8e2418" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/><path d="M186 226 L294 226" stroke="#8e2418" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/><path d="M186 248 L294 248" stroke="#8e2418" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/>
-<path d="M240 282 c-5 18 -22 26 -22 44 a22 22 0 0 0 44 0 c0 -18 -17 -26 -22 -44z" fill="none" stroke="#8e2418" stroke-width="2.5" transform="translate(0,-40)"/></svg>
+<path d="M40 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M80 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M120 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M160 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M200 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M240 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M280 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M320 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M360 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M400 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M440 0 V360" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 40 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 80 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 120 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 160 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 200 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 240 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 280 H480" stroke="#ffffff" stroke-opacity="0.03"/><path d="M0 320 H480" stroke="#ffffff" stroke-opacity="0.03"/>
+<ellipse cx="240" cy="176" rx="225" ry="145" fill="url(#agcased9a4418e2418)"/><ellipse cx="240" cy="322" rx="100" ry="10" fill="#000" opacity="0.45" filter="url(#fzcased9a4418e2418)"/>
+<rect x="152" y="48" width="176" height="266" rx="32" fill="url(#mbcased9a4418e2418)"/>
+<rect x="152" y="48" width="176" height="266" rx="32" fill="url(#mtcased9a4418e2418)"/>
+<rect x="153.4" y="49.4" width="173.2" height="263.2" rx="30.6" fill="none" stroke="#ffffff" stroke-opacity="0.13" stroke-width="1.8"/>
+<rect x="170" y="64" width="140" height="96" rx="22" fill="#360e09"/>
+<circle cx="198" cy="100" r="16" fill="#0a0d13" stroke="#b67169" stroke-width="1.6"/><circle cx="198" cy="100" r="10" fill="url(#glcased9a4418e2418)"/><circle cx="240" cy="100" r="16" fill="#0a0d13" stroke="#b67169" stroke-width="1.6"/><circle cx="240" cy="100" r="10" fill="url(#glcased9a4418e2418)"/><circle cx="282" cy="100" r="16" fill="#0a0d13" stroke="#b67169" stroke-width="1.6"/><circle cx="282" cy="100" r="10" fill="url(#glcased9a4418e2418)"/>
+<path d="M200 150 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="#d9a441" stroke-opacity="0.35" stroke-width="2"/><path d="M222 150 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="#d9a441" stroke-opacity="0.35" stroke-width="2"/><path d="M244 150 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="#d9a441" stroke-opacity="0.35" stroke-width="2"/><path d="M266 150 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="#d9a441" stroke-opacity="0.35" stroke-width="2"/><path d="M288 150 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="#d9a441" stroke-opacity="0.35" stroke-width="2"/>
+<path d="M240 232 c-6 20 -25 29 -25 49 a25 25 0 0 0 50 0 c0 -20 -19 -29 -25 -49z" fill="none" stroke="#d9a441" stroke-width="2.8" stroke-linejoin="round"/>
+<rect x="326" y="120" width="6" height="42" rx="3" fill="#360e09"/>
+<rect x="326" y="176" width="6" height="30" rx="3" fill="#360e09"/>
+<text x="240" y="342" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">MIL-STD-810H</text></svg>

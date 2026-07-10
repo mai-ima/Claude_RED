@@ -384,11 +384,11 @@ def mega_products():
       <p class="mega__group-title">ショッピング</p>
       <ul class="mega__list">
         {li('/collab/', 'コラボレーション', '数量限定・期間限定', True)}
-        {li('/collab/silicon/', 'コラボ限定シリコン')}
         {li('/store/', 'SUZAKU ストア')}
-        {li('/products/compare/', '製品を比較する')}
+        {li('/store/deals/', '特集・キャンペーン')}
+        {li('/store/trade-in/', '下取りプログラム')}
+        {li('/store/gift/', 'ギフトガイド')}
         {li('/store/guide/', '購入ガイド')}
-        {li('/store/order-status/', '注文状況の確認')}
       </ul>
     </div>
   </div>
@@ -453,6 +453,8 @@ def mega_company():
         <li><a href="/company/">会社概要</a></li>
         <li><a href="/company/history/">沿革 — SUZAKUの歴史</a></li>
         <li><a href="/company/ignite/">IGNITE 発表会</a></li>
+        <li><a href="/company/leadership/">経営陣</a></li>
+        <li><a href="/company/ir/">投資家情報</a></li>
         <li><a href="/news/">ニュースルーム</a></li>
         <li><a href="/company/careers/">採用情報</a></li>
       </ul>
@@ -631,6 +633,10 @@ def footer_html():
             ("コラボレーション", "/collab/"),
             ("コラボ限定シリコン", "/collab/silicon/"),
             ("SUZAKU ストア", "/store/"),
+            ("特集・キャンペーン", "/store/deals/"),
+            ("下取りプログラム", "/store/trade-in/"),
+            ("SUZAKU Care(延長保証)", "/store/care/"),
+            ("ギフトガイド", "/store/gift/"),
             ("製品を比較する", "/products/compare/"),
             ("購入ガイド", "/store/guide/"),
         ]),
@@ -662,7 +668,11 @@ def footer_html():
             ("会社概要", "/company/"),
             ("沿革", "/company/history/"),
             ("IGNITE 発表会", "/company/ignite/"),
+            ("経営陣", "/company/leadership/"),
+            ("投資家情報", "/company/ir/"),
+            ("拠点・アクセス", "/company/locations/"),
             ("ニュースルーム", "/news/"),
+            ("プレスキット", "/news/press-kit/"),
             ("採用情報", "/company/careers/"),
             ("コミュニティ", "/community/"),
             ("eスポーツ・大会", "/community/esports/"),

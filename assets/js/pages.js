@@ -634,4 +634,68 @@
       if (hint) hint.textContent = "3つすべて選ぶと結果を表示します。";
     });
   }
+
+  /* ---------------- 下取り査定(/store/trade-in/) ---------------- */
+  var tradein = $("#tradeinTool");
+  if (tradein) {
+    var tYen = window.szFmt.yen;
+    var tSel = $("#tradeinModel");
+    var tRes = $("#tradeinResult");
+    var tCond = 1;
+    // 下取り対象 = スマホ/タブレットの全世代(現行・販売終了とも)
+    var tItems = (SZ.products || []).filter(function (p) { return p.cat === "phone" || p.cat === "tablet"; })
+      .sort(function (a, b) { return b.year - a.year || b.price - a.price; });
+    tSel.innerHTML = '<option value="">選択してください</option>' + tItems.map(function (p) {
+      return '<option value="' + esc(p.id) + '">' + esc(p.name) + "(" + p.year + "年)</option>";
+    }).join("");
+
+    function tEstimate() {
+      var id = tSel.value;
+      if (!id) { tRes.style.display = "none"; return; }
+      var p = tItems.filter(function (x) { return x.id === id; })[0];
+      if (!p) return;
+      // 経年で残価率を減衰(当年60% → 毎年-12pt、下限12%)、状態係数を乗算
+      var age = new Date().getFullYear() - p.year;
+      var rate = Math.max(0.12, 0.6 - age * 0.12);
+      var base = Math.round(p.price * rate * tCond / 100) * 100;
+      tRes.style.display = "";
+      tRes.innerHTML = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg> ' +
+        "<strong>" + esc(p.name) + "</strong> の概算下取り額: <strong style='font-size:1.3em'>" + tYen(base) + "</strong>" +
+        '<br><small class="t-faint">購入時クーポンとして還元されます(デモ用の概算です)。</small>';
+    }
+    tSel.addEventListener("change", tEstimate);
+    var condBox = $("#tradeinCond");
+    condBox.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-cond]");
+      if (!b) return;
+      tCond = parseFloat(b.getAttribute("data-cond"));
+      Array.prototype.forEach.call(condBox.querySelectorAll("button"), function (x) { x.classList.toggle("is-active", x === b); });
+      tEstimate();
+    });
+  }
+
+  /* ---------------- ギフト提案(/store/gift/) ---------------- */
+  var gift = $("#giftTool");
+  if (gift) {
+    var gYen = window.szFmt.yen;
+    var gRes = $("#giftResult");
+    gift.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-gift]");
+      if (!b) return;
+      Array.prototype.forEach.call(gift.querySelectorAll("[data-gift]"), function (x) { x.classList.toggle("is-active", x === b); });
+      var budget = parseInt(b.getAttribute("data-gift"), 10);
+      var picks = (SZ.products || []).filter(function (p) {
+        return p.status === "current" && p.price <= budget && p.flag !== "limited";
+      }).sort(function (a, b2) { return b2.price - a.price; }).slice(0, 3);
+      gRes.innerHTML = picks.length
+        ? '<div class="grid grid--3 grid--cards">' + picks.map(function (p) {
+            return '<a class="product-card" href="' + esc(p.url) + '">' +
+              '<div class="product-card__media"><img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy" width="360" height="640"></div>' +
+              '<div class="product-card__body"><p class="product-card__tag">' + esc(p.lineLabel) + "</p>" +
+              '<p class="product-card__name">' + esc(p.name) + "</p>" +
+              '<p class="product-card__price">' + gYen(p.price) + " <small>(税込)〜</small></p></div></a>";
+          }).join("") + "</div>"
+        : '<p class="t-soft">ご予算内の製品が見つかりませんでした。</p>';
+    });
+  }
 })();

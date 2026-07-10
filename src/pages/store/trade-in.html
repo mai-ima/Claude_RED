@@ -1,0 +1,44 @@
+<!--META {"title": "下取りプログラム", "desc": "お手持ちのSUZAKU端末を下取りに出して、次の一台をお得に。機種と状態から概算下取り額をその場で確認できます。", "theme": "light", "crumbs": [["ストア", "/store/"], ["下取り", null]], "group": "ストア"} -->
+
+<section class="hero hero--page">
+  <div class="hero__inner hero-enter" style="width:100%">
+    <p class="eyebrow">TRADE-IN</p>
+    <h1 class="t-h1">その一台に、次の価値を。</h1>
+    <p class="t-soft" style="max-width:640px">お手持ちのSUZAKU端末を下取りに出すと、購入時に使えるクーポンとして還元します。環境への回収(<a href="/sustainability/recycle/">リサイクル</a>)とは異なり、こちらは<strong>査定額をお値引きに充当</strong>するプログラムです。</p>
+  </div>
+</section>
+
+<section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">ESTIMATE</p><h2 class="t-h2">概算下取り額シミュレーション</h2>
+    <p class="t-soft t-small">機種と状態を選ぶと、その場で概算額を表示します(正式な査定は端末到着後に確定します)。</p></div>
+    <div id="tradeinTool" class="card reveal" style="padding:clamp(20px,3vw,32px)">
+      <div class="field"><label for="tradeinModel">下取りに出す機種</label>
+        <select class="select" id="tradeinModel"><option value="">選択してください</option></select></div>
+      <div class="field" style="margin-top:16px"><label>状態</label>
+        <div class="opt-group" id="tradeinCond" role="group" aria-label="端末の状態">
+          <button type="button" data-cond="1" class="is-active">良好(傷ほぼなし)</button>
+          <button type="button" data-cond="0.7">普通(使用感あり)</button>
+          <button type="button" data-cond="0.4">難あり(画面割れ等)</button>
+        </div>
+      </div>
+      <div id="tradeinResult" class="notice" style="margin-top:20px;display:none" aria-live="polite"></div>
+    </div>
+    <p class="t-micro t-faint" style="margin-top:14px">※ 表示額はデモ用の概算です。実際の査定額・条件を示すものではありません。</p>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container container--narrow">
+    <div class="section-head"><p class="eyebrow">HOW IT WORKS</p><h2 class="t-h2">下取りの流れ</h2></div>
+    <div class="timeline reveal-stagger">
+      <div class="timeline__item"><p class="timeline__date">STEP 1</p><h3 class="t-h4">申し込み・概算査定</h3><p class="t-small t-soft">新端末のご購入時に下取りを選択。上のシミュレーションで概算額を確認できます。</p></div>
+      <div class="timeline__item"><p class="timeline__date">STEP 2</p><h3 class="t-h4">端末の発送</h3><p class="t-small t-soft">送付キットが届いたら、データを消去(<a href="/support/downloads/">SUZAKU Sync</a>でバックアップ後)して発送。</p></div>
+      <div class="timeline__item"><p class="timeline__date">STEP 3</p><h3 class="t-h4">査定確定・還元</h3><p class="t-small t-soft">到着後に正式査定。確定額を購入クーポンとして還元します。</p></div>
+    </div>
+    <div class="cluster" style="margin-top:8px">
+      <a class="btn btn--primary" href="/store/">ストアで新端末を見る</a>
+      <a class="btn btn--ghost" href="/sustainability/recycle/">無償回収(リサイクル)について</a>
+    </div>
+  </div>
+</section>

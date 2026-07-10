@@ -42,6 +42,10 @@ python3 scripts/gen.py
 
 # リンク切れ0を検証
 python3 scripts/check_links.py
+
+# 全ページ監査(HTTPステータス/コンソールエラー/横スクロール/壊れ画像/リンク404)
+python3 -m http.server 8930 &   # リポジトリルートで配信
+node scripts/audit.js           # AUDIT_WIDTH=1440 でPC幅、AUDIT_BASE で配信先変更
 ```
 
 - 製品・価格・スペック・ニュースは `scripts/data_*.py` の単一ソースから、

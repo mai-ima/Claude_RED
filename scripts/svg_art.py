@@ -784,6 +784,60 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
 {tiles}
 <rect x="196" y="296" width="88" height="5" rx="2.5" fill="#4a4a5c"/>
 <path d="M240 128 c-5 18 -22 25 -22 43 a22 22 0 0 0 44 0 c0 -18 -17 -25 -22 -43z" fill="none" stroke="{g}" stroke-width="2.6" transform="translate(0 60)" opacity="0.9"/>"""
+    elif kind == "panel":
+        # ディスプレイの積層構造(カバーガラス〜発光層〜基板の分解図)
+        layers = [
+            ("カバーガラス", "#8fa8c8", 0.9), ("偏光板", _shade(g, 0.25), 0.55),
+            ("タッチセンサー", g, 0.75), ("発光層(AMOLED)", g, 1.0),
+            ("TFT基板", "#5a5a6e", 0.8), ("放熱シート", "#3a3a48", 0.9),
+        ]
+        stack = ""
+        for i, (label, col, op) in enumerate(layers):
+            y = 74 + i * 34
+            stack += f"""
+{shadow(226, y + 30, 108)}
+<path d="M116 {y + 14} L226 {y} L336 {y + 14} L226 {y + 28} Z" fill="{col}" opacity="{op * 0.85:.2f}"/>
+<path d="M116 {y + 14} L226 {y} L336 {y + 14}" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.2"/>
+<text x="352" y="{y + 16}" font-family="sans-serif" font-size="10" fill="#b9b9c8">{label}</text>"""
+        body = f"""{stack}
+<path d="M226 44 v250" stroke="{g}" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="3 5"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">RINKO PANEL STACK</text>"""
+    elif kind == "touch":
+        # タッチ応答(指先タップ→同心円リップル→応答時間)
+        ripples = "".join(
+            f'<circle cx="200" cy="168" r="{r}" fill="none" stroke="{g}" stroke-width="{w}" stroke-opacity="{o}"/>'
+            for r, w, o in ((18, 3, 0.95), (36, 2.4, 0.6), (58, 2, 0.35), (84, 1.6, 0.18)))
+        body = f"""{shadow(240, 296, 130)}
+<rect x="96" y="60" width="288" height="230" rx="18" fill="#0c0c14" stroke="{_shade('#0c0c14', 0.4)}" stroke-width="2"/>
+<rect x="104" y="68" width="272" height="214" rx="12" fill="#07070b"/>
+<rect x="104" y="68" width="272" height="214" rx="12" fill="url(#ag{u})" opacity="0.35"/>
+{ripples}
+<circle cx="200" cy="168" r="9" fill="{g}"/>
+<path d="M208 160 c22 -30 44 -38 58 -34 c10 3 8 16 -2 22 l-34 22" fill="#e8c9a8" opacity="0.95" transform="rotate(18 208 160)"/>
+<rect x="286" y="120" width="74" height="30" rx="8" fill="#0f0f18" stroke="{g}" stroke-opacity="0.7" stroke-width="1.4"/>
+<text x="323" y="140" font-family="sans-serif" font-size="13" font-weight="800" fill="{g}" text-anchor="middle">0.4ms</text>
+<path d="M120 254 h240" stroke="#2a2a36" stroke-width="2"/>
+{"".join(f'<rect x="{124 + i * 30}" y="{246 - h}" width="14" height="{h}" rx="3" fill="{g}" opacity="{0.3 + h / 60:.2f}"/>' for i, h in enumerate((10, 18, 30, 42, 34, 24, 16, 12)))}
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">TOUCH SAMPLING 2500Hz</text>"""
+    elif kind == "gamespace":
+        # ゲームスペース「陣」のオーバーレイUI(横持ち画面+HUDパネル)
+        body = f"""{shadow(240, 300, 150)}
+<rect x="72" y="76" width="336" height="212" rx="16" fill="#0c0c14" stroke="{_shade('#0c0c14', 0.4)}" stroke-width="2"/>
+<rect x="80" y="84" width="320" height="196" rx="10" fill="#07070b"/>
+<rect x="80" y="84" width="320" height="196" rx="10" fill="url(#ag{u})" opacity="0.4"/>
+<rect x="92" y="96" width="120" height="172" rx="10" fill="#10101a" stroke="{g}" stroke-opacity="0.55" stroke-width="1.4"/>
+<text x="152" y="116" font-family="sans-serif" font-size="11" font-weight="800" fill="#ececf2" text-anchor="middle" letter-spacing="2">陣 GAME SPACE</text>
+{"".join(f'<rect x="102" y="{128 + i * 26}" width="100" height="18" rx="5" fill="{g}" opacity="{0.55 - i * 0.09:.2f}"/>' for i in range(5))}
+<circle cx="300" cy="150" r="34" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="7"/>
+<circle cx="300" cy="150" r="34" fill="none" stroke="{g}" stroke-width="7" stroke-linecap="round" stroke-dasharray="150 214" transform="rotate(-90 300 150)"/>
+<text x="300" y="156" font-family="sans-serif" font-size="17" font-weight="900" fill="#ffffff" text-anchor="middle">144</text>
+<text x="300" y="196" font-family="sans-serif" font-size="8.5" fill="{g}" text-anchor="middle" letter-spacing="3">FPS</text>
+<rect x="238" y="214" width="124" height="46" rx="9" fill="#10101a" stroke="{g}" stroke-opacity="0.4" stroke-width="1.2"/>
+<text x="248" y="233" font-family="sans-serif" font-size="9" fill="#9c9cb0">GPU 82% ・ 38.2℃</text>
+<text x="248" y="249" font-family="sans-serif" font-size="9" fill="#9c9cb0">旋風ファン 21,000rpm</text>
+<rect x="238" y="96" width="124" height="40" rx="9" fill="#10101a" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1.2"/>
+<text x="248" y="120" font-family="sans-serif" font-size="9" fill="#ececf2">通知ブロック ON</text>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">GAME SPACE OVERLAY</text>"""
     elif kind == "cooler":
         blades = "".join(
             f'<path d="M240 168 q30 -32 68 -19" fill="none" stroke="{g}" stroke-width="9" stroke-linecap="round" opacity="0.92" transform="rotate({i * 51.4:.0f} 240 168)"/>'

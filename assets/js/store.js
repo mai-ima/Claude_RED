@@ -17,6 +17,10 @@
 
   var yen = window.szFmt.yen;
   var esc = window.szFmt.esc;
+  function productImg(pid, idx) {
+    var v = (window.SZ && window.SZ.assetV) ? "?v=" + window.SZ.assetV : "";
+    return "/assets/img/products/" + pid + "-" + idx + ".svg" + v;
+  }
   function product(id) {
     return SZ.products.filter(function (p) { return p.id === id; })[0] || null;
   }
@@ -78,7 +82,7 @@
     function refresh() {
       if (!p) return;
       var img = $("#buyImage");
-      if (img) img.src = "/assets/img/products/" + pid + "-" + colorIdx + ".svg";
+      if (img) img.src = productImg(pid, colorIdx);
       var cn = $("#colorName");
       if (cn && p.colors[colorIdx]) cn.textContent = p.colors[colorIdx].name;
       var priceEl = $("#buyPrice");
@@ -169,7 +173,7 @@
           if (p.colors[x.color]) conf.push(p.colors[x.color].name);
           if (p.storage && p.storage[x.storage]) conf.push(p.storage[x.storage].label);
           return '<div class="cart-line">' +
-            '<a class="cart-line__thumb" href="' + p.url + '"><img src="/assets/img/products/' + p.id + "-" + (x.color || 0) + '.svg" alt=""></a>' +
+            '<a class="cart-line__thumb" href="' + p.url + '"><img src="' + productImg(p.id, x.color || 0) + '" alt=""></a>' +
             '<div class="stack" style="gap:4px">' +
             '<p style="font-weight:800;color:var(--text-strong)">' + p.name + "</p>" +
             '<p class="t-micro t-faint">' + (conf.join(" / ") || "標準構成") + "</p>" +

@@ -47,10 +47,24 @@ def _asset_version():
                 h.update(f.read_bytes())
     for f in sorted((ROOT / "scripts").glob("data_*.py")):
         h.update(f.read_bytes())
+    # 製品SVGは svg_art.py から生成されるため、描画エンジンの変更でも
+    # 画像URLの ?v= が変わるようハッシュ対象に含める(旧画像がCDNの
+    # immutableキャッシュに残り続ける問題の対策)
+    h.update((ROOT / "scripts" / "svg_art.py").read_bytes())
     return h.hexdigest()[:10]
 
 
 ASSET_V = _asset_version()
+
+
+def pimg(pid, i=0):
+    """製品画像URL(キャッシュバスティング付き)。vercelの/assets/*は
+    1年immutableのため、内容が変わったらクエリでURL自体を変える。"""
+    return f"/assets/img/products/{pid}-{i}.svg?v={ASSET_V}"
+
+
+def pimg_front(pid):
+    return f"/assets/img/products/{pid}-front.svg?v={ASSET_V}"
 
 PAGES = []  # 検索インデックス + sitemap 用 {url,title,desc,group}
 
@@ -914,7 +928,7 @@ def product_card(p, show_price=True):
                  if p["status"] == "current" else '<p class="product-card__price t-faint">販売終了モデル</p>')
     url = product_url(p)
     return f"""<a class="product-card" href="{url}">
-  <div class="product-card__media"><img src="/assets/img/products/{p['id']}-0.svg" alt="{esc(p['name'])}" loading="lazy" width="360" height="640"></div>
+  <div class="product-card__media"><img src="{pimg(p['id'])}" alt="{esc(p['name'])}" loading="lazy" width="360" height="640"></div>
   <div class="product-card__body">
     <p class="product-card__tag">{line['label']} / {p['year']}</p>
     <p class="product-card__name">{esc(p['name'])} {badge}</p>
@@ -1052,7 +1066,7 @@ def build_product_page(p):
 <section class="section--sm" id="buy">
   <div class="container">
     <div class="buy-grid" data-product="{p['id']}">
-      <div class="buy-media reveal-l"><img id="buyImage" src="/assets/img/products/{p['id']}-0.svg" alt="{esc(p['name'])}" width="360" height="640"></div>
+      <div class="buy-media reveal-l"><img id="buyImage" src="{pimg(p['id'])}" alt="{esc(p['name'])}" width="360" height="640"></div>
       <div class="stack reveal-r">
         <p class="eyebrow">{line['label']}</p>
         <h2 class="t-h3">{esc(p['name'])} を構成する</h2>
@@ -1206,9 +1220,9 @@ def build_product_page(p):
     # --- カラーギャラリー(2色以上のデバイス) ---
     color_gallery = ""
     if is_device and len(p["colors"]) >= 2:
-        gcards = f"""<figure class="color-card reveal"><img src="/assets/img/products/{p['id']}-front.svg" alt="{esc(p['name'])} 正面ディスプレイ" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:var(--accent)"></i>正面ディスプレイ</figcaption></figure>"""
+        gcards = f"""<figure class="color-card reveal"><img src="{pimg_front(p['id'])}" alt="{esc(p['name'])} 正面ディスプレイ" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:var(--accent)"></i>正面ディスプレイ</figcaption></figure>"""
         gcards += "".join(
-            f"""<figure class="color-card reveal"><img src="/assets/img/products/{p['id']}-{i}.svg" alt="{esc(p['name'])} {esc(c['name'])}" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:{c['hex']}"></i>{esc(c['name'])}</figcaption></figure>"""
+            f"""<figure class="color-card reveal"><img src="{pimg(p['id'], i)}" alt="{esc(p['name'])} {esc(c['name'])}" loading="lazy" width="360" height="640"><figcaption><i style="--swatch:{c['hex']}"></i>{esc(c['name'])}</figcaption></figure>"""
             for i, c in enumerate(p["colors"]))
         color_gallery = f"""
 <section class="section--sm" id="colors">
@@ -1259,7 +1273,7 @@ def build_product_page(p):
         buy_float = f"""
 <div class="buy-float" id="buyFloat" aria-hidden="true">
   <div class="buy-float__inner">
-    <img src="/assets/img/products/{p['id']}-0.svg" alt="" width="36" height="52" style="height:44px;width:auto">
+    <img src="{pimg(p['id'])}" alt="" width="36" height="52" style="height:44px;width:auto">
     <div>
       <p class="buy-float__name">{esc(p['name'])}</p>
       <p class="buy-float__price">{yen(p['price'])}(税込)〜</p>
@@ -1282,7 +1296,7 @@ def build_product_page(p):
       {'<a class="btn btn--primary btn--lg" href="#buy">' + yen(p['price']) + '(税込)〜 購入へ</a>' if p['status'] == 'current' else '<span class="badge badge--end">販売終了モデル</span>'}
       {chip_link}
     </div>
-    {f'<img class="hero-device" src="/assets/img/products/{p["id"]}-0.svg" alt="{esc(p["name"])}" width="340" height="600">' if is_device else ''}
+    {f'<img class="hero-device" src="{pimg(p["id"])}" alt="{esc(p["name"])}" width="340" height="600">' if is_device else ''}
   </div>
 </section>
 <section class="section--sm"><div class="container">{stats_html(p['stats'])}</div></section>
@@ -1892,7 +1906,7 @@ def build_collab_page(cfg):
     for a in accs:
         acc_cards += (
             f'<a class="cl-acc" href="{product_url(a)}">'
-            f'<div class="cl-acc__media"><img src="/assets/img/products/{a["id"]}-0.svg" alt="{esc(a["name"])}" loading="lazy" width="240" height="240"></div>'
+            f'<div class="cl-acc__media"><img src="{pimg(a["id"])}" alt="{esc(a["name"])}" loading="lazy" width="240" height="240"></div>'
             f'<div class="cl-acc__body"><p class="cl-acc__name">{esc(a["name"])}</p>'
             f'<p class="cl-acc__copy">{esc(a["tagline"])}</p>'
             f'<p class="cl-acc__price">{yen(a["price"])} <small>(税込)〜</small></p></div></a>')
@@ -2385,7 +2399,7 @@ def build_client_data():
             "status": p["status"], "flag": p.get("flag"), "price": p["price"],
             "tagline": p["tagline"], "release": p["release"],
             "colors": p["colors"], "storage": p["storage"],
-            "img": f"/assets/img/products/{p['id']}-0.svg",
+            "img": pimg(p["id"]),
             "url": product_url(p), "cmp": cmp_data,
             "radar": radar_values(p) if cmp_data else None,
         })
@@ -2403,6 +2417,7 @@ def build_client_data():
                      "qty": c["limited"]["qty"], "sold": c["limited"]["sold"]}
                     for c in COLLABS if c.get("active")],
         "pages": PAGES,
+        "assetV": ASSET_V,
         "tax": 0.10,
         "freeShipping": 5000,
         "shippingFee": 550,
@@ -2470,6 +2485,11 @@ def build_fragments():
         # ビルド時プレースホルダ(データ駆動セクションのサーバー描画)
         if "<!--HISTORY_TIMELINE-->" in body:
             body = body.replace("<!--HISTORY_TIMELINE-->", history_timeline_html())
+        # 図版プレースホルダ <!--ART:kind:glow--> → svg_art 生成(手書き旧図版の一掃用)
+        body = re.sub(
+            r"<!--ART:([a-z-]+):(#[0-9a-fA-F]{6})-->",
+            lambda m2: svg_art.svg_art(m2.group(1), m2.group(2)),
+            body)
         rel = f.relative_to(SRC)
         if rel.as_posix() == "home.html":
             url = "/"

@@ -25,7 +25,7 @@ UIを変える=gen.py の build_collab_page() テンプレートを1箇所編集
 COLLABS = [
     {
         "slug": "genshin", "game": "原神", "studio": "HoYoverse",
-        "active": True, "motif": "fantasy",
+        "active": True, "motif": "fantasy", "bin": "元素",
         "tokens": {
             "bg": "#0f1a17", "bg2": "#152521", "ink": "#f5efe0", "soft": "#c7d3c9",
             "accent": "#2fb9a3", "accent2": "#e5c07b", "line": "rgba(229,192,123,.28)",
@@ -57,7 +57,7 @@ COLLABS = [
     },
     {
         "slug": "wuwa", "game": "鳴潮", "studio": "Kuro Games",
-        "active": True, "motif": "techwear",
+        "active": True, "motif": "techwear", "bin": "共鳴",
         "tokens": {
             "bg": "#0e1216", "bg2": "#131a20", "ink": "#eaf6ff", "soft": "#9fb3c2",
             "accent": "#00e0ff", "accent2": "#8b5cf6", "line": "rgba(0,224,255,.28)",
@@ -89,7 +89,7 @@ COLLABS = [
     },
     {
         "slug": "nte", "game": "NTE(Neverness to Everness)", "studio": "Hotta Studio",
-        "active": True, "motif": "neon",
+        "active": True, "motif": "neon", "bin": "夜想",
         "tokens": {
             "bg": "#0a0812", "bg2": "#120a1c", "ink": "#f4ecff", "soft": "#c3b3d6",
             "accent": "#ff2d78", "accent2": "#22d3ee", "line": "rgba(255,45,120,.30)",
@@ -121,7 +121,7 @@ COLLABS = [
     },
     {
         "slug": "endfield", "game": "アークナイツ: エンドフィールド", "studio": "Hypergryph",
-        "active": True, "motif": "industrial",
+        "active": True, "motif": "industrial", "bin": "開拓",
         "tokens": {
             "bg": "#0d0f0e", "bg2": "#15130f", "ink": "#f2ede4", "soft": "#b9b3a6",
             "accent": "#ff7a1a", "accent2": "#ffb020", "line": "rgba(255,122,26,.30)",
@@ -159,3 +159,42 @@ def collab_by_slug(slug):
         if c["slug"] == slug:
             return c
     return None
+
+
+# コラボ限定シリコン(SoC/GPU/メモリ/SSD)の共通ベース定義。
+# COLLABS(active)× この4部品 = 16枚の「専用シリコン」ページを /collab/{slug}/silicon/{key}/ に生成する。
+# soc は機種ごとにクロック/スコアが異なる(per_collab_soc=True → gen.py が機種値で差し替え)。
+# gpu/mem/ssd は選別ビンの控えめなアップリフトを共通で示す。
+COLLAB_SILICON = [
+    {
+        "key": "soc", "comp": "SoC", "brand": "雷 RAI-G4", "base_tech": "rai-g4", "hub": "cpu",
+        "per_collab_soc": True,
+        "base": [("最大クロック", "3.8GHz"), ("AnTuTuスコア", "385万点")],
+        "story": "ウエハー上の全ダイから、リーク電流と最大到達クロックを実測。上位数%の「当たり石」だけを、このエディションのために選び抜いています。同じ設計でも、選別で殻を破る——それが特別選別ビンです。",
+        "points": ["歩留まり上位の選別ビン", "同一設計・選別のみで到達クロック向上", "コラボエディション専用"],
+    },
+    {
+        "key": "gpu", "comp": "GPU", "brand": "焔 HOMURA-X4", "base_tech": "homura-x4", "hub": "gpu",
+        "base": [("GPUクロック", "1.10GHz"), ("ピーク電力効率", "基準")],
+        "delta": [("GPUクロック", "1.10GHz", "1.16GHz"), ("ピーク電力効率", "基準", "+6%"), ("レイトレ持続fps", "基準", "+4%")],
+        "story": "選別された焔 HOMURA-X4は、より低い電圧で高いクロックを維持できます。レイトレーシングを効かせた長時間プレイでも、fps の落ち込みを一段抑えます。",
+        "points": ["低電圧で高クロックを維持", "レイトレ持続fpsが向上", "発熱の立ち上がりが緩やか"],
+    },
+    {
+        "key": "mem", "comp": "メモリ", "brand": "疾風 HAYATE-M2", "base_tech": "hayate-m2", "hub": "memory",
+        "base": [("転送速度", "10,667Mbps"), ("実効レイテンシ", "基準")],
+        "delta": [("転送速度", "10,667Mbps", "11,200Mbps"), ("実効レイテンシ", "基準", "-4%"), ("常駐タイトル数", "基準", "+1")],
+        "story": "選別 LPDDR6 は、より高いクロックで安定動作します。オープンワールドのストリーミングやタイトル切替の待ちを、わずかでも短く。",
+        "points": ["選別による転送速度の底上げ", "実効レイテンシを低減", "バックグラウンド常駐に余裕"],
+    },
+    {
+        "key": "ssd", "comp": "ストレージ", "brand": "瞬 SHUN-S2", "base_tech": "shun-s2", "hub": "storage",
+        "base": [("シーケンシャル読込", "5,800MB/s"), ("ランダム4K読込", "基準")],
+        "delta": [("シーケンシャル読込", "5,800MB/s", "6,100MB/s"), ("ランダム4K読込", "基準", "+7%"), ("大型タイトル起動", "基準", "-0.2秒")],
+        "story": "選別 UFS 4.1 は、読み出しのばらつきが小さく、ピークに張り付きます。大型タイトルのロードとマップ移動の一瞬を削ります。",
+        "points": ["読出しのばらつきが小さい選別品", "ランダム4Kが向上", "大型タイトルの起動を短縮"],
+    },
+]
+
+# SoC の per-collab クロック(AnTuTu は gen.py の ANTUTU[rai-g4-{slug}] を参照)
+COLLAB_SOC_CLOCK = {"genshin": "3.9", "wuwa": "4.0", "nte": "3.9", "endfield": "3.9"}

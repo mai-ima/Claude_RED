@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from data_products import ALL_PRODUCTS, PHONES, TABLETS, ACCESSORIES, LINES  # noqa: E402
-from data_collab import COLLABS  # noqa: E402
+from data_collab import COLLABS, COLLAB_SILICON, COLLAB_SOC_CLOCK  # noqa: E402
 from data_tech import TECHS, OS_VERSIONS  # noqa: E402
 from data_misc import NEWS, FAQ, HISTORY, GLOSSARY  # noqa: E402
 from data_docs import DOCS  # noqa: E402
@@ -384,6 +384,7 @@ def mega_products():
       <p class="mega__group-title">ショッピング</p>
       <ul class="mega__list">
         {li('/collab/', 'コラボレーション', '数量限定・期間限定', True)}
+        {li('/collab/silicon/', 'コラボ限定シリコン')}
         {li('/store/', 'SUZAKU ストア')}
         {li('/products/compare/', '製品を比較する')}
         {li('/store/guide/', '購入ガイド')}
@@ -628,6 +629,7 @@ def footer_html():
             ("SUZAKU Pad 2", "/products/tablet/pad-2/"),
             ("アクセサリ", "/products/accessories/"),
             ("コラボレーション", "/collab/"),
+            ("コラボ限定シリコン", "/collab/silicon/"),
             ("SUZAKU ストア", "/store/"),
             ("製品を比較する", "/products/compare/"),
             ("購入ガイド", "/store/guide/"),
@@ -1861,6 +1863,22 @@ def build_collab_page(cfg):
     # 作品ごとの固有セクション(motif別に構成が変わる中核)
     sig_section = collab_signature_section(cfg, phone)
 
+    # コラボ限定シリコン(4部品)への導線
+    silicon_cards = "".join(
+        f'<a class="cl-si-card" href="/collab/{slug}/silicon/{c["key"]}/">'
+        f'<span class="cl-si-card__comp">{esc(cfg.get("bin", ""))}選別版 {esc(c["comp"])}</span>'
+        f'<span class="cl-si-card__brand">{esc(c["brand"])}</span></a>'
+        for c in COLLAB_SILICON)
+    silicon_section = f"""
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">COLLAB SILICON</p><h2 class="cl-h2">限定シリコン。</h2>
+    <p class="cl-sig__lead">このエディションのために選び抜かれた、SoC・GPU・メモリ・ストレージの特別選別ビン。</p></div>
+    <div class="cl-si-cards">{silicon_cards}</div>
+    <div style="margin-top:16px"><a class="cl-btn cl-btn--ghost" href="/collab/silicon/">すべての限定シリコンを見る</a></div>
+  </div>
+</section>"""
+
     body = f"""
 <section class="cl-hero" aria-label="{esc(cfg['game'])} コラボレーション">
   <div class="cl-hero__aura" aria-hidden="true"></div>
@@ -1926,6 +1944,8 @@ def build_collab_page(cfg):
 
 {('<section class="cl-section"><div class="cl-wrap"><div class="cl-head"><p class="cl-eyebrow">COLLAB ACCESSORY</p><h2 class="cl-h2">コラボアクセサリ</h2></div><div class="cl-accs">' + acc_cards + '</div></div></section>') if acc_cards else ''}
 
+{silicon_section}
+
 <section class="cl-section cl-buy">
   <div class="cl-wrap cl-buy__inner">
     <div>
@@ -1985,11 +2005,151 @@ def build_collab_hub():
                 body, "dark", [("コラボレーション", None)], "コラボレーション")
 
 
+def collab_silicon_url(slug, key):
+    return f"/collab/{slug}/silicon/{key}/"
+
+
+def _silicon_delta(cfg, comp):
+    """コンポーネントのベース比の差分表 [(項目, ベース値, 選別値), ...] を返す。
+    SoC は機種ごとにクロック/スコアが異なるため per-collab 値で差し替える。"""
+    if comp.get("per_collab_soc"):
+        slug = cfg["slug"]
+        clock = COLLAB_SOC_CLOCK.get(slug, "3.9")
+        score = ANTUTU.get(f"rai-g4-{slug}", 405)
+        return [("最大クロック", "3.8GHz", f"{clock}GHz"),
+                ("AnTuTuスコア", "385万点", f"{score}万点"),
+                ("選別グレード", "標準ビン", f"{cfg['bin']}選別ビン")]
+    return comp.get("delta", [])
+
+
+def build_collab_silicon_page(cfg, comp):
+    slug = cfg["slug"]
+    bin_name = cfg["bin"]
+    title_name = f"{bin_name}選別版 {comp['brand']}"
+    base_tech = next((t for t in TECHS if t["id"] == comp["base_tech"]), None)
+    delta = _silicon_delta(cfg, comp)
+
+    rows = "".join(
+        f'<tr><th scope="row">{esc(k)}</th><td>{esc(b)}</td><td class="cl-delta__sel">{esc(s)}</td></tr>'
+        for k, b, s in delta)
+    points = "".join(f"<li>{esc(p)}</li>" for p in comp["points"])
+
+    # ベース技術の主要スタッツ(あれば流用)
+    base_stats = ""
+    if base_tech:
+        base_stats = "".join(
+            f'<div class="cl-stat"><span class="cl-stat__v">{esc(str(s["v"]))}<i>{esc(s["u"])}</i></span>'
+            f'<span class="cl-stat__l">{esc(s["l"])}</span></div>'
+            for s in base_tech.get("stats", [])[:4])
+
+    base_link = ""
+    if base_tech:
+        base_link = f'<a class="cl-btn cl-btn--ghost" href="/tech/{comp["hub"]}/{comp["base_tech"]}/">ベースの {esc(base_tech["name"])} 技術ページ</a>'
+
+    # 同コラボの他シリコンへの導線
+    others = "".join(
+        f'<a class="cl-chip" href="{collab_silicon_url(slug, c["key"])}">{esc(c["comp"])}</a>'
+        for c in COLLAB_SILICON if c["key"] != comp["key"])
+
+    body = f"""
+<section class="cl-hero cl-hero--silicon" aria-label="{esc(title_name)}">
+  <div class="cl-hero__aura" aria-hidden="true"></div>
+  <div class="cl-hero__inner">
+    <p class="cl-hero__eyebrow">COLLAB SILICON — {esc(cfg['game'])}</p>
+    <h1 class="cl-hero__title" style="font-size:clamp(2rem,1rem+5vw,3.6rem)">{esc(title_name)}</h1>
+    <p class="cl-hero__lead">{esc(cfg['edition'])} のために選び抜かれた、{esc(comp['comp'])}の特別選別ビン。</p>
+    <div class="cl-hero__tags"><span class="cl-tag">{esc(bin_name)}選別ビン</span><span class="cl-tag">{esc(comp['comp'])}</span></div>
+  </div>
+</section>
+
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">BASE VS SELECTED</p><h2 class="cl-h2">ベース比の差分</h2>
+    <p class="cl-sig__lead">同じ設計の標準ビンと、{esc(bin_name)}選別ビンの違い。</p></div>
+    <div class="cl-delta"><table><thead><tr><th>項目</th><th>標準ビン</th><th>{esc(bin_name)}選別ビン</th></tr></thead><tbody>{rows}</tbody></table></div>
+  </div>
+</section>
+
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SELECTION</p><h2 class="cl-h2">なぜ、選別なのか。</h2></div>
+    <p class="cl-sig__lead" style="max-width:760px">{esc(comp['story'])}</p>
+    <ul class="cl-points">{points}</ul>
+  </div>
+</section>
+
+{('<section class="cl-section"><div class="cl-wrap"><div class="cl-head"><p class="cl-eyebrow">BASE TECH</p><h2 class="cl-h2">ベース技術の実力</h2></div><div class="cl-stats">' + base_stats + '</div></div></section>') if base_stats else ''}
+
+<section class="cl-section cl-buy">
+  <div class="cl-wrap cl-buy__inner">
+    <div>
+      <p class="cl-eyebrow">{esc(cfg['game'])} コラボ限定シリコン</p>
+      <h2 class="cl-h2">{esc(title_name)}</h2>
+    </div>
+    <div class="cl-buy__cta">
+      <a class="cl-btn cl-btn--primary" href="/collab/{slug}/">{esc(cfg['edition'])} を見る</a>
+      {base_link}
+    </div>
+  </div>
+</section>
+
+<div class="cl-wrap" style="margin-top:28px">
+  <p class="cl-eyebrow">同コラボの他のシリコン</p>
+  <div class="cl-chips">{others}</div>
+</div>
+<div class="cl-backlink"><a href="/collab/silicon/">← すべてのコラボ限定シリコンを見る</a></div>
+"""
+    desc = f"{cfg['edition']} 専用の{comp['comp']}「{title_name}」。ベース比の差分と選別の理由を解説するコラボ限定シリコンページ。"
+    render_page(collab_silicon_url(slug, comp["key"]), f"{title_name} — SUZAKU × {cfg['game']} 限定シリコン",
+                desc, body, theme="dark", crumbs=None, group="コラボレーション",
+                layout="collab", collab=cfg)
+
+
+def build_collab_silicon_hub():
+    groups = ""
+    for cfg in COLLABS:
+        if not cfg.get("active"):
+            continue
+        tok = cfg["tokens"]
+        style = f"--cl-accent:{tok['accent']};--cl-accent2:{tok['accent2']};--cl-bg2:{tok['bg2']}"
+        cards = "".join(
+            f'<a class="collab-card" style="{style}" href="{collab_silicon_url(cfg["slug"], c["key"])}">'
+            f'<span class="collab-card__game">{esc(cfg["bin"])}選別版 {esc(c["comp"])}</span>'
+            f'<span class="collab-card__edition">{esc(c["brand"])}</span>'
+            f'<span class="collab-card__go">詳細へ →</span></a>'
+            for c in COLLAB_SILICON)
+        groups += (
+            f'<div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">{esc(cfg["game"])}</p>'
+            f'<h2 class="t-h3">{esc(cfg["edition"])} の限定シリコン</h2></div>'
+            f'<div class="collab-grid">{cards}</div>')
+    body = f"""
+<section class="hero hero--sub">
+  <div class="hero__bg hero__bg--glow"></div>
+  <div class="hero__inner hero-enter">
+    <p class="eyebrow eyebrow--center">COLLAB SILICON</p>
+    <h1 class="t-hero">コラボ限定シリコン</h1>
+    <p class="t-lead" style="max-width:700px">各コラボエディションのために選び抜かれた、SoC・GPU・メモリ・ストレージの特別選別ビン。標準ビンとの差分と、選別の理由を解説します。</p>
+  </div>
+</section>
+<section class="section--sm">
+  <div class="container">{groups}
+    <p class="t-micro t-faint" style="margin-top:28px;text-align:center">※ 掲載の数値・選別はデモ用の架空コンテンツです。ベースとなる各技術は<a href="/tech/">テクノロジー</a>をご覧ください。</p>
+  </div>
+</section>
+"""
+    render_page("/collab/silicon/", "コラボ限定シリコン — SUZAKU × ゲーム",
+                "各コラボエディション専用の特別選別シリコン(SoC/GPU/メモリ/ストレージ)一覧。標準ビンとの差分を解説。",
+                body, "dark", [("コラボレーション", "/collab/"), ("限定シリコン", None)], "コラボレーション")
+
+
 def build_collab_pages():
     build_collab_hub()
+    build_collab_silicon_hub()
     for cfg in COLLABS:
         if cfg.get("active"):
             build_collab_page(cfg)
+            for comp in COLLAB_SILICON:
+                build_collab_silicon_page(cfg, comp)
 
 
 # ==========================================================================

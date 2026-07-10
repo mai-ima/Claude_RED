@@ -315,6 +315,34 @@
 }
 .cl-sig--industrial .cl-terminal__out .cl-cursor { background: var(--cl-accent); color: #0a0b0a; }
 
+/* ---------- コラボ限定シリコン ---------- */
+.collab-page .cl-delta { overflow-x: auto; border: 1px solid var(--cl-line); border-radius: var(--r-md); }
+.collab-page .cl-delta table { width: 100%; border-collapse: collapse; min-width: 460px; }
+.collab-page .cl-delta th, .collab-page .cl-delta td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--cl-line); font-size: var(--fs-small); }
+.collab-page .cl-delta thead th { color: var(--cl-soft); font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .08em; }
+.collab-page .cl-delta tbody th { color: var(--cl-ink); font-weight: 700; }
+.collab-page .cl-delta td { color: var(--cl-soft); }
+.collab-page .cl-delta .cl-delta__sel { color: var(--cl-accent2); font-weight: 800; }
+.collab-page .cl-points { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; }
+.collab-page .cl-points li { position: relative; padding-left: 24px; color: var(--cl-soft); font-size: var(--fs-small); }
+.collab-page .cl-points li::before { content: "▪"; position: absolute; left: 4px; color: var(--cl-accent); }
+.collab-page .cl-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.collab-page .cl-chip {
+  padding: 8px 16px; border: 1px solid var(--cl-line); border-radius: var(--r-full);
+  color: var(--cl-ink); font-size: var(--fs-small); font-weight: 700; transition: border-color var(--dur-fast);
+}
+.collab-page .cl-chip:hover { border-color: var(--cl-accent); }
+.collab-page .cl-si-cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.collab-page .cl-si-card {
+  display: flex; flex-direction: column; gap: 6px; padding: 20px;
+  border: 1px solid var(--cl-line); border-radius: var(--r-md); background: color-mix(in srgb, var(--cl-bg2) 60%, transparent);
+  color: var(--cl-ink); transition: transform var(--dur-fast), border-color var(--dur-fast);
+}
+.collab-page .cl-si-card:hover { transform: translateY(-3px); border-color: var(--cl-accent); }
+.collab-page .cl-si-card__comp { font-weight: 800; }
+.collab-page .cl-si-card__brand { font-size: var(--fs-micro); color: var(--cl-soft); }
+.collab-page .cl-hero--silicon { min-height: min(60vh, 480px); }
+
 /* ---------- レスポンシブ ---------- */
 @media (max-width: 720px) {
   .collab-page .cl-limited__grid,

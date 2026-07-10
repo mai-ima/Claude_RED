@@ -38,6 +38,7 @@ def _collab_phone(P):
         "colors": colors,
         "storage": P.get("storage_opts", [{"label": "16GB + 512GB", "delta": 0}, {"label": "24GB + 1TB", "delta": 30000}]),
         "chip": "rai-g4-" + slug, "gpu_id": "homura-x4", "os_v": "os-v4",
+        "glow": P.get("glow"),             # 製品ビジュアルのアクセント色(作品アクセント。無指定はライン色)
         "spec_focus": P["spec_focus"],     # 突出軸ラベル(特設・比較で使用)
         "radar_override": P["radar"],      # 機種ごとに異なるレーダー形状(コラボのみ明示指定)
         "stats": P["stats"],
@@ -779,7 +780,7 @@ PHONES = [
         "sub": "色域BT.2020 110%・ピーク3200nitの「元素ディスプレイ」と7,900mAh大容量を備えた、映像美&長時間探索に特化したコラボフラッグシップ。テイワットの輝きをまとう一台。",
         "price": 154800, "until": "2026-08-31T23:59:59", "qty": 8000, "sold": 5240,
         "colors": [{"name": "元素・翠", "hex": "#1f7a6b"}, {"name": "元素・金", "hex": "#b8862b"}],
-        "bin": "元素選別版", "clock": "3.9", "antutu": "402", "spec_focus": "映像美・電池特化",
+        "bin": "元素選別版", "glow": "#2fb9a3", "clock": "3.9", "antutu": "402", "spec_focus": "映像美・電池特化",
         "radar": [95, 93, 99, 95, 55],
         "stats": [
             {"v": "3200", "u": "nit", "l": "元素ディスプレイ ピーク輝度"},
@@ -815,7 +816,7 @@ PHONES = [
         "sub": "コラボ4機種で最速。生性能に振り切った特別選別チップ「雷 RAI-G4 共鳴選別版」(4.0GHz/AnTuTu 412万点)と、タッチ3200Hz・強化冷却を搭載。",
         "price": 159800, "until": "2026-09-30T23:59:59", "qty": 7000, "sold": 3110,
         "colors": [{"name": "共鳴・蒼", "hex": "#0e5a6e"}, {"name": "共鳴・紫", "hex": "#5b4b8a"}],
-        "bin": "共鳴選別版", "clock": "4.0", "antutu": "412", "spec_focus": "性能・応答特化",
+        "bin": "共鳴選別版", "glow": "#00e0ff", "clock": "4.0", "antutu": "412", "spec_focus": "性能・応答特化",
         "radar": [100, 86, 94, 99, 48],
         "stats": [
             {"v": "4.0", "u": "GHz", "l": "最高クロック(コラボ最速)"},
@@ -855,7 +856,7 @@ PHONES = [
         "sub": "夜景特化ISPと強化望遠、最大2TBストレージを備えたカメラ&大容量特化のコラボフラッグシップ。ネオンの夜をまとう。",
         "price": 157800, "until": "2026-10-31T23:59:59", "qty": 6000, "sold": 1980,
         "colors": [{"name": "夜想・黒", "hex": "#141019"}, {"name": "夜想・桃", "hex": "#8a2352"}],
-        "bin": "夜想選別版", "clock": "3.9", "antutu": "405", "spec_focus": "カメラ・大容量特化",
+        "bin": "夜想選別版", "glow": "#ff2d78", "clock": "3.9", "antutu": "405", "spec_focus": "カメラ・大容量特化",
         "radar": [96, 99, 92, 93, 52],
         "storage_opts": [{"label": "16GB + 512GB", "delta": 0}, {"label": "24GB + 1TB", "delta": 30000}, {"label": "24GB + 2TB", "delta": 70000}],
         "storage_spec": "瞬 SHUN-S2 UFS 4.1 512GB / 1TB / 2TB",
@@ -889,7 +890,7 @@ PHONES = [
         "sub": "8,200mAh・IP68/MIL-STD-810H準拠・持続性能モードを備えた、耐久&スタミナ特化のコラボフラッグシップ。インダストリアルSFの意匠。",
         "price": 152800, "until": "2026-11-30T23:59:59", "qty": 6500, "sold": 2470,
         "colors": [{"name": "開拓・琥珀", "hex": "#8a5a12"}, {"name": "開拓・黒鉄", "hex": "#1b1c1e"}],
-        "bin": "開拓選別版", "clock": "3.9", "antutu": "400", "spec_focus": "耐久・持続特化",
+        "bin": "開拓選別版", "glow": "#ff7a1a", "clock": "3.9", "antutu": "400", "spec_focus": "耐久・持続特化",
         "radar": [93, 84, 100, 97, 60],
         "weight": "238g", "ip": "IP68 + MIL-STD-810H 準拠",
         "material": "アルミ合金フレーム + 強化ガラス背面(耐衝撃バンパー一体)",

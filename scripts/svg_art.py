@@ -6,6 +6,24 @@
 """
 
 
+def _shade(hex_color, f):
+    """hex色を明暗調整する。f>0 で白へ、f<0 で黒へ混ぜる(0〜±1)。"""
+    h = hex_color.lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    if f >= 0:
+        r, g, b = (round(c + (255 - c) * f) for c in (r, g, b))
+    else:
+        r, g, b = (round(c * (1 + f)) for c in (r, g, b))
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def _is_light(hex_color):
+    """ボディ色が明色かどうか(白銀・白練などで刻印を黒系に反転するため)。"""
+    h = hex_color.lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 150
+
+
 def _defs(gid, glow):
     return f"""<defs>
 <linearGradient id="scr{gid}" x1="0" y1="0" x2="1" y2="1">
@@ -27,49 +45,133 @@ def _defs(gid, glow):
 
 
 def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
-    """スマートフォン正面ビュー。実機比率(約76.5×164mm ≒ 1:2.15)で描画。"""
+    """スマートフォン背面ビュー(実機比率 約76.5×164mm ≒ 1:2.15)。
+
+    カラー選択で切り替わる画像のため、実機のカラバリ訴求と同じ「背面」を描く。
+    ボディカラーの多段グラデーション・蒸着テクスチャ・ガラスの斜めシーン・
+    金属フレーム・カメラモジュールで質感を出し、ゲーミング系ラインには
+    冷却ファン窓とLEDスラッシュを載せる。"""
     gid = pid.replace("-", "")
-    gaming = line in ("suzaku", "neo")
-    hole = "" if line == "suzaku" else '<circle cx="170" cy="66" r="5" fill="#050508" stroke="#33333f" stroke-width="1.4"/>'
-    status = f"""
-<text x="74" y="74" font-family="'Noto Sans JP',sans-serif" font-size="12.5" font-weight="700" fill="#e6e6ee">12:34</text>
-<rect x="228" y="64" width="3.5" height="5" rx="1" fill="#c9c9d6"/>
-<rect x="233" y="61.5" width="3.5" height="7.5" rx="1" fill="#c9c9d6"/>
-<rect x="238" y="59" width="3.5" height="10" rx="1" fill="#c9c9d6"/>
-<rect x="247" y="61" width="19" height="9.5" rx="3.5" fill="none" stroke="#c9c9d6" stroke-width="1.4"/>
-<rect x="249" y="63" width="11" height="5.5" rx="1.5" fill="{glow}"/>"""
+    gaming = line in ("suzaku", "neo", "collab")
+    lite = _shade(body_hex, 0.42)
+    lite2 = _shade(body_hex, 0.16)
+    dark = _shade(body_hex, -0.38)
+    dark2 = _shade(body_hex, -0.6)
+    plate = _shade(body_hex, -0.3)
+    # 明色ボディ(白銀・白練など)では刻印・ブレードを黒系に反転して視認性を保つ
+    light_body = _is_light(body_hex)
+    ink = "#1c1c26" if light_body else "#ffffff"
+    blade = _shade(body_hex, -0.35) if light_body else _shade(body_hex, 0.22)
+
+    defs = f"""<defs>
+<linearGradient id="body{gid}" x1="0" y1="0" x2="0.9" y2="1">
+  <stop offset="0" stop-color="{lite}"/>
+  <stop offset="0.28" stop-color="{lite2}"/>
+  <stop offset="0.62" stop-color="{body_hex}"/>
+  <stop offset="1" stop-color="{dark}"/>
+</linearGradient>
+<linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.55)}"/>
+  <stop offset="0.12" stop-color="{_shade(body_hex, -0.15)}"/>
+  <stop offset="0.5" stop-color="{dark2}"/>
+  <stop offset="0.88" stop-color="{_shade(body_hex, -0.2)}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, 0.35)}"/>
+</linearGradient>
+<radialGradient id="lens{gid}" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#3c4454"/>
+  <stop offset="0.35" stop-color="#141821"/>
+  <stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<linearGradient id="sheen{gid}" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+  <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
+  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+</linearGradient>
+<pattern id="tex{gid}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+</pattern>
+<filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%">
+  <feGaussianBlur stdDeviation="7"/>
+</filter>
+</defs>"""
+
+    # カメラモジュール(天眼トリプル+フラッシュ)
+    lenses = ""
+    for cx in (108, 170, 232):
+        lenses += f"""
+<circle cx="{cx}" cy="116" r="25" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.6"/>
+<circle cx="{cx}" cy="116" r="19" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.3"/>
+<circle cx="{cx}" cy="116" r="15" fill="url(#lens{gid})"/>
+<circle cx="{cx}" cy="116" r="5.5" fill="#04040a"/>
+<circle cx="{cx - 5.5}" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>"""
+    camera = f"""
+<rect x="66" y="64" width="208" height="90" rx="26" fill="{plate}"/>
+<rect x="66" y="64" width="208" height="90" rx="26" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="66.7" y="64.7" width="206.6" height="88.6" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
+<circle cx="86" cy="80" r="5" fill="#f4efdf" opacity="0.9"/>
+<text x="262" y="83" font-family="'Noto Sans JP',sans-serif" font-size="8.5" font-weight="700" fill="{ink}" opacity="0.5" text-anchor="end" letter-spacing="2">TENGAN</text>
+{lenses}"""
+
     if gaming:
-        bottom = f"""
-<rect x="100" y="468" width="140" height="27" rx="13.5" fill="#07070b" stroke="{glow}" stroke-opacity="0.65" stroke-width="1.4"/>
-<circle cx="118" cy="481.5" r="4.5" fill="{glow}"/>
-<text x="178" y="486" font-family="'Noto Sans JP',sans-serif" font-size="12" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">{hz} 陣</text>"""
+        # LEDスラッシュ + 冷却ファン窓
+        slashes = "".join(
+            f'<path d="M{66 + i * 66} 178 h44 l-13 13 h-44 z" fill="{glow}" opacity="{o}"/>'
+            for i, o in enumerate((0.92, 0.55, 0.28)))
+        blades = "".join(
+            f'<path d="M170 328 L170 296" stroke="{blade}" stroke-width="9" stroke-linecap="round" transform="rotate({a} 170 328)"/>'
+            for a in range(0, 360, 40))
+        feature = f"""
+{slashes}
+<circle cx="170" cy="328" r="50" fill="{dark2}"/>
+<circle cx="170" cy="328" r="50" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="170" cy="328" r="42" fill="#0a0b10"/>
+{blades}
+<circle cx="170" cy="328" r="13" fill="#101018" stroke="{glow}" stroke-opacity="0.8" stroke-width="1.6"/>
+<circle cx="170" cy="328" r="4" fill="{glow}"/>
+<text x="170" y="398" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="{ink}" opacity="0.5" text-anchor="middle" letter-spacing="3">SENPU COOLING</text>"""
         side_r = f"""
-<rect x="296.5" y="118" width="5" height="46" rx="2.5" fill="{glow}"/>
-<rect x="296.5" y="182" width="5" height="46" rx="2.5" fill="{glow}"/>
-<rect x="296.5" y="258" width="5" height="48" rx="2.5" fill="#3d3d4e"/>"""
+<rect x="292.5" y="112" width="5" height="44" rx="2.5" fill="{glow}"/>
+<rect x="292.5" y="172" width="5" height="44" rx="2.5" fill="{glow}"/>
+<rect x="292.5" y="250" width="5" height="48" rx="2.5" fill="{dark2}"/>"""
     else:
-        bottom = "".join(
-            f'<rect x="{104 + i * 36}" y="468" width="26" height="26" rx="8" fill="#ffffff" opacity="{o}"/>'
-            for i, o in enumerate((0.16, 0.24, 0.18, 0.22)))
-        side_r = '<rect x="296.5" y="168" width="5" height="56" rx="2.5" fill="#3d3d4e"/>'
+        # 一般ライン: 朱雀エンブレムの型押し
+        feature = f"""
+<g transform="translate(122 268) scale(2)" opacity="0.9">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="{glow}" stroke-width="2.6" stroke-linejoin="round"/>
+  <circle cx="24" cy="31.5" r="3.2" fill="{glow}"/>
+</g>"""
+        side_r = f'<rect x="292.5" y="162" width="5" height="56" rx="2.5" fill="{dark2}"/>'
+
+    # 刻印(長いコラボ名は「×」で2行に分割してはみ出しを防ぐ)
+    if "×" in label and len(label) > 14:
+        l1, l2 = (s.strip() for s in label.split("×", 1))
+        etched = f"""
+<text x="170" y="452" font-family="'Noto Sans JP',sans-serif" font-size="13" font-weight="800" fill="{ink}" opacity="0.72" text-anchor="middle" letter-spacing="1.5">{l1} ×</text>
+<text x="170" y="470" font-family="'Noto Sans JP',sans-serif" font-size="12" font-weight="700" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="1">{l2}</text>"""
+    else:
+        etched = f"""
+<text x="170" y="462" font-family="'Noto Sans JP',sans-serif" font-size="14.5" font-weight="800" fill="{ink}" opacity="0.72" text-anchor="middle" letter-spacing="2.5">{label}</text>"""
+    if kana:
+        etched += f"""
+<text x="170" y="487" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="{ink}" opacity="0.4" text-anchor="middle" letter-spacing="4">{kana}</text>"""
+
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="{label}">
-{_defs(gid, glow)}
-<rect x="45" y="32" width="250" height="536" rx="42" fill="{body_hex}"/>
-<rect x="45" y="32" width="250" height="536" rx="42" fill="url(#metal{gid})"/>
-<rect x="45.8" y="32.8" width="248.4" height="534.4" rx="41.2" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="1.6"/>
-<path d="M45 140 h4 M45 452 h4 M291 140 h4 M291 452 h4" stroke="#4a4a5a" stroke-width="2.5"/>
-<rect x="54" y="41" width="232" height="518" rx="33" fill="url(#scr{gid})"/>
-<ellipse cx="170" cy="218" rx="112" ry="118" fill="url(#flare{gid})"/>
-{hole}{status}
-<path d="M170 150 c-9 37 -46 53 -46 92 a46 46 0 0 0 92 0 c0 -39 -37 -55 -46 -92z" fill="none" stroke="{glow}" stroke-width="4.5" stroke-linejoin="round" opacity="0.95"/>
-<circle cx="170" cy="250" r="11" fill="{glow}"/>
-<text x="170" y="332" font-family="'Noto Sans JP',sans-serif" font-size="22" font-weight="800" fill="#f4f4f8" text-anchor="middle" letter-spacing="2">{label}</text>
-<text x="170" y="356" font-family="'Noto Sans JP',sans-serif" font-size="11.5" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">{kana}</text>
-{bottom}
-<rect x="125" y="534" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.35"/>
-<path d="M72 41 L252 41 L122 559 L54 559 L54 430 Z" fill="#ffffff" opacity="0.038"/>
+{defs}
+<ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.4" filter="url(#soft{gid})"/>
+<rect x="43" y="30" width="254" height="540" rx="47" fill="url(#frame{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="{body_hex}"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="url(#body{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="url(#tex{gid})"/>
+<rect x="50" y="37" width="240" height="526" rx="41" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6"/>
+<path d="M43 128 h6 M43 448 h6 M291 128 h6 M291 448 h6" stroke="{dark2}" stroke-width="3"/>
+{camera}
+{feature}
+{etched}
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.38" text-anchor="middle" letter-spacing="2">DESIGNED BY SUZAKU ・ {hz}</text>
+<path d="M78 36 L206 36 L96 564 L49 564 L49 300 Z" fill="url(#sheen{gid})"/>
+<path d="M232 36 L262 36 L150 564 L124 564 Z" fill="#ffffff" opacity="0.05"/>
 {side_r}
-<rect x="38.5" y="150" width="5" height="64" rx="2.5" fill="#3d3d4e"/>
+<rect x="42.5" y="146" width="5" height="62" rx="2.5" fill="{dark2}"/>
 </svg>"""
 
 

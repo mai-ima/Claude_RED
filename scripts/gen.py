@@ -2411,7 +2411,8 @@ def build_assets():
     (img / "products").mkdir(parents=True, exist_ok=True)
     (img / "favicon.svg").write_text(svg_art.FAVICON, encoding="utf-8")
     for p in ALL_PRODUCTS:
-        glow = LINES[p["line"]]["glow"]
+        # コラボモデルなどは製品個別のアクセント色(作品カラー)を優先する
+        glow = p.get("glow") or LINES[p["line"]]["glow"]
         hz = f"{num(get_spec(p, ['ディスプレイ'], 'リフレッシュレート')) or 60}Hz" if p["cat"] in ("phone", "tablet") else "60Hz"
         for i, c in enumerate(p["colors"]):
             if p["cat"] == "phone":

@@ -15,10 +15,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=d4878ffcb6">
-<link rel="stylesheet" href="/assets/css/base.css?v=d4878ffcb6">
-<link rel="stylesheet" href="/assets/css/components.css?v=d4878ffcb6">
-<link rel="stylesheet" href="/assets/css/animations.css?v=d4878ffcb6">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=601fec25ed">
+<link rel="stylesheet" href="/assets/css/base.css?v=601fec25ed">
+<link rel="stylesheet" href="/assets/css/components.css?v=601fec25ed">
+<link rel="stylesheet" href="/assets/css/animations.css?v=601fec25ed">
 
 </head>
 <body class="page-admin">
@@ -448,6 +448,18 @@
         </div>
 
         <div class="card" style="margin-top:var(--sp-5)">
+          <p class="eyebrow">COLLAB STOCK</p>
+          <h2 class="t-h4">コラボ在庫管理</h2>
+          <p class="t-small t-soft">各コラボモデルの販売済み数・生産数を上書きします。特設ページの残数メーターに即時反映されます(空欄で既定値に戻ります)。</p>
+          <div id="admCollabStock" class="stack" style="gap:12px"></div>
+          <div class="cluster" style="margin-top:14px">
+            <button class="btn btn--primary btn--sm" id="admCollabSave" type="button">在庫を保存</button>
+            <button class="btn btn--ghost btn--sm" id="admCollabReset" type="button">既定値に戻す</button>
+            <a class="btn btn--soft btn--sm" href="/collab/" target="_blank" rel="noopener">特設で確認</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--sp-5)">
           <p class="eyebrow">STORE SETTINGS</p>
           <h2 class="t-h4">ストア設定</h2>
           <p class="t-small t-soft">送料無料のしきい値と配送料を変更できます。カート・チェックアウトに即時反映されます。</p>
@@ -599,18 +611,18 @@
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="/assets/js/keys.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/fmt.js?v=d4878ffcb6" defer></script>
-<script src="/data/products.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/main.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/charts.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/store.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/pages.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/auth-core.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/auth-guard.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/auth-account.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/auth-admin.js?v=d4878ffcb6" defer></script>
-<script src="/assets/js/auth-status.js?v=d4878ffcb6" defer></script>
+<script src="/assets/js/keys.js?v=601fec25ed" defer></script>
+<script src="/assets/js/fmt.js?v=601fec25ed" defer></script>
+<script src="/data/products.js?v=601fec25ed" defer></script>
+<script src="/assets/js/main.js?v=601fec25ed" defer></script>
+<script src="/assets/js/charts.js?v=601fec25ed" defer></script>
+<script src="/assets/js/store.js?v=601fec25ed" defer></script>
+<script src="/assets/js/pages.js?v=601fec25ed" defer></script>
+<script src="/assets/js/auth-core.js?v=601fec25ed" defer></script>
+<script src="/assets/js/auth-guard.js?v=601fec25ed" defer></script>
+<script src="/assets/js/auth-account.js?v=601fec25ed" defer></script>
+<script src="/assets/js/auth-admin.js?v=601fec25ed" defer></script>
+<script src="/assets/js/auth-status.js?v=601fec25ed" defer></script>
 
 </body>
 </html>

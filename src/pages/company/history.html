@@ -10,9 +10,9 @@
 
 <section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
   <div class="container container--narrow">
-    <!-- 沿革は scripts/data_misc.py の HISTORY を単一ソースとし、pages.js が
-         window.SZ.history から描画する(会社ページと二重管理しないため)。 -->
-    <div class="timeline" id="historyTimeline"></div>
+    <!-- 沿革は scripts/data_misc.py の HISTORY を単一ソースとし、gen.py が
+         ビルド時にサーバー描画で焼き込む(SEO・no-JS対応。二重管理しない)。 -->
+    <div class="timeline"><!--HISTORY_TIMELINE--></div>
   </div>
 </section>
 

@@ -10,7 +10,7 @@
   var PREF = ["sz_theme", "sz_prefs", "sz_consent"];
   var DATA = ["sz_users", "sz_orders", "sz_tickets", "sz_maintenance", "sz_global",
     "sz_page_ctrl", "sz_services", "sz_admin_news", "sz_seed_del",
-    "sz_announce", "sz_store_cfg", "sz_admin_log"];
+    "sz_announce", "sz_store_cfg", "sz_admin_log", "sz_collab_stock"];
   var VOLATILE = ["sz_cart", "sz_announce_seen"];
 
   /* sz_session は意図的に含めない(ログアウトは logout() で個別削除する) */

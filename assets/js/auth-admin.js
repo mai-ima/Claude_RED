@@ -560,6 +560,48 @@
       });
     }
 
+    /* ---- コラボ在庫管理(sz_collab_stock で特設の残数メーターを上書き) ---- */
+    var admCollabStock = $("#admCollabStock");
+    if (admCollabStock) {
+      var collabs = (window.SZ && window.SZ.collabs) || [];
+      var stockNow = get("sz_collab_stock", {});
+      admCollabStock.innerHTML = collabs.length ? collabs.map(function (c) {
+        var ov = stockNow[c.slug] || {};
+        var sold = typeof ov.sold === "number" ? ov.sold : "";
+        var qty = typeof ov.qty === "number" ? ov.qty : "";
+        return '<div class="spread" style="gap:10px;align-items:flex-end" data-collab-row="' + esc(c.slug) + '">' +
+          '<div class="stack" style="gap:2px;flex:1;min-width:160px"><strong class="t-small">' + esc(c.game) + '</strong>' +
+          '<span class="t-micro t-faint">既定: ' + c.sold.toLocaleString("ja-JP") + " / " + c.qty.toLocaleString("ja-JP") + " 台</span></div>" +
+          '<label class="t-micro t-faint" style="display:grid;gap:4px">販売済み<input class="input" style="max-width:110px" type="number" min="0" data-cs-sold value="' + sold + '" placeholder="' + c.sold + '"></label>' +
+          '<label class="t-micro t-faint" style="display:grid;gap:4px">生産数<input class="input" style="max-width:110px" type="number" min="1" data-cs-qty value="' + qty + '" placeholder="' + c.qty + '"></label></div>';
+      }).join("") : '<p class="t-small t-soft">コラボデータがありません。</p>';
+
+      var admCollabSave = $("#admCollabSave");
+      if (admCollabSave) admCollabSave.addEventListener("click", function () {
+        var out = {};
+        $$("[data-collab-row]", admCollabStock).forEach(function (row) {
+          var slug = row.getAttribute("data-collab-row");
+          var soldV = row.querySelector("[data-cs-sold]").value.trim();
+          var qtyV = row.querySelector("[data-cs-qty]").value.trim();
+          if (soldV === "" && qtyV === "") return; // 空欄=既定値のまま
+          var e = {};
+          if (soldV !== "") e.sold = Math.max(0, parseInt(soldV, 10) || 0);
+          if (qtyV !== "") e.qty = Math.max(1, parseInt(qtyV, 10) || 1);
+          out[slug] = e;
+        });
+        set("sz_collab_stock", out);
+        logAction("コラボ在庫を更新(" + Object.keys(out).length + "件の上書き)");
+        window.szToast("コラボ在庫を保存しました(特設ページに反映)");
+      });
+      var admCollabReset = $("#admCollabReset");
+      if (admCollabReset) admCollabReset.addEventListener("click", function () {
+        try { localStorage.removeItem("sz_collab_stock"); } catch (e) { /* noop */ }
+        $$("[data-cs-sold], [data-cs-qty]", admCollabStock).forEach(function (i) { i.value = ""; });
+        logAction("コラボ在庫を既定値に戻す");
+        window.szToast("コラボ在庫を既定値に戻しました");
+      });
+    }
+
     /* ---- バックアップ(エクスポート/インポート) ---- */
     var BACKUP_KEYS = window.szKeys.BACKUP;
     var admExport = $("#admExport");

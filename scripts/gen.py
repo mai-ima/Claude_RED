@@ -1915,7 +1915,7 @@ def build_collab_page(cfg):
       </div>
       <p class="cl-count__end">{esc(lim['until'][:10])} まで</p>
     </div>
-    <div class="cl-stock" data-qty="{lim['qty']}" data-sold="{lim['sold']}">
+    <div class="cl-stock" data-slug="{slug}" data-qty="{lim['qty']}" data-sold="{lim['sold']}">
       <p class="cl-eyebrow">数量限定 生産数</p>
       <div class="cl-stock__bar"><span class="cl-stock__fill"></span></div>
       <p class="cl-stock__meta"><b class="cl-stock__remain">--</b> / {lim['qty']:,} 台 が販売可能</p>
@@ -2371,6 +2371,10 @@ def build_client_data():
         "docs": DOCS,
         "glossary": GLOSSARY,
         "history": HISTORY,
+        # 管理ボードのコラボ在庫パネル用の要約(既定値。上書きは sz_collab_stock)
+        "collabs": [{"slug": c["slug"], "game": c["game"], "edition": c["edition"],
+                     "qty": c["limited"]["qty"], "sold": c["limited"]["sold"]}
+                    for c in COLLABS if c.get("active")],
         "pages": PAGES,
         "tax": 0.10,
         "freeShipping": 5000,
@@ -2399,6 +2403,19 @@ def build_assets():
             (img / "products" / f"{p['id']}-{i}.svg").write_text(svg, encoding="utf-8")
 
 
+def history_timeline_html():
+    """沿革タイムラインを HISTORY(単一ソース)からサーバー描画で生成。
+    クライアントJS描画だと SEO・no-JS 環境に弱いため、ビルド時にHTMLへ焼き込む。"""
+    items = []
+    for h in HISTORY:
+        news_link = f' <a href="/news/{h["news"]}/">→ 関連ニュース</a>' if h.get("news") else ""
+        items.append(
+            f'<div class="timeline__item reveal"><p class="timeline__date">{esc(h["date"])}</p>'
+            f'<h2 class="t-h4">{esc(h["title"])}</h2>'
+            f'<p class="t-small t-soft">{h["body"]}{news_link}</p></div>')
+    return "".join(items)
+
+
 def build_fragments():
     if not SRC.exists():
         return
@@ -2409,6 +2426,9 @@ def build_fragments():
             raise SystemExit(f"METAコメントがありません: {f}")
         meta = json.loads(m.group(1))
         body = text[m.end():]
+        # ビルド時プレースホルダ(データ駆動セクションのサーバー描画)
+        if "<!--HISTORY_TIMELINE-->" in body:
+            body = body.replace("<!--HISTORY_TIMELINE-->", history_timeline_html())
         rel = f.relative_to(SRC)
         if rel.as_posix() == "home.html":
             url = "/"

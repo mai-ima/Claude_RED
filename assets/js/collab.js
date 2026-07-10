@@ -50,6 +50,15 @@
   if (stockEl) {
     var qty = parseInt(stockEl.getAttribute("data-qty"), 10) || 0;
     var sold = parseInt(stockEl.getAttribute("data-sold"), 10) || 0;
+    // 管理ボードからの在庫上書き(sz_collab_stock = {slug: {qty, sold}})を優先する
+    var slug = stockEl.getAttribute("data-slug");
+    if (slug && window.szStore) {
+      var ov = (window.szStore.get("sz_collab_stock", {}) || {})[slug];
+      if (ov && typeof ov.sold === "number") {
+        sold = ov.sold;
+        if (typeof ov.qty === "number" && ov.qty > 0) qty = ov.qty;
+      }
+    }
     var remain = Math.max(0, qty - sold);
     var pct = qty > 0 ? Math.round((remain / qty) * 100) : 0;
     var fill = stockEl.querySelector(".cl-stock__fill");

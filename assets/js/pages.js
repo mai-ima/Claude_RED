@@ -539,16 +539,7 @@
     }
   }
 
-  /* ---------------- 沿革(/company/history/、data_misc.py の HISTORY を単一ソースに) ---------------- */
-  var historyTimeline = $("#historyTimeline");
-  if (historyTimeline) {
-    historyTimeline.innerHTML = (SZ.history || []).map(function (h) {
-      var newsLink = h.news ? ' <a href="/news/' + esc(h.news) + '/">→ 関連ニュース</a>' : "";
-      return '<div class="timeline__item reveal"><p class="timeline__date">' + esc(h.date) + "</p>" +
-        '<h2 class="t-h4">' + esc(h.title) + "</h2>" +
-        '<p class="t-small t-soft">' + h.body + newsLink + "</p></div>";
-    }).join("");
-  }
+  /* 沿革(/company/history/)は gen.py がビルド時にサーバー描画する(SEO対応)。 */
 
   /* ---------------- 製品セレクター(/products/finder/) ---------------- */
   var finder = $("#productFinder");

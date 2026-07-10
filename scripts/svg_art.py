@@ -246,7 +246,6 @@ def svg_art(kind, glow="#e8442e"):
 <circle cx="330" cy="178" r="40" fill="#15151e" stroke="{g}" stroke-width="2.5"/>
 {"".join(f'<circle cx="{330 + dx}" cy="{178 + dy}" r="7" fill="{g}" opacity="0.85"/>' for dx, dy in [(0, -18), (18, 0), (0, 18), (-18, 0)])}
 <rect x="210" y="156" width="60" height="10" rx="5" fill="{g}" opacity="0.4"/>
-<rect x="122" y="108" width="56, 14" height="14" rx="7" fill="{g}" opacity="0.6"/>
 <rect x="122" y="108" width="56" height="14" rx="7" fill="{g}" opacity="0.6"/>
 <rect x="302" y="108" width="56" height="14" rx="7" fill="{g}" opacity="0.6"/>"""
     elif kind == "buds":

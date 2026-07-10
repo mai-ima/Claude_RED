@@ -1562,6 +1562,25 @@ def build_tech_hub(hub_key):
     if hub_key == "camera":
         trend_charts += chart({"type": "bar", "title": "センサー相対受光面積(RS-1 = 100)", "unit": "",
                                "labels": ["天眼 RS-1(2024)", "天眼 RS-2(2025)"], "values": [100, 137], "highlight": 1})
+        trend_charts += chart({"type": "bar", "title": "神楽ISP 画像処理能力の推移", "unit": "億画素/秒",
+                               "labels": ["2024(RS-1世代)", "2025(RS-2世代)", "2026(RS-2+世代)"], "values": [14, 24, 32], "highlight": 2})
+
+    # カメラハブ専用: イメージングパイプラインの解説(センサー→ISP→演算処理の全体像)
+    hub_extra = ""
+    if hub_key == "camera":
+        hub_extra = f"""
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">IMAGING PIPELINE</p><h2 class="t-h2">シャッターの裏側、0.1秒の分業。</h2>
+    <p class="t-soft">天眼はセンサー単体の名前ではありません。受光・処理・演算がひとつの設計で貫かれた、イメージングシステムの総称です。</p></div>
+    <div class="grid grid--3 grid--cards reveal-stagger">
+      <div class="card"><p class="eyebrow">1. SENSOR</p><h3 class="t-h4">天眼センサーが受け止める</h3><p class="t-small t-soft">1/1.28型の大型センサーとデュアルネイティブISOで、夜のネオンも昼の逆光もRAWのまま取り込みます。</p></div>
+      <div class="card"><p class="eyebrow">2. ISP</p><h3 class="t-h4">神楽ISPがさばく</h3><p class="t-small t-soft">SoC統合ISPが毎秒32億画素を3系統同時処理。8K動画を撮りながら静止画を切り出せるのはこの帯域のおかげです。</p></div>
+      <div class="card"><p class="eyebrow">3. AI</p><h3 class="t-h4">神楽NPUが仕上げる</h3><p class="t-small t-soft">120TOPSのNPUがノイズ除去・HDR合成・被写体認識をリアルタイム実行。<a href="/tech/ai/">神楽 AIエンジン</a>と同じ頭脳です。</p></div>
+    </div>
+    <div class="notice reveal" style="margin-top:24px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg> ゲーミングフォンにカメラは不要? — 私たちはそう思いません。攻略の記録、戦績のシェア、日常の一枚。ゲームと同じ本気で、カメラを作っています。搭載機は<a href="/products/phone/suzaku-4/">SUZAKU 4</a>・<a href="/products/phone/tsubame-3/">TSUBAME 3</a>をご覧ください。</div>
+  </div>
+</section>"""
 
     trend_html = f"""
 <section class="section--sm">
@@ -1588,6 +1607,7 @@ def build_tech_hub(hub_key):
   </div>
 </section>
 {trend_html}
+{hub_extra}
 {cta_band('すべての技術は、つながっている。', 'SoC・メモリ・冷却・OSの垂直統合こそ、SUZAKUの体験の正体です。', [('テクノロジー トップ', '/tech/', 'btn--primary'), ('製品を見る', '/products/', 'btn--ghost')])}
 """
     render_page(hub["path"], f"{hub['title']}({hub['en']})", hub["desc"], body, "dark",

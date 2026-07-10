@@ -252,6 +252,13 @@ h1, h2, h3, h4, h5 {
 .prose th, .prose td { border: 1px solid var(--line); padding: 10px 14px; text-align: left; vertical-align: top; }
 .prose th { background: var(--surface-2); color: var(--text-strong); white-space: nowrap; }
 
+/* モバイル: prose内の表は自身の中で横スクロールさせ、ページ全体の
+   横スクロール(本文はみ出し)を起こさない。thの改行も許可する。 */
+@media (max-width: 720px) {
+  .prose table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .prose th { white-space: normal; }
+}
+
 /* --------------------------------------------------------------------------
    ボタン
    -------------------------------------------------------------------------- */

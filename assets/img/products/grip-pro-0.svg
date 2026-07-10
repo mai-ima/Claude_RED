@@ -17,6 +17,5 @@
 <circle cx="330" cy="178" r="40" fill="#15151e" stroke="#d9a441" stroke-width="2.5"/>
 <circle cx="330" cy="160" r="7" fill="#d9a441" opacity="0.85"/><circle cx="348" cy="178" r="7" fill="#d9a441" opacity="0.85"/><circle cx="330" cy="196" r="7" fill="#d9a441" opacity="0.85"/><circle cx="312" cy="178" r="7" fill="#d9a441" opacity="0.85"/>
 <rect x="210" y="156" width="60" height="10" rx="5" fill="#d9a441" opacity="0.4"/>
-<rect x="122" y="108" width="56, 14" height="14" rx="7" fill="#d9a441" opacity="0.6"/>
 <rect x="122" y="108" width="56" height="14" rx="7" fill="#d9a441" opacity="0.6"/>
 <rect x="302" y="108" width="56" height="14" rx="7" fill="#d9a441" opacity="0.6"/></svg>

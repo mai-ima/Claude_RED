@@ -1,0 +1,357 @@
+/* ==========================================================================
+   SUZAKU × NTE「夜行」専用スタイル — チャコール×マゼンタ×ライム・
+   斜体コンデンス英字・マーキー・ステッカー・夜景。
+   /collab/nte/ 系ページ専用。他コラボとクラスを共有しない。
+   ========================================================================== */
+
+.cl-lp.collab--nte {
+  --nt-char: #221f26;
+  --nt-char2: #2a2530;
+  --nt-mag: #ff3ea5;
+  --nt-lime: #c8f24a;
+  --nt-cyan: #39d7f5;
+  --nt-ink: #f4ecff;
+  --nt-soft: #b9aec8;
+  font-family: "Noto Sans JP", sans-serif;
+  background:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.022) 0 2px, transparent 2px 14px),
+    var(--nt-char);
+}
+
+.collab--nte .cl-h2, .collab--nte .cl-shero__title {
+  font-family: "Archivo", "Noto Sans JP", sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.collab--nte .cl-eyebrow { color: var(--nt-lime); font-style: italic; }
+
+/* --- ヒーロー --- */
+.nt-hero {
+  position: relative;
+  overflow: clip;
+  padding: clamp(3.4rem, 8vh, 6rem) clamp(16px, 4vw, 32px) 0;
+}
+
+.nt-hero__inner {
+  position: relative;
+  max-width: 1080px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-areas: "eyebrow device" "title device" "lead device" "stick device";
+  gap: 8px 24px;
+  align-items: center;
+}
+
+.nt-hero__eyebrow {
+  grid-area: eyebrow;
+  font-size: 0.7rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.3em;
+  color: var(--nt-lime);
+  text-transform: uppercase;
+}
+
+.nt-hero__title { grid-area: title; }
+
+.nt-hero__title em {
+  display: block;
+  font-family: "Archivo", sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(4rem, 2rem + 12vw, 9.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--nt-mag);
+  text-shadow: 0 0 34px rgba(255, 62, 165, 0.35);
+}
+
+.nt-hero__title span {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(1.15rem, 1rem + 1.4vw, 1.7rem);
+  font-weight: 900;
+  color: var(--nt-ink);
+}
+
+.nt-hero__lead { grid-area: lead; max-width: 520px; margin-top: 10px; color: var(--nt-soft); line-height: 2; font-size: 0.9rem; }
+
+.nt-hero__device {
+  grid-area: device;
+  width: clamp(160px, 20vw, 250px);
+  justify-self: center;
+  height: auto;
+  transform: rotate(6deg);
+  filter: drop-shadow(0 0 38px rgba(255, 62, 165, 0.28)) drop-shadow(0 26px 34px rgba(0, 0, 0, 0.6));
+}
+
+.nt-hero__stickers { grid-area: stick; display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+
+.nt-stick {
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: "Archivo", sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 0.86rem;
+  border-radius: 8px;
+  border: 2px solid;
+}
+
+.nt-stick--1 { color: var(--nt-mag); border-color: var(--nt-mag); transform: rotate(-4deg); }
+.nt-stick--2 { color: var(--nt-lime); border-color: var(--nt-lime); transform: rotate(2.5deg); }
+.nt-stick--3 { color: var(--nt-cyan); border-color: var(--nt-cyan); transform: rotate(-2deg); }
+
+@media (max-width: 800px) {
+  .nt-hero__inner { grid-template-columns: 1fr; grid-template-areas: "eyebrow" "title" "lead" "device" "stick"; }
+  .nt-hero__device { margin-top: 16px; }
+}
+
+/* --- マーキー帯 --- */
+.nt-marquee {
+  margin-top: clamp(2rem, 4vw, 3.4rem);
+  border-block: 2px solid var(--nt-mag);
+  background: rgba(255, 62, 165, 0.08);
+  overflow: hidden;
+  padding-block: 10px;
+}
+
+.nt-marquee__track { display: flex; width: max-content; animation: nt-marq 26s linear infinite; }
+
+.nt-marquee__track span {
+  font-family: "Archivo", sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  color: var(--nt-mag);
+  white-space: nowrap;
+  padding-right: 2em;
+}
+
+@keyframes nt-marq { to { transform: translateX(-50%); } }
+
+/* --- 用語カード(ランクバッジ調) --- */
+.nt-terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.nt-term {
+  position: relative;
+  border-radius: 14px;
+  background: var(--nt-char2);
+  border: 1.5px solid rgba(244, 236, 255, 0.12);
+  padding: 26px 22px 22px;
+  transform: rotate(-0.6deg);
+}
+
+.nt-term:nth-child(2) { transform: rotate(0.8deg); }
+.nt-term:nth-child(3) { transform: rotate(-0.4deg); }
+
+.nt-term__rank {
+  position: absolute;
+  top: -14px;
+  left: 18px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--nt-lime);
+  color: #1c2208;
+  font-family: "Archivo", sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 1.05rem;
+  box-shadow: 0 6px 16px rgba(200, 242, 74, 0.3);
+}
+
+.nt-term h3 { font-size: 1.05rem; font-weight: 900; color: var(--nt-ink); margin-bottom: 10px; }
+
+.nt-term p { font-size: 0.83rem; line-height: 1.95; color: var(--nt-soft); }
+
+@media (max-width: 800px) { .nt-terms { grid-template-columns: 1fr; } }
+
+/* --- 夜景シティ(スクロールで窓が点く) --- */
+.nt-cityscape {
+  position: relative;
+  height: 300px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #191423 0%, #241a30 74%, #17121e 100%);
+  border: 1.5px solid rgba(244, 236, 255, 0.12);
+}
+
+.nt-city__sky { position: absolute; inset: 0; }
+
+.nt-moon {
+  position: absolute;
+  top: 34px;
+  right: 60px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #f2ecdc;
+  box-shadow: -12px 0 0 -6px #241a30 inset, 0 0 34px rgba(242, 236, 220, 0.4);
+}
+
+.nt-bldg {
+  position: relative;
+  width: 7.2%;
+  height: var(--h);
+  background: #171221;
+  border-radius: 3px 3px 0 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 12px, rgba(0, 0, 0, 0.4) 12px 13px),
+    repeating-linear-gradient(90deg, transparent 0 9px, rgba(0, 0, 0, 0.4) 9px 10px);
+}
+
+.nt-bldg::after {
+  content: "";
+  position: absolute;
+  inset: 6px 5px;
+  background:
+    repeating-linear-gradient(0deg, currentColor 0 4px, transparent 4px 13px),
+    repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 10px);
+  background-blend-mode: multiply;
+  color: var(--nt-mag);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.9s ease var(--d);
+}
+
+.nt-bldg:nth-child(3n)::after { color: var(--nt-cyan); }
+.nt-bldg:nth-child(4n)::after { color: #ffd166; }
+
+.nt-city.is-lit .nt-bldg::after, [data-city].is-lit .nt-bldg::after { opacity: 0.5; }
+
+.nt-city__road {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--nt-mag), var(--nt-cyan));
+  filter: blur(1px);
+  opacity: 0.75;
+}
+
+.nt-camrow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+
+.nt-camcell {
+  text-align: center;
+  border-radius: 14px;
+  background: var(--nt-char2);
+  border: 1.5px solid rgba(244, 236, 255, 0.12);
+  padding: 22px 12px;
+}
+
+.nt-camcell b { font-family: "Archivo", sans-serif; font-style: italic; font-weight: 900; font-size: clamp(1.5rem, 1rem + 2vw, 2.2rem); color: var(--nt-ink); }
+
+.nt-camcell i { font-style: italic; color: var(--nt-mag); margin-left: 3px; font-size: 0.85rem; }
+
+.nt-camcell span { display: block; margin-top: 8px; font-size: 0.74rem; color: var(--nt-soft); }
+
+@media (max-width: 760px) { .nt-camrow { grid-template-columns: repeat(2, 1fr); } }
+
+/* --- EL発光デモ --- */
+.nt-split { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(1.8rem, 4vw, 4rem); align-items: center; }
+
+.nt-split__media { display: grid; place-items: center; }
+
+.nt-split__media img { width: clamp(190px, 22vw, 260px); height: auto; transform: rotate(-4deg); filter: drop-shadow(0 0 30px rgba(200, 242, 74, 0.16)) drop-shadow(0 24px 30px rgba(0, 0, 0, 0.6)); }
+
+.nt-split__copy p { margin-top: 14px; line-height: 2; color: var(--nt-soft); font-size: 0.9rem; }
+
+.nt-elbtns { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+
+.nt-elbtn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid rgba(244, 236, 255, 0.2);
+  color: var(--nt-soft);
+  font-family: "Archivo", sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.nt-elbtn:hover { border-color: var(--nt-mag); color: var(--nt-mag); }
+
+.nt-elbtn.is-on { border-color: var(--nt-mag); background: rgba(255, 62, 165, 0.14); color: var(--nt-mag); }
+
+.nt-elpanel {
+  margin-top: 18px;
+  height: 64px;
+  border-radius: 12px;
+  background: #17121e;
+  border: 1.5px solid rgba(244, 236, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.nt-elpanel span {
+  width: 34px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--nt-mag);
+  opacity: 0.16;
+}
+
+.nt-elpanel[data-mode="pulse"] span { animation: nt-pulse 1.6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 0s); }
+.nt-elpanel[data-mode="pulse"] span:nth-child(odd) { background: var(--nt-cyan); }
+.nt-elpanel[data-mode="beat"] span { animation: nt-beat 0.7s ease-in-out infinite alternate; }
+.nt-elpanel[data-mode="beat"] span:nth-child(2n) { animation-delay: 0.18s; }
+.nt-elpanel[data-mode="beat"] span:nth-child(3n) { animation-delay: 0.32s; background: var(--nt-lime); }
+.nt-elpanel[data-mode="rain"] span { animation: nt-rain 1.3s linear infinite; }
+.nt-elpanel[data-mode="rain"] span:nth-child(2n) { animation-delay: 0.4s; background: var(--nt-cyan); }
+.nt-elpanel[data-mode="rain"] span:nth-child(3n) { animation-delay: 0.8s; }
+.nt-elpanel[data-mode="off"] span { animation: none; opacity: 0.08; }
+
+@keyframes nt-pulse { 0%, 100% { opacity: 0.14; } 50% { opacity: 1; } }
+@keyframes nt-beat { from { opacity: 0.1; transform: scaleX(0.6); } to { opacity: 1; transform: scaleX(1.15); } }
+@keyframes nt-rain { 0% { opacity: 0; transform: translateY(-18px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(18px); } }
+
+@media (max-width: 860px) { .nt-split { grid-template-columns: 1fr; } }
+
+.nt-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* --- コアモジュールのポップ調整 --- */
+.collab--nte .cl-btn--primary {
+  background: var(--nt-mag);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(255, 62, 165, 0.35);
+}
+
+.collab--nte .cl-btn--ghost { border-radius: 12px; }
+
+.collab--nte .cl-tag { border-radius: 8px; font-style: italic; }
+
+.collab--nte .cl-stat, .collab--nte .cl-count, .collab--nte .cl-stock,
+.collab--nte .cl-buy__inner, .collab--nte .cl-faq__i, .collab--nte .cl-acc,
+.collab--nte .cl-si-card { background: var(--nt-char2); }
+
+.collab--nte .cl-stock__fill { background: linear-gradient(90deg, var(--nt-mag), var(--nt-lime)); }
+
+.collab--nte .cl-lpnav { background: rgba(34, 31, 38, 0.88); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nt-marquee__track { animation: none; }
+  .nt-elpanel span { animation: none !important; }
+  .nt-hero__device, .nt-split__media img, .nt-term { transform: none; }
+}
+
+/* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
+.collab--nte:not(.cl-lp) .t-hero { font-family: "Archivo", "Noto Sans JP", sans-serif; font-style: italic; font-weight: 900; }

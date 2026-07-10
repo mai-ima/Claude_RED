@@ -1,0 +1,352 @@
+/* ==========================================================================
+   SUZAKU × 原神「七耀」専用スタイル — 白×金の明色ファンタジー・明朝。
+   このファイルは /collab/genshin/ 系ページ専用。他コラボとクラスを共有しない。
+   ========================================================================== */
+
+.cl-lp.collab--genshin {
+  --gs-gold: #a8842c;
+  --gs-gold-soft: #cbb26a;
+  --gs-paper: #f7f2e6;
+  --gs-paper2: #efe7d2;
+  --gs-ink: #2c261a;
+  font-family: "Shippori Mincho", "Noto Sans JP", serif;
+  background:
+    radial-gradient(1100px 500px at 80% -5%, rgba(47, 185, 163, 0.12), transparent 60%),
+    radial-gradient(900px 480px at 10% 30%, rgba(203, 178, 106, 0.16), transparent 65%),
+    var(--gs-paper);
+}
+
+.collab--genshin .cl-h2,
+.collab--genshin .cl-shero__title {
+  font-family: "Shippori Mincho", serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* --- 点火イントロ(七元素が順に灯る) --- */
+.gs-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-content: center;
+  gap: 22px;
+  justify-items: center;
+  background: var(--gs-paper);
+  transition: opacity 0.7s ease, visibility 0.7s;
+}
+
+.gs-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.gs-intro__ring { display: flex; gap: 14px; }
+
+.gs-intro__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--el);
+  opacity: 0.12;
+  transform: scale(0.6);
+  transition: opacity 0.35s, transform 0.35s, box-shadow 0.35s;
+}
+
+.gs-intro.is-run .gs-intro__dot {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--el) 70%, transparent);
+  transition-delay: calc(var(--i) * 0.16s);
+}
+
+.gs-intro__t {
+  font-family: "Shippori Mincho", serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.5em;
+  margin-left: 0.5em;
+  color: var(--gs-ink);
+}
+
+/* --- ヒーロー(羊皮紙×金飾り罫×雲パララックス) --- */
+.gs-hero { position: relative; overflow: clip; padding: clamp(3rem, 2rem + 4vw, 6rem) clamp(16px, 4vw, 32px) 0; }
+
+.gs-hero__clouds { position: absolute; inset: 0; pointer-events: none; }
+
+.gs-cloud {
+  position: absolute;
+  width: 46vw;
+  min-width: 300px;
+  aspect-ratio: 3 / 1;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  filter: blur(6px);
+  will-change: transform;
+}
+
+.gs-cloud--1 { top: 8%; left: -12%; opacity: 0.9; }
+.gs-cloud--2 { top: 30%; right: -16%; opacity: 0.7; }
+.gs-cloud--3 { bottom: 4%; left: 18%; opacity: 0.8; }
+
+.gs-hero__frame {
+  position: relative;
+  max-width: 1020px;
+  margin-inline: auto;
+  border: 1.5px solid var(--gs-gold-soft);
+  border-radius: 4px;
+  padding: clamp(2.2rem, 1.6rem + 3vw, 4.5rem) clamp(1.2rem, 4vw, 3.5rem) clamp(2rem, 3vw, 3rem);
+  text-align: center;
+  background: color-mix(in srgb, #ffffff 42%, transparent);
+  box-shadow: 0 30px 80px rgba(120, 96, 40, 0.12);
+}
+
+/* 金の飾り角 */
+.gs-hero__frame::before,
+.gs-hero__frame::after {
+  content: "";
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border: 2.5px solid var(--gs-gold);
+  pointer-events: none;
+}
+
+.gs-hero__frame::before { top: -9px; left: -9px; border-right: 0; border-bottom: 0; }
+.gs-hero__frame::after { bottom: -9px; right: -9px; border-left: 0; border-top: 0; }
+
+.gs-hero__eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  color: var(--gs-gold);
+  text-transform: uppercase;
+}
+
+.gs-hero__title {
+  margin-top: 18px;
+  font-family: "Shippori Mincho", serif;
+  font-size: clamp(2.1rem, 1.2rem + 4.6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--gs-ink);
+}
+
+.gs-hero__lead {
+  margin: 18px auto 0;
+  max-width: 640px;
+  color: #5d5442;
+  line-height: 2.1;
+}
+
+.gs-hero__tags { margin-top: 20px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+
+.gs-hero__devices {
+  margin-top: clamp(1.8rem, 3vw, 3rem);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(10px, 3vw, 34px);
+}
+
+.gs-hero__devices img {
+  width: clamp(140px, 22vw, 230px);
+  height: auto;
+  filter: drop-shadow(0 26px 34px rgba(90, 72, 30, 0.28));
+}
+
+.gs-hero__devices img:first-child { transform: rotate(-4deg) translateY(8px); }
+.gs-hero__devices img:last-child { transform: rotate(4deg); }
+
+.gs-hero__world {
+  margin: clamp(1.6rem, 3vw, 2.6rem) auto 0;
+  max-width: 560px;
+  padding-top: 18px;
+  border-top: 1px solid var(--gs-gold-soft);
+  font-size: 0.85rem;
+  line-height: 2.2;
+  color: #6b6046;
+}
+
+/* --- 用語カード --- */
+.gs-terms__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.gs-term {
+  border: 1px solid var(--gs-gold-soft);
+  border-radius: 4px;
+  padding: 26px 22px;
+  background: color-mix(in srgb, #ffffff 55%, transparent);
+  position: relative;
+}
+
+.gs-term::before {
+  content: "◆";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--gs-gold);
+  background: var(--gs-paper);
+  padding-inline: 8px;
+  font-size: 0.8rem;
+}
+
+.gs-term h3 {
+  font-family: "Shippori Mincho", serif;
+  font-size: 1.15rem;
+  color: var(--gs-ink);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 0.2em;
+}
+
+.gs-term p { font-size: 0.85rem; line-height: 2; color: #5d5442; }
+
+@media (max-width: 800px) { .gs-terms__grid { grid-template-columns: 1fr; } }
+
+/* --- 元素ホイール --- */
+.gs-elements { position: relative; }
+
+.gs-elem-stage {
+  display: grid;
+  justify-items: center;
+  gap: 26px;
+  padding: clamp(1.5rem, 3vw, 3rem);
+  border: 1.5px solid var(--gs-gold-soft);
+  border-radius: 6px;
+  background:
+    radial-gradient(560px 300px at 50% 30%, color-mix(in srgb, var(--gs-el, #2fb9a3) 18%, transparent), transparent 70%),
+    color-mix(in srgb, #ffffff 40%, transparent);
+  transition: background 0.5s ease;
+}
+
+.gs-elem-orb {
+  position: relative;
+  width: 208px;
+  display: grid;
+  place-items: center;
+}
+
+.gs-elem-orb::before {
+  content: "";
+  position: absolute;
+  inset: -26px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--gs-el, #2fb9a3) 34%, transparent), transparent 72%);
+  transition: background 0.5s;
+}
+
+.gs-elem-orb img { position: relative; width: 170px; height: auto; filter: drop-shadow(0 18px 28px rgba(90, 72, 30, 0.3)); }
+
+.gs-elems { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+.gs-elem {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--el) 65%, #ffffff);
+  background: color-mix(in srgb, var(--el) 16%, #ffffff);
+  color: var(--gs-ink);
+  font-family: "Shippori Mincho", serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s, box-shadow 0.25s;
+}
+
+.gs-elem:hover { transform: translateY(-3px); }
+
+.gs-elem.is-on {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--el) 30%, transparent), 0 8px 22px color-mix(in srgb, var(--el) 45%, transparent);
+  transform: scale(1.12);
+}
+
+.gs-elem-name {
+  font-family: "Shippori Mincho", serif;
+  letter-spacing: 0.3em;
+  color: #6b6046;
+  font-size: 0.9rem;
+}
+
+/* --- 分割セクション --- */
+.gs-split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(1.6rem, 4vw, 4rem); align-items: center; }
+
+.gs-split--rev { grid-template-columns: 1.1fr 0.9fr; }
+
+.gs-split__media { display: grid; place-items: center; }
+
+.gs-split__media img { width: clamp(200px, 24vw, 280px); height: auto; filter: drop-shadow(0 24px 30px rgba(90, 72, 30, 0.25)); }
+
+.gs-split__media svg { width: 100%; max-width: 460px; height: auto; border-radius: 8px; border: 1px solid var(--gs-gold-soft); }
+
+.gs-split__copy p { margin-top: 14px; line-height: 2.1; color: #5d5442; }
+
+.gs-split__copy .cl-points { margin-top: 18px; }
+
+.gs-split__copy .cl-points li::before { border-radius: 50%; background: var(--gs-gold); }
+
+@media (max-width: 860px) {
+  .gs-split, .gs-split--rev { grid-template-columns: 1fr; }
+  .gs-split--rev .gs-split__media { order: -1; }
+}
+
+/* --- 計器(ディスプレイ数値) --- */
+.gs-gauges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+.gs-gauge {
+  text-align: center;
+  border: 1px solid var(--gs-gold-soft);
+  border-radius: 4px;
+  padding: 26px 12px;
+  background: color-mix(in srgb, #ffffff 50%, transparent);
+}
+
+.gs-gauge b { font-size: clamp(1.6rem, 1.1rem + 2vw, 2.4rem); font-weight: 800; color: var(--gs-ink); font-family: "Shippori Mincho", serif; }
+
+.gs-gauge i { font-style: normal; color: var(--gs-gold); font-size: 0.85rem; margin-left: 3px; }
+
+.gs-gauge span { display: block; margin-top: 8px; font-size: 0.75rem; color: #6b6046; }
+
+@media (max-width: 760px) { .gs-gauges { grid-template-columns: repeat(2, 1fr); } }
+
+/* --- ベンチ比較バー --- */
+.gs-vsbar { display: grid; gap: 12px; margin-block: 20px 22px; }
+
+.gs-vsbar__row { display: grid; grid-template-columns: 1fr; gap: 5px; font-size: 0.8rem; color: #6b6046; }
+
+.gs-vsbar__row i {
+  display: block;
+  height: 14px;
+  width: var(--w);
+  border-radius: 999px;
+  background: #d8cdb2;
+}
+
+.gs-vsbar__row--hi i { background: linear-gradient(90deg, var(--gs-gold), #2fb9a3); }
+
+.gs-vsbar__row b { color: var(--gs-ink); font-size: 0.95rem; }
+
+/* --- コアモジュールの明色調整 --- */
+.collab--genshin .cl-stat,
+.collab--genshin .cl-count,
+.collab--genshin .cl-stock,
+.collab--genshin .cl-buy__inner,
+.collab--genshin .cl-faq__i,
+.collab--genshin .cl-acc,
+.collab--genshin .cl-si-card {
+  background: color-mix(in srgb, #ffffff 55%, transparent);
+  border-radius: 4px;
+}
+
+.collab--genshin .cl-btn--primary {
+  background: linear-gradient(120deg, var(--gs-gold), #8d6c1e);
+  color: #fff;
+}
+
+.collab--genshin .cl-lpnav { background: color-mix(in srgb, var(--gs-paper) 88%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-intro { display: none; }
+  .gs-cloud { display: none; }
+}
+
+/* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
+.collab--genshin:not(.cl-lp) .t-hero { font-family: "Shippori Mincho", "Noto Sans JP", serif; }

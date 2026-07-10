@@ -1,0 +1,287 @@
+/* ==========================================================================
+   SUZAKU × アークナイツ:エンドフィールド「前線」専用スタイル —
+   白黒反転ブロック×ビビッドイエロー・「//」見出し・等高線・計器・等幅数字。
+   /collab/endfield/ 系ページ専用。他コラボとクラスを共有しない。
+   ========================================================================== */
+
+.cl-lp.collab--endfield {
+  --ef-paper: #f2f1ec;
+  --ef-black: #141412;
+  --ef-yellow: #f2d800;
+  --ef-gray: #5a5952;
+  --ef-line: rgba(20, 20, 18, 0.22);
+  font-family: "Noto Sans JP", sans-serif;
+  background: var(--ef-paper);
+  color: var(--ef-black);
+}
+
+/* 等高線背景(SVG data URI・軽量) */
+.collab--endfield main {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23141412' stroke-opacity='0.05'%3E%3Cpath d='M60 210a150 150 0 1 0 300 0a150 150 0 1 0-300 0'/%3E%3Cpath d='M100 210a110 110 0 1 0 220 0a110 110 0 1 0-220 0'/%3E%3Cpath d='M140 210a70 70 0 1 0 140 0a70 70 0 1 0-140 0'/%3E%3Cpath d='M20 40q90 40 180 0t200 30'/%3E%3Cpath d='M0 380q120-50 220-10t200-20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.collab--endfield .cl-h2, .collab--endfield .cl-shero__title,
+.ef-h2 {
+  font-family: "Oswald", "Noto Sans JP", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* --- 起動カウンタ(イントロ) --- */
+.ef-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: var(--ef-black);
+  display: grid;
+  place-content: center;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+.ef-boot.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.ef-boot__in { display: grid; gap: 14px; justify-items: start; min-width: min(420px, 80vw); }
+
+.ef-boot__pct {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: clamp(3.4rem, 10vw, 5.5rem);
+  color: var(--ef-paper);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.ef-boot__l { font-size: 0.7rem; letter-spacing: 0.3em; color: rgba(242, 241, 236, 0.6); }
+
+.ef-boot__bar { width: 100%; height: 6px; background: rgba(242, 241, 236, 0.16); overflow: hidden; }
+
+.ef-boot__bar i { display: block; height: 100%; width: var(--p, 0%); background: var(--ef-yellow); }
+
+/* --- 黄色の縦レール --- */
+.ef-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  background: var(--ef-yellow);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 34px;
+  padding-top: 30px;
+  align-items: center;
+}
+
+.ef-rail span {
+  writing-mode: vertical-rl;
+  font-family: "Oswald", sans-serif;
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  color: var(--ef-black);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) { .ef-rail { display: none; } }
+
+/* --- ヒーロー(白地) --- */
+.ef-hero { position: relative; overflow: clip; padding: clamp(3rem, 7vh, 5.5rem) clamp(16px, 4vw, 32px) clamp(2.6rem, 4vw, 4rem) clamp(60px, 7vw, 90px); }
+
+.ef-hero__inner {
+  max-width: 1040px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-areas: "eyebrow device" "title device" "lead device" "tags device";
+  gap: 6px 26px;
+  align-items: center;
+}
+
+.ef-hero__eyebrow {
+  grid-area: eyebrow;
+  font-family: "Oswald", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--ef-gray);
+  text-transform: uppercase;
+}
+
+.ef-hero__title { grid-area: title; font-family: "Oswald", "Noto Sans JP", sans-serif; font-weight: 700; font-size: clamp(3rem, 1.6rem + 8vw, 6.8rem); line-height: 1; color: var(--ef-black); }
+
+.ef-hero__title span { display: block; margin-top: 14px; font-family: "Noto Sans JP", sans-serif; font-size: clamp(1.1rem, 0.9rem + 1.4vw, 1.7rem); font-weight: 900; }
+
+.ef-hero__lead { grid-area: lead; max-width: 520px; margin-top: 12px; color: var(--ef-gray); line-height: 2; font-size: 0.9rem; }
+
+.ef-hero__tags { grid-area: tags; display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+
+.ef-tag {
+  display: inline-flex;
+  padding: 7px 14px;
+  background: var(--ef-black);
+  color: var(--ef-yellow);
+  font-family: "Oswald", sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+}
+
+.ef-hero__device {
+  grid-area: device;
+  width: clamp(160px, 20vw, 250px);
+  justify-self: center;
+  height: auto;
+  filter: drop-shadow(0 26px 30px rgba(20, 20, 18, 0.35));
+}
+
+@media (max-width: 800px) {
+  .ef-hero__inner { grid-template-columns: 1fr; grid-template-areas: "eyebrow" "title" "lead" "device" "tags"; }
+  .ef-hero__device { margin-top: 18px; }
+}
+
+/* --- 反転ブロック --- */
+.ef-block { padding: clamp(3.2rem, 2.4rem + 4vw, 6rem) 0; position: relative; }
+
+.ef-block--dark { background: var(--ef-black); color: var(--ef-paper); }
+
+.ef-block--dark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: repeating-linear-gradient(-45deg, var(--ef-yellow) 0 18px, var(--ef-black) 18px 36px);
+}
+
+.ef-eyebrow {
+  font-family: "Oswald", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  color: var(--ef-yellow);
+  margin-bottom: 10px;
+}
+
+.ef-block:not(.ef-block--dark) .ef-eyebrow { color: var(--ef-black); background: var(--ef-yellow); display: inline-block; padding: 3px 10px; }
+
+.ef-h2 { font-size: clamp(1.6rem, 1.1rem + 2.6vw, 2.6rem); line-height: 1.2; color: var(--ef-black); }
+
+.ef-block--dark .ef-h2, .ef-block--dark .cl-h2 { color: var(--ef-paper); }
+
+.ef-head { margin-bottom: clamp(1.4rem, 2vw, 2.4rem); }
+
+.ef-lead { max-width: 720px; color: inherit; opacity: 0.78; line-height: 2; margin-bottom: 26px; font-size: 0.92rem; }
+
+/* --- 用語(黒ブロック内) --- */
+.ef-terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(242, 241, 236, 0.2); border: 1px solid rgba(242, 241, 236, 0.2); }
+
+.ef-term { background: var(--ef-black); padding: 26px 22px; }
+
+.ef-term h3 { font-size: 1rem; font-weight: 900; color: var(--ef-yellow); margin-bottom: 10px; font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.06em; }
+
+.ef-term p { font-size: 0.83rem; line-height: 2; color: rgba(242, 241, 236, 0.75); }
+
+@media (max-width: 800px) { .ef-terms { grid-template-columns: 1fr; } }
+
+/* --- 分割+耐久表 --- */
+.ef-split { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(1.8rem, 4vw, 4rem); align-items: center; }
+
+.ef-split__media { display: grid; place-items: center; }
+
+.ef-split__media img { width: clamp(200px, 23vw, 270px); height: auto; filter: drop-shadow(0 24px 28px rgba(20, 20, 18, 0.3)); }
+
+.ef-split__copy p { margin-top: 14px; line-height: 2; color: var(--ef-gray); font-size: 0.9rem; }
+
+.ef-dura { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 0.84rem; }
+
+.ef-dura th, .ef-dura td { border: 1px solid var(--ef-line); padding: 10px 14px; text-align: left; }
+
+.ef-dura thead th { background: var(--ef-black); color: var(--ef-paper); font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.08em; }
+
+.ef-dura tbody th { font-weight: 700; white-space: nowrap; }
+
+.ef-pass { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; color: #1b7a2e; font-weight: 700; }
+
+@media (max-width: 860px) { .ef-split { grid-template-columns: 1fr; } }
+
+/* --- 計器グリッド+ターミナル --- */
+.ef-gauges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(242, 241, 236, 0.2); border: 1px solid rgba(242, 241, 236, 0.2); margin-bottom: 30px; }
+
+.ef-gauge { background: var(--ef-black); text-align: center; padding: clamp(1.8rem, 3vw, 2.8rem) 12px; }
+
+.ef-gauge b {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 1.2rem + 2.6vw, 3rem);
+  color: var(--ef-paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.ef-gauge i { font-style: normal; color: var(--ef-yellow); margin-left: 4px; font-size: 0.9rem; }
+
+.ef-gauge span { display: block; margin-top: 10px; font-size: 0.72rem; letter-spacing: 0.1em; color: rgba(242, 241, 236, 0.6); }
+
+@media (max-width: 760px) { .ef-gauges { grid-template-columns: repeat(2, 1fr); } }
+
+.ef-terminal {
+  border: 1px solid rgba(242, 241, 236, 0.25);
+  background: #0c0c0a;
+  padding: 22px 24px;
+  min-height: 176px;
+}
+
+.ef-terminal__out {
+  margin: 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.82rem;
+  line-height: 1.9;
+  color: var(--ef-yellow);
+  white-space: pre-wrap;
+}
+
+.ef-terminal__out::after { content: "▮"; animation: ef-blink 1s steps(1) infinite; }
+
+@keyframes ef-blink { 50% { opacity: 0; } }
+
+/* --- コアモジュールの工業調整 --- */
+.collab--endfield .cl-eyebrow { color: var(--ef-black); background: var(--ef-yellow); display: inline-block; padding: 3px 10px; letter-spacing: 0.26em; }
+
+.collab--endfield .ef-block--dark .cl-eyebrow { background: transparent; color: var(--ef-yellow); padding: 0; }
+
+.collab--endfield .cl-btn { border-radius: 0; font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.08em; }
+
+.collab--endfield .cl-btn--primary { background: var(--ef-black); color: var(--ef-yellow); box-shadow: none; }
+
+.collab--endfield .cl-btn--primary:hover { box-shadow: 4px 4px 0 var(--ef-yellow); }
+
+.collab--endfield .cl-btn--ghost { border-color: var(--ef-black); color: var(--ef-black); }
+
+.collab--endfield .cl-tag { border-radius: 0; border-color: var(--ef-black); }
+
+.collab--endfield .cl-stat, .collab--endfield .cl-count, .collab--endfield .cl-stock,
+.collab--endfield .cl-buy__inner, .collab--endfield .cl-faq__i, .collab--endfield .cl-acc,
+.collab--endfield .cl-si-card, .collab--endfield .cl-bundle__i {
+  border-radius: 0;
+  background: #ffffff;
+  border-color: var(--ef-line);
+}
+
+.collab--endfield .cl-stock__fill { background: var(--ef-yellow); }
+
+.collab--endfield .cl-stat__v, .collab--endfield .cl-count__unit b { font-family: "Oswald", "Noto Sans JP", sans-serif; }
+
+.collab--endfield .cl-lpnav { background: rgba(242, 241, 236, 0.9); }
+
+.collab--endfield .cl-lpnav__buy { border-radius: 0; background: var(--ef-black); color: var(--ef-yellow); }
+
+.collab--endfield .cl-points li::before { border-radius: 0; background: var(--ef-yellow); border: 1px solid var(--ef-black); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ef-boot { display: none; }
+  .ef-terminal__out::after { animation: none; }
+}
+
+/* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
+.collab--endfield:not(.cl-lp) .t-hero { font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.04em; }

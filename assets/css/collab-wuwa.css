@@ -1,0 +1,227 @@
+/* ==========================================================================
+   SUZAKU × 鳴潮「残響」専用スタイル — 黒×白の明朝ミニマル・縦書き・波形。
+   /collab/wuwa/ 系ページ専用。他コラボとクラスを共有しない。
+   ========================================================================== */
+
+.cl-lp.collab--wuwa {
+  --ww-black: #0a0a0c;
+  --ww-white: #f2f2f4;
+  --ww-gray: #9a9aa6;
+  --ww-cyan: #00e0ff;
+  font-family: "Zen Old Mincho", "Noto Sans JP", serif;
+  background: var(--ww-black);
+  letter-spacing: 0.03em;
+}
+
+.collab--wuwa .cl-h2,
+.collab--wuwa .cl-shero__title {
+  font-family: "Zen Old Mincho", serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.collab--wuwa .cl-eyebrow { letter-spacing: 0.44em; color: var(--ww-gray); }
+
+/* --- ヒーロー(縦書き・余白極大・波形) --- */
+.ww-hero {
+  position: relative;
+  min-height: 88vh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(1.6rem, 3vw, 2.6rem);
+  padding: clamp(4rem, 8vh, 7rem) clamp(16px, 4vw, 32px) clamp(5rem, 10vh, 8rem);
+  overflow: clip;
+  animation: ww-fadein 1.6s ease both;
+}
+
+@keyframes ww-fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.ww-hero__eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.5em;
+  color: var(--ww-gray);
+  text-transform: uppercase;
+}
+
+.ww-hero__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 6vw, 5.5rem);
+}
+
+.ww-hero__title {
+  writing-mode: vertical-rl;
+  font-family: "Zen Old Mincho", serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 1.2rem + 4.4vw, 3.9rem);
+  line-height: 1.6;
+  letter-spacing: 0.22em;
+  color: var(--ww-white);
+  display: flex;
+  gap: 0.6em;
+  max-height: 560px;
+}
+
+.ww-hero__device {
+  width: clamp(150px, 22vw, 250px);
+  height: auto;
+  filter: drop-shadow(0 0 44px rgba(0, 224, 255, 0.14)) drop-shadow(0 30px 40px rgba(0, 0, 0, 0.7));
+}
+
+.ww-hero__lead { max-width: 560px; text-align: center; color: var(--ww-gray); line-height: 2.3; font-size: 0.92rem; }
+
+.ww-hero__tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+.ww-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 120px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* --- 世界観・用語 --- */
+.ww-world { border-top: 1px solid rgba(242, 242, 244, 0.14); }
+
+.ww-terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(242, 242, 244, 0.14); border: 1px solid rgba(242, 242, 244, 0.14); }
+
+.ww-term { background: var(--ww-black); padding: clamp(26px, 4vw, 44px) clamp(20px, 3vw, 34px); }
+
+.ww-term h3 {
+  font-family: "Zen Old Mincho", serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--ww-white);
+  margin-bottom: 16px;
+}
+
+.ww-term p { font-size: 0.85rem; line-height: 2.3; color: var(--ww-gray); }
+
+@media (max-width: 800px) { .ww-terms { grid-template-columns: 1fr; } }
+
+/* --- ベンチマーク(頂点を見せる) --- */
+.ww-bench__chart { display: grid; gap: 18px; margin-block: 8px 26px; max-width: 760px; }
+
+.ww-bench__row { display: grid; gap: 7px; font-size: 0.8rem; color: var(--ww-gray); }
+
+.ww-bench__row i {
+  display: block;
+  height: 2px;
+  width: var(--w);
+  background: rgba(242, 242, 244, 0.35);
+  position: relative;
+}
+
+.ww-bench__row i::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(242, 242, 244, 0.5);
+}
+
+.ww-bench__row b { color: var(--ww-white); font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.ww-bench__row--hi i { height: 4px; background: linear-gradient(90deg, var(--ww-white), var(--ww-cyan)); }
+
+.ww-bench__row--hi i::after { background: var(--ww-cyan); box-shadow: 0 0 14px var(--ww-cyan); }
+
+.ww-bench__row--hi b { font-size: 1.35rem; }
+
+/* --- 速度グリッド --- */
+.ww-speed { border-block: 1px solid rgba(242, 242, 244, 0.14); padding-block: 0; }
+
+.ww-speed__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+
+.ww-speed__cell {
+  padding: clamp(2.4rem, 4vw, 4rem) 16px;
+  text-align: center;
+  border-left: 1px solid rgba(242, 242, 244, 0.14);
+}
+
+.ww-speed__cell:first-child { border-left: 0; }
+
+.ww-speed__cell b {
+  font-family: "Zen Old Mincho", serif;
+  font-size: clamp(1.9rem, 1.2rem + 3vw, 3.2rem);
+  font-weight: 900;
+  color: var(--ww-white);
+  font-variant-numeric: tabular-nums;
+}
+
+.ww-speed__cell i { font-style: normal; color: var(--ww-cyan); margin-left: 4px; font-size: 0.9rem; }
+
+.ww-speed__cell span { display: block; margin-top: 10px; font-size: 0.72rem; letter-spacing: 0.14em; color: var(--ww-gray); }
+
+@media (max-width: 760px) {
+  .ww-speed__grid { grid-template-columns: repeat(2, 1fr); }
+  .ww-speed__cell:nth-child(3) { border-left: 0; }
+  .ww-speed__cell { border-top: 1px solid rgba(242, 242, 244, 0.14); }
+  .ww-speed__cell:nth-child(-n+2) { border-top: 0; }
+}
+
+/* --- 分割(モノリス) --- */
+.ww-split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+
+.ww-split__media { display: grid; place-items: center; }
+
+.ww-split__media img { width: clamp(200px, 24vw, 270px); height: auto; filter: drop-shadow(0 26px 40px rgba(0, 0, 0, 0.75)); }
+
+.ww-split__copy p { margin-top: 16px; line-height: 2.3; color: var(--ww-gray); font-size: 0.92rem; }
+
+.ww-split__copy .cl-points { margin-top: 20px; }
+
+.ww-split__copy .cl-points li::before { border-radius: 0; width: 10px; height: 2px; top: 0.85em; background: var(--ww-white); }
+
+@media (max-width: 860px) { .ww-split { grid-template-columns: 1fr; } }
+
+/* --- コアモジュールのモノクロ調整 --- */
+.collab--wuwa .cl-stat,
+.collab--wuwa .cl-count,
+.collab--wuwa .cl-stock,
+.collab--wuwa .cl-buy__inner,
+.collab--wuwa .cl-faq__i,
+.collab--wuwa .cl-acc,
+.collab--wuwa .cl-si-card,
+.collab--wuwa .cl-bundle__i {
+  border-radius: 0;
+  background: transparent;
+}
+
+.collab--wuwa .cl-btn { border-radius: 0; }
+
+.collab--wuwa .cl-btn--primary {
+  background: var(--ww-white);
+  color: var(--ww-black);
+  box-shadow: none;
+}
+
+.collab--wuwa .cl-btn--primary:hover { box-shadow: 0 0 0 1px var(--ww-white), 0 10px 30px rgba(0, 224, 255, 0.18); }
+
+.collab--wuwa .cl-tag { border-radius: 0; }
+
+.collab--wuwa .cl-stock__fill { background: linear-gradient(90deg, var(--ww-white), var(--ww-cyan)); }
+
+.collab--wuwa .cl-stat__v, .collab--wuwa .cl-count__unit b { font-family: "Zen Old Mincho", serif; }
+
+.collab--wuwa .cl-lpnav { background: rgba(10, 10, 12, 0.85); }
+
+/* 一瞬のシアン反転(JSが .ww-flash を付与) */
+.collab--wuwa.ww-flash .ww-hero__title { color: var(--ww-cyan); transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ww-hero { animation: none; }
+  .ww-wave { display: none; }
+}
+
+/* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
+.collab--wuwa:not(.cl-lp) .t-hero { font-family: "Zen Old Mincho", "Noto Sans JP", serif; letter-spacing: 0.08em; }

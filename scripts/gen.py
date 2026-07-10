@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from data_products import ALL_PRODUCTS, PHONES, TABLETS, ACCESSORIES, LINES  # noqa: E402
-from data_collab import COLLABS, COLLAB_SILICON, COLLAB_SOC_CLOCK  # noqa: E402
+from data_collab import COLLABS, COLLAB_SILICON, COLLAB_SOC_CLOCK, collab_by_slug  # noqa: E402
 from data_tech import TECHS, OS_VERSIONS  # noqa: E402
 from data_misc import NEWS, FAQ, HISTORY, GLOSSARY  # noqa: E402
 from data_docs import DOCS  # noqa: E402
@@ -93,8 +93,8 @@ def chart(cfg, cls=""):
 
 # ベンチマーク・技術トレンドの単一ソース(架空値)
 ANTUTU = {"rai-g1": 158, "rai-g2": 218, "rai-g3": 312, "rai-g4": 385,
-          # コラボ限定の特別選別ビン(機種ごとに突出軸が異なる。鳴潮=生性能最強)
-          "rai-g4-genshin": 402, "rai-g4-wuwa": 412, "rai-g4-nte": 405, "rai-g4-endfield": 400}   # 万点(旗艦G系)
+          # コラボ専用設計SoC(七耀/残響/夜行/前線。残響=全SUZAKU最高)
+          "gensoro-e1": 408, "kyoshin-w1": 418, "yaso-n1": 410, "kikan-f1": 403}   # 万点(旗艦G系)
 ANTUTU_E = {"rai-e1": 62, "rai-e2": 85}                                   # 万点(エントリーE系)
 TFLOPS_L = {"homura-l1": 0.35, "homura-l2": 0.5}                          # Lite GPU
 CLOCK = {"rai-g1": 3.2, "rai-g2": 3.3, "rai-g3": 3.5, "rai-g4": 3.8}    # GHz
@@ -250,7 +250,7 @@ LINE_FAQ["collab"] = [
     ("コラボモデルは数量限定・期間限定ですか?",
      "はい。各コラボレーションモデルは数量限定生産・期間限定販売です。特設ページに残りの販売枠と受付終了までのカウントダウンを表示しています。上限に達した場合は期間内でも販売を終了します。"),
     ("性能は通常モデルと違いますか?",
-     "コラボモデルは歩留まり上位の個体を選び抜いた特別選別ビン「雷 RAI-G4 選別版」を搭載し、最大3.9GHz・AnTuTu 405万点と当社史上最高性能です。冷却・カメラ・ディスプレイは通常のSUZAKU 4に準じます。"),
+     "コラボモデルは既存機の色替えではなく、筐体・ディスプレイ・カメラ・電池からSoC(元素炉/共振/夜想/基幹)まで作品ごとにゼロから共同設計したオリジナル端末です。性能の性格も機種ごとに異なります(例: 残響はAnTuTu 418万点でSUZAKU史上最速、前線は30分後fps維持率99%)。詳細は各特設ページをご覧ください。"),
     ("同梱のゲーム内アイテムコードは実際に使えますか?",
      "本サイトは架空のデモです。コラボレーション企画・同梱コードはデモ表記であり、実在の商品・提携・引き換えを示すものではありません。"),
 ] + LINE_FAQ["suzaku"]
@@ -270,10 +270,10 @@ GAME_FPS = {
     "rai-g2": [(59, 55), (116, 108), (142, 137), (108, 101)],
     "rai-g3": [(60, 59), (143, 138), (164, 160), (132, 127)],
     "rai-g4": [(60, 60), (172, 170), (175, 175), (158, 155)],
-    "rai-g4-genshin": [(60, 60), (174, 172), (175, 175), (159, 157)],
-    "rai-g4-wuwa": [(60, 60), (175, 175), (175, 175), (163, 162)],
-    "rai-g4-nte": [(60, 60), (174, 173), (175, 175), (160, 158)],
-    "rai-g4-endfield": [(60, 60), (173, 172), (175, 175), (158, 157)],
+    "gensoro-e1": [(60, 60), (143, 142), (144, 144), (140, 138)],
+    "kyoshin-w1": [(60, 60), (185, 184), (185, 185), (168, 166)],
+    "yaso-n1": [(60, 60), (164, 162), (165, 165), (152, 150)],
+    "kikan-f1": [(60, 60), (144, 143), (144, 144), (142, 141)],
 }
 
 
@@ -786,7 +786,7 @@ HEAD_FONTS = """<link rel="preconnect" href="https://fonts.googleapis.com">
 
 
 def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その他", noindex=False,
-                layout=None, collab=None):
+                layout=None, collab=None, collab_lp=True):
     """共通レイアウトでページを組み立ててディスクに書き出す。
 
     layout=="collab" のとき、コラボ特設専用のスタイル(collab.css)・スクリプト(collab.js)を
@@ -796,11 +796,17 @@ def render_page(url, title, desc, body, theme="dark", crumbs=None, group="その
     collab_head = collab_body_class = collab_body_attr = collab_script = ""
     if layout == "collab" and collab:
         tok = collab["tokens"]
-        collab_head = f'<link rel="stylesheet" href="/assets/css/collab.css?v={ASSET_V}">'
-        collab_body_class = f' collab-page collab--{collab["slug"]}'
+        slug = collab["slug"]
+        collab_head = (f'<link rel="stylesheet" href="/assets/css/collab-core.css?v={ASSET_V}">'
+                       f'<link rel="stylesheet" href="/assets/css/collab-{slug}.css?v={ASSET_V}">'
+                       + COLLAB_FONTS.get(slug, ""))
+        # cl-lp はLP/シリコン等の「専用レイアウトページ」のみ。コラボ製品ページは
+        # 通常レイアウトのままフォント/アクセントだけ注入する(背景衝突を防ぐ)。
+        collab_body_class = f' collab-page collab--{slug}' + (" cl-lp" if collab_lp else "")
         style_vars = ";".join(f"--cl-{k}:{v}" for k, v in tok.items())
         collab_body_attr = f' data-motif="{collab["motif"]}" style="{style_vars}"'
-        collab_script = f'<script src="/assets/js/collab.js?v={ASSET_V}" defer></script>'
+        collab_script = (f'<script src="/assets/js/collab-core.js?v={ASSET_V}" defer></script>'
+                         f'<script src="/assets/js/collab-{slug}.js?v={ASSET_V}" defer></script>')
     crumb_html = ""
     if crumbs:
         items = [('ホーム', '/')] + list(crumbs)
@@ -1024,11 +1030,7 @@ def build_product_page(p):
     url = product_url(p)
     is_device = p["cat"] in ("phone", "tablet")
     # コラボ製品はセクション図版にも作品意匠(motif)を引き継ぐ
-    p_motif = None
-    if p["id"].startswith("pb-"):
-        p_motif = p["id"][3:]
-    elif p["line"] == "collab" and p.get("chip"):
-        p_motif = p["chip"].rsplit("-", 1)[-1]
+    p_motif = p.get("collab")
     cat_label = {"phone": "スマートフォン", "tablet": "タブレット", "accessory": "アクセサリ"}[p["cat"]]
     cat_url = {"phone": "/products/phone/", "tablet": "/products/tablet/", "accessory": "/products/accessories/"}[p["cat"]]
 
@@ -1098,11 +1100,15 @@ def build_product_page(p):
 
     chip_link = ""
     if p.get("chip"):
-        # コラボ限定の特別選別ビン(例 rai-g4-genshin)は技術ページを持たないため、ベースのチップにリンクする
-        base_chip = re.sub(r"-(sig|genshin|wuwa|nte|endfield)$", "", p["chip"])
-        chip = next((t for t in TECHS if t["id"] == base_chip), None)
-        if chip:
-            chip_link = f'<a class="btn btn--ghost" href="/tech/cpu/{base_chip}/">搭載SoC {esc(chip["name"])} を見る</a>'
+        # コラボ専用SoC(例 gensoro-e1)は専用シリコンページへリンクする
+        if p.get("collab"):
+            soc_name = get_spec(p, ["性能"], "SoC").split("(")[0].strip()
+            chip_link = f'<a class="btn btn--ghost" href="/collab/{p["collab"]}/silicon/soc/">専用SoC {esc(soc_name)} を見る</a>'
+            chip = None
+        else:
+            chip = next((t for t in TECHS if t["id"] == p["chip"]), None)
+            if chip:
+                chip_link = f'<a class="btn btn--ghost" href="/tech/cpu/{p["chip"]}/">搭載SoC {esc(chip["name"])} を見る</a>'
 
     # --- データセクション(グラフ+表) ---
     data_section = ""
@@ -1322,7 +1328,9 @@ def build_product_page(p):
 {buy_float}
 """
     crumbs = [("製品", "/products/"), (cat_label, cat_url), (p["name"], None)]
-    render_page(url, f"{p['name']} — {p['tagline']}", p["sub"], body, "dark", crumbs, "製品")
+    collab_cfg = collab_by_slug(p["collab"]) if p.get("collab") else None
+    render_page(url, f"{p['name']} — {p['tagline']}", p["sub"], body, "dark", crumbs, "製品",
+                layout="collab" if collab_cfg else None, collab=collab_cfg, collab_lp=False)
 
     # --- specsページ(スマホ・タブレットのみ) ---
     if is_device:
@@ -1344,7 +1352,8 @@ def build_product_page(p):
 {cta_band('この仕様を、あなたの手に。', 'SUZAKU ストアなら全モデル送料無料でお届けします。', [('ストアで見る', '/store/', 'btn--primary'), (p['name'] + ' 製品ページ', url, 'btn--ghost')])}
 """
         render_page(url + "specs/", f"{p['name']} 仕様", f"{p['name']}の詳細スペック一覧。サイズ、性能、ディスプレイ、カメラ、バッテリー、通信仕様。",
-                    spec_body, "dark", crumbs[:-1] + [(p["name"], url), ("仕様", None)], "製品")
+                    spec_body, "dark", crumbs[:-1] + [(p["name"], url), ("仕様", None)], "製品",
+                    layout="collab" if collab_cfg else None, collab=collab_cfg, collab_lp=False)
 
 
 # ==========================================================================
@@ -1772,179 +1781,49 @@ def build_news_pages():
 
 
 # ==========================================================================
-# コラボレーション特設(data_collab.py の COLLABS を単一テンプレートで生成)
+# コラボレーション特設 — 作品ごとに完全個別設計のLP
+# 共有するのは購入モジュール(カウントダウン/在庫/CTA)と注記のみ(collab-core)。
+# 骨格・背景・フォント・演出は _collab_lp_{slug}() + collab-{slug}.css/js が持つ。
 # ==========================================================================
 
-def collab_signature_section(cfg, phone):
-    """motif ごとに全く異なる「その作品を感じる」固有セクションを返す。
-    共通骨格(カウントダウン/在庫/購入)とは別に、作品体験の差を作る中核。"""
-    motif = cfg.get("motif", "")
-    focus = phone.get("spec_focus", "") if phone else ""
-    excl = None
-    if phone:
-        for s in phone.get("sections", []):
-            if s.get("eyebrow") in ("ELEMENTAL BACKGLOW", "RESONANCE HAPTICS", "NEON ADAPTIVE LIGHT", "TERMINAL HUD"):
-                excl = s
-                break
-    excl_title = excl["title"] if excl else ""
-    excl_body = esc(excl["body"]) if excl else ""
+# コラボLP限定の追加フォント(非ブロッキング読み込み)
+COLLAB_FONTS = {
+    "genshin": """<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&display=swap" media="print" onload="this.media='all'">""",
+    "wuwa": """<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;700;900&display=swap" media="print" onload="this.media='all'">""",
+    "nte": """<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,700;1,800;1,900&display=swap" media="print" onload="this.media='all'">""",
+    "endfield": """<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" media="print" onload="this.media='all'">""",
+}
 
-    if motif == "fantasy":
-        elems = [("風", "#4dd6c1"), ("岩", "#e5b53a"), ("雷", "#b18bff"), ("草", "#8bd450"),
-                 ("水", "#3fb6ff"), ("炎", "#ff6a4d"), ("氷", "#7fe8ff")]
-        chips = "".join(
-            f'<button type="button" class="cl-elem" data-elem="{e}" style="--el:{c}" aria-label="{e}元素"><span>{e}</span></button>'
-            for e, c in elems)
-        return f"""
-<section class="cl-section cl-sig cl-sig--fantasy">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">SEVEN ELEMENTS</p><h2 class="cl-h2">七元素と、響き合う一台。</h2>
-    <p class="cl-sig__lead">{focus}。元素を選ぶと、背面リアクティブグローの色が切り替わります(プレビュー)。</p></div>
-    <div class="cl-elem-stage" data-elem-stage><div class="cl-elem-orb" aria-hidden="true"></div>
-      <div class="cl-elems" role="group" aria-label="七元素">{chips}</div>
-      <p class="cl-elem-name" aria-live="polite">元素を選んでください</p>
-    </div>
-    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
+
+def _cl_lpnav(cfg, phone):
+    """LP専用ミニヘッダー(進行バー付き)。通常ナビとは別物。
+    phone があるLP本体では #buy へ、無いページ(シリコン等)ではLPへ誘導する。"""
+    price = f'<span class="cl-lpnav__price">{yen(phone["price"])}〜</span>' if phone else ""
+    cta = ('<a class="cl-lpnav__buy" href="#buy">購入へ</a>' if phone
+           else f'<a class="cl-lpnav__buy" href="/collab/{cfg["slug"]}/">特設へ</a>')
+    return f"""
+<div class="cl-lpnav" id="clLpnav">
+  <div class="cl-lpnav__in">
+    <a class="cl-lpnav__back" href="/collab/">← COLLAB</a>
+    <span class="cl-lpnav__name">{esc(cfg['edition'])}</span>
+    {price}{cta}
   </div>
-</section>"""
-
-    if motif == "techwear":
-        bars = "".join(f'<span style="--i:{i}"></span>' for i in range(28))
-        chips = ""
-        if phone:
-            chips = "".join(f'<div class="cl-hud-chip"><b>{esc(str(s["v"]))}<i>{esc(s["u"])}</i></b><span>{esc(s["l"])}</span></div>'
-                            for s in phone.get("stats", [])[:3])
-        return f"""
-<section class="cl-section cl-sig cl-sig--techwear">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">RESONANCE HUD</p><h2 class="cl-h2">戦況を、波形で掴む。</h2>
-    <p class="cl-sig__lead">{focus}。共鳴の波形が、攻撃と応答をリアルタイムに可視化します。</p></div>
-    <div class="cl-wave" data-wave aria-hidden="true">{bars}</div>
-    <div class="cl-hud-chips">{chips}</div>
-    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
-  </div>
-</section>"""
-
-    if motif == "neon":
-        bld = "".join(f'<span class="cl-bldg" style="--h:{h}%;--d:{d}s"></span>'
-                      for h, d in [(60, 2.1), (85, 3.2), (45, 1.7), (95, 2.6), (70, 3.8), (55, 2.3),
-                                   (80, 1.9), (40, 2.9), (90, 3.4), (65, 2.0)])
-        return f"""
-<section class="cl-section cl-sig cl-sig--neon">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">NEON CITY</p><h2 class="cl-h2">眠らない街の、光の中へ。</h2>
-    <p class="cl-sig__lead">{focus}。夜想ナイトISPが、ネオンの滲みも遠くの看板も写し取ります。</p></div>
-    <div class="cl-city" data-city aria-hidden="true"><div class="cl-city__sky"></div>{bld}<div class="cl-city__road"></div></div>
-    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
-  </div>
-</section>"""
-
-    if motif == "industrial":
-        lines = [
-            "> SUZAKU TERMINAL v4.0  //  ENDFIELD EDITION",
-            "> boot: 雷 RAI-G4 開拓選別版 ......... OK",
-            "> battery: 8200mAh ................. 100%",
-            "> durability: IP68 / MIL-STD-810H ... PASS",
-            "> sustained-performance-mode ....... ENABLED",
-            "> ready. 現場の相棒、起動完了。",
-        ]
-        data_lines = "|".join(lines)
-        return f"""
-<section class="cl-section cl-sig cl-sig--industrial">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">TERMINAL BOOT</p><h2 class="cl-h2">ターミナル、起動。</h2>
-    <p class="cl-sig__lead">{focus}。常時表示の稼働計器HUDが、現場の状態を一目で伝えます。</p></div>
-    <div class="cl-terminal" data-terminal data-lines="{esc(data_lines)}"><pre class="cl-terminal__out" aria-label="起動ログ"></pre></div>
-    <div class="cl-sig__note"><strong>{excl_title}</strong><span>{excl_body}</span></div>
-  </div>
-</section>"""
-
-    return ""
+  <span class="cl-lpnav__bar" aria-hidden="true"></span>
+</div>"""
 
 
-def build_collab_page(cfg):
-    """コラボ特設LP(1コラボ1ページ)。骨格は全コラボ共通、色/文言は cfg 由来。"""
-    slug = cfg["slug"]
-    hero = cfg["hero"]
+def _cl_commerce(cfg, phone):
+    """共通購入モジュール: カウントダウン+在庫メーター+CTA(collab-core.css)。"""
     lim = cfg["limited"]
-    phone = next((p for p in ALL_PRODUCTS if p["id"] == cfg["phone_id"]), None)
-    accs = [p for p in ALL_PRODUCTS if p["id"] in cfg.get("accessory_ids", [])]
-
-    badges = "".join(f'<span class="cl-tag">{t}</span>' for t in ("数量限定", "期間限定", "史上最高性能"))
-
-    # スペック早見(コラボスマホの stats を流用)
-    stat_cells = ""
-    if phone:
-        stat_cells = "".join(
-            f'<div class="cl-stat"><span class="cl-stat__v">{esc(str(s["v"]))}<i>{esc(s["u"])}</i></span>'
-            f'<span class="cl-stat__l">{esc(s["l"])}</span></div>'
-            for s in phone.get("stats", []))
-
-    feats = "".join(
-        f'<div class="cl-feat"><h3 class="cl-feat__t">{esc(h["title"])}</h3>'
-        f'<p class="cl-feat__b">{esc(h["body"])}</p></div>'
-        for h in cfg.get("highlights", []))
-
-    bundle = "".join(
-        f'<li class="cl-bundle__i"><strong>{esc(b["title"])}</strong><span>{esc(b["desc"])}</span></li>'
-        for b in cfg.get("bundle", []))
-
-    gallery = "".join(
-        f'<figure class="cl-tile cl-tile--{i % 4}"><figcaption>{esc(cap)}</figcaption></figure>'
-        for i, cap in enumerate(cfg.get("gallery", [])))
-
-    # 購入導線(実際の製品ページへ)
+    slug = cfg["slug"]
     buy = ""
+    price_html = ""
     if phone:
         buy = (f'<a class="cl-btn cl-btn--primary" href="{product_url(phone)}">製品詳細・購入へ</a>'
                f'<a class="cl-btn cl-btn--ghost" href="/products/compare/">通常モデルと比較</a>')
         price_html = f'<span class="cl-buy__price">{yen(phone["price"])}<small>(税込)〜</small></span>'
-    else:
-        price_html = ""
-
-    acc_cards = ""
-    for a in accs:
-        acc_cards += (
-            f'<a class="cl-acc" href="{product_url(a)}">'
-            f'<div class="cl-acc__media"><img src="{pimg(a["id"])}" alt="{esc(a["name"])}" loading="lazy" width="240" height="240"></div>'
-            f'<div class="cl-acc__body"><p class="cl-acc__name">{esc(a["name"])}</p>'
-            f'<p class="cl-acc__copy">{esc(a["tagline"])}</p>'
-            f'<p class="cl-acc__price">{yen(a["price"])} <small>(税込)〜</small></p></div></a>')
-
-    # 作品ごとの固有セクション(motif別に構成が変わる中核)
-    sig_section = collab_signature_section(cfg, phone)
-
-    # コラボ限定シリコン(4部品)への導線
-    silicon_cards = "".join(
-        f'<a class="cl-si-card" href="/collab/{slug}/silicon/{c["key"]}/">'
-        f'<span class="cl-si-card__comp">{esc(cfg.get("bin", ""))}選別版 {esc(c["comp"])}</span>'
-        f'<span class="cl-si-card__brand">{esc(c["brand"])}</span></a>'
-        for c in COLLAB_SILICON)
-    silicon_section = f"""
-<section class="cl-section">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">COLLAB SILICON</p><h2 class="cl-h2">限定シリコン。</h2>
-    <p class="cl-sig__lead">このエディションのために選び抜かれた、SoC・GPU・メモリ・ストレージの特別選別ビン。</p></div>
-    <div class="cl-si-cards">{silicon_cards}</div>
-    <div style="margin-top:16px"><a class="cl-btn cl-btn--ghost" href="/collab/silicon/">すべての限定シリコンを見る</a></div>
-  </div>
-</section>"""
-
-    body = f"""
-<section class="cl-hero" aria-label="{esc(cfg['game'])} コラボレーション">
-  <div class="cl-hero__aura" aria-hidden="true"></div>
-  <div class="cl-hero__deco" aria-hidden="true"></div>
-  <div class="cl-hero__inner">
-    <p class="cl-hero__eyebrow">{esc(hero['eyebrow'])}</p>
-    <h1 class="cl-hero__title">{hero['title']}</h1>
-    <p class="cl-hero__lead">{esc(hero['lead'])}</p>
-    <div class="cl-hero__tags">{badges}</div>
-    <div class="cl-hero__cta">{buy}</div>
-    <p class="cl-hero__world">{esc(cfg['world'])}</p>
-  </div>
-</section>
-
-<section class="cl-section cl-limited">
+    return f"""
+<section class="cl-section cl-limited" id="buy">
   <div class="cl-wrap cl-limited__grid">
     <div class="cl-count" data-until="{lim['until']}" role="timer" aria-label="受付終了までの残り時間">
       <p class="cl-eyebrow">受付終了まで</p>
@@ -1962,42 +1841,6 @@ def build_collab_page(cfg):
       <p class="cl-stock__meta"><b class="cl-stock__remain">--</b> / {lim['qty']:,} 台 が販売可能</p>
     </div>
   </div>
-</section>
-
-<section class="cl-section">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">EDITION</p><h2 class="cl-h2">{esc(cfg['edition'])}</h2></div>
-    <div class="cl-stats">{stat_cells}</div>
-  </div>
-</section>
-
-<section class="cl-section">
-  <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">HIGHLIGHTS</p><h2 class="cl-h2">このエディションだけの特別。</h2></div>
-    <div class="cl-feats">{feats}</div>
-  </div>
-</section>
-
-{sig_section}
-
-<section class="cl-section">
-  <div class="cl-wrap cl-split">
-    <div class="cl-bundle">
-      <div class="cl-head"><p class="cl-eyebrow">IN THE BOX</p><h2 class="cl-h2">同梱バンドル</h2></div>
-      <ul class="cl-bundle__list">{bundle}</ul>
-    </div>
-    <div class="cl-gallery-wrap">
-      <div class="cl-head"><p class="cl-eyebrow">GALLERY</p><h2 class="cl-h2">ギャラリー</h2></div>
-      <div class="cl-gallery">{gallery}</div>
-    </div>
-  </div>
-</section>
-
-{('<section class="cl-section"><div class="cl-wrap"><div class="cl-head"><p class="cl-eyebrow">COLLAB ACCESSORY</p><h2 class="cl-h2">コラボアクセサリ</h2></div><div class="cl-accs">' + acc_cards + '</div></div></section>') if acc_cards else ''}
-
-{silicon_section}
-
-<section class="cl-section cl-buy">
   <div class="cl-wrap cl-buy__inner">
     <div>
       <p class="cl-eyebrow">数量限定・期間限定</p>
@@ -2006,14 +1849,497 @@ def build_collab_page(cfg):
     </div>
     <div class="cl-buy__cta">{buy}</div>
   </div>
+</section>"""
+
+
+def _cl_schedule(cfg):
+    items = "".join(
+        f'<li class="cl-sched__i reveal"><span class="cl-sched__d">{esc(d)}</span>'
+        f'<strong class="cl-sched__t">{esc(t)}</strong><span class="cl-sched__b">{esc(b)}</span></li>'
+        for d, t, b in cfg.get("schedule", []))
+    if not items:
+        return ""
+    return f"""
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SCHEDULE</p><h2 class="cl-h2">スケジュール</h2></div>
+    <ol class="cl-sched">{items}</ol>
+  </div>
+</section>"""
+
+
+def _cl_faq(cfg):
+    items = "".join(
+        f'<details class="cl-faq__i"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>'
+        for q, a in cfg.get("faq", []))
+    if not items:
+        return ""
+    return f"""
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">FAQ</p><h2 class="cl-h2">よくある質問</h2></div>
+    <div class="cl-faq">{items}</div>
+  </div>
+</section>"""
+
+
+def _cl_accs(cfg, accs):
+    if not accs:
+        return ""
+    cards = "".join(
+        f'<a class="cl-acc" href="{product_url(a)}">'
+        f'<div class="cl-acc__media"><img src="{pimg(a["id"])}" alt="{esc(a["name"])}" loading="lazy" width="240" height="240"></div>'
+        f'<div class="cl-acc__body"><p class="cl-acc__name">{esc(a["name"])}</p>'
+        f'<p class="cl-acc__copy">{esc(a["tagline"])}</p>'
+        f'<p class="cl-acc__price">{yen(a["price"])} <small>(税込)〜</small></p></div></a>'
+        for a in accs)
+    return f"""
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">COLLAB ACCESSORY</p><h2 class="cl-h2">専用アクセサリ</h2></div>
+    <div class="cl-accs">{cards}</div>
+  </div>
+</section>"""
+
+
+def _cl_bundle(cfg):
+    items = "".join(
+        f'<li class="cl-bundle__i"><strong>{esc(b["title"])}</strong><span>{esc(b["desc"])}</span></li>'
+        for b in cfg.get("bundle", []))
+    return f"""
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">IN THE BOX</p><h2 class="cl-h2">同梱バンドル</h2></div>
+    <ul class="cl-bundle__list">{items}</ul>
+  </div>
+</section>"""
+
+
+def _cl_silicon(cfg):
+    slug = cfg["slug"]
+    comps = COLLAB_SILICON.get(slug, [])
+    cards = "".join(
+        f'<a class="cl-si-card" href="{collab_silicon_url(slug, c["key"])}">'
+        f'<span class="cl-si-card__comp">{esc(c["comp"])} — 専用設計</span>'
+        f'<span class="cl-si-card__brand">{esc(c["name"])}</span>'
+        f'<span class="cl-si-card__kick">{esc(c["kicker"])}</span></a>'
+        for c in comps)
+    if not cards:
+        return ""
+    return f"""
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">DEDICATED SILICON</p><h2 class="cl-h2">専用設計シリコン。</h2>
+    <p class="cl-lead">{esc(cfg['device'])}のためだけに新規設計した、SoC・GPU・メモリ・ストレージ。既存チップの選別や流用は、一切ありません。</p></div>
+    <div class="cl-si-cards">{cards}</div>
+    <div style="margin-top:16px"><a class="cl-btn cl-btn--ghost" href="/collab/silicon/">すべての専用シリコンを見る</a></div>
+  </div>
+</section>"""
+
+
+def _cl_note(cfg):
+    return (f'<p class="cl-note">{esc(cfg["note"])} 本サイトは架空企業「株式会社朱雀」のデモンストレーションであり、'
+            f'実在の商品・価格・提携・販売を示すものではありません。</p>'
+            f'<div class="cl-backlink"><a href="/collab/">← すべてのコラボレーションを見る</a></div>')
+
+
+def _cl_stats(phone):
+    if not phone:
+        return ""
+    return "".join(
+        f'<div class="cl-stat reveal"><span class="cl-stat__v">{esc(str(s["v"]))}<i>{esc(s["u"])}</i></span>'
+        f'<span class="cl-stat__l">{esc(s["l"])}</span></div>'
+        for s in phone.get("stats", []))
+
+
+def _collab_lp_genshin(cfg, phone, accs):
+    """原神「七耀」LP — 白×金の明色ファンタジー・明朝・元素ホイール・雲パララックス。"""
+    elems = [("風", "#4dd6c1"), ("岩", "#e5b53a"), ("雷", "#b18bff"), ("草", "#8bd450"),
+             ("水", "#3fb6ff"), ("炎", "#ff6a4d"), ("氷", "#7fe8ff")]
+    chips = "".join(
+        f'<button type="button" class="gs-elem" data-elem="{e}" style="--el:{c}"><span>{e}</span></button>'
+        for e, c in elems)
+    intro_dots = "".join(f'<span class="gs-intro__dot" style="--el:{c};--i:{i}"></span>' for i, (e, c) in enumerate(elems))
+    terms = [
+        ("旅人", "テイワットを旅する主人公。七耀は、その旅路のための一台です。"),
+        ("七元素", "風・岩・雷・草・水・炎・氷。世界を構成する七つの力。背面の元素リングが、その色で灯ります。"),
+        ("七天神像", "旅の道標。原神コラボ・モバイルバッテリーの意匠にもあしらいました。"),
+    ]
+    term_cards = "".join(
+        f'<div class="gs-term reveal"><h3>{esc(t)}</h3><p>{esc(b)}</p></div>' for t, b in terms)
+    return f"""
+{_cl_lpnav(cfg, phone)}
+<div class="gs-intro" id="gsIntro" aria-hidden="true"><div class="gs-intro__ring">{intro_dots}</div><p class="gs-intro__t">七耀</p></div>
+<section class="gs-hero">
+  <div class="gs-hero__clouds" aria-hidden="true"><span class="gs-cloud gs-cloud--1"></span><span class="gs-cloud gs-cloud--2"></span><span class="gs-cloud gs-cloud--3"></span></div>
+  <div class="gs-hero__frame">
+    <p class="gs-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
+    <h1 class="gs-hero__title">{cfg['hero']['title']}</h1>
+    <p class="gs-hero__lead">{esc(cfg['hero']['lead'])}</p>
+    <div class="gs-hero__tags"><span class="cl-tag">数量限定 {cfg['limited']['qty']:,}台</span><span class="cl-tag">期間限定</span><span class="cl-tag">完全専用設計</span></div>
+    <div class="gs-hero__devices">
+      <img src="{pimg_front(phone['id'])}" alt="{esc(phone['name'])} 正面" width="240" height="424" loading="eager">
+      <img src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 背面(白磁)" width="240" height="424" loading="eager">
+    </div>
+    <p class="gs-hero__world">{esc(cfg['world'])}</p>
+  </div>
 </section>
 
-<p class="cl-note">{esc(cfg['note'])} 本サイトは架空企業「株式会社朱雀」のデモンストレーションであり、実在の商品・価格・提携・販売を示すものではありません。</p>
-<div class="cl-backlink"><a href="/collab/">← すべてのコラボレーションを見る</a></div>
-"""
-    desc = f"SUZAKU × {cfg['game']} の数量限定・期間限定コラボレーションモデル「{cfg['edition']}」特設ページ。{hero['lead']}"
-    render_page(f"/collab/{slug}/", f"{cfg['edition']} — SUZAKU × {cfg['game']}",
-                desc, body, theme="dark", crumbs=None, group="コラボレーション",
+<section class="cl-section gs-terms">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">TEYVAT</p><h2 class="cl-h2">テイワットより。</h2></div>
+    <div class="gs-terms__grid">{term_cards}</div>
+  </div>
+</section>
+
+<section class="cl-section gs-elements" data-elem-stage>
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SEVEN ELEMENTS</p><h2 class="cl-h2">元素を選ぶと、頁が応える。</h2>
+    <p class="cl-lead">背面の元素リング発光を、七元素からプレビューできます。ページの光も、選んだ元素に染まります。</p></div>
+    <div class="gs-elem-stage">
+      <div class="gs-elem-orb" aria-hidden="true"><img src="{pimg(phone['id'])}" alt="" width="200" height="353" loading="lazy"></div>
+      <div class="gs-elems" role="group" aria-label="七元素">{chips}</div>
+      <p class="gs-elem-name" aria-live="polite">元素を選んでください</p>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section gs-device">
+  <div class="cl-wrap gs-split">
+    <div class="gs-split__media reveal"><img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} 金彩" width="280" height="494" loading="lazy"></div>
+    <div class="gs-split__copy reveal">
+      <p class="cl-eyebrow">CRAFT</p>
+      <h2 class="cl-h2">白磁と金彩。<br>工芸品として、仕上げた。</h2>
+      <p>SUZAKU 4 の色替えではありません。白磁調の蒸着ガラス、金彩アルミフレーム、背面カメラを囲む元素リング発光層 — 七耀は筐体からゼロ設計のオリジナルです。見る角度で色相がわずかに移ろう仕上げは、原神の元素の揺らぎから起こしました。</p>
+      <ul class="cl-points"><li>白磁×金彩のコラボ限定2色</li><li>円形デュアルカメラ+元素リング発光</li><li>厚さ8.7mm・206g</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section gs-display">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">ELEMENTAL DISPLAY</p><h2 class="cl-h2">元素燐光ディスプレイ。</h2>
+    <p class="cl-lead">色域BT.2020 110%・10bit・ピーク3200nit。テイワットの空の色を、計算で妥協しない。</p></div>
+    <div class="gs-gauges">
+      <div class="gs-gauge reveal"><b data-cl-count="110">0</b><i>%</i><span>色域 BT.2020</span></div>
+      <div class="gs-gauge reveal"><b data-cl-count="3200">0</b><i>nit</i><span>ピーク輝度</span></div>
+      <div class="gs-gauge reveal"><b data-cl-count="144">0</b><i>Hz</i><span>可変リフレッシュ</span></div>
+      <div class="gs-gauge reveal"><b data-cl-count="7900">0</b><i>mAh</i><span>長時間探索</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section gs-chip">
+  <div class="cl-wrap gs-split gs-split--rev">
+    <div class="gs-split__copy reveal">
+      <p class="cl-eyebrow">GENSORO-E1</p>
+      <h2 class="cl-h2">専用SoC「元素炉」。</h2>
+      <p>七耀のために新規設計した3nm SoC。色管理コプロ「幻彩エンジン」をダイに統合し、広色域表示の消費電力を18%削減。AnTuTu 408万点の性能と、旅の長さに応える効率を両立します。</p>
+      <div class="gs-vsbar reveal">
+        <div class="gs-vsbar__row"><span>SUZAKU 4(雷 RAI-G4)</span><i style="--w:92%"></i><b>385万点</b></div>
+        <div class="gs-vsbar__row gs-vsbar__row--hi"><span>七耀(元素炉 GENSORO-E1)</span><i style="--w:97.6%"></i><b>408万点</b></div>
+      </div>
+      <a class="cl-btn cl-btn--ghost" href="/collab/genshin/silicon/soc/">元素炉 GENSORO-E1 の詳細</a>
+    </div>
+    <div class="gs-split__media reveal">{svg_art.svg_art('chip', '#2fb9a3')}</div>
+  </div>
+</section>
+
+<section class="cl-section gs-stats">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SPEC</p><h2 class="cl-h2">数字で見る、七耀。</h2></div>
+    <div class="cl-stats">{_cl_stats(phone)}</div>
+    <div style="margin-top:18px"><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
+  </div>
+</section>
+
+{_cl_silicon(cfg)}
+{_cl_accs(cfg, accs)}
+{_cl_bundle(cfg)}
+{_cl_schedule(cfg)}
+{_cl_commerce(cfg, phone)}
+{_cl_faq(cfg)}
+{_cl_note(cfg)}"""
+
+
+def _collab_lp_wuwa(cfg, phone, accs):
+    """鳴潮「残響」LP — 黒×白の明朝ミニマル・縦書き・スクロール波形。"""
+    terms = [
+        ("漂泊者", "記憶を失い、ソラリス-3を旅する主人公。残響は、その静かな相棒です。"),
+        ("音骸", "戦いのあとに残る、音のかたち。吸収し、力に変える。"),
+        ("共鳴者", "特定の事象と共鳴し、その周波数を操る者たち。"),
+    ]
+    term_cards = "".join(
+        f'<div class="ww-term reveal"><h3>{esc(t)}</h3><p>{esc(b)}</p></div>' for t, b in terms)
+    bench = [("残響(共振 KYOSHIN-W1)", 418, True), ("SUZAKU 4(雷 RAI-G4)", 385, False),
+             ("SUZAKU 3(雷 RAI-G3)", 312, False), ("SUZAKU NEO 2(雷 RAI-G3)", 312, False)]
+    bars = "".join(
+        f'<div class="ww-bench__row{" ww-bench__row--hi" if hi else ""}"><span>{esc(n)}</span>'
+        f'<i style="--w:{v / 4.18:.1f}%"></i><b>{v}万点</b></div>'
+        for n, v, hi in bench)
+    return f"""
+{_cl_lpnav(cfg, phone)}
+<section class="ww-hero">
+  <p class="ww-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
+  <div class="ww-hero__stage">
+    <h1 class="ww-hero__title" aria-label="最速は、静けさの中にある。"><span>最速は、</span><span>静けさの中にある。</span></h1>
+    <img class="ww-hero__device" src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 漆黒" width="250" height="441" loading="eager">
+  </div>
+  <p class="ww-hero__lead">{esc(cfg['hero']['lead'])}</p>
+  <div class="ww-hero__tags"><span class="cl-tag">数量限定 {cfg['limited']['qty']:,}台</span><span class="cl-tag">SUZAKU史上最速</span><span class="cl-tag">完全専用設計</span></div>
+  <canvas class="ww-wave" id="wwWave" aria-hidden="true"></canvas>
+</section>
+
+<section class="cl-section ww-world">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SOLARIS-3</p><h2 class="cl-h2">音の残る世界で。</h2>
+    <p class="cl-lead">{esc(cfg['world'])}</p></div>
+    <div class="ww-terms">{term_cards}</div>
+  </div>
+</section>
+
+<section class="cl-section ww-bench">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">KYOSHIN-W1</p><h2 class="cl-h2">全SUZAKUの、頂点。</h2>
+    <p class="cl-lead">専用SoC「共振 KYOSHIN-W1」— 最大4.1GHz・AnTuTu 418万点。フラッグシップSUZAKU 4すら、下に置く。</p></div>
+    <div class="ww-bench__chart reveal">{bars}</div>
+    <a class="cl-btn cl-btn--ghost" href="/collab/wuwa/silicon/soc/">共振 KYOSHIN-W1 の詳細</a>
+  </div>
+</section>
+
+<section class="cl-section ww-speed">
+  <div class="cl-wrap ww-speed__grid">
+    <div class="ww-speed__cell reveal"><b data-cl-count="185">0</b><i>Hz</i><span>表示リフレッシュ</span></div>
+    <div class="ww-speed__cell reveal"><b data-cl-count="3200">0</b><i>Hz</i><span>タッチサンプリング</span></div>
+    <div class="ww-speed__cell reveal"><b data-cl-count="418">0</b><i>万点</i><span>AnTuTu(全機種最高)</span></div>
+    <div class="ww-speed__cell reveal"><b>8.2</b><i>mm</i><span>漆黒のモノリス</span></div>
+  </div>
+</section>
+
+<section class="cl-section ww-device">
+  <div class="cl-wrap ww-split">
+    <div class="ww-split__media reveal"><img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} 月白" width="270" height="476" loading="lazy"></div>
+    <div class="ww-split__copy reveal">
+      <p class="cl-eyebrow">MONOLITH</p>
+      <h2 class="cl-h2">装飾を、すべて削った。</h2>
+      <p>残響の筐体に、ゲーミングの記号はありません。精密鍛造アルミのマイクロアーク酸化仕上げ、直線のエッジ、縦列に沈むトリプルカメラ。唯一の光は、音に共鳴して明滅する背面の音叉LEDだけ。速さは、静けさの中にあります。</p>
+      <ul class="cl-points"><li>厚さ8.2mm・199g の薄型モノリス</li><li>音に共鳴する音叉LED</li><li>共鳴ハプティクス(専用波形エンジン)</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section ww-stats">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SPEC</p><h2 class="cl-h2">数字で見る、残響。</h2></div>
+    <div class="cl-stats">{_cl_stats(phone)}</div>
+    <div style="margin-top:18px"><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
+  </div>
+</section>
+
+{_cl_silicon(cfg)}
+{_cl_accs(cfg, accs)}
+{_cl_bundle(cfg)}
+{_cl_schedule(cfg)}
+{_cl_commerce(cfg, phone)}
+{_cl_faq(cfg)}
+{_cl_note(cfg)}"""
+
+
+def _collab_lp_nte(cfg, phone, accs):
+    """NTE「夜行」LP — チャコール×マゼンタ×ライム・斜体コンデンス・マーキー・夜景。"""
+    marq = "SUZAKU × NTE — WELCOME TO HETHEREAU — 夜行 YAKO — LIMITED {qty} UNITS — ".format(qty=f"{cfg['limited']['qty']:,}")
+    terms = [
+        ("鑑定士", "S", "骨董品店エイボンに籍を置く、異象事件の解決屋。プレイヤーの分身。"),
+        ("異象", "A", "ヘザロウで日常的に起こる超常現象。人々はそれと隣り合って暮らす。"),
+        ("エイボン", "B", "表向きは骨董品店。その実、異象がらみの依頼を請け負う拠点。"),
+    ]
+    term_cards = "".join(
+        f'<div class="nt-term reveal"><span class="nt-term__rank">{r}</span><h3>{esc(t)}</h3><p>{esc(b)}</p></div>'
+        for t, r, b in terms)
+    bld = "".join(f'<span class="nt-bldg" style="--h:{h}%;--d:{d}s"></span>'
+                  for h, d in [(58, 0.2), (86, 0.5), (44, 0.8), (95, 0.3), (70, 1.1), (52, 0.6),
+                               (80, 0.9), (38, 1.3), (90, 0.4), (64, 1.0), (74, 0.7), (48, 1.2)])
+    return f"""
+{_cl_lpnav(cfg, phone)}
+<section class="nt-hero">
+  <div class="nt-hero__inner">
+    <p class="nt-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
+    <h1 class="nt-hero__title"><em>YAKO</em><span>ヘザロウの夜を、連れて歩く。</span></h1>
+    <p class="nt-hero__lead">{esc(cfg['hero']['lead'])}</p>
+    <div class="nt-hero__stickers" aria-hidden="true"><span class="nt-stick nt-stick--1">1/0.98型</span><span class="nt-stick nt-stick--2">2TB</span><span class="nt-stick nt-stick--3">EL BACK</span></div>
+    <img class="nt-hero__device" src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 夜想黒" width="250" height="441" loading="eager">
+  </div>
+</section>
+<div class="nt-marquee" aria-hidden="true"><div class="nt-marquee__track"><span>{esc(marq)}</span><span>{esc(marq)}</span></div></div>
+
+<section class="cl-section nt-world">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">HETHEREAU</p><h2 class="cl-h2">超現実都市へ、ようこそ。</h2>
+    <p class="cl-lead">{esc(cfg['world'])}</p></div>
+    <div class="nt-terms">{term_cards}</div>
+  </div>
+</section>
+
+<section class="cl-section nt-city" data-city>
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">NIGHT CITY</p><h2 class="cl-h2">スクロールで、街に灯りが点く。</h2>
+    <p class="cl-lead">1/0.98型「夜行センサー」とデュアル夜景ISP。ネオンの滲みも、看板の文字も、路地の階調も。</p></div>
+    <div class="nt-cityscape" aria-hidden="true"><div class="nt-city__sky"><span class="nt-moon"></span></div>{bld}<div class="nt-city__road"></div></div>
+    <div class="nt-camrow">
+      <div class="nt-camcell reveal"><b>1/0.98</b><i>型</i><span>夜行センサー(超大型)</span></div>
+      <div class="nt-camcell reveal"><b>2</b><i>基</i><span>ISP(1基は夜景専用)</span></div>
+      <div class="nt-camcell reveal"><b>-35</b><i>%</i><span>低照度ノイズ</span></div>
+      <div class="nt-camcell reveal"><b>8K</b><i></i><span>ナイトビデオ</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section nt-el">
+  <div class="cl-wrap nt-split">
+    <div class="nt-split__media reveal">
+      <img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} ネオン桃" width="260" height="459" loading="lazy">
+    </div>
+    <div class="nt-split__copy reveal">
+      <p class="cl-eyebrow">NEON SIGN EL</p>
+      <h2 class="cl-h2">背面が、看板になる。</h2>
+      <p>背面に埋め込んだEL発光層が、通知・音楽・着信に合わせてネオンサインのように明滅します。発光パターンはテーマから切替可能。ボタンでプレビューできます。</p>
+      <div class="nt-elbtns" role="group" aria-label="EL発光パターン">
+        <button type="button" class="nt-elbtn is-on" data-el="pulse">PULSE</button>
+        <button type="button" class="nt-elbtn" data-el="beat">BEAT</button>
+        <button type="button" class="nt-elbtn" data-el="rain">RAIN</button>
+        <button type="button" class="nt-elbtn" data-el="off">OFF</button>
+      </div>
+      <div class="nt-elpanel" data-elpanel aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section nt-chip">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">YASO-N1 + 2TB</p><h2 class="cl-h2">夜のための、専用シリコン。</h2>
+    <p class="cl-lead">専用SoC「夜想 YASO-N1」はISPを2基搭載(1基は夜景デノイズ専用)。ストレージ「夜市 YOICHI」は最大2TB — 8Kナイトビデオも撮り切る。</p></div>
+    <div class="cl-stats">{_cl_stats(phone)}</div>
+    <div style="margin-top:18px" class="nt-ctas"><a class="cl-btn cl-btn--ghost" href="/collab/nte/silicon/soc/">夜想 YASO-N1 の詳細</a><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
+  </div>
+</section>
+
+{_cl_silicon(cfg)}
+{_cl_accs(cfg, accs)}
+{_cl_bundle(cfg)}
+{_cl_schedule(cfg)}
+{_cl_commerce(cfg, phone)}
+{_cl_faq(cfg)}
+{_cl_note(cfg)}"""
+
+
+def _collab_lp_endfield(cfg, phone, accs):
+    """エンドフィールド「前線」LP — 白黒反転×ビビッドイエロー・//見出し・起動カウンタ・等高線。"""
+    boot_lines = [
+        "> SUZAKU × ENDFIELD INDUSTRIES — JOINT ENGINEERING",
+        "> boot: 基幹 KIKAN-F1 ................ OK",
+        "> power cell: 8500mAh ............... 100%",
+        "> armor: IP68 / MIL-STD-810H ........ PASS",
+        "> thermal: 定速ガバナー .............. ENGAGED",
+        "> ready. 前線、稼働開始。",
+    ]
+    data_lines = "|".join(boot_lines)
+    dura = [
+        ("落下", "1.8m × 26方向", "PASS"), ("防水", "IP68(水深1.5m・30分)", "PASS"),
+        ("防塵", "IP6X + 防塵ファン駆動", "PASS"), ("温度", "-20℃ 〜 45℃ 動作保証", "PASS"),
+        ("振動・衝撃", "MIL-STD-810H 準拠", "PASS"),
+    ]
+    dura_rows = "".join(
+        f'<tr><th scope="row">{esc(k)}</th><td>{esc(v)}</td><td class="ef-pass">[{s}]</td></tr>'
+        for k, v, s in dura)
+    return f"""
+{_cl_lpnav(cfg, phone)}
+<div class="ef-boot" id="efBoot" aria-hidden="true"><div class="ef-boot__in"><span class="ef-boot__pct" data-boot>0%</span><span class="ef-boot__l">OVER THE FRONTIER / INTO THE FRONT</span><span class="ef-boot__bar"><i></i></span></div></div>
+<section class="ef-hero">
+  <div class="ef-rail" aria-hidden="true"><span>// DEVICE</span><span>// DURABILITY</span><span>// SILICON</span><span>// ORDER</span></div>
+  <div class="ef-hero__inner">
+    <p class="ef-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
+    <h1 class="ef-hero__title">// ZENSEN<span>タロⅡの果てでも、止まらない。</span></h1>
+    <p class="ef-hero__lead">{esc(cfg['hero']['lead'])}</p>
+    <div class="ef-hero__tags"><span class="ef-tag">IP68 + MIL-STD-810H</span><span class="ef-tag">8,500mAh</span><span class="ef-tag">持続99%</span></div>
+    <img class="ef-hero__device" src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 黒鉄" width="250" height="441" loading="eager">
+  </div>
+</section>
+
+<section class="ef-block ef-block--dark">
+  <div class="cl-wrap">
+    <div class="ef-head"><p class="ef-eyebrow">// TALOS-II</p><h2 class="ef-h2">現場は、タロⅡ。</h2></div>
+    <p class="ef-lead">{esc(cfg['world'])}</p>
+    <div class="ef-terms">
+      <div class="ef-term reveal"><h3>管理人</h3><p>エンドフィールド工業を率いる主人公。オペレーターとともに、開拓の最前線に立つ。</p></div>
+      <div class="ef-term reveal"><h3>エンドフィールド工業</h3><p>タロⅡで工業システムを展開する組織。前線は、その現場のための道具。</p></div>
+      <div class="ef-term reveal"><h3>集成工業システム</h3><p>採掘から生産までを自動化する基幹システム。前線のターミナルHUDの着想元。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ef-block">
+  <div class="cl-wrap ef-split">
+    <div class="ef-split__media reveal"><img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} 工業黄" width="270" height="476" loading="lazy"></div>
+    <div class="ef-split__copy reveal">
+      <p class="ef-eyebrow">// FIELD ARMOR</p>
+      <h2 class="ef-h2">工業機として、作った。</h2>
+      <p>四隅の装甲リブ。リブ付きの耐滑背面。グローブでも濡れた手でも動くタッチ制御。背面の計器窓は電池残量と温度を常時表示します。スマートフォンではなく、現場の道具として設計しました。</p>
+      <table class="ef-dura reveal"><thead><tr><th>試験</th><th>条件</th><th>判定</th></tr></thead><tbody>{dura_rows}</tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="ef-block ef-block--dark ef-sustain">
+  <div class="cl-wrap">
+    <div class="ef-head"><p class="ef-eyebrow">// SUSTAINED 99%</p><h2 class="ef-h2">落ちない性能を、計器で見る。</h2></div>
+    <p class="ef-lead">専用SoC「基幹 KIKAN-F1」の定速ガバナーは、発熱を先読みしてクロックを一定に保つ。30分連続負荷でのfps維持率99%は、全SUZAKU製品で最高。</p>
+    <div class="ef-gauges">
+      <div class="ef-gauge reveal"><b data-cl-count="99">0</b><i>%</i><span>30分後fps維持率</span></div>
+      <div class="ef-gauge reveal"><b data-cl-count="8500">0</b><i>mAh</i><span>電池容量(全機種最大)</span></div>
+      <div class="ef-gauge reveal"><b data-cl-count="403">0</b><i>万点</i><span>AnTuTu</span></div>
+      <div class="ef-gauge reveal"><b>-20〜45</b><i>℃</i><span>動作保証温度</span></div>
+    </div>
+    <div class="ef-terminal" data-terminal data-lines="{esc(data_lines)}"><pre class="ef-terminal__out" aria-label="起動ログ"></pre></div>
+  </div>
+</section>
+
+<section class="ef-block">
+  <div class="cl-wrap">
+    <div class="ef-head"><p class="ef-eyebrow">// SPEC</p><h2 class="ef-h2">数字で見る、前線。</h2></div>
+    <div class="cl-stats">{_cl_stats(phone)}</div>
+    <div style="margin-top:18px"><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
+  </div>
+</section>
+
+{_cl_silicon(cfg)}
+{_cl_accs(cfg, accs)}
+{_cl_bundle(cfg)}
+{_cl_schedule(cfg)}
+{_cl_commerce(cfg, phone)}
+{_cl_faq(cfg)}
+{_cl_note(cfg)}"""
+
+
+_COLLAB_LP_BUILDERS = {
+    "genshin": _collab_lp_genshin,
+    "wuwa": _collab_lp_wuwa,
+    "nte": _collab_lp_nte,
+    "endfield": _collab_lp_endfield,
+}
+
+# 明色ベースのLP(ヘッダー/フッターのテーマを合わせる)
+_COLLAB_THEME = {"genshin": "light", "wuwa": "dark", "nte": "dark", "endfield": "light"}
+
+
+def build_collab_page(cfg):
+    """コラボ特設LP。作品ごとに完全個別のレイアウト関数で生成する。"""
+    slug = cfg["slug"]
+    phone = next((p for p in ALL_PRODUCTS if p["id"] == cfg["phone_id"]), None)
+    accs = [p for p in ALL_PRODUCTS if p["id"] in cfg.get("accessory_ids", [])]
+    body = _COLLAB_LP_BUILDERS[slug](cfg, phone, accs)
+    desc = f"SUZAKU × {cfg['game']} 完全専用設計のコラボレーションモデル「{cfg['edition']}」特設ページ。{cfg['hero']['lead']}"
+    render_page(f"/collab/{slug}/", f"{cfg['edition']} — 公式コラボレーション",
+                desc, body, theme=_COLLAB_THEME.get(slug, "dark"), crumbs=None, group="コラボレーション",
                 layout="collab", collab=cfg)
 
 
@@ -2041,7 +2367,7 @@ def build_collab_hub():
   <div class="hero__inner hero-enter">
     <p class="eyebrow eyebrow--center">COLLABORATION</p>
     <h1 class="t-hero">コラボレーションモデル</h1>
-    <p class="t-lead" style="max-width:680px">人気ゲームタイトルとSUZAKUの、数量限定・期間限定コラボレーション。各作品の世界観をまとった特別なフラッグシップと、専用アクセサリ。</p>
+    <p class="t-lead" style="max-width:680px">人気ゲームタイトルとSUZAKUの共同設計による、数量限定・期間限定のオリジナル端末。色替えではない、筐体・チップ・体験まで専用設計の特別なモデルです。</p>
   </div>
 </section>
 <section class="section--sm">
@@ -2052,7 +2378,7 @@ def build_collab_hub():
 </section>
 """
     render_page("/collab/", "コラボレーションモデル — SUZAKU × ゲーム",
-                "SUZAKUと人気ゲームタイトルの数量限定・期間限定コラボレーションモデル一覧。原神・鳴潮・NTE・エンドフィールド。",
+                "SUZAKUと人気ゲームタイトルの共同設計によるオリジナル端末。七耀(原神)・残響(鳴潮)・夜行(NTE)・前線(エンドフィールド)。",
                 body, "dark", [("コラボレーション", None)], "コラボレーション")
 
 
@@ -2060,86 +2386,65 @@ def collab_silicon_url(slug, key):
     return f"/collab/{slug}/silicon/{key}/"
 
 
-def _silicon_delta(cfg, comp):
-    """コンポーネントのベース比の差分表 [(項目, ベース値, 選別値), ...] を返す。
-    SoC は機種ごとにクロック/スコアが異なるため per-collab 値で差し替える。"""
-    if comp.get("per_collab_soc"):
-        slug = cfg["slug"]
-        clock = COLLAB_SOC_CLOCK.get(slug, "3.9")
-        score = ANTUTU.get(f"rai-g4-{slug}", 405)
-        return [("最大クロック", "3.8GHz", f"{clock}GHz"),
-                ("AnTuTuスコア", "385万点", f"{score}万点"),
-                ("選別グレード", "標準ビン", f"{cfg['bin']}選別ビン")]
-    return comp.get("delta", [])
-
-
 def build_collab_silicon_page(cfg, comp):
+    """コラボ専用シリコンの詳細ページ。デザインはLPと同じ作品言語(collab-{slug}.css)。"""
     slug = cfg["slug"]
-    bin_name = cfg["bin"]
-    title_name = f"{bin_name}選別版 {comp['brand']}"
-    base_tech = next((t for t in TECHS if t["id"] == comp["base_tech"]), None)
-    delta = _silicon_delta(cfg, comp)
+    name = comp["name"]
 
     rows = "".join(
+        f'<tr><th scope="row">{esc(k)}</th><td>{esc(v)}</td></tr>' for k, v in comp["rows"])
+    vs_rows = "".join(
         f'<tr><th scope="row">{esc(k)}</th><td>{esc(b)}</td><td class="cl-delta__sel">{esc(s)}</td></tr>'
-        for k, b, s in delta)
+        for k, b, s in comp["vs"])
     points = "".join(f"<li>{esc(p)}</li>" for p in comp["points"])
-
-    # ベース技術の主要スタッツ(あれば流用)
-    base_stats = ""
-    if base_tech:
-        base_stats = "".join(
-            f'<div class="cl-stat"><span class="cl-stat__v">{esc(str(s["v"]))}<i>{esc(s["u"])}</i></span>'
-            f'<span class="cl-stat__l">{esc(s["l"])}</span></div>'
-            for s in base_tech.get("stats", [])[:4])
-
-    base_link = ""
-    if base_tech:
-        base_link = f'<a class="cl-btn cl-btn--ghost" href="/tech/{comp["hub"]}/{comp["base_tech"]}/">ベースの {esc(base_tech["name"])} 技術ページ</a>'
-
-    # 同コラボの他シリコンへの導線
     others = "".join(
-        f'<a class="cl-chip" href="{collab_silicon_url(slug, c["key"])}">{esc(c["comp"])}</a>'
-        for c in COLLAB_SILICON if c["key"] != comp["key"])
+        f'<a class="cl-chip" href="{collab_silicon_url(slug, c["key"])}">{esc(c["comp"])} {esc(c["name"])}</a>'
+        for c in COLLAB_SILICON[slug] if c["key"] != comp["key"])
 
     body = f"""
-<section class="cl-hero cl-hero--silicon" aria-label="{esc(title_name)}">
-  <div class="cl-hero__aura" aria-hidden="true"></div>
-  <div class="cl-hero__inner">
-    <p class="cl-hero__eyebrow">COLLAB SILICON — {esc(cfg['game'])}</p>
-    <h1 class="cl-hero__title" style="font-size:clamp(2rem,1rem+5vw,3.6rem)">{esc(title_name)}</h1>
-    <p class="cl-hero__lead">{esc(cfg['edition'])} のために選び抜かれた、{esc(comp['comp'])}の特別選別ビン。</p>
-    <div class="cl-hero__tags"><span class="cl-tag">{esc(bin_name)}選別ビン</span><span class="cl-tag">{esc(comp['comp'])}</span></div>
+{_cl_lpnav(cfg, None)}
+<section class="cl-shero">
+  <div class="cl-wrap">
+    <p class="cl-eyebrow">DEDICATED SILICON — {esc(cfg['game'])}</p>
+    <h1 class="cl-shero__title">{esc(name)}</h1>
+    <p class="cl-shero__kick">{esc(comp['kicker'])}</p>
+    <p class="cl-lead">{esc(cfg['edition'])} のためだけに新規設計した専用{esc(comp['comp'])}。既存チップの選別・流用ではありません。</p>
+    <div class="cl-hero__tags"><span class="cl-tag">完全専用設計</span><span class="cl-tag">{esc(comp['comp'])}</span><span class="cl-tag">{esc(comp['en'])}</span></div>
   </div>
 </section>
 
 <section class="cl-section">
   <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">BASE VS SELECTED</p><h2 class="cl-h2">ベース比の差分</h2>
-    <p class="cl-sig__lead">同じ設計の標準ビンと、{esc(bin_name)}選別ビンの違い。</p></div>
-    <div class="cl-delta"><table><thead><tr><th>項目</th><th>標準ビン</th><th>{esc(bin_name)}選別ビン</th></tr></thead><tbody>{rows}</tbody></table></div>
+    <div class="cl-head"><p class="cl-eyebrow">SPEC</p><h2 class="cl-h2">主要スペック</h2></div>
+    <div class="cl-delta"><table><tbody>{rows}</tbody></table></div>
   </div>
 </section>
 
 <section class="cl-section">
   <div class="cl-wrap">
-    <div class="cl-head"><p class="cl-eyebrow">SELECTION</p><h2 class="cl-h2">なぜ、選別なのか。</h2></div>
-    <p class="cl-sig__lead" style="max-width:760px">{esc(comp['story'])}</p>
+    <div class="cl-head"><p class="cl-eyebrow">VS STANDARD</p><h2 class="cl-h2">標準フラッグシップとの違い</h2>
+    <p class="cl-lead">SUZAKU 4 世代(雷 RAI-G4 ほか)との比較。別設計のため、性格そのものが異なります。</p></div>
+    <div class="cl-delta"><table><thead><tr><th>項目</th><th>標準(SUZAKU 4 世代)</th><th>{esc(name)}</th></tr></thead><tbody>{vs_rows}</tbody></table></div>
+  </div>
+</section>
+
+<section class="cl-section">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">WHY DEDICATED</p><h2 class="cl-h2">なぜ、専用設計なのか。</h2></div>
+    <p class="cl-lead" style="max-width:760px">{esc(comp['story'])}</p>
     <ul class="cl-points">{points}</ul>
   </div>
 </section>
 
-{('<section class="cl-section"><div class="cl-wrap"><div class="cl-head"><p class="cl-eyebrow">BASE TECH</p><h2 class="cl-h2">ベース技術の実力</h2></div><div class="cl-stats">' + base_stats + '</div></div></section>') if base_stats else ''}
-
 <section class="cl-section cl-buy">
   <div class="cl-wrap cl-buy__inner">
     <div>
-      <p class="cl-eyebrow">{esc(cfg['game'])} コラボ限定シリコン</p>
-      <h2 class="cl-h2">{esc(title_name)}</h2>
+      <p class="cl-eyebrow">{esc(cfg['game'])} コラボ専用シリコン</p>
+      <h2 class="cl-h2">{esc(name)}</h2>
     </div>
     <div class="cl-buy__cta">
       <a class="cl-btn cl-btn--primary" href="/collab/{slug}/">{esc(cfg['edition'])} を見る</a>
-      {base_link}
+      <a class="cl-btn cl-btn--ghost" href="/tech/">標準の技術一覧</a>
     </div>
   </div>
 </section>
@@ -2148,11 +2453,11 @@ def build_collab_silicon_page(cfg, comp):
   <p class="cl-eyebrow">同コラボの他のシリコン</p>
   <div class="cl-chips">{others}</div>
 </div>
-<div class="cl-backlink"><a href="/collab/silicon/">← すべてのコラボ限定シリコンを見る</a></div>
+<div class="cl-backlink"><a href="/collab/silicon/">← すべての専用シリコンを見る</a></div>
 """
-    desc = f"{cfg['edition']} 専用の{comp['comp']}「{title_name}」。ベース比の差分と選別の理由を解説するコラボ限定シリコンページ。"
-    render_page(collab_silicon_url(slug, comp["key"]), f"{title_name} — SUZAKU × {cfg['game']} 限定シリコン",
-                desc, body, theme="dark", crumbs=None, group="コラボレーション",
+    desc = f"{cfg['edition']} 専用の{comp['comp']}「{name}」。{comp['kicker']} 専用設計の理由と標準フラッグシップとの違いを解説。"
+    render_page(collab_silicon_url(slug, comp["key"]), f"{name} — SUZAKU × {cfg['game']} 専用シリコン",
+                desc, body, theme=_COLLAB_THEME.get(slug, "dark"), crumbs=None, group="コラボレーション",
                 layout="collab", collab=cfg)
 
 
@@ -2165,32 +2470,33 @@ def build_collab_silicon_hub():
         style = f"--cl-accent:{tok['accent']};--cl-accent2:{tok['accent2']};--cl-bg2:{tok['bg2']}"
         cards = "".join(
             f'<a class="collab-card" style="{style}" href="{collab_silicon_url(cfg["slug"], c["key"])}">'
-            f'<span class="collab-card__game">{esc(cfg["bin"])}選別版 {esc(c["comp"])}</span>'
-            f'<span class="collab-card__edition">{esc(c["brand"])}</span>'
+            f'<span class="collab-card__game">専用{esc(c["comp"])}</span>'
+            f'<span class="collab-card__edition">{esc(c["name"])}</span>'
+            f'<span class="collab-card__tag">{esc(c["kicker"])}</span>'
             f'<span class="collab-card__go">詳細へ →</span></a>'
-            for c in COLLAB_SILICON)
+            for c in COLLAB_SILICON[cfg["slug"]])
         groups += (
             f'<div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">{esc(cfg["game"])}</p>'
-            f'<h2 class="t-h3">{esc(cfg["edition"])} の限定シリコン</h2></div>'
+            f'<h2 class="t-h3">{esc(cfg["edition"])} の専用シリコン</h2></div>'
             f'<div class="collab-grid">{cards}</div>')
     body = f"""
 <section class="hero hero--sub">
   <div class="hero__bg hero__bg--glow"></div>
   <div class="hero__inner hero-enter">
-    <p class="eyebrow eyebrow--center">COLLAB SILICON</p>
-    <h1 class="t-hero">コラボ限定シリコン</h1>
-    <p class="t-lead" style="max-width:700px">各コラボエディションのために選び抜かれた、SoC・GPU・メモリ・ストレージの特別選別ビン。標準ビンとの差分と、選別の理由を解説します。</p>
+    <p class="eyebrow eyebrow--center">DEDICATED SILICON</p>
+    <h1 class="t-hero">コラボ専用シリコン</h1>
+    <p class="t-lead" style="max-width:700px">各コラボ端末のためだけに新規設計した、SoC・GPU・メモリ・ストレージ。既存チップの選別や流用ではなく、作品ごとに性格の異なる完全専用設計です。</p>
   </div>
 </section>
 <section class="section--sm">
   <div class="container">{groups}
-    <p class="t-micro t-faint" style="margin-top:28px;text-align:center">※ 掲載の数値・選別はデモ用の架空コンテンツです。ベースとなる各技術は<a href="/tech/">テクノロジー</a>をご覧ください。</p>
+    <p class="t-micro t-faint" style="margin-top:28px;text-align:center">※ 掲載の数値・設計はデモ用の架空コンテンツです。標準の各技術は<a href="/tech/">テクノロジー</a>をご覧ください。</p>
   </div>
 </section>
 """
-    render_page("/collab/silicon/", "コラボ限定シリコン — SUZAKU × ゲーム",
-                "各コラボエディション専用の特別選別シリコン(SoC/GPU/メモリ/ストレージ)一覧。標準ビンとの差分を解説。",
-                body, "dark", [("コラボレーション", "/collab/"), ("限定シリコン", None)], "コラボレーション")
+    render_page("/collab/silicon/", "コラボ専用シリコン — SUZAKU × ゲーム",
+                "各コラボ端末専用に新規設計したシリコン(SoC/GPU/メモリ/ストレージ)一覧。元素炉・共振・夜想・基幹ほか。",
+                body, "dark", [("コラボレーション", "/collab/"), ("専用シリコン", None)], "コラボレーション")
 
 
 def build_collab_pages():
@@ -2199,7 +2505,7 @@ def build_collab_pages():
     for cfg in COLLABS:
         if cfg.get("active"):
             build_collab_page(cfg)
-            for comp in COLLAB_SILICON:
+            for comp in COLLAB_SILICON[cfg["slug"]]:
                 build_collab_silicon_page(cfg, comp)
 
 
@@ -2436,12 +2742,8 @@ def build_assets():
         # コラボモデルなどは製品個別のアクセント色(作品カラー)を優先する
         glow = p.get("glow") or LINES[p["line"]]["glow"]
         hz = f"{num(get_spec(p, ['ディスプレイ'], 'リフレッシュレート')) or 60}Hz" if p["cat"] in ("phone", "tablet") else "60Hz"
-        # コラボ意匠の出し分け(pb-{slug} アクセサリ / chip サフィックスのコラボ機)
-        motif = None
-        if p["id"].startswith("pb-"):
-            motif = p["id"][3:]
-        elif p["line"] == "collab" and p.get("chip"):
-            motif = p["chip"].rsplit("-", 1)[-1]
+        # コラボ意匠の出し分け(製品の collab フィールド = 作品slug)
+        motif = p.get("collab")
         for i, c in enumerate(p["colors"]):
             if p["cat"] == "phone":
                 svg = svg_art.svg_phone(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)

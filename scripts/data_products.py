@@ -704,7 +704,7 @@ PHONES = [
     # 作品ごとにゼロから共同設計したオリジナル製品(共同ブランド+独自モデル名)。
     {
         "id": "shichiyo", "cat": "phone", "line": "collab", "collab": "genshin",
-        "name": "SUZAKU × 原神 七耀", "kana": "すざく × げんしん しちよう",
+        "name": "SUZAKU × 原神 七耀", "kana": "SHICHIYO",
         "year": 2026, "release": "2026年7月18日", "status": "current", "flag": "limited",
         "tagline": "七つの元素を、この一台に灯す。",
         "sub": "旅人とともにテイワットを旅するために、SUZAKUとHoYoverseがゼロから共同設計。BT.2020 110%の「元素燐光」ディスプレイ、白磁×金彩の専用筐体、背面の元素リング発光。専用SoC「元素炉 GENSORO-E1」搭載。",
@@ -786,7 +786,7 @@ PHONES = [
     },
     {
         "id": "zankyo", "cat": "phone", "line": "collab", "collab": "wuwa",
-        "name": "SUZAKU × 鳴潮 残響", "kana": "すざく × めいちょう ざんきょう",
+        "name": "SUZAKU × 鳴潮 残響", "kana": "ZANKYO",
         "year": 2026, "release": "2026年8月8日", "status": "current", "flag": "limited",
         "tagline": "最速は、静けさの中にある。",
         "sub": "漂泊者の旅に応えるため、SUZAKUとKuro Gamesが共同設計した漆黒のモノリス。専用SoC「共振 KYOSHIN-W1」は最大4.1GHz・AnTuTu 418万点 — SUZAKU史上最速。185Hz表示とタッチ3200Hzで、コンマ1秒を削る。",
@@ -867,9 +867,9 @@ PHONES = [
     },
     {
         "id": "yako", "cat": "phone", "line": "collab", "collab": "nte",
-        "name": "SUZAKU × NTE 夜行", "kana": "すざく × エヌティーイー やこう",
+        "name": "SUZAKU × NTE 夜行", "kana": "YAKO",
         "year": 2026, "release": "2026年9月12日", "status": "current", "flag": "limited",
-        "tagline": "ヘザロウの夜を、連れて歩く。",
+        "tagline": "ヘロシティの夜を、連れて歩く。",
         "sub": "鑑定士の相棒として、SUZAKUとHotta Studioが共同設計。1/0.98型の超大型センサーとデュアル夜景ISPを持つ専用SoC「夜想 YASO-N1」、通知に呼応するEL発光背面。最大2TBで、眠らない街を撮り切る。",
         "price": 164800,
         "limited": {"until": "2026-10-31T23:59:59", "qty": 6000, "sold": 1980},
@@ -950,10 +950,10 @@ PHONES = [
     },
     {
         "id": "zensen", "cat": "phone", "line": "collab", "collab": "endfield",
-        "name": "SUZAKU × エンドフィールド 前線", "kana": "すざく × えんどふぃーるど ぜんせん",
+        "name": "SUZAKU × エンドフィールド 前線", "kana": "ZENSEN",
         "year": 2026, "release": "2026年10月17日", "status": "current", "flag": "limited",
         "tagline": "タロⅡの果てでも、止まらない。",
-        "sub": "管理人の現場のために、SUZAKUとHypergryphが共同設計した工業機。IP68+MIL-STD-810H準拠の装甲筐体、8,500mAh、持続性能99%の専用SoC「基幹 KIKAN-F1」。計器窓とターミナルHUDが稼働状態を常時表示する。",
+        "sub": "タロⅡの過酷な環境に挑む管理人とオペレーターのために、SUZAKUとHypergryphが共同設計した堅牢機。IP68+MIL-STD-810H準拠の装甲筐体、8,500mAh、持続性能99%の専用SoC「基幹 KIKAN-F1」。計器窓とターミナルHUDが稼働状態を常時表示。作戦の間、道具の心配をさせない。",
         "price": 159800,
         "limited": {"until": "2026-11-30T23:59:59", "qty": 6500, "sold": 2470},
         "colors": [{"name": "黒鉄", "hex": "#1b1c1e"}, {"name": "工業黄", "hex": "#b39b20"}],

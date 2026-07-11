@@ -275,7 +275,7 @@ def _front_scene_phone(line, glow, hz, motif):
     fps = hz.replace("Hz", "")
     fjp = "'Noto Sans JP',sans-serif"
     if motif == "genshin":
-        # 七元素ホイール(元素の頂 Edition)
+        # 七元素ホイール(七耀 SHICHIYO)
         cols = ("#74c2a8", "#d8b45c", "#a68cc8", "#9ac546", "#4cc2f1", "#ef7938", "#9fd6e3")
         dots = ""
         for i, col in enumerate(cols):
@@ -292,9 +292,9 @@ def _front_scene_phone(line, glow, hz, motif):
 <text x="170" y="392" font-family="{fjp}" font-size="15" font-weight="800" fill="#efe7d2" text-anchor="middle" letter-spacing="6">七元素共鳴</text>
 <text x="170" y="414" font-family="{fjp}" font-size="8.5" fill="#b9b2a0" text-anchor="middle" letter-spacing="3">ELEMENTAL BACKGLOW</text>
 <rect x="106" y="452" width="128" height="30" rx="15" fill="none" stroke="{glow}" stroke-opacity="0.7" stroke-width="1.4"/>
-<text x="170" y="471.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="2">元素の頂 Edition</text>"""
+<text x="170" y="471.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="2">七耀 SHICHIYO</text>"""
     if motif == "wuwa":
-        # 共鳴波形HUD(共鳴 Edition)
+        # 共鳴波形HUD(残響 ZANKYO)
         wave = "M62 300 " + " ".join(
             f"Q {74 + i * 24} {300 - a} {86 + i * 24} 300"
             for i, a in enumerate((14, -38, 82, -120, 96, -60, 26, -12, 6)))
@@ -304,16 +304,16 @@ def _front_scene_phone(line, glow, hz, motif):
         return f"""
 <path d="M66 84 h30 M66 84 v30 M274 84 h-30 M274 84 v30 M66 516 h30 M66 516 v-30 M274 516 h-30 M274 516 v-30" stroke="{glow}" stroke-opacity="0.75" stroke-width="2"/>
 <text x="170" y="140" font-family="{fjp}" font-size="10" fill="#9adfe8" text-anchor="middle" letter-spacing="6" opacity="0.85">RESONANCE HUD</text>
-<text x="170" y="216" font-family="{fjp}" font-size="52" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">4.0<tspan font-size="20" fill="{glow}">GHz</tspan></text>
-<text x="170" y="242" font-family="{fjp}" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">MAX CLOCK ・ ANTUTU 412万</text>
+<text x="170" y="216" font-family="{fjp}" font-size="52" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">4.1<tspan font-size="20" fill="{glow}">GHz</tspan></text>
+<text x="170" y="242" font-family="{fjp}" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">MAX CLOCK ・ ANTUTU 418万</text>
 <path d="{wave}" fill="none" stroke="{glow}" stroke-width="2.6" stroke-linecap="round"/>
 <path d="M62 300 H278" stroke="{glow}" stroke-opacity="0.25" stroke-width="1"/>
 {bars}
 <text x="170" y="428" font-family="{fjp}" font-size="9" fill="#9adfe8" text-anchor="middle" letter-spacing="3" opacity="0.8">RESONANCE HAPTICS 3200Hz</text>
 <rect x="106" y="452" width="128" height="30" rx="15" fill="none" stroke="{glow}" stroke-opacity="0.7" stroke-width="1.4"/>
-<text x="170" y="471.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="2">共鳴 Edition</text>"""
+<text x="170" y="471.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="2">残響 ZANKYO</text>"""
     if motif == "nte":
-        # ネオン都市の夜景(ネオンシティ Edition)
+        # ネオン都市の夜景(夜行 YAKO)
         bl = "#191327"
         buildings = "".join(
             f'<rect x="{x}" y="{y}" width="{w}" height="{460 - y}" fill="{bl}" opacity="{o}"/>'
@@ -336,13 +336,13 @@ def _front_scene_phone(line, glow, hz, motif):
 <text x="170" y="184" font-family="{fjp}" font-size="21" font-weight="900" fill="{glow}" text-anchor="middle" letter-spacing="4">NEON CITY</text>
 <text x="170" y="228" font-family="{fjp}" font-size="8.5" fill="#c9a7d6" text-anchor="middle" letter-spacing="3">NIGHT ISP ・ 2TB</text>
 <rect x="106" y="486" width="128" height="30" rx="15" fill="none" stroke="{glow}" stroke-opacity="0.7" stroke-width="1.4"/>
-<text x="170" y="505.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="1">ネオンシティ Edition</text>"""
+<text x="170" y="505.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="1">夜行 YAKO</text>"""
     if motif == "endfield":
-        # 産業ターミナル(開拓 Edition)
+        # 産業ターミナル(前線 ZENSEN)
         hazard = "".join(
             f'<path d="M{64 + i * 30} 96 l16 0 -10 14 -16 0 z" fill="{glow}" opacity="{0.9 if i % 2 == 0 else 0.35}"/>'
             for i in range(8))
-        lines = (("SYSTEM CHECK", "OK", 0.95), ("POWER CELL 8200mAh", "OK", 0.8),
+        lines = (("SYSTEM CHECK", "OK", 0.95), ("POWER CELL 8500mAh", "OK", 0.8),
                  ("IP68 / MIL-STD-810H", "OK", 0.65), ("SUSTAIN MODE", "READY", 0.5))
         rows = "".join(
             f'<text x="66" y="{176 + i * 30}" font-family="monospace" font-size="11" fill="#ffb066" opacity="{o}">&gt; {t}</text>'
@@ -358,7 +358,7 @@ def _front_scene_phone(line, glow, hz, motif):
 <rect x="66" y="360" width="9" height="14" fill="{glow}"/>
 <text x="170" y="418" font-family="{fjp}" font-size="13" font-weight="800" fill="#ead9c4" text-anchor="middle" letter-spacing="4">TERMINAL HUD</text>
 <rect x="106" y="452" width="128" height="30" rx="15" fill="none" stroke="{glow}" stroke-opacity="0.7" stroke-width="1.4"/>
-<text x="170" y="471.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="2">開拓 Edition</text>"""
+<text x="170" y="471.5" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="middle" letter-spacing="2">前線 ZENSEN</text>"""
     if line in ("suzaku", "neo", "collab"):
         # ゲーミング: パフォーマンスHUD
         ring_c = 2 * math.pi * 66

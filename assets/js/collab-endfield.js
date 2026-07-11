@@ -1,42 +1,13 @@
 /* ==========================================================================
    SUZAKU × アークナイツ:エンドフィールド「前線」LP専用演出
-   ・起動カウンタ 0→100%(1セッション1回)
-   ・ターミナル起動ログのタイプライタ
+   ・ターミナル起動ログのタイプライタ(実機の稼働ログ再現)
+   ・タイトル画面のグリッチ断片を時々ちらつかせる
    ========================================================================== */
 (function () {
   "use strict";
   if (!document.querySelector(".collab--endfield")) return;
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ---------- 起動カウンタ ---------- */
-  var boot = document.getElementById("efBoot");
-  if (boot) {
-    var seen = false;
-    try { seen = sessionStorage.getItem("sz_ef_boot") === "1"; } catch (e) {}
-    if (reduce || seen) {
-      boot.classList.add("is-done");
-    } else {
-      var pctEl = boot.querySelector("[data-boot]");
-      var bar = boot.querySelector(".ef-boot__bar");
-      var p = 0;
-      var step = function () {
-        p = Math.min(100, p + 3 + Math.random() * 9);
-        var v = Math.floor(p);
-        if (pctEl) pctEl.textContent = v + "%";
-        if (bar) bar.style.setProperty("--p", v + "%");
-        if (p < 100) {
-          setTimeout(step, 40 + Math.random() * 70);
-        } else {
-          setTimeout(function () {
-            boot.classList.add("is-done");
-            try { sessionStorage.setItem("sz_ef_boot", "1"); } catch (e) {}
-          }, 300);
-        }
-      };
-      step();
-    }
-  }
 
   /* ---------- ターミナル起動ログ ---------- */
   var term = document.querySelector("[data-terminal]");
@@ -69,5 +40,15 @@
         run();
       }
     }
+  }
+
+  /* ---------- タイトル画面のグリッチちらつき ---------- */
+  var noise = document.querySelectorAll(".ef-title__noise i");
+  if (noise.length && !reduce) {
+    setInterval(function () {
+      var el = noise[Math.floor(Math.random() * noise.length)];
+      el.style.visibility = "hidden";
+      setTimeout(function () { el.style.visibility = ""; }, 120 + Math.random() * 200);
+    }, 1400);
   }
 })();

@@ -1,264 +1,731 @@
 /* ==========================================================================
    SUZAKU × アークナイツ:エンドフィールド「前線」専用スタイル —
-   白黒反転ブロック×ビビッドイエロー・「//」見出し・等高線・計器・等幅数字。
+   実機ゲームUIの再現: 明灰地+ドットグリッド+等高線+グリッチ断片 /
+   ビビッドイエロー=選択・アクション色 / //見出し / 任務パネル+報酬カード /
+   能力値グリッド+縦黄バンド / 設備ダイアログ / スカウト画面 / 極小モノ文字。
    /collab/endfield/ 系ページ専用。他コラボとクラスを共有しない。
    ========================================================================== */
 
 .cl-lp.collab--endfield {
-  --ef-paper: #f2f1ec;
-  --ef-black: #141412;
-  --ef-yellow: #f2d800;
+  --ef-paper: #ecebe7;
+  --ef-panel: #f6f5f2;
+  --ef-black: #17171a;
+  --ef-yellow: #ffd800;
+  --ef-red: #d8382a;
   --ef-gray: #5a5952;
-  --ef-line: rgba(20, 20, 18, 0.22);
+  --ef-line: rgba(23, 23, 26, 0.2);
+  --ef-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
   font-family: "Noto Sans JP", sans-serif;
-  background: var(--ef-paper);
   color: var(--ef-black);
+  /* ドットグリッド + 等高線(実機タイトル画面の地) */
+  background-color: var(--ef-paper);
+  background-image:
+    radial-gradient(rgba(23, 23, 26, 0.09) 1px, transparent 1.2px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 520 520'%3E%3Cg fill='none' stroke='%2317171a' stroke-opacity='0.045'%3E%3Cpath d='M40 260a220 220 0 1 0 440 0a220 220 0 1 0-440 0'/%3E%3Cpath d='M110 260a150 150 0 1 0 300 0a150 150 0 1 0-300 0'/%3E%3Cpath d='M0 80q140 60 260 0t260 40'/%3E%3Cpath d='M0 470q160-70 280-20t240-30'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 26px 26px, 520px 520px;
 }
 
-/* 等高線背景(SVG data URI・軽量) */
-.collab--endfield main {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23141412' stroke-opacity='0.05'%3E%3Cpath d='M60 210a150 150 0 1 0 300 0a150 150 0 1 0-300 0'/%3E%3Cpath d='M100 210a110 110 0 1 0 220 0a110 110 0 1 0-220 0'/%3E%3Cpath d='M140 210a70 70 0 1 0 140 0a70 70 0 1 0-140 0'/%3E%3Cpath d='M20 40q90 40 180 0t200 30'/%3E%3Cpath d='M0 380q120-50 220-10t200-20'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-.collab--endfield .cl-h2, .collab--endfield .cl-shero__title,
-.ef-h2 {
+.collab--endfield .cl-h2, .collab--endfield .cl-shero__title, .ef-h2x {
   font-family: "Oswald", "Noto Sans JP", sans-serif;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
-/* --- 起動カウンタ(イントロ) --- */
-.ef-boot {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
+/* --- 共通ミニ部品 --- */
+.ef-slash {
+  font-family: "Oswald", "Noto Sans JP", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: var(--ef-black);
+  margin-bottom: 18px;
+}
+
+.ef-slash::before { content: "// "; color: var(--ef-black); }
+
+.ef-slash--y { background: var(--ef-yellow); display: inline-block; padding: 3px 12px; }
+
+.ef-meta {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--ef-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(23, 23, 26, 0.45);
+}
+
+.ef-x {
+  width: 30px;
+  height: 30px;
   background: var(--ef-black);
+  color: #fff;
+  font-size: 0.8rem;
+  display: grid;
+  place-items: center;
+  cursor: default;
+}
+
+/* 実機の白ピルボタン(――― ラベル ◔) / 黄ピル */
+.ef-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 22px 12px 18px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1.5px solid var(--ef-black);
+  color: var(--ef-black);
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.ef-pill:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(23, 23, 26, 0.18); }
+
+.ef-pill__dash { width: 44px; height: 2px; background: var(--ef-black); flex: none; }
+
+.ef-pill b {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.6px solid var(--ef-black);
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  flex: none;
+}
+
+.ef-pill--buy, .ef-pill--go { background: var(--ef-yellow); border-color: var(--ef-yellow); }
+
+.ef-pill--buy:hover, .ef-pill--go:hover { box-shadow: 0 10px 24px rgba(255, 216, 0, 0.5); }
+
+/* ==========================================================================
+   S1 タイトル画面(実機スクショ1の再現)
+   ========================================================================== */
+.ef-title {
+  position: relative;
+  min-height: calc(100vh - var(--header-h) - 54px);
   display: grid;
   place-content: center;
-  transition: opacity 0.5s, visibility 0.5s;
+  justify-items: center;
+  padding: clamp(2rem, 5vh, 4rem) clamp(16px, 4vw, 32px) 4.5rem;
+  overflow: clip;
 }
 
-.ef-boot.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
-
-.ef-boot__in { display: grid; gap: 14px; justify-items: start; min-width: min(420px, 80vw); }
-
-.ef-boot__pct {
-  font-family: "Oswald", sans-serif;
-  font-weight: 700;
-  font-size: clamp(3.4rem, 10vw, 5.5rem);
-  color: var(--ef-paper);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-.ef-boot__l { font-size: 0.7rem; letter-spacing: 0.3em; color: rgba(242, 241, 236, 0.6); }
-
-.ef-boot__bar { width: 100%; height: 6px; background: rgba(242, 241, 236, 0.16); overflow: hidden; }
-
-.ef-boot__bar i { display: block; height: 100%; width: var(--p, 0%); background: var(--ef-yellow); }
-
-/* --- 黄色の縦レール --- */
-.ef-rail {
+/* グリッチ断片(黄・黒・赤の小さな矩形ノイズ) */
+.ef-title__noise i {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 44px;
-  background: var(--ef-yellow);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 34px;
-  padding-top: 30px;
-  align-items: center;
+  background: repeating-linear-gradient(90deg, var(--ef-yellow) 0 8px, var(--ef-black) 8px 10px, transparent 10px 16px);
+  opacity: 0.85;
 }
 
-.ef-rail span {
-  writing-mode: vertical-rl;
-  font-family: "Oswald", sans-serif;
-  font-weight: 600;
-  font-size: 0.68rem;
-  letter-spacing: 0.24em;
-  color: var(--ef-black);
-  white-space: nowrap;
-}
+.ef-title__noise i:nth-child(1) { left: 0; top: 34%; width: 90px; height: 8px; }
+.ef-title__noise i:nth-child(2) { left: 3%; top: 37%; width: 46px; height: 4px; opacity: 0.5; }
+.ef-title__noise i:nth-child(3) { right: 6%; top: 18%; width: 40px; height: 6px; }
+.ef-title__noise i:nth-child(4) { right: 14%; bottom: 26%; width: 60px; height: 5px; opacity: 0.6; }
+.ef-title__noise i:nth-child(5) { left: 12%; bottom: 18%; width: 26px; height: 10px; background: var(--ef-black); opacity: 0.14; }
+.ef-title__noise i:nth-child(6) { left: 24%; top: 14%; width: 14px; height: 14px; background: var(--ef-black); opacity: 0.1; }
+.ef-title__noise i:nth-child(7) { right: 26%; top: 60%; width: 18px; height: 4px; background: var(--ef-red); opacity: 0.55; }
+.ef-title__noise i:nth-child(8) { left: 40%; bottom: 8%; width: 34px; height: 3px; background: var(--ef-black); opacity: 0.2; }
 
-@media (max-width: 900px) { .ef-rail { display: none; } }
-
-/* --- ヒーロー(白地) --- */
-.ef-hero { position: relative; overflow: clip; padding: clamp(3rem, 7vh, 5.5rem) clamp(16px, 4vw, 32px) clamp(2.6rem, 4vw, 4rem) clamp(60px, 7vw, 90px); }
-
-.ef-hero__inner {
-  max-width: 1040px;
-  margin-inline: auto;
+/* 右縦メニュー(お知らせ/設定/修復…の再現) */
+.ef-title__menu {
+  position: absolute;
+  right: clamp(12px, 3vw, 40px);
+  top: 50%;
+  transform: translateY(-50%);
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  grid-template-areas: "eyebrow device" "title device" "lead device" "tags device";
-  gap: 6px 26px;
-  align-items: center;
+  gap: 18px;
+  justify-items: end;
 }
 
-.ef-hero__eyebrow {
-  grid-area: eyebrow;
-  font-family: "Oswald", sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
+.ef-title__menu a {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ef-black);
+}
+
+.ef-title__mi {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid var(--ef-line);
+  display: grid;
+  place-items: center;
+  font-size: 0.82rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.ef-title__menu a:hover .ef-title__mi { background: var(--ef-yellow); border-color: var(--ef-black); }
+
+@media (max-width: 900px) { .ef-title__menu { display: none; } }
+
+/* 中央ロゴロックアップ(黄帯+黒ブロックロゴ+終末地風ボックス) */
+.ef-title__lock { text-align: center; max-width: 760px; }
+
+.ef-title__over {
+  font-family: var(--ef-mono);
+  font-size: 0.66rem;
   letter-spacing: 0.3em;
   color: var(--ef-gray);
-  text-transform: uppercase;
+  margin-bottom: 16px;
 }
 
-.ef-hero__title { grid-area: title; font-family: "Oswald", "Noto Sans JP", sans-serif; font-weight: 700; font-size: clamp(3rem, 1.6rem + 8vw, 6.8rem); line-height: 1; color: var(--ef-black); }
+.ef-title__rule { display: block; height: 2px; background: var(--ef-black); margin: 14px auto; width: min(560px, 80%); }
 
-.ef-hero__title span { display: block; margin-top: 14px; font-family: "Noto Sans JP", sans-serif; font-size: clamp(1.1rem, 0.9rem + 1.4vw, 1.7rem); font-weight: 900; }
-
-.ef-hero__lead { grid-area: lead; max-width: 520px; margin-top: 12px; color: var(--ef-gray); line-height: 2; font-size: 0.9rem; }
-
-.ef-hero__tags { grid-area: tags; display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
-
-.ef-tag {
-  display: inline-flex;
-  padding: 7px 14px;
-  background: var(--ef-black);
-  color: var(--ef-yellow);
-  font-family: "Oswald", sans-serif;
-  font-weight: 600;
-  font-size: 0.74rem;
-  letter-spacing: 0.1em;
-}
-
-.ef-hero__device {
-  grid-area: device;
-  width: clamp(160px, 20vw, 250px);
-  justify-self: center;
-  height: auto;
-  filter: drop-shadow(0 26px 30px rgba(20, 20, 18, 0.35));
-}
-
-@media (max-width: 800px) {
-  .ef-hero__inner { grid-template-columns: 1fr; grid-template-areas: "eyebrow" "title" "lead" "device" "tags"; }
-  .ef-hero__device { margin-top: 18px; }
-}
-
-/* --- 反転ブロック --- */
-.ef-block { padding: clamp(3.2rem, 2.4rem + 4vw, 6rem) 0; position: relative; }
-
-.ef-block--dark { background: var(--ef-black); color: var(--ef-paper); }
-
-.ef-block--dark::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: repeating-linear-gradient(-45deg, var(--ef-yellow) 0 18px, var(--ef-black) 18px 36px);
-}
-
-.ef-eyebrow {
-  font-family: "Oswald", sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  color: var(--ef-yellow);
+.ef-title__logo small {
+  display: block;
+  font-size: clamp(0.8rem, 0.7rem + 0.7vw, 1.05rem);
+  font-weight: 900;
+  letter-spacing: 0.34em;
+  color: var(--ef-black);
   margin-bottom: 10px;
 }
 
-.ef-block:not(.ef-block--dark) .ef-eyebrow { color: var(--ef-black); background: var(--ef-yellow); display: inline-block; padding: 3px 10px; }
+.ef-title__band {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 2px 20px;
+}
 
-.ef-h2 { font-size: clamp(1.6rem, 1.1rem + 2.6vw, 2.6rem); line-height: 1.2; color: var(--ef-black); }
+/* ロゴ背後の黄色帯 */
+.ef-title__band::before {
+  content: "";
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  top: 52%;
+  height: 34%;
+  background: var(--ef-yellow);
+  z-index: -1;
+}
 
-.ef-block--dark .ef-h2, .ef-block--dark .cl-h2 { color: var(--ef-paper); }
+.ef-title__band em {
+  font-style: normal;
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 900;
+  font-size: clamp(4rem, 2.4rem + 9vw, 8rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--ef-black);
+}
 
-.ef-head { margin-bottom: clamp(1.4rem, 2vw, 2.4rem); }
+.ef-title__box {
+  align-self: flex-end;
+  background: var(--ef-black);
+  color: #fff;
+  font-size: clamp(0.7rem, 0.6rem + 0.5vw, 0.95rem);
+  font-weight: 900;
+  line-height: 1.25;
+  padding: 6px 8px;
+  letter-spacing: 0.1em;
+}
 
-.ef-lead { max-width: 720px; color: inherit; opacity: 0.78; line-height: 2; margin-bottom: 26px; font-size: 0.92rem; }
+.ef-title__lead {
+  margin: 22px auto 0;
+  max-width: 520px;
+  color: var(--ef-gray);
+  line-height: 2;
+  font-size: 0.9rem;
+}
 
-/* --- 用語(黒ブロック内) --- */
-.ef-terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(242, 241, 236, 0.2); border: 1px solid rgba(242, 241, 236, 0.2); }
+/* タップして続ける▶ 相当 */
+.ef-title__continue {
+  position: absolute;
+  right: clamp(16px, 6vw, 90px);
+  bottom: clamp(56px, 12vh, 120px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: 0.1em;
+  color: var(--ef-black);
+  animation: ef-blink2 2.2s ease-in-out infinite;
+}
 
-.ef-term { background: var(--ef-black); padding: 26px 22px; }
+.ef-title__continue b {
+  width: 30px;
+  height: 20px;
+  background: var(--ef-yellow);
+  color: var(--ef-black);
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+}
 
-.ef-term h3 { font-size: 1rem; font-weight: 900; color: var(--ef-yellow); margin-bottom: 10px; font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.06em; }
+@keyframes ef-blink2 { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-.ef-term p { font-size: 0.83rem; line-height: 2; color: rgba(242, 241, 236, 0.75); }
+/* 四隅の極小モノ文字(バージョン/メーカー/サーバー) */
+.ef-title__ver { position: absolute; left: 14px; bottom: 12px; font-family: var(--ef-mono); font-size: 0.6rem; letter-spacing: 0.08em; color: rgba(23, 23, 26, 0.4); }
 
-@media (max-width: 800px) { .ef-terms { grid-template-columns: 1fr; } }
+.ef-title__maker { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); font-family: "Oswald", sans-serif; font-size: 0.62rem; letter-spacing: 0.3em; color: rgba(23, 23, 26, 0.45); }
 
-/* --- 分割+耐久表 --- */
-.ef-split { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(1.8rem, 4vw, 4rem); align-items: center; }
+.ef-title__srv { position: absolute; right: 14px; bottom: 10px; font-size: 0.68rem; font-weight: 700; padding: 5px 12px; background: #fff; border: 1px solid var(--ef-line); border-radius: 4px; color: var(--ef-gray); }
 
-.ef-split__media { display: grid; place-items: center; }
+/* ==========================================================================
+   S2 任務パネル(実機スクショ2の再現)
+   ========================================================================== */
+.ef-mission { padding: clamp(3rem, 6vw, 5.5rem) 0; }
 
-.ef-split__media img { width: clamp(200px, 23vw, 270px); height: auto; filter: drop-shadow(0 24px 28px rgba(20, 20, 18, 0.3)); }
+.ef-mission__grid {
+  display: grid;
+  grid-template-columns: 52px 300px 1fr;
+  gap: 0;
+  border: 1.5px solid var(--ef-black);
+  background: rgba(23, 23, 26, 0.88);
+  box-shadow: 0 24px 60px rgba(23, 23, 26, 0.22);
+}
 
-.ef-split__copy p { margin-top: 14px; line-height: 2; color: var(--ef-gray); font-size: 0.9rem; }
+/* 左アイコンレール(ALL=黄) */
+.ef-rail2 { display: flex; flex-direction: column; background: #101013; }
 
-.ef-dura { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 0.84rem; }
-
-.ef-dura th, .ef-dura td { border: 1px solid var(--ef-line); padding: 10px 14px; text-align: left; }
-
-.ef-dura thead th { background: var(--ef-black); color: var(--ef-paper); font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.08em; }
-
-.ef-dura tbody th { font-weight: 700; white-space: nowrap; }
-
-.ef-pass { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; color: #1b7a2e; font-weight: 700; }
-
-@media (max-width: 860px) { .ef-split { grid-template-columns: 1fr; } }
-
-/* --- 計器グリッド+ターミナル --- */
-.ef-gauges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(242, 241, 236, 0.2); border: 1px solid rgba(242, 241, 236, 0.2); margin-bottom: 30px; }
-
-.ef-gauge { background: var(--ef-black); text-align: center; padding: clamp(1.8rem, 3vw, 2.8rem) 12px; }
-
-.ef-gauge b {
+.ef-rail2 span {
+  height: 52px;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.5);
   font-family: "Oswald", sans-serif;
   font-weight: 700;
-  font-size: clamp(1.8rem, 1.2rem + 2.6vw, 3rem);
-  color: var(--ef-paper);
-  font-variant-numeric: tabular-nums;
+  font-size: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.ef-gauge i { font-style: normal; color: var(--ef-yellow); margin-left: 4px; font-size: 0.9rem; }
+.ef-rail2 .is-on { background: var(--ef-yellow); color: var(--ef-black); clip-path: polygon(0 0, 100% 0, 100% 84%, 84% 100%, 0 100%); }
 
-.ef-gauge span { display: block; margin-top: 10px; font-size: 0.72rem; letter-spacing: 0.1em; color: rgba(242, 241, 236, 0.6); }
+/* 任務リスト */
+.ef-mlist { padding: 16px 14px; border-right: 1px solid rgba(255, 255, 255, 0.12); }
 
-@media (max-width: 760px) { .ef-gauges { grid-template-columns: repeat(2, 1fr); } }
+.ef-mlist__urgent { font-size: 0.72rem; color: rgba(255, 255, 255, 0.6); letter-spacing: 0.1em; margin-bottom: 12px; }
 
-.ef-terminal {
-  border: 1px solid rgba(242, 241, 236, 0.25);
-  background: #0c0c0a;
-  padding: 22px 24px;
-  min-height: 176px;
+.ef-mlist__urgent b { background: var(--ef-red); color: #fff; padding: 3px 8px; margin-right: 8px; font-size: 0.7rem; }
+
+.ef-mitem {
+  display: grid;
+  gap: 3px;
+  padding: 12px 12px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.ef-terminal__out {
-  margin: 0;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-  font-size: 0.82rem;
-  line-height: 1.9;
+.ef-mitem__t { font-weight: 700; font-size: 0.85rem; }
+
+.ef-mitem__meta { font-size: 0.68rem; letter-spacing: 0.08em; }
+
+.ef-mitem.is-on {
+  background: rgba(255, 216, 0, 0.12);
+  border-color: var(--ef-yellow);
+  border-left: 4px solid var(--ef-yellow);
+  color: #fff;
+}
+
+.ef-mitem.is-on .ef-mitem__meta { color: var(--ef-yellow); }
+
+/* 右詳細(白パネル) */
+.ef-mdetail { position: relative; background: var(--ef-panel); padding: 22px 24px 26px; }
+
+.ef-mdetail .ef-x { position: absolute; top: 0; right: 0; }
+
+.ef-mdetail__t { font-family: "Oswald", "Noto Sans JP", sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--ef-black); }
+
+.ef-mdetail__area { margin-top: 6px; font-size: 0.78rem; font-weight: 700; color: var(--ef-gray); }
+
+.ef-mdetail__area i { font-style: normal; color: #c8a400; }
+
+.ef-mdetail__b { margin-top: 14px; font-size: 0.85rem; line-height: 1.95; color: var(--ef-gray); border-top: 1px solid var(--ef-line); padding-top: 14px; }
+
+.ef-tasks { margin-top: 14px; display: grid; gap: 9px; }
+
+.ef-task { display: flex; align-items: baseline; gap: 10px; font-size: 0.85rem; color: var(--ef-black); }
+
+.ef-task__box { width: 11px; height: 11px; border: 1.6px solid var(--ef-black); flex: none; transform: translateY(1px); }
+
+.ef-task a { color: var(--ef-black); font-weight: 700; text-decoration: underline; text-decoration-color: #c8a400; text-underline-offset: 3px; }
+
+.ef-task a:hover { color: #a08300; }
+
+.ef-mdetail__rw { margin-top: 20px; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; color: var(--ef-gray); border-top: 1px solid var(--ef-line); padding-top: 14px; }
+
+/* 任務報酬カード(暗色スロット+レア度色) */
+.ef-rewards { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+
+.ef-reward {
+  position: relative;
+  width: 88px;
+  padding: 10px 8px 8px;
+  background: #232327;
+  border-bottom: 3px solid var(--rar);
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+}
+
+.ef-reward__ic { font-family: "Oswald", sans-serif; font-weight: 700; font-size: 0.72rem; color: var(--rar); letter-spacing: 0.08em; }
+
+.ef-reward__n { font-size: 0.6rem; color: rgba(255, 255, 255, 0.75); line-height: 1.4; }
+
+.ef-reward__c { position: absolute; right: 5px; bottom: 4px; font-family: var(--ef-mono); font-size: 0.62rem; color: #fff; }
+
+@media (max-width: 880px) {
+  .ef-mission__grid { grid-template-columns: 1fr; }
+  .ef-rail2 { flex-direction: row; }
+  .ef-rail2 span { width: 52px; border-bottom: 0; border-right: 1px solid rgba(255, 255, 255, 0.07); }
+  .ef-mlist { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+}
+
+/* ==========================================================================
+   S3 端末ファイル(実機スクショ4 オペレーター画面の再現)
+   ========================================================================== */
+.ef-oper { position: relative; padding: clamp(3rem, 6vw, 5.5rem) 0; overflow: clip; }
+
+.ef-water {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 10vw, 8rem);
+  letter-spacing: 0.3em;
+  color: rgba(23, 23, 26, 0.06);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ef-oper__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr 130px;
+  gap: clamp(1.2rem, 3vw, 2.6rem);
+  align-items: start;
+}
+
+.ef-oper__name { font-family: "Noto Sans JP", sans-serif; font-weight: 900; font-size: clamp(2.2rem, 1.6rem + 3vw, 3.6rem); line-height: 1.1; color: var(--ef-black); }
+
+.ef-oper__name small { font-family: "Oswald", sans-serif; font-weight: 600; font-size: 0.4em; letter-spacing: 0.3em; margin-left: 14px; color: var(--ef-gray); }
+
+.ef-oper__stars { color: var(--ef-gray); letter-spacing: 0.14em; margin-top: 8px; font-size: 0.7rem; font-family: "Oswald", "Noto Sans JP", sans-serif; font-weight: 600; }
+
+.ef-oper__tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+.ef-oper__tags span { border: 1.5px solid var(--ef-black); padding: 4px 12px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; background: #fff; }
+
+.ef-oper__cap { margin-top: 26px; margin-bottom: 12px; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.1em; color: var(--ef-black); border-left: 4px solid var(--ef-yellow); padding-left: 10px; }
+
+.ef-oper__cap i { font-family: var(--ef-mono); font-style: normal; font-size: 0.56rem; color: rgba(23, 23, 26, 0.4); vertical-align: super; margin-left: 6px; letter-spacing: 0.16em; }
+
+.ef-abils { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.ef-abil { display: grid; gap: 2px; }
+
+.ef-abil__l { font-size: 0.7rem; font-weight: 700; color: var(--ef-gray); }
+
+.ef-abil__v { font-family: "Oswald", sans-serif; font-weight: 700; font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.3rem); color: var(--ef-black); font-variant-numeric: tabular-nums; line-height: 1.1; }
+
+.ef-abil__v i { font-style: normal; font-size: 0.5em; color: var(--ef-gray); margin-left: 2px; }
+
+.ef-abil__d { font-size: 0.62rem; color: rgba(23, 23, 26, 0.45); }
+
+.ef-skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.ef-skill { display: grid; gap: 5px; justify-items: center; text-align: center; }
+
+.ef-skill__orb {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--ef-black);
   color: var(--ef-yellow);
-  white-space: pre-wrap;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 1.1rem;
+  border: 2.5px solid var(--ef-yellow);
+  box-shadow: 0 6px 14px rgba(23, 23, 26, 0.25);
 }
+
+.ef-skill__n { font-size: 0.74rem; font-weight: 800; color: var(--ef-black); }
+
+.ef-skill__d { font-size: 0.6rem; color: rgba(23, 23, 26, 0.5); line-height: 1.5; }
+
+/* 右: 巨大レベル数字 + ピル */
+.ef-oper__right { display: grid; gap: 18px; justify-items: start; padding-top: 8px; }
+
+.ef-level { display: grid; justify-items: start; }
+
+.ef-level b { font-family: "Oswald", sans-serif; font-weight: 700; font-size: clamp(4.5rem, 3rem + 7vw, 8rem); line-height: 0.9; color: var(--ef-black); }
+
+.ef-level span { font-family: "Oswald", sans-serif; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--ef-gray); margin-top: 4px; }
+
+.ef-level__badge { font-style: normal; margin-top: 10px; background: var(--ef-black); color: var(--ef-yellow); padding: 5px 12px; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; }
+
+.ef-oper__ctas { display: grid; gap: 10px; }
+
+/* 縦黄バンド + 装備スロット(=専用シリコン) */
+.ef-band { position: relative; background: var(--ef-yellow); padding: 130px 10px 14px; display: grid; gap: 10px; align-content: start; }
+
+.ef-band__txt {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--ef-black);
+  height: 112px;
+}
+
+.ef-slot {
+  display: grid;
+  gap: 1px;
+  background: var(--ef-black);
+  color: #fff;
+  padding: 9px 10px;
+  transition: transform 0.15s;
+}
+
+.ef-slot:hover { transform: translateX(-4px); }
+
+.ef-slot__t { font-size: 0.56rem; letter-spacing: 0.14em; color: var(--ef-yellow); }
+
+.ef-slot b { font-size: 0.82rem; font-weight: 800; }
+
+.ef-slot__lv { font-family: var(--ef-mono); font-size: 0.56rem; color: rgba(255, 255, 255, 0.55); }
+
+@media (max-width: 900px) {
+  .ef-oper__grid { grid-template-columns: 1fr; }
+  .ef-band { padding: 14px; grid-template-columns: repeat(2, 1fr); }
+  .ef-band__txt { display: none; }
+  .ef-abils, .ef-skills { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ==========================================================================
+   S4 設備ダイアログ(実機スクショ3の再現)
+   ========================================================================== */
+.ef-dialog { padding: clamp(2.6rem, 5vw, 4.5rem) 0; }
+
+.ef-dlg {
+  border: 1.5px solid var(--ef-black);
+  background:
+    repeating-linear-gradient(45deg, rgba(23, 23, 26, 0.022) 0 2px, transparent 2px 12px),
+    var(--ef-panel);
+  box-shadow: 0 26px 60px rgba(23, 23, 26, 0.2);
+}
+
+.ef-dlg__head { display: flex; align-items: center; gap: 12px; padding: 14px 0 14px 20px; border-bottom: 1.5px solid var(--ef-black); }
+
+.ef-dlg__ic { font-size: 1rem; }
+
+.ef-dlg__cap { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; color: var(--ef-gray); }
+
+.ef-dlg__cap i { font-family: var(--ef-mono); font-style: normal; font-size: 0.54rem; vertical-align: super; margin-left: 4px; color: rgba(23, 23, 26, 0.4); }
+
+.ef-dlg__t { font-family: "Oswald", "Noto Sans JP", sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--ef-black); }
+
+.ef-dlg__head .ef-x { margin-left: auto; }
+
+.ef-dlg__body { display: grid; grid-template-columns: 240px 1fr; gap: clamp(1.2rem, 3vw, 2.6rem); padding: clamp(1.4rem, 3vw, 2.4rem); }
+
+/* 警告アイコン(斜線ダイヤ+立体三角) */
+.ef-dlg__icon {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background:
+    repeating-linear-gradient(45deg, rgba(23, 23, 26, 0.85) 0 10px, rgba(23, 23, 26, 0.7) 10px 20px);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.ef-dlg__tri {
+  width: 96px;
+  height: 84px;
+  background: #f2f1ec;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  display: grid;
+  place-items: center;
+  color: var(--ef-red);
+  font-weight: 900;
+  font-size: 2.2rem;
+  padding-top: 18px;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+}
+
+.ef-dlg__cap2 { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; color: var(--ef-gray); margin-bottom: 8px; }
+
+.ef-dlg__cap2 i { font-family: var(--ef-mono); font-style: normal; font-size: 0.56rem; vertical-align: super; margin-left: 5px; color: rgba(23, 23, 26, 0.4); }
+
+.ef-dlg__b { font-size: 0.86rem; line-height: 1.95; color: var(--ef-gray); margin-bottom: 18px; }
+
+.ef-mats { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.ef-mat { width: 128px; background: #ffffff; border: 1px solid var(--ef-line); padding: 10px 10px 8px; display: grid; gap: 3px; }
+
+.ef-mat__t { font-size: 0.7rem; font-weight: 800; color: var(--ef-black); }
+
+.ef-mat__v { font-size: 0.62rem; color: var(--ef-gray); line-height: 1.5; }
+
+.ef-mat__own { font-family: var(--ef-mono); font-size: 0.62rem; color: #1b7a2e; }
+
+.ef-dlg__foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 20px; border-top: 1.5px solid var(--ef-black); flex-wrap: wrap; }
+
+.ef-dlg__warn { background: var(--ef-red); color: #fff; font-weight: 800; font-size: 0.76rem; letter-spacing: 0.1em; padding: 8px 16px; }
+
+@media (max-width: 760px) { .ef-dlg__body { grid-template-columns: 1fr; } .ef-dlg__icon { max-width: 220px; margin-inline: auto; } }
+
+/* ==========================================================================
+   S5 持続計器+ターミナル(黒ブロック)
+   ========================================================================== */
+.ef-sustain2 { background: var(--ef-black); color: #f2f1ec; padding: clamp(3rem, 6vw, 5.5rem) 0; position: relative; }
+
+.ef-sustain2::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: repeating-linear-gradient(-45deg, var(--ef-yellow) 0 18px, var(--ef-black) 18px 36px); }
+
+.ef-sustain2 .ef-slash--y { color: var(--ef-black); }
+
+.ef-h2x { font-size: clamp(1.6rem, 1.1rem + 2.6vw, 2.6rem); color: #f2f1ec; margin-top: 14px; }
+
+.ef-leadx { max-width: 700px; margin-top: 12px; margin-bottom: 26px; opacity: 0.78; line-height: 2; font-size: 0.9rem; }
+
+.ef-gauges2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(242, 241, 236, 0.22); border: 1px solid rgba(242, 241, 236, 0.22); margin-bottom: 28px; }
+
+.ef-gauge2 { background: var(--ef-black); text-align: center; padding: clamp(1.6rem, 3vw, 2.6rem) 12px; }
+
+.ef-gauge2 b { font-family: "Oswald", sans-serif; font-weight: 700; font-size: clamp(1.8rem, 1.2rem + 2.6vw, 3rem); color: #f2f1ec; font-variant-numeric: tabular-nums; }
+
+.ef-gauge2 i { font-style: normal; color: var(--ef-yellow); margin-left: 4px; font-size: 0.9rem; }
+
+.ef-gauge2 span { display: block; margin-top: 10px; font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(242, 241, 236, 0.6); }
+
+@media (max-width: 760px) { .ef-gauges2 { grid-template-columns: repeat(2, 1fr); } }
+
+.ef-terminal { border: 1px solid rgba(242, 241, 236, 0.25); background: #0c0c0a; padding: 22px 24px; min-height: 176px; }
+
+.ef-terminal__out { margin: 0; font-family: var(--ef-mono); font-size: 0.82rem; line-height: 1.9; color: var(--ef-yellow); white-space: pre-wrap; }
 
 .ef-terminal__out::after { content: "▮"; animation: ef-blink 1s steps(1) infinite; }
 
 @keyframes ef-blink { 50% { opacity: 0; } }
 
-/* --- コアモジュールの工業調整 --- */
+/* ==========================================================================
+   S6 スカウト画面(実機スクショ5の再現・購入セクション)
+   ========================================================================== */
+.ef-scout { position: relative; padding: clamp(3rem, 6vw, 5rem) 0 0; overflow: clip; }
+
+.ef-water--w { color: rgba(23, 23, 26, 0.05); top: 40%; }
+
+.ef-scout__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0;
+  border: 1.5px solid var(--ef-black);
+  background: #ffffff;
+  box-shadow: 0 26px 60px rgba(23, 23, 26, 0.2);
+}
+
+.ef-scout__art { position: relative; padding: 26px; display: flex; gap: 22px; align-items: center; justify-content: center; overflow: clip; }
+
+/* 左アートの赤い斜めブロック(スカウト画面の赤面の再現) */
+.ef-scout__art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 55%, rgba(216, 56, 42, 0.92) 55.2%),
+    linear-gradient(115deg, transparent 68%, rgba(23, 23, 26, 0.9) 68.2%);
+  z-index: 0;
+}
+
+.ef-scout__art .ef-slash { position: absolute; top: 16px; left: 20px; z-index: 2; }
+
+.ef-scout__art img { position: relative; z-index: 1; width: clamp(130px, 15vw, 200px); height: auto; filter: drop-shadow(0 20px 26px rgba(23, 23, 26, 0.35)); }
+
+.ef-scout__art img:last-child { transform: rotate(5deg) translateY(12px); }
+
+/* 右の赤縦パネル(灼熱焔痕の再現) */
+.ef-scout__panel { background: var(--ef-red); color: #fff; padding: clamp(1.4rem, 3vw, 2.4rem); display: grid; gap: 14px; align-content: start; }
+
+.ef-scout__t { font-family: "Noto Sans JP", sans-serif; font-weight: 900; font-size: clamp(1.9rem, 1.3rem + 2.6vw, 3rem); line-height: 1.15; letter-spacing: 0.06em; }
+
+.ef-scout__pick { background: var(--ef-black); color: #fff; align-self: start; justify-self: start; padding: 6px 12px; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; }
+
+.ef-scout__count { border: 0; padding: 0; background: transparent; border-radius: 0; }
+
+.ef-scout__cl { font-size: 0.88rem; font-weight: 700; }
+
+.ef-scout__cl b { font-family: "Oswald", sans-serif; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+
+.ef-scout__end { margin-top: 4px; font-family: var(--ef-mono); font-size: 0.7rem; opacity: 0.85; }
+
+.ef-scout__sure { display: grid; gap: 6px; font-size: 0.78rem; }
+
+.ef-scout__sure li { padding-left: 16px; position: relative; }
+
+.ef-scout__sure li::before { content: "◆"; position: absolute; left: 0; font-size: 0.6rem; top: 0.25em; color: var(--ef-yellow); }
+
+.ef-scout__stock { border: 0; border-radius: 0; padding: 0; background: transparent; }
+
+.ef-scout__stock .cl-stock__bar { background: rgba(255, 255, 255, 0.25); margin-block: 6px; }
+
+.ef-scout__stock .cl-stock__fill { background: var(--ef-yellow); }
+
+.ef-scout__stock .cl-stock__meta { color: rgba(255, 255, 255, 0.85); font-size: 0.78rem; }
+
+.ef-scout__stock .cl-stock__remain { color: #fff; }
+
+.ef-scout__btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+
+.ef-scout__btns .ef-pill { border-color: #fff; }
+
+.ef-scout__btns .ef-pill--buy { border-color: var(--ef-yellow); }
+
+/* 下部バー(武庫交換所…の再現) */
+.ef-scout__bar {
+  margin-top: 0;
+  border-top: 1.5px solid var(--ef-black);
+  background: var(--ef-panel);
+  display: flex;
+  justify-content: flex-end;
+  gap: 26px;
+  padding: 12px clamp(16px, 4vw, 40px);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--ef-gray);
+}
+
+@media (max-width: 860px) {
+  .ef-scout__grid { grid-template-columns: 1fr; }
+  .ef-scout__art { min-height: 300px; }
+}
+
+/* ==========================================================================
+   コアモジュールの実機UI調整(白パネル・黄フィル・角なし)
+   ========================================================================== */
 .collab--endfield .cl-eyebrow { color: var(--ef-black); background: var(--ef-yellow); display: inline-block; padding: 3px 10px; letter-spacing: 0.26em; }
 
-.collab--endfield .ef-block--dark .cl-eyebrow { background: transparent; color: var(--ef-yellow); padding: 0; }
+.collab--endfield .cl-btn { border-radius: 999px; font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.08em; }
 
-.collab--endfield .cl-btn { border-radius: 0; font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.08em; }
+.collab--endfield .cl-btn--primary { background: var(--ef-yellow); color: var(--ef-black); box-shadow: none; border: 1.5px solid var(--ef-black); }
 
-.collab--endfield .cl-btn--primary { background: var(--ef-black); color: var(--ef-yellow); box-shadow: none; }
+.collab--endfield .cl-btn--primary:hover { box-shadow: 0 10px 24px rgba(255, 216, 0, 0.5); }
 
-.collab--endfield .cl-btn--primary:hover { box-shadow: 4px 4px 0 var(--ef-yellow); }
+.collab--endfield .cl-btn--ghost { border-color: var(--ef-black); color: var(--ef-black); background: #fff; }
 
-.collab--endfield .cl-btn--ghost { border-color: var(--ef-black); color: var(--ef-black); }
-
-.collab--endfield .cl-tag { border-radius: 0; border-color: var(--ef-black); }
+.collab--endfield .cl-tag { border-radius: 0; border-color: var(--ef-black); background: #fff; }
 
 .collab--endfield .cl-stat, .collab--endfield .cl-count, .collab--endfield .cl-stock,
 .collab--endfield .cl-buy__inner, .collab--endfield .cl-faq__i, .collab--endfield .cl-acc,
@@ -272,16 +739,361 @@
 
 .collab--endfield .cl-stat__v, .collab--endfield .cl-count__unit b { font-family: "Oswald", "Noto Sans JP", sans-serif; }
 
-.collab--endfield .cl-lpnav { background: rgba(242, 241, 236, 0.9); }
+.collab--endfield .cl-lpnav { background: rgba(236, 235, 231, 0.92); }
 
-.collab--endfield .cl-lpnav__buy { border-radius: 0; background: var(--ef-black); color: var(--ef-yellow); }
+.collab--endfield .cl-lpnav__buy { border-radius: 0; background: var(--ef-yellow); color: var(--ef-black); }
 
 .collab--endfield .cl-points li::before { border-radius: 0; background: var(--ef-yellow); border: 1px solid var(--ef-black); }
 
+.collab--endfield .cl-h2 { color: var(--ef-black); }
+
+.collab--endfield .cl-sched__i::before { border-radius: 0; background: var(--ef-yellow); border: 1px solid var(--ef-black); }
+
 @media (prefers-reduced-motion: reduce) {
-  .ef-boot { display: none; }
+  .ef-title__continue { animation: none; }
   .ef-terminal__out::after { animation: none; }
 }
 
 /* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
 .collab--endfield:not(.cl-lp) .t-hero { font-family: "Oswald", "Noto Sans JP", sans-serif; letter-spacing: 0.04em; }
+
+/* ==========================================================================
+   追補: 拡張セクション(拠点マップ/素質/fps推移/開発記録/記録画像/テーマ/資料室)
+   ========================================================================== */
+
+/* タイトル画面: 中央奥の端末シルエット(実機のキャラシルエット相当) */
+.ef-title__sil {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: clamp(180px, 22vw, 280px);
+  height: auto;
+  filter: grayscale(1) contrast(0.7) opacity(0.16);
+  pointer-events: none;
+}
+
+.ef-title__lock { position: relative; }
+
+/* 白抜きスラッシュ見出し(暗色セクション用) */
+.ef-slash--w { color: #f2f1ec; }
+
+.ef-slash--w::before { color: var(--ef-yellow); }
+
+/* --- S2 拠点マップ --- */
+.ef-base { background: #1b1b1e; color: #f2f1ec; padding: clamp(3rem, 6vw, 5.5rem) 0; position: relative; overflow: clip; }
+
+.ef-base__lead { max-width: 640px; opacity: 0.75; line-height: 2; font-size: 0.88rem; margin-bottom: 26px; }
+
+.ef-base__grid { display: grid; grid-template-columns: 170px 1fr 200px; gap: clamp(1rem, 3vw, 2.4rem); align-items: center; }
+
+.ef-map__mbtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: rgba(242, 241, 236, 0.09);
+  border: 1px solid rgba(242, 241, 236, 0.16);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+  color: #f2f1ec;
+  font-weight: 800;
+  font-size: 0.82rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ef-map__mbtn b { font-family: "Oswald", "Noto Sans JP", sans-serif; width: 26px; height: 26px; display: grid; place-items: center; background: rgba(242, 241, 236, 0.14); font-size: 0.8rem; }
+
+.ef-map__mbtn:hover { background: var(--ef-yellow); color: var(--ef-black); }
+
+.ef-map__mbtn:hover b { background: rgba(23, 23, 26, 0.15); }
+
+/* 円形等高線マップ+黄色区画 */
+.ef-map { position: relative; aspect-ratio: 1; max-width: 460px; margin-inline: auto; width: 100%; }
+
+.ef-map__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(242, 241, 236, 0.08) 0 30%, transparent 31%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(242, 241, 236, 0.12) 0 1px, transparent 1px 12%);
+  border: 2px solid rgba(242, 241, 236, 0.25);
+}
+
+.ef-map__ring::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 2px dashed rgba(242, 241, 236, 0.18);
+}
+
+/* 黄色いエリア(不定形ポリゴン) */
+.ef-map__zonebg {
+  position: absolute;
+  inset: 17%;
+  background: var(--ef-yellow);
+  opacity: 0.9;
+  clip-path: polygon(28% 8%, 62% 4%, 78% 22%, 92% 40%, 84% 66%, 62% 88%, 40% 92%, 18% 74%, 8% 48%, 16% 24%);
+  filter: drop-shadow(0 0 34px rgba(255, 216, 0, 0.35));
+}
+
+.ef-map__zonebg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(23, 23, 26, 0.12) 0 2px, transparent 2px 12px),
+    repeating-linear-gradient(90deg, rgba(23, 23, 26, 0.12) 0 2px, transparent 2px 12px);
+  clip-path: inherit;
+}
+
+.ef-map__zones { position: absolute; inset: 0; display: grid; place-content: center; gap: 10px; }
+
+.ef-map__zone {
+  display: grid;
+  gap: 1px;
+  justify-items: center;
+  text-align: center;
+  color: var(--ef-black);
+  background: rgba(242, 241, 236, 0.92);
+  border: 1.5px solid var(--ef-black);
+  padding: 7px 16px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.ef-map__zone i { font-style: normal; color: #c8a400; margin-right: 4px; }
+
+.ef-map__zone small { font-size: 0.62rem; font-weight: 600; color: var(--ef-gray); }
+
+.ef-map__zone:hover { transform: scale(1.05); background: #ffffff; }
+
+.ef-map__lv {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: rgba(242, 241, 236, 0.7);
+  white-space: nowrap;
+}
+
+.ef-map__lv b { font-family: "Oswald", sans-serif; color: var(--ef-yellow); font-size: 1rem; }
+
+.ef-map__lv i { font-style: normal; color: var(--ef-yellow); }
+
+/* 右のスロット(ロック付き) */
+.ef-map__slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 11px 14px;
+  border: 1px solid rgba(242, 241, 236, 0.2);
+  background: rgba(242, 241, 236, 0.06);
+  color: #f2f1ec;
+  font-weight: 700;
+  font-size: 0.78rem;
+  clip-path: polygon(0 0, 92% 0, 100% 26%, 100% 100%, 0 100%);
+  transition: background 0.15s, color 0.15s;
+}
+
+.ef-map__slot i { font-style: normal; font-size: 0.72rem; color: var(--ef-yellow); }
+
+a.ef-map__slot:hover { background: var(--ef-yellow); color: var(--ef-black); }
+
+a.ef-map__slot:hover i { color: var(--ef-black); }
+
+.ef-map__slot.is-lock { opacity: 0.45; cursor: default; }
+
+/* 下部: オペレーターカード+トースト+ワードマーク */
+.ef-base__foot { margin-top: 30px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; position: relative; }
+
+.ef-opcard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 216, 0, 0.5);
+  clip-path: polygon(0 0, 96% 0, 100% 30%, 100% 100%, 4% 100%, 0 70%);
+  padding: 10px 18px;
+}
+
+.ef-opcard__pow { width: 30px; height: 30px; border-radius: 50%; border: 1.6px solid rgba(242, 241, 236, 0.5); display: grid; place-items: center; font-size: 0.8rem; }
+
+.ef-opcard b { font-size: 0.88rem; }
+
+.ef-opcard__lv { display: flex; align-items: center; gap: 8px; font-size: 0.64rem; color: rgba(242, 241, 236, 0.65); margin-top: 3px; }
+
+.ef-opcard__lv i { font-style: normal; font-family: "Oswald", sans-serif; color: var(--ef-yellow); font-size: 0.85rem; }
+
+.ef-opcard__bar { width: 90px; height: 5px; background: rgba(242, 241, 236, 0.18); display: inline-block; }
+
+.ef-opcard__bar i { display: block; width: 99%; height: 100%; background: var(--ef-yellow); }
+
+.ef-opcard__uid { font-family: var(--ef-mono); font-size: 0.6rem; color: rgba(242, 241, 236, 0.45); }
+
+.ef-toast {
+  background: rgba(0, 0, 0, 0.55);
+  border-left: 3px solid var(--ef-yellow);
+  padding: 10px 16px;
+  font-size: 0.78rem;
+  color: rgba(242, 241, 236, 0.85);
+}
+
+.ef-toast a { color: var(--ef-yellow); text-decoration: underline; text-underline-offset: 3px; }
+
+.ef-base__mark { margin-left: auto; font-family: "Oswald", sans-serif; font-weight: 700; letter-spacing: 0.4em; font-size: 1rem; color: rgba(242, 241, 236, 0.5); }
+
+.ef-base .ef-meta { color: rgba(242, 241, 236, 0.4); }
+
+@media (max-width: 900px) {
+  .ef-base__grid { grid-template-columns: 1fr; }
+  .ef-map { max-width: 340px; }
+  .ef-base__left, .ef-base__right { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ef-map__mbtn, .ef-map__slot { margin-bottom: 0; }
+}
+
+/* --- 素質 --- */
+.ef-traits { display: grid; gap: 10px; }
+
+.ef-trait {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  background: #ffffff;
+  border: 1px solid var(--ef-line);
+  padding: 12px 16px;
+}
+
+.ef-trait b { font-size: 0.8rem; color: var(--ef-black); }
+
+.ef-trait span { font-size: 0.78rem; color: var(--ef-gray); line-height: 1.8; }
+
+@media (max-width: 640px) { .ef-trait { grid-template-columns: 1fr; gap: 4px; } }
+
+/* --- fps推移バー --- */
+.ef-fps { margin-bottom: 28px; }
+
+.ef-fps__cap { font-size: 0.72rem; letter-spacing: 0.08em; color: rgba(242, 241, 236, 0.6); margin-bottom: 12px; }
+
+.ef-fps__bars { display: flex; align-items: flex-end; gap: clamp(6px, 1.4vw, 16px); height: 130px; border-bottom: 1px solid rgba(242, 241, 236, 0.3); padding-bottom: 0; }
+
+.ef-fpsbar { flex: 1; display: grid; align-content: end; justify-items: center; gap: 6px; height: 100%; }
+
+.ef-fpsbar i { display: block; width: 100%; max-width: 46px; height: calc(var(--h) * 1.2px); background: linear-gradient(180deg, var(--ef-yellow), #b89e00); }
+
+.ef-fpsbar span { font-family: var(--ef-mono); font-size: 0.58rem; color: rgba(242, 241, 236, 0.55); }
+
+/* --- 共同開発記録 --- */
+.ef-devlog { padding: clamp(3rem, 6vw, 5rem) 0; }
+
+.ef-logs { display: grid; }
+
+.ef-log {
+  display: grid;
+  grid-template-columns: 110px 240px 1fr;
+  gap: 8px 22px;
+  padding: 16px 0 16px 24px;
+  border-left: 2px solid var(--ef-black);
+  position: relative;
+}
+
+.ef-log::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 22px;
+  width: 12px;
+  height: 12px;
+  background: var(--ef-yellow);
+  border: 1.6px solid var(--ef-black);
+}
+
+.ef-log__d { font-family: var(--ef-mono); font-size: 0.74rem; color: var(--ef-gray); padding-top: 2px; }
+
+.ef-log__t { font-size: 0.95rem; color: var(--ef-black); }
+
+.ef-log__b { font-size: 0.8rem; color: var(--ef-gray); line-height: 1.9; }
+
+@media (max-width: 760px) { .ef-log { grid-template-columns: 1fr; gap: 3px; } }
+
+/* --- 記録画像 --- */
+.ef-gallery { padding: clamp(2.6rem, 5vw, 4.5rem) 0; }
+
+.ef-recs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.ef-rec { background: #ffffff; border: 1.5px solid var(--ef-black); padding: 14px 14px 10px; }
+
+.ef-rec img { width: 68%; height: auto; margin-inline: auto; }
+
+.ef-rec figcaption { margin-top: 10px; font-family: var(--ef-mono); font-size: 0.64rem; letter-spacing: 0.06em; color: var(--ef-gray); border-top: 1px solid var(--ef-line); padding-top: 8px; }
+
+@media (max-width: 760px) { .ef-recs { grid-template-columns: 1fr; } .ef-rec img { width: 46%; } }
+
+/* --- 同梱テーマ --- */
+.ef-theme { background: #1b1b1e; color: #f2f1ec; padding: clamp(3rem, 6vw, 5rem) 0; }
+
+.ef-theme .ef-slash { color: #f2f1ec; }
+
+.ef-theme .ef-slash::before { color: var(--ef-yellow); }
+
+.ef-theme .ef-base__lead { margin-bottom: 20px; }
+
+.ef-theme__grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: clamp(1.8rem, 4vw, 4rem); align-items: center; }
+
+.ef-theme__media { display: grid; place-items: center; }
+
+.ef-theme__media img { width: clamp(170px, 18vw, 230px); height: auto; filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.55)); }
+
+.ef-theme .ef-task { color: #f2f1ec; }
+
+.ef-theme .ef-task__box { border-color: var(--ef-yellow); }
+
+.ef-theme .ef-pill { margin-top: 18px; }
+
+@media (max-width: 800px) { .ef-theme__grid { grid-template-columns: 1fr; } }
+
+/* --- 資料室 --- */
+.ef-archive { padding: clamp(2.6rem, 5vw, 4.5rem) 0 clamp(1.6rem, 3vw, 2.6rem); }
+
+.ef-arch__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+.ef-arch {
+  display: grid;
+  gap: 4px;
+  background: #ffffff;
+  border: 1.5px solid var(--ef-black);
+  padding: 18px 18px 16px;
+  color: var(--ef-black);
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.ef-arch:hover { transform: translateY(-3px); box-shadow: 5px 5px 0 var(--ef-yellow); }
+
+.ef-arch__no { font-family: "Oswald", sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--ef-gray); }
+
+.ef-arch b { font-size: 0.98rem; font-weight: 800; }
+
+.ef-arch span:last-child { font-size: 0.74rem; color: var(--ef-gray); }
+
+@media (max-width: 760px) { .ef-arch__grid { grid-template-columns: 1fr; } }
+
+/* --- スカウトパネル内のコア部品を赤地仕様に(白箱化の修正) --- */
+.collab--endfield .cl-count.ef-scout__count,
+.collab--endfield .cl-stock.ef-scout__stock {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  color: #fff;
+}
+
+/* 設備ダイアログの警告三角を大きく */
+.ef-dlg__tri { width: 120px; height: 104px; font-size: 2.8rem; }

@@ -2150,7 +2150,7 @@ def _collab_lp_nte(cfg, phone, accs):
     marq = "SUZAKU × NTE — WELCOME TO HETHEREAU — 夜行 YAKO — LIMITED {qty} UNITS — ".format(qty=f"{cfg['limited']['qty']:,}")
     terms = [
         ("鑑定士", "S", "骨董品店エイボンに籍を置く、異象事件の解決屋。プレイヤーの分身。"),
-        ("異象", "A", "ヘザロウで日常的に起こる超常現象。人々はそれと隣り合って暮らす。"),
+        ("異象", "A", "ヘロシティで日常的に起こる超常現象。人々はそれと隣り合って暮らす。"),
         ("エイボン", "B", "表向きは骨董品店。その実、異象がらみの依頼を請け負う拠点。"),
     ]
     term_cards = "".join(
@@ -2164,7 +2164,7 @@ def _collab_lp_nte(cfg, phone, accs):
 <section class="nt-hero">
   <div class="nt-hero__inner">
     <p class="nt-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
-    <h1 class="nt-hero__title"><em>YAKO</em><span>ヘザロウの夜を、連れて歩く。</span></h1>
+    <h1 class="nt-hero__title"><em>YAKO</em><span>ヘロシティの夜を、連れて歩く。</span></h1>
     <p class="nt-hero__lead">{esc(cfg['hero']['lead'])}</p>
     <div class="nt-hero__stickers" aria-hidden="true"><span class="nt-stick nt-stick--1">1/0.98型</span><span class="nt-stick nt-stick--2">2TB</span><span class="nt-stick nt-stick--3">EL BACK</span></div>
     <img class="nt-hero__device" src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 夜想黒" width="250" height="441" loading="eager">
@@ -2233,89 +2233,362 @@ def _collab_lp_nte(cfg, phone, accs):
 
 
 def _collab_lp_endfield(cfg, phone, accs):
-    """エンドフィールド「前線」LP — 白黒反転×ビビッドイエロー・//見出し・起動カウンタ・等高線。"""
+    """エンドフィールド「前線」LP — ゲームUIの雰囲気を全面再現した長編構成。
+    タイトル画面/拠点マップ/任務/端末ファイル/設備ダイアログ/持続計器/
+    共同開発記録/記録画像/同梱テーマ/スカウト購入/資料室 の11画面+FAQ。"""
+    lim = cfg["limited"]
+
+    # --- S3 任務: 特徴をタスク行として、同梱物を任務報酬カードとして描く ---
+    tasks = [
+        ("8,500mAhで、長時間の連続稼働を維持する", "/products/phone/zensen/specs/"),
+        ("IP68+MIL-STD-810H 準拠の装甲で現場に耐える", None),
+        ("定速ガバナーで30分後fps維持率99%を保つ", "/collab/endfield/silicon/soc/"),
+        ("計器窓とターミナルHUDで稼働状態を常時表示する", None),
+        ("USB-C 18W逆給電で現場機器に電力を送る", None),
+    ]
+    task_rows = "".join(
+        (f'<li class="ef-task"><span class="ef-task__box" aria-hidden="true"></span>'
+         + (f'<a href="{href}">{esc(t)}</a>' if href else f'<span>{esc(t)}</span>') + "</li>")
+        for t, href in tasks)
+    rewards = [
+        ("ケース", "専用ケース(耐衝撃)", "×1", "#f2d800"),
+        ("BOX", "コレクターズボックス", "×1", "#8a8a92"),
+        ("CODE", "限定ギフトコード", "×1", "#c86428"),
+        ("THEME", "ターミナル・テーマ", "×1", "#4a7ac8"),
+        ("EXP", "持続99%", "", "#d43a2e"),
+    ]
+    reward_cards = "".join(
+        f'<div class="ef-reward" style="--rar:{c}"><span class="ef-reward__ic">{k}</span>'
+        f'<span class="ef-reward__n">{n}</span><b class="ef-reward__c">{q}</b></div>'
+        for k, n, q, c in rewards)
+
+    # --- S2 拠点マップ: 端末内部を「拠点」として読む(円形等高線+黄エリア) ---
+    zones = [
+        ("中枢エリア", "基幹 KIKAN-F1", "#efMission"),
+        ("電力区画", "8,500mAh", "#efOper"),
+        ("冷却坑道", "機関 定速ファン", "#efSustain"),
+    ]
+    zone_tags = "".join(
+        f'<a class="ef-map__zone" href="{href}"><i>◎</i>{z}<small>{d}</small></a>'
+        for z, d, href in zones)
+    left_menu = [
+        ("任", "任務", "#efMission"), ("端", "端末ファイル", "#efOper"),
+        ("耐", "耐久試験", "#efDura"), ("購", "購買部", "#buy"),
+    ]
+    left_btns = "".join(
+        f'<a class="ef-map__mbtn" href="{href}"><b>{ic}</b><span>{label}</span></a>'
+        for ic, label, href in left_menu)
+    right_slots = [
+        ("資料室", "/collab/endfield/silicon/soc/", False),
+        ("編成(アクセサリ)", "#efAcc", False),
+        ("記録画像", "#efGallery", False),
+        ("通行証(保証)", "/support/warranty/", False),
+        ("第2弾", None, True),
+    ]
+    right_btns = "".join(
+        (f'<span class="ef-map__slot is-lock"><i>🔒</i>{label}</span>' if locked else
+         f'<a class="ef-map__slot" href="{href}"><i>▣</i>{label}</a>')
+        for label, href, locked in right_slots)
+
+    # --- S4 端末ファイル ---
+    stats = [
+        ("性能", "403", "万点", "AnTuTu(基幹 KIKAN-F1)"),
+        ("持続", "99", "%", "30分後fps維持率"),
+        ("電池", "8500", "mAh", "全機種最大"),
+        ("耐候", "-20〜45", "℃", "動作保証温度"),
+    ]
+    stat_cells = "".join(
+        f'<div class="ef-abil"><span class="ef-abil__l">{l}</span><b class="ef-abil__v">{v}<i>{u}</i></b>'
+        f'<span class="ef-abil__d">{d}</span></div>' for l, v, u, d in stats)
+    skills = [("計器窓", "背面に電池・温度を常時表示"), ("HUD", "ターミナル調AOD"),
+              ("逆給電", "USB-C 18Wで機器へ給電"), ("耐滑", "グローブ/濡れ手タッチ")]
+    skill_cells = "".join(
+        f'<div class="ef-skill"><span class="ef-skill__orb">{t[0]}</span><span class="ef-skill__n">{t}</span>'
+        f'<span class="ef-skill__d">{d}</span></div>' for t, d in skills)
+    traits = [
+        ("特性・定速", "負荷を先読みしてクロックを一定に保ち、フレームタイム分散を48%低減する。"),
+        ("特性・岩盤", "高温時はメモリのリフレッシュを強化し、-20〜45℃で仕様通りに動く。"),
+        ("特性・坑道", "ストレージの書込耐久は標準比3倍。毎日記録しても摩耗を恐れない。"),
+    ]
+    trait_rows = "".join(
+        f'<div class="ef-trait"><b>{t}</b><span>{d}</span></div>' for t, d in traits)
+    slots = "".join(
+        f'<a class="ef-slot" href="{collab_silicon_url("endfield", c["key"])}">'
+        f'<span class="ef-slot__t">{esc(c["comp"])}</span><b>{esc(c["name"].split(" ")[0])}</b>'
+        f'<span class="ef-slot__lv">専用設計</span></a>'
+        for c in COLLAB_SILICON["endfield"])
+
+    # --- S5 設備ダイアログ ---
+    dura_cards = "".join(
+        f'<div class="ef-mat"><span class="ef-mat__t">{esc(k)}</span><span class="ef-mat__v">{esc(v)}</span>'
+        f'<b class="ef-mat__own">[PASS]</b></div>'
+        for k, v in [("落下", "1.8m × 26方向"), ("防水", "IP68・水深1.5m/30分"),
+                     ("防塵", "IP6X+防塵ファン駆動"), ("温度", "-20℃〜45℃"), ("振動・衝撃", "MIL-STD-810H")])
+
+    # --- S6 持続計器: 30分fps推移バー ---
+    fps_bars = "".join(
+        f'<div class="ef-fpsbar"><i style="--h:{h}"></i><span>{m}分</span></div>'
+        for m, h in [(0, 100), (4, 100), (8, 100), (12, 99), (16, 99), (20, 99), (24, 99), (28, 99), (30, 99)])
     boot_lines = [
         "> SUZAKU × ENDFIELD INDUSTRIES — JOINT ENGINEERING",
         "> boot: 基幹 KIKAN-F1 ................ OK",
         "> power cell: 8500mAh ............... 100%",
         "> armor: IP68 / MIL-STD-810H ........ PASS",
         "> thermal: 定速ガバナー .............. ENGAGED",
+        "> reverse-power: 18W ................ READY",
         "> ready. 前線、稼働開始。",
     ]
     data_lines = "|".join(boot_lines)
-    dura = [
-        ("落下", "1.8m × 26方向", "PASS"), ("防水", "IP68(水深1.5m・30分)", "PASS"),
-        ("防塵", "IP6X + 防塵ファン駆動", "PASS"), ("温度", "-20℃ 〜 45℃ 動作保証", "PASS"),
-        ("振動・衝撃", "MIL-STD-810H 準拠", "PASS"),
+
+    # --- S7 共同開発記録(スケジュール統合) ---
+    devlog = [
+        ("2025-08", "プロジェクト起動", "SUZAKUとHypergryphの共同設計チームが発足。「道具として信頼できる端末」を要件の頂点に置く。"),
+        ("2025-12", "タロⅡ環境要件を定義", "低温・粉塵・連続稼働の3条件を実機仕様に翻訳。-20℃動作とIP68+MILを必須要件化。"),
+        ("2026-04", "基幹 KIKAN-F1 テープアウト", "持続特化の専用SoCの初回試作が完成。定速ガバナーの実測でfps維持率99%を確認。"),
+        ("2026-08", "全26項目の耐久試験に合格", "落下26方向・防水・防塵・温度・振動の全項目をパス。装甲リブの最終形状が確定。"),
+        ("2026-10-03", "予約受付開始", "SUZAKUストアで先行予約を受付。"),
+        ("2026-10-17", "発売", "オンライン・秋葉原直営で同時発売。数量限定6,500台。"),
+        ("2026-11-30", "受付終了", "期間限定販売の受付終了。完売次第、期間内でも終了。"),
     ]
-    dura_rows = "".join(
-        f'<tr><th scope="row">{esc(k)}</th><td>{esc(v)}</td><td class="ef-pass">[{s}]</td></tr>'
-        for k, v, s in dura)
+    devlog_rows = "".join(
+        f'<li class="ef-log reveal"><span class="ef-log__d">{d}</span><b class="ef-log__t">{t}</b>'
+        f'<span class="ef-log__b">{b}</span></li>' for d, t, b in devlog)
+
+    # --- S8 記録画像(ギャラリー) ---
+    shots = [
+        (pimg(phone["id"]), "REC_001 — 黒鉄・背面装甲", f'{esc(phone["name"])} 黒鉄'),
+        (pimg(phone["id"], 1), "REC_002 — 工業黄・ハザード", f'{esc(phone["name"])} 工業黄'),
+        (pimg_front(phone["id"]), "REC_003 — ターミナルHUD", f'{esc(phone["name"])} 正面'),
+    ]
+    gallery = "".join(
+        f'<figure class="ef-rec reveal"><img src="{src}" alt="{alt}" loading="lazy" width="220" height="388">'
+        f'<figcaption>{cap}</figcaption></figure>' for src, cap, alt in shots)
+
     return f"""
 {_cl_lpnav(cfg, phone)}
-<div class="ef-boot" id="efBoot" aria-hidden="true"><div class="ef-boot__in"><span class="ef-boot__pct" data-boot>0%</span><span class="ef-boot__l">OVER THE FRONTIER / INTO THE FRONT</span><span class="ef-boot__bar"><i></i></span></div></div>
-<section class="ef-hero">
-  <div class="ef-rail" aria-hidden="true"><span>// DEVICE</span><span>// DURABILITY</span><span>// SILICON</span><span>// ORDER</span></div>
-  <div class="ef-hero__inner">
-    <p class="ef-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
-    <h1 class="ef-hero__title">// ZENSEN<span>タロⅡの果てでも、止まらない。</span></h1>
-    <p class="ef-hero__lead">{esc(cfg['hero']['lead'])}</p>
-    <div class="ef-hero__tags"><span class="ef-tag">IP68 + MIL-STD-810H</span><span class="ef-tag">8,500mAh</span><span class="ef-tag">持続99%</span></div>
-    <img class="ef-hero__device" src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 黒鉄" width="250" height="441" loading="eager">
+<section class="ef-title" aria-label="SUZAKU × アークナイツ: エンドフィールド 前線">
+  <div class="ef-title__noise" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <img class="ef-title__sil" src="{pimg(phone['id'])}" alt="" aria-hidden="true" width="230" height="406">
+  <nav class="ef-title__menu" aria-label="ページ内メニュー">
+    <a href="{product_url(phone)}"><span class="ef-title__mi">製</span>製品詳細</a>
+    <a href="{product_url(phone)}specs/"><span class="ef-title__mi">仕</span>仕様</a>
+    <a href="/collab/endfield/silicon/soc/"><span class="ef-title__mi">基</span>専用シリコン</a>
+    <a href="#buy"><span class="ef-title__mi">購</span>購入</a>
+  </nav>
+  <div class="ef-title__lock">
+    <p class="ef-title__over">{esc(cfg['hero']['eyebrow'])}</p>
+    <span class="ef-title__rule" aria-hidden="true"></span>
+    <h1 class="ef-title__logo"><small>SUZAKU × アークナイツ: エンドフィールド</small><span class="ef-title__band"><em>前線</em><b class="ef-title__box">共同<br>設計</b></span></h1>
+    <span class="ef-title__rule" aria-hidden="true"></span>
+    <p class="ef-title__lead">{esc(cfg['hero']['lead'])}</p>
+  </div>
+  <a class="ef-title__continue" href="#efBase">スクロールして続ける <b>▶</b></a>
+  <span class="ef-title__ver" aria-hidden="true">SZ_WEB_REL_2026.10_ZENSEN_E{lim['qty']}</span>
+  <span class="ef-title__maker" aria-hidden="true">SUZAKU × ENDFIELD INDUSTRIES</span>
+</section>
+
+<section class="ef-base" id="efBase" aria-label="拠点マップ">
+  <div class="cl-wrap">
+    <p class="ef-slash ef-slash--w">拠点 — 前線の内部</p>
+    <p class="ef-base__lead">工業機「前線」を、ひとつの拠点として読む。中央のエリアを選ぶと各区画の詳細へ移動します。</p>
+    <div class="ef-base__grid">
+      <div class="ef-base__left">{left_btns}</div>
+      <div class="ef-map" aria-hidden="false">
+        <div class="ef-map__ring"></div>
+        <div class="ef-map__zonebg" aria-hidden="true"></div>
+        <div class="ef-map__zones">{zone_tags}</div>
+        <p class="ef-map__lv"><i>●</i> 区画マップ <b>03</b>/03</p>
+      </div>
+      <div class="ef-base__right">{right_btns}</div>
+    </div>
+    <div class="ef-base__foot">
+      <div class="ef-opcard">
+        <span class="ef-opcard__pow">⏻</span>
+        <div><b>前線 ZENSEN</b><span class="ef-opcard__lv">稼働状態 <i>99/100</i><em class="ef-opcard__bar"><i></i></em></span></div>
+        <span class="ef-opcard__uid">UID:SZ-{lim['qty']}</span>
+      </div>
+      <p class="ef-toast" role="status">計測レポート「持続99%」を公開中です → <a href="#efSustain">持続計器で見る</a></p>
+      <span class="ef-base__mark" aria-hidden="true">ZENSEN</span>
+    </div>
+  </div>
+  <span class="ef-meta" aria-hidden="true">SZ-ZENSEN-{lim['qty']} / BASE MAP</span>
+</section>
+
+<section class="ef-mission" id="efMission" aria-label="任務">
+  <div class="cl-wrap">
+    <p class="ef-slash">調達計画</p>
+    <div class="ef-mission__grid">
+      <div class="ef-rail2" aria-hidden="true"><span class="is-on">ALL</span><span>◆</span><span>▲</span><span>◇</span><span>▽</span></div>
+      <div class="ef-mlist">
+        <p class="ef-mlist__urgent"><b>受注</b>共同設計プロジェクト</p>
+        <div class="ef-mitem is-on"><span class="ef-mitem__t">前線、受注開始</span><span class="ef-mitem__meta">受付中 ◎ 〜{esc(lim['until'][5:10]).replace('-', '/')}</span></div>
+        <div class="ef-mitem"><span class="ef-mitem__t">タロⅡ 環境試験</span><span class="ef-mitem__meta">完了 — 全26項目 PASS</span></div>
+        <div class="ef-mitem"><span class="ef-mitem__t">基幹 KIKAN-F1 実装</span><span class="ef-mitem__meta">完了 — 持続99%達成</span></div>
+        <div class="ef-mitem"><span class="ef-mitem__t">専用アクセサリ配備</span><span class="ef-mitem__meta">進行中 → 購買部</span></div>
+      </div>
+      <div class="ef-mdetail">
+        <button class="ef-x" type="button" aria-hidden="true" tabindex="-1">✕</button>
+        <h2 class="ef-mdetail__t">前線、受注開始</h2>
+        <p class="ef-mdetail__area"><i>◎</i> 中枢エリア — SUZAKUストア</p>
+        <p class="ef-mdetail__b">{esc(cfg['world'])} タロⅡ級の環境に耐えるよう共同設計した堅牢機「前線」の受注を開始した。下記の導入チェックリストを確認し、受付終了までに手配を。</p>
+        <ul class="ef-tasks">{task_rows}</ul>
+        <p class="ef-mdetail__rw">同梱物</p>
+        <div class="ef-rewards">{reward_cards}</div>
+      </div>
+    </div>
+    <span class="ef-meta" aria-hidden="true">SZ-ZENSEN-{lim['qty']} / PROCUREMENT</span>
   </div>
 </section>
 
-<section class="ef-block ef-block--dark">
+<section class="ef-oper" id="efOper" aria-label="端末ファイル">
+  <span class="ef-water" aria-hidden="true">Z E N S E N</span>
+  <div class="cl-wrap ef-oper__grid">
+    <div class="ef-oper__left">
+      <p class="ef-slash">端末ファイル</p>
+      <h2 class="ef-oper__name">前線<small>ZENSEN</small></h2>
+      <p class="ef-oper__stars">JOINT ENGINEERING MODEL — 完全専用設計</p>
+      <div class="ef-oper__tags"><span>IP68</span><span>MIL-STD-810H</span><span>工業設計</span><span>共同設計</span></div>
+      <p class="ef-oper__cap">キースペック <i>FIELD DATA</i></p>
+      <div class="ef-abils">{stat_cells}</div>
+      <p class="ef-oper__cap">専用機能 <i>EXCLUSIVE</i></p>
+      <div class="ef-skills">{skill_cells}</div>
+      <p class="ef-oper__cap">設計特性 <i>TRAITS</i></p>
+      <div class="ef-traits">{trait_rows}</div>
+    </div>
+    <div class="ef-oper__right">
+      <div class="ef-level"><b>99</b><span>SUSTAIN / 100</span><i class="ef-level__badge">JOINT ENGINEERING</i></div>
+      <div class="ef-oper__ctas"><a class="ef-pill" href="{product_url(phone)}specs/"><span class="ef-pill__dash"></span>仕様を見る<b>+</b></a>
+      <a class="ef-pill" href="/products/compare/"><span class="ef-pill__dash"></span>比較する<b>+</b></a></div>
+    </div>
+    <div class="ef-band">
+      <span class="ef-band__txt" aria-hidden="true">SUZAKU × ENDFIELD INDUSTRIES</span>
+      <div class="ef-slots">{slots}</div>
+    </div>
+  </div>
+  <span class="ef-meta" aria-hidden="true">SZ-ZENSEN-{lim['qty']} / DEVICE FILE</span>
+</section>
+
+<section class="ef-dialog" id="efDura" aria-label="耐久試験">
   <div class="cl-wrap">
-    <div class="ef-head"><p class="ef-eyebrow">// TALOS-II</p><h2 class="ef-h2">現場は、タロⅡ。</h2></div>
-    <p class="ef-lead">{esc(cfg['world'])}</p>
-    <div class="ef-terms">
-      <div class="ef-term reveal"><h3>管理人</h3><p>エンドフィールド工業を率いる主人公。オペレーターとともに、開拓の最前線に立つ。</p></div>
-      <div class="ef-term reveal"><h3>エンドフィールド工業</h3><p>タロⅡで工業システムを展開する組織。前線は、その現場のための道具。</p></div>
-      <div class="ef-term reveal"><h3>集成工業システム</h3><p>採掘から生産までを自動化する基幹システム。前線のターミナルHUDの着想元。</p></div>
+    <div class="ef-dlg">
+      <div class="ef-dlg__head"><span class="ef-dlg__ic">⚙</span><span class="ef-dlg__cap">// 耐久 <i>DURABILITY</i></span><h2 class="ef-dlg__t">過酷環境テスト</h2><button class="ef-x" type="button" aria-hidden="true" tabindex="-1">✕</button></div>
+      <div class="ef-dlg__body">
+        <div class="ef-dlg__icon" aria-hidden="true"><span class="ef-dlg__tri">!</span></div>
+        <div class="ef-dlg__info">
+          <p class="ef-dlg__cap2">試験詳細 <i>TEST REPORT</i></p>
+          <p class="ef-dlg__b">この端末はタロⅡ級の過酷環境を想定して設計されている。全26項目の耐久試験に合格済み — 落下も、粉塵も、氷点下も、この装甲の想定内だ。現場での運用に、相当の信頼を置けるだろう。</p>
+          <p class="ef-dlg__cap2">試験項目 <i>PASSED</i></p>
+          <div class="ef-mats">{dura_cards}</div>
+        </div>
+      </div>
+      <div class="ef-dlg__foot">
+        <span class="ef-dlg__warn">⚠ MIL-STD-810H 準拠</span>
+        <a class="ef-pill ef-pill--go" href="{product_url(phone)}specs/"><span class="ef-pill__dash"></span>詳細仕様<b>◔</b></a>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="ef-block">
-  <div class="cl-wrap ef-split">
-    <div class="ef-split__media reveal"><img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} 工業黄" width="270" height="476" loading="lazy"></div>
-    <div class="ef-split__copy reveal">
-      <p class="ef-eyebrow">// FIELD ARMOR</p>
-      <h2 class="ef-h2">工業機として、作った。</h2>
-      <p>四隅の装甲リブ。リブ付きの耐滑背面。グローブでも濡れた手でも動くタッチ制御。背面の計器窓は電池残量と温度を常時表示します。スマートフォンではなく、現場の道具として設計しました。</p>
-      <table class="ef-dura reveal"><thead><tr><th>試験</th><th>条件</th><th>判定</th></tr></thead><tbody>{dura_rows}</tbody></table>
-    </div>
-  </div>
-</section>
-
-<section class="ef-block ef-block--dark ef-sustain">
+<section class="ef-sustain2" id="efSustain" aria-label="持続性能">
   <div class="cl-wrap">
-    <div class="ef-head"><p class="ef-eyebrow">// SUSTAINED 99%</p><h2 class="ef-h2">落ちない性能を、計器で見る。</h2></div>
-    <p class="ef-lead">専用SoC「基幹 KIKAN-F1」の定速ガバナーは、発熱を先読みしてクロックを一定に保つ。30分連続負荷でのfps維持率99%は、全SUZAKU製品で最高。</p>
-    <div class="ef-gauges">
-      <div class="ef-gauge reveal"><b data-cl-count="99">0</b><i>%</i><span>30分後fps維持率</span></div>
-      <div class="ef-gauge reveal"><b data-cl-count="8500">0</b><i>mAh</i><span>電池容量(全機種最大)</span></div>
-      <div class="ef-gauge reveal"><b data-cl-count="403">0</b><i>万点</i><span>AnTuTu</span></div>
-      <div class="ef-gauge reveal"><b>-20〜45</b><i>℃</i><span>動作保証温度</span></div>
+    <p class="ef-slash ef-slash--y">SUSTAINED 99%</p>
+    <h2 class="ef-h2x">落ちない性能を、計器で見る。</h2>
+    <p class="ef-leadx">専用SoC「基幹 KIKAN-F1」の定速ガバナーは、発熱を先読みしてクロックを一定に保つ。30分連続負荷でのfps維持率99%は、全SUZAKU製品で最高。瞬間の最速より、8時間後の確実さを選んだ設計です。</p>
+    <div class="ef-gauges2">
+      <div class="ef-gauge2"><b data-cl-count="99">0</b><i>%</i><span>30分後fps維持率</span></div>
+      <div class="ef-gauge2"><b data-cl-count="8500">0</b><i>mAh</i><span>電池(全機種最大)</span></div>
+      <div class="ef-gauge2"><b data-cl-count="403">0</b><i>万点</i><span>AnTuTu</span></div>
+      <div class="ef-gauge2"><b>-20〜45</b><i>℃</i><span>動作保証温度</span></div>
+    </div>
+    <div class="ef-fps">
+      <p class="ef-fps__cap">144fps 上限・30分連続負荷でのfps推移(当社試験値)</p>
+      <div class="ef-fps__bars">{fps_bars}</div>
     </div>
     <div class="ef-terminal" data-terminal data-lines="{esc(data_lines)}"><pre class="ef-terminal__out" aria-label="起動ログ"></pre></div>
   </div>
 </section>
 
-<section class="ef-block">
+<section class="ef-devlog" aria-label="共同開発記録">
   <div class="cl-wrap">
-    <div class="ef-head"><p class="ef-eyebrow">// SPEC</p><h2 class="ef-h2">数字で見る、前線。</h2></div>
-    <div class="cl-stats">{_cl_stats(phone)}</div>
-    <div style="margin-top:18px"><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
+    <p class="ef-slash">共同開発記録</p>
+    <p class="ef-base__lead">2025年8月のチーム発足から発売まで — 前線が「道具」になるまでの記録。</p>
+    <ol class="ef-logs">{devlog_rows}</ol>
   </div>
 </section>
 
-{_cl_silicon(cfg)}
-{_cl_accs(cfg, accs)}
-{_cl_bundle(cfg)}
-{_cl_schedule(cfg)}
-{_cl_commerce(cfg, phone)}
+<section class="ef-gallery" id="efGallery" aria-label="記録画像">
+  <div class="cl-wrap">
+    <p class="ef-slash">記録画像</p>
+    <div class="ef-recs">{gallery}</div>
+  </div>
+</section>
+
+<section class="ef-theme" aria-label="同梱テーマ">
+  <div class="cl-wrap ef-theme__grid">
+    <div class="ef-theme__media reveal"><img src="{pimg_front(phone['id'])}" alt="ターミナル・テーマパックのHUD表示" width="230" height="406" loading="lazy"></div>
+    <div class="ef-theme__copy">
+      <p class="ef-slash">同梱テーマ — ターミナル・テーマパック</p>
+      <p class="ef-base__lead">SUZAKU OS「陣」に、工業ターミナル調の専用テーマを同梱。起動のたびにシステムチェックが走り、常時表示(AOD)は稼働計器になります。</p>
+      <ul class="ef-tasks">
+        <li class="ef-task"><span class="ef-task__box"></span><span>専用ロック画面・アイコン・起動音・壁紙</span></li>
+        <li class="ef-task"><span class="ef-task__box"></span><span>ターミナル調AOD(温度・クロック・稼働時間)</span></li>
+        <li class="ef-task"><span class="ef-task__box"></span><span>計器風ウィジェット / 起動時システムチェック演出</span></li>
+        <li class="ef-task"><span class="ef-task__box"></span><span>限定ギフトコード(デモ表記)を同梱</span></li>
+      </ul>
+      <a class="ef-pill" href="/os/v4/"><span class="ef-pill__dash"></span>SUZAKU OS 4.0 を見る<b>+</b></a>
+    </div>
+  </div>
+</section>
+
+<section class="ef-scout" id="buy" aria-label="数量限定販売">
+  <span class="ef-water ef-water--w" aria-hidden="true">Z E N S E N</span>
+  <div class="cl-wrap ef-scout__grid">
+    <div class="ef-scout__art">
+      <p class="ef-slash">数量限定販売</p>
+      <img src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 黒鉄" width="230" height="406" loading="lazy">
+      <img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} 工業黄" width="230" height="406" loading="lazy">
+    </div>
+    <div class="ef-scout__panel">
+      <h2 class="ef-scout__t">数量限定<br>販売</h2>
+      <p class="ef-scout__pick">対象端末 — 前線 ZENSEN</p>
+      <div class="cl-count ef-scout__count" data-until="{lim['until']}" role="timer" aria-label="受付終了までの残り時間">
+        <p class="ef-scout__cl">受付終了まで <b data-c="d">--</b>日 <b data-c="h">--</b>:<b data-c="m">--</b>:<b data-c="s">--</b></p>
+        <p class="ef-scout__end">終了: {esc(lim['until'][:10].replace('-', '/'))} 23:59 (JST)</p>
+      </div>
+      <ul class="ef-scout__sure">
+        <li>{lim['qty']:,}台以内 — 数量限定生産・完売次第終了</li>
+        <li>全数に専用ケース(耐衝撃)同梱 確定</li>
+        <li>高コスパ設定 — 同性能帯の想定より抑えた {yen(phone['price'])}</li>
+      </ul>
+      <div class="cl-stock ef-scout__stock" data-slug="endfield" data-qty="{lim['qty']}" data-sold="{lim['sold']}">
+        <div class="cl-stock__bar"><span class="cl-stock__fill"></span></div>
+        <p class="cl-stock__meta"><b class="cl-stock__remain">--</b> / {lim['qty']:,} 台 が販売可能</p>
+      </div>
+      <div class="ef-scout__btns">
+        <a class="ef-pill" href="{product_url(phone)}"><span class="ef-pill__dash"></span>製品ページ<b>→</b></a>
+        <a class="ef-pill ef-pill--buy" href="{product_url(phone)}#buy"><span class="ef-pill__dash"></span>購入へ {yen(phone['price'])}<b>¥</b></a>
+      </div>
+    </div>
+  </div>
+  <div class="ef-scout__bar" aria-hidden="true"><span>◎ アクセサリ</span><span>▣ バンドル</span><span>△ 比較</span><span>✕ 特設一覧</span></div>
+</section>
+
+<div id="efAcc">{_cl_accs(cfg, accs)}</div>
+
+<section class="ef-archive" aria-label="資料室">
+  <div class="cl-wrap">
+    <p class="ef-slash">資料室</p>
+    <div class="ef-arch__grid">
+      <a class="ef-arch" href="/collab/endfield/silicon/soc/"><span class="ef-arch__no">01</span><b>基幹 KIKAN-F1</b><span>持続特化の専用SoC</span></a>
+      <a class="ef-arch" href="/collab/endfield/silicon/gpu/"><span class="ef-arch__no">02</span><b>重工 JUKO-GX</b><span>持続クロック固定GPU</span></a>
+      <a class="ef-arch" href="/collab/endfield/silicon/mem/"><span class="ef-arch__no">03</span><b>岩盤 GANBAN</b><span>高信頼リフレッシュのメモリ</span></a>
+      <a class="ef-arch" href="/collab/endfield/silicon/ssd/"><span class="ef-arch__no">04</span><b>坑道 KODO</b><span>TBW 3倍の高耐久ストレージ</span></a>
+      <a class="ef-arch" href="{product_url(phone)}specs/"><span class="ef-arch__no">05</span><b>完全仕様書</b><span>寸法・通信・カメラの全記載</span></a>
+      <a class="ef-arch" href="/collab/"><span class="ef-arch__no">06</span><b>コラボ一覧</b><span>七耀 / 残響 / 夜行 / 前線</span></a>
+    </div>
+  </div>
+</section>
+
 {_cl_faq(cfg)}
 {_cl_note(cfg)}"""
 

@@ -487,3 +487,6 @@
 .cl-shero__art svg { width: 100%; max-width: 380px; height: auto; border-radius: 14px; border: 1px solid var(--cl-line); display: block; margin-inline: auto; }
 
 @media (max-width: 820px) { .cl-shero__grid { grid-template-columns: 1fr; } .cl-shero__art { order: -1; } }
+
+/* アンカージャンプ時に見出しが固定ヘッダー+LPナビの下へ潜らないようにする */
+.cl-lp [id] { scroll-margin-top: calc(var(--header-h) + 72px); }

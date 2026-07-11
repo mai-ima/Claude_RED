@@ -127,5 +127,5 @@ URLが変わるため、CDN・ブラウザの古いキャッシュを確実に�
 
 リポジトリをVercelにインポートするだけで公開できます(Framework Preset: Other)。
 `vercel.json` でクリーンURL・キャッシュ・セキュリティヘッダを設定済みです。
-`src/`・`scripts/`・`docs/`(内部監査メモ)は `.vercelignore` により配信対象
+`src/`・`scripts/`・`project-notes/`(内部監査メモ)は `.vercelignore` により配信対象
 から除外されます。

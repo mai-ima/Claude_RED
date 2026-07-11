@@ -2458,3 +2458,32 @@ body.has-announce-bar .drawer { top: calc(var(--header-h) + var(--announce-h, 32
 
   .doc-side a small { display: none; }
 }
+
+/* コラボハブ: タブレット予告カード(第1弾の続き・COMING SOON表示のみ) */
+.collab-tabgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.collab-tabcard {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 22px 20px;
+  border: 1px dashed color-mix(in srgb, var(--cl-accent, var(--accent)) 55%, transparent);
+  border-radius: var(--r-lg);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--cl-bg2, var(--surface)) 55%, var(--surface)), var(--surface));
+  overflow: hidden;
+}
+
+.collab-tabcard__ic { width: 44px; height: 32px; color: var(--cl-accent, var(--accent)); opacity: 0.85; }
+.collab-tabcard__game { font-size: 0.78rem; font-weight: 700; color: var(--cl-accent, var(--accent)); letter-spacing: 0.06em; }
+.collab-tabcard__name { font-size: 1rem; font-weight: 800; color: var(--text); }
+.collab-tabcard__tag {
+  width: max-content; margin-top: 6px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.22em;
+  padding: 4px 12px; border-radius: 999px;
+  color: var(--cl-accent, var(--accent));
+  border: 1px solid color-mix(in srgb, var(--cl-accent, var(--accent)) 60%, transparent);
+}

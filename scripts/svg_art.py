@@ -1676,6 +1676,26 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
 {"".join(f'<rect x="{170 + i * 26}" y="305" width="14" height="8" rx="2" fill="#07070b"/>' for i in range(6))}
 <circle cx="336" cy="264" r="4.5" fill="{g}"/>
 <text x="240" y="342" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">4K/120 OUT ・ 80W DOCK</text>"""
+    elif kind == "silhouette":
+        # ティザー用: 正体不明の端末シルエット(輪郭グロー+「?」+ノイズ粒)
+        dots = "".join(
+            f'<circle cx="{x}" cy="{y}" r="{r}" fill="{g}" opacity="{o}"/>'
+            for x, y, r, o in ((120, 84, 2, 0.6), (356, 66, 1.6, 0.4), (392, 150, 2.4, 0.5),
+                               (86, 214, 1.8, 0.35), (368, 268, 2, 0.45), (128, 300, 1.4, 0.3)))
+        scan = "".join(
+            f'<path d="M60 {70 + i * 34} H420" stroke="{g}" stroke-opacity="{0.05 if i % 2 else 0.09}" stroke-width="1"/>'
+            for i in range(8))
+        body = f"""{shadow(240, 330, 100)}
+{scan}
+<rect x="168" y="44" width="144" height="276" rx="26" fill="#050506" stroke="{g}" stroke-width="2" stroke-opacity="0.9"/>
+<rect x="168" y="44" width="144" height="276" rx="26" fill="url(#ag{u})" opacity="0.12"/>
+<rect x="176" y="52" width="128" height="260" rx="20" fill="#0a0a0c"/>
+<path d="M182 58 h44 l-96 248 v-44 z" fill="#ffffff" opacity="0.03"/>
+<text x="240" y="206" font-family="'Oswald','Noto Sans JP',sans-serif" font-size="86" font-weight="700" fill="{g}" text-anchor="middle" opacity="0.95">?</text>
+<rect x="206" y="286" width="68" height="10" rx="5" fill="none" stroke="{g}" stroke-opacity="0.5" stroke-width="1.4"/>
+{dots}
+<path d="M150 118 h-24 M150 140 h-38 M330 200 h24 M330 222 h38" stroke="{g}" stroke-opacity="0.5" stroke-width="1.6"/>
+<text x="240" y="348" font-family="monospace" font-size="11" fill="{g}" opacity="0.75" text-anchor="middle" letter-spacing="6">UNIT_00 ・ CLASSIFIED</text>"""
     elif kind == "shield":
         # 法人MDM: 盾+ポリシー行+管理下の端末群(フリート管理コンソールの図)
         rows = "".join(

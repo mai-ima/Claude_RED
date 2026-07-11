@@ -426,3 +426,8 @@
 }
 .cl-lp.collab--genshin .gs-box__i b { font-size: 0.95rem; color: #2c261a; align-self: end; }
 .cl-lp.collab--genshin .gs-box__d { font-size: 0.8rem; color: #85744a; }
+
+/* 購入モジュールのトグル: 金縁の印章風 */
+.cl-lp.collab--genshin .cl-view { border-color: rgba(168, 132, 44, 0.5); background: #fffdf6; }
+.cl-lp.collab--genshin .cl-view__btn { font-family: "Shippori Mincho", serif; color: #85744a; }
+.cl-lp.collab--genshin .cl-view__btn.is-on { background: linear-gradient(160deg, #c9a24a, #a8842c); color: #fff; }

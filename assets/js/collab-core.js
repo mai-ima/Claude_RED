@@ -114,3 +114,24 @@
     }
   }
 })();
+
+/* ---------- 購入モジュールの背面⇔正面トグル([data-clview-scope]内で完結) ---------- */
+(function () {
+  "use strict";
+  if (!document.querySelector(".collab-page")) return;
+  Array.prototype.forEach.call(document.querySelectorAll("[data-clview-scope]"), function (scope) {
+    var img = scope.querySelector(".clview-img");
+    if (!img) return;
+    Array.prototype.forEach.call(scope.querySelectorAll("[data-clview]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var view = btn.getAttribute("data-clview");
+        img.src = img.getAttribute("data-" + view + "-src") || img.src;
+        Array.prototype.forEach.call(scope.querySelectorAll("[data-clview]"), function (b) {
+          var on = b === btn;
+          b.classList.toggle("is-on", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      });
+    });
+  });
+})();

@@ -1190,3 +1190,9 @@ a.ef-map__slot:hover i { color: var(--ef-black); }
   .cl-lp.collab--endfield .ef-supply__row { grid-template-columns: 74px 1fr; }
   .cl-lp.collab--endfield .ef-supply__use { grid-column: 1 / 3; }
 }
+
+/* ef-scout内のトグル: 黄タブの工業スイッチ */
+.cl-lp.collab--endfield .ef-scout__art { flex-wrap: wrap; }
+.cl-lp.collab--endfield .ef-scout__art .cl-view { flex-basis: 100%; justify-content: center; width: max-content; margin-inline: auto; border: 2px solid #17171a; border-radius: 0; background: #ecebe7; z-index: 2; }
+.cl-lp.collab--endfield .ef-scout__art .cl-view__btn { font-family: "Oswald", sans-serif; border-radius: 0; letter-spacing: 0.16em; color: #17171a; }
+.cl-lp.collab--endfield .ef-scout__art .cl-view__btn.is-on { background: #f2d800; color: #17171a; }

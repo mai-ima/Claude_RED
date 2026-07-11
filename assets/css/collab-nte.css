@@ -454,3 +454,8 @@
 .cl-lp.collab--nte .nt-score__y.is-win { color: #c8f24a; text-shadow: 0 0 12px rgba(200, 242, 74, 0.4); }
 .cl-lp.collab--nte .nt-score__y.is-win::after { content: " ★"; font-size: 0.8rem; }
 .cl-lp.collab--nte .nt-score__s { font-size: 0.9rem; color: #8f8499; }
+
+/* 購入モジュールのトグル: ネオンピル */
+.cl-lp.collab--nte .cl-view { border-color: rgba(255, 62, 165, 0.55); box-shadow: 0 0 14px rgba(255, 62, 165, 0.25); }
+.cl-lp.collab--nte .cl-view__btn { font-style: italic; font-weight: 900; }
+.cl-lp.collab--nte .cl-view__btn.is-on { background: #ff3ea5; color: #17121c; text-shadow: none; }

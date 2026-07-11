@@ -195,17 +195,25 @@ COLLABS = [
         "slug": "next", "game": "???", "studio": "COMING SOON",
         "active": False, "motif": "teaser",
         "tokens": {
-            "bg": "#101014", "bg2": "#16161c", "ink": "#f2f2f4", "soft": "#9a9aa6",
-            "accent": "#e8442e", "accent2": "#d9a441", "line": "rgba(232,68,46,.3)",
-            "glow": "#e8442e",
+            "bg": "#0c0c0e", "bg2": "#141416", "ink": "#f2f2f4", "soft": "#9a9aa6",
+            "accent": "#ff7a00", "accent2": "#f2f2f4", "line": "rgba(255,122,0,.35)",
+            "glow": "#ff7a00",
         },
         "edition": "コラボレーション第2弾", "device": "???",
         "hero": {"eyebrow": "NEXT COLLABORATION", "title": "次の共同設計、進行中。", "lead": "", "tagline": "COMING SOON"},
         "phone_id": None, "accessory_ids": [],
         "limited": {"until": "", "qty": 0, "sold": 0},
+        # 発表カウントダウンの目標日時(変更可)とティザーヒント。
+        # ヒントは「匂わせ」までに留め、相手の名称・固有名詞は出さない。
+        "reveal_at": "2026-12-12T20:00:00",
+        "hints": [
+            ("HINT 01", "都市には、穴がひとつ。", "日常のすぐ隣に、非日常への入り口が開いている街の話。"),
+            ("HINT 02", "テーマカラーは、黒×警告色。", "夜より黒く、標識より鮮やかに。筐体はすでに塗装工程へ。"),
+            ("HINT 03", "合言葉は、三つの零。", "数字が並ぶとき、扉が開く。発表の日をお楽しみに。"),
+        ],
         "world": "",
         "highlights": [], "bundle": [], "schedule": [], "faq": [],
-        "note": "コラボレーション第2弾は近日発表予定です(デモ表記)。",
+        "note": "コラボレーション第2弾は近日発表予定です。掲載のヒントは予告であり、正式発表まで内容は変更される場合があります(デモ表記)。",
     },
 ]
 

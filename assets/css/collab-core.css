@@ -490,3 +490,14 @@
 
 /* アンカージャンプ時に見出しが固定ヘッダー+LPナビの下へ潜らないようにする */
 .cl-lp [id] { scroll-margin-top: calc(var(--header-h) + 72px); }
+
+/* 購入モジュールの端末メディア+背面⇔正面トグル(共通形。配色は各slug cssが上書き) */
+.cl-buy__media { display: grid; justify-items: center; gap: 12px; }
+.cl-buy__media img { width: 150px; height: auto; }
+.cl-view { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--cl-line); border-radius: 999px; }
+.cl-view__btn {
+  border: 0; background: transparent; color: var(--cl-soft); font: inherit; font-size: 0.78rem;
+  font-weight: 700; padding: 5px 16px; border-radius: 999px; cursor: pointer;
+}
+.cl-view__btn.is-on { background: var(--cl-accent); color: var(--cl-bg); }
+@media (max-width: 900px) { .cl-buy__media img { width: 120px; } }

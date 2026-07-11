@@ -1879,6 +1879,13 @@ def _cl_commerce(cfg, phone):
     </div>
   </div>
   <div class="cl-wrap cl-buy__inner">
+    {f'''<div class="cl-buy__media" data-clview-scope>
+      <img class="clview-img" src="{pimg(phone['id'])}" data-back-src="{pimg(phone['id'])}" data-front-src="{pimg_front(phone['id'])}" alt="{esc(phone['name'])}" width="180" height="318" loading="lazy">
+      <div class="cl-view" role="group" aria-label="表示切替">
+        <button type="button" class="cl-view__btn is-on" data-clview="back" aria-pressed="true">背面</button>
+        <button type="button" class="cl-view__btn" data-clview="front" aria-pressed="false">正面</button>
+      </div>
+    </div>''' if phone else ''}
     <div>
       <p class="cl-eyebrow">数量限定・期間限定</p>
       <h2 class="cl-h2">{esc(cfg['edition'])}</h2>
@@ -3022,10 +3029,14 @@ def _collab_lp_endfield(cfg, phone, accs):
 <section class="ef-scout" id="buy" aria-label="数量限定販売">
   <span class="ef-water ef-water--w" aria-hidden="true">Z E N S E N</span>
   <div class="cl-wrap ef-scout__grid">
-    <div class="ef-scout__art">
+    <div class="ef-scout__art" data-clview-scope>
       <p class="ef-slash">数量限定販売</p>
-      <img src="{pimg(phone['id'])}" alt="{esc(phone['name'])} 黒鉄" width="230" height="406" loading="lazy">
+      <img class="clview-img" src="{pimg(phone['id'])}" data-back-src="{pimg(phone['id'])}" data-front-src="{pimg_front(phone['id'])}" alt="{esc(phone['name'])} 黒鉄" width="230" height="406" loading="lazy">
       <img src="{pimg(phone['id'], 1)}" alt="{esc(phone['name'])} 工業黄" width="230" height="406" loading="lazy">
+      <div class="cl-view" role="group" aria-label="表示切替">
+        <button type="button" class="cl-view__btn is-on" data-clview="back" aria-pressed="true">背面</button>
+        <button type="button" class="cl-view__btn" data-clview="front" aria-pressed="false">正面</button>
+      </div>
     </div>
     <div class="ef-scout__panel">
       <h2 class="ef-scout__t">数量限定<br>販売</h2>
@@ -3072,11 +3083,67 @@ def _collab_lp_endfield(cfg, phone, accs):
 {_cl_note(cfg)}"""
 
 
+def _collab_lp_teaser(cfg, phone, accs):
+    """コラボ第2弾ティザー — 暗闇+スキャンライン+シルエット+発表カウントダウン。
+    コラボ相手は未発表のため、固有名詞は一切出さない(ヒントで匂わせるのみ)。"""
+    hints = "".join(
+        f'<div class="nx-hint reveal"><span class="nx-hint__no">{esc(no)}</span>'
+        f'<h2 class="nx-hint__t">{esc(t)}</h2><p class="nx-hint__b">{esc(b)}</p>'
+        f'<span class="nx-hint__tape" aria-hidden="true">CLASSIFIED</span></div>'
+        for no, t, b in cfg.get("hints", []))
+    links = "".join(
+        f'<a class="nx-past" href="/collab/{c["slug"]}/"><span class="nx-past__no">{i + 1:02d}</span>'
+        f'<b>{esc(c["edition"])}</b><span class="nx-past__st">受付中</span></a>'
+        for i, c in enumerate([c for c in COLLABS if c.get("active")]))
+    reveal = cfg.get("reveal_at", "")
+    return f"""
+<section class="nx-hero">
+  <div class="nx-hero__scan" aria-hidden="true"></div>
+  <p class="nx-hero__eyebrow">{esc(cfg['hero']['eyebrow'])}</p>
+  <h1 class="nx-hero__title"><span class="nx-q" data-nx-glitch>???</span><small>次の共同設計、進行中。</small></h1>
+  <div class="nx-hero__sil reveal">{svg_art.svg_art('silhouette', cfg['tokens']['glow'])}</div>
+  <p class="nx-hero__lead">第2弾のコラボレーションが、組み立てラインに載りました。相手も、名前も、まだ言えません。言えるのは — 今回も色替えでは終わらない、ということだけ。</p>
+</section>
+
+<section class="cl-section nx-count">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">REVEAL</p><h2 class="cl-h2">発表まで。</h2></div>
+    <div class="cl-count nx-count__panel" data-until="{esc(reveal)}" role="timer" aria-label="発表までの残り時間">
+      <div class="cl-count__row">
+        <span class="cl-count__unit"><b data-c="d">--</b><i>日</i></span>
+        <span class="cl-count__unit"><b data-c="h">--</b><i>時間</i></span>
+        <span class="cl-count__unit"><b data-c="m">--</b><i>分</i></span>
+        <span class="cl-count__unit"><b data-c="s">--</b><i>秒</i></span>
+      </div>
+      <p class="cl-count__end">{esc(reveal[:10].replace('-', '/'))} 20:00 (JST) 発表予定</p>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section nx-hints">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">TEASER</p><h2 class="cl-h2">三つのヒント。</h2>
+    <p class="cl-lead">発表日まで、ここだけの手がかりを。当てられても、まだ答え合わせはしません。</p></div>
+    <div class="nx-hints__grid">{hints}</div>
+  </div>
+</section>
+
+<section class="cl-section nx-pasts">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SERIES</p><h2 class="cl-h2">第1弾は、受付中。</h2></div>
+    <div class="nx-pasts__grid">{links}</div>
+    <div style="margin-top:22px"><a class="cl-btn cl-btn--ghost" href="/news/">発表はニュースでお知らせします</a></div>
+  </div>
+</section>
+{_cl_note(cfg)}"""
+
+
 _COLLAB_LP_BUILDERS = {
     "genshin": _collab_lp_genshin,
     "wuwa": _collab_lp_wuwa,
     "nte": _collab_lp_nte,
     "endfield": _collab_lp_endfield,
+    "next": _collab_lp_teaser,
 }
 
 # 明色ベースのLP(ヘッダー/フッターのテーマを合わせる)
@@ -3089,8 +3156,13 @@ def build_collab_page(cfg):
     phone = next((p for p in ALL_PRODUCTS if p["id"] == cfg["phone_id"]), None)
     accs = [p for p in ALL_PRODUCTS if p["id"] in cfg.get("accessory_ids", [])]
     body = _COLLAB_LP_BUILDERS[slug](cfg, phone, accs)
-    desc = f"SUZAKU × {cfg['game']} 完全専用設計のコラボレーションモデル「{cfg['edition']}」特設ページ。{cfg['hero']['lead']}"
-    render_page(f"/collab/{slug}/", f"{cfg['edition']} — 公式コラボレーション",
+    if slug == "next":
+        title = "コラボレーション第2弾 ティザー — COMING SOON"
+        desc = "SUZAKUコラボレーション第2弾のティザーページ。発表カウントダウンと三つのヒントを公開中。相手は、まだ言えません。"
+    else:
+        title = f"{cfg['edition']} — 公式コラボレーション"
+        desc = f"SUZAKU × {cfg['game']} 完全専用設計のコラボレーションモデル「{cfg['edition']}」特設ページ。{cfg['hero']['lead']}"
+    render_page(f"/collab/{slug}/", title,
                 desc, body, theme=_COLLAB_THEME.get(slug, "dark"), crumbs=None, group="コラボレーション",
                 layout="collab", collab=cfg)
 
@@ -3109,10 +3181,28 @@ def build_collab_hub():
                 f'<span class="collab-card__go">特設ページへ →</span></a>')
         else:
             cards += (
-                f'<div class="collab-card collab-card--soon" style="{style}">'
+                f'<a class="collab-card collab-card--soon" style="{style}" href="/collab/{cfg["slug"]}/">'
                 f'<span class="collab-card__game">{esc(cfg["game"])}</span>'
                 f'<span class="collab-card__edition">{esc(cfg["edition"])}</span>'
-                f'<span class="collab-card__tag">近日公開</span></div>')
+                f'<span class="collab-card__tag">近日公開 — ティザー公開中</span>'
+                f'<span class="collab-card__go">ティザーを見る →</span></a>')
+
+    # コラボタブレット予告(第1弾の続き)。ページは未公開のため表示のみ。
+    tab_icon = ('<svg viewBox="0 0 48 34" aria-hidden="true" class="collab-tabcard__ic">'
+                '<rect x="2" y="2" width="44" height="30" rx="5" fill="none" stroke="currentColor" stroke-width="2.4"/>'
+                '<circle cx="9" cy="9" r="2.2" fill="currentColor"/></svg>')
+    tab_cards = ""
+    for cfg in COLLABS:
+        if not cfg.get("active"):
+            continue
+        tok = cfg["tokens"]
+        style = f"--cl-accent:{tok['accent']};--cl-accent2:{tok['accent2']};--cl-bg2:{tok['bg2']}"
+        tab_cards += (
+            f'<div class="collab-tabcard" style="{style}">'
+            f'{tab_icon}'
+            f'<span class="collab-tabcard__game">{esc(cfg["game"])}</span>'
+            f'<span class="collab-tabcard__name">コラボレーションタブレット</span>'
+            f'<span class="collab-tabcard__tag">COMING SOON</span></div>')
     body = f"""
 <section class="hero hero--sub">
   <div class="hero__bg hero__bg--glow"></div>
@@ -3125,6 +3215,13 @@ def build_collab_hub():
 <section class="section--sm">
   <div class="container">
     <div class="collab-grid">{cards}</div>
+  </div>
+</section>
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">TABLET — NEXT WAVE</p><h2 class="t-h2">コラボレーションタブレット — 第1弾の続き</h2>
+    <p class="t-soft" style="max-width:640px">スマートフォン第1弾の4作品で、タブレットの共同設計が進行中です。大画面ならではの専用意匠で準備しています。</p></div>
+    <div class="collab-tabgrid">{tab_cards}</div>
     <p class="t-micro t-faint" style="margin-top:24px;text-align:center">※ 掲載のコラボレーションはすべてデモ用の架空企画です。各作品名・権利は各社に帰属します。</p>
   </div>
 </section>
@@ -3262,6 +3359,8 @@ def build_collab_pages():
             build_collab_page(cfg)
             for comp in COLLAB_SILICON[cfg["slug"]]:
                 build_collab_silicon_page(cfg, comp)
+        elif cfg["slug"] == "next":
+            build_collab_page(cfg)  # 第2弾ティザー(カウントダウン+シルエット)
 
 
 # ==========================================================================

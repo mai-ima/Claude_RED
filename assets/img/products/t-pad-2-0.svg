@@ -23,8 +23,8 @@
   <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
-<pattern id="textpad20" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+<pattern id="textpad20" width="10" height="10" patternUnits="userSpaceOnUse">
+  <path d="M0 0" stroke="none"/>
 </pattern>
 <filter id="softtpad20" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
@@ -41,19 +41,23 @@
 <rect x="72" y="62" width="66" height="60" rx="20" fill="#a2a19c"/>
 <rect x="72" y="62" width="66" height="60" rx="20" fill="url(#sheentpad20)" opacity="0.5"/>
 <rect x="72.7" y="62.7" width="64.6" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
-<circle cx="126" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
 
 <circle cx="104" cy="92" r="19" fill="#0b0d13" stroke="#efeee9" stroke-width="1.5"/>
 <circle cx="104" cy="92" r="14" fill="none" stroke="#3d8bff" stroke-opacity="0.5" stroke-width="1.2"/>
 <circle cx="104" cy="92" r="11" fill="url(#lenstpad20)"/>
 <circle cx="104" cy="92" r="4" fill="#04040a"/>
 <circle cx="100" cy="87.5" r="2.6" fill="#ffffff" opacity="0.55"/>
+<circle cx="126" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
 
-<g transform="translate(276 194) scale(1.85)" opacity="0.9">
-  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#3d8bff" stroke-width="2.6" stroke-linejoin="round"/>
+
+
+<g transform="translate(252 168) scale(2.6)" opacity="0.92">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#3d8bff" stroke-width="2.4" stroke-linejoin="round"/>
   <circle cx="24" cy="31.5" r="3.2" fill="#3d8bff"/>
 </g>
-<circle cx="296" cy="436" r="4" fill="#5d5c59" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/><circle cx="320" cy="436" r="4" fill="#5d5c59" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/><circle cx="344" cy="436" r="4" fill="#5d5c59" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>
+<text x="320" y="322" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#1c1c26" opacity="0.42" text-anchor="middle" letter-spacing="4">TSUBAME PAD</text>
+
+<rect x="560" y="436.5" width="10" height="3.5" rx="1.75" fill="#5d5c59"/><rect x="542" y="436.5" width="10" height="3.5" rx="1.75" fill="#5d5c59"/><rect x="524" y="436.5" width="10" height="3.5" rx="1.75" fill="#5d5c59"/><rect x="506" y="436.5" width="10" height="3.5" rx="1.75" fill="#5d5c59"/>
 <text x="320" y="368" font-family="'Noto Sans JP',sans-serif" font-size="17" font-weight="800" fill="#1c1c26" opacity="0.72" text-anchor="middle" letter-spacing="3">TSUBAME Pad 2</text>
 <text x="320" y="392" font-family="'Noto Sans JP',sans-serif" font-size="9.5" fill="#1c1c26" opacity="0.4" text-anchor="middle" letter-spacing="4">燕 Pad 2</text>
 <text x="556" y="430" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="#1c1c26" opacity="0.38" text-anchor="end" letter-spacing="2">DESIGNED BY SUZAKU ・ 120Hz</text>

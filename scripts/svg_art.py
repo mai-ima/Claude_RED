@@ -584,6 +584,27 @@ _PHONE_CUSTOM = {
 }
 
 
+def _tablet_tex(gid, kind):
+    """タブレット背面テクスチャ(スマホと同じ4種の語彙: carbon/hairline/matte/gloss)。"""
+    if kind == "carbon":
+        return f"""<pattern id="tex{gid}" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+  <path d="M0 0 V8 M4 0 V8" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1.4"/>
+  <path d="M0 0 H8" stroke="#000000" stroke-opacity="0.14" stroke-width="1.4"/>
+</pattern>"""
+    if kind == "matte":
+        return f"""<pattern id="tex{gid}" width="9" height="9" patternUnits="userSpaceOnUse">
+  <circle cx="2" cy="3" r="0.7" fill="#ffffff" fill-opacity="0.045"/>
+  <circle cx="6.5" cy="7" r="0.6" fill="#000000" fill-opacity="0.1"/>
+</pattern>"""
+    if kind == "gloss":
+        return f"""<pattern id="tex{gid}" width="10" height="10" patternUnits="userSpaceOnUse">
+  <path d="M0 0" stroke="none"/>
+</pattern>"""
+    return f"""<pattern id="tex{gid}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+</pattern>"""
+
+
 def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz", design=None):
     """タブレット背面ビュー(横持ち)。スマホ背面と同じ質感エンジンで描く。
 
@@ -627,59 +648,131 @@ def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz", desi
   <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
-<pattern id="tex{gid}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
-</pattern>
+{_tablet_tex(gid, d.get("tex", "hairline"))}
 <filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
 </filter>
 </defs>"""
 
-    # カメラ(左上・横持ち基準)。レンズ数はspecsのリアカメラ表記と一致
-    cam_xs = (104, 156)[:cams]
-    plate_w = 118 if cams >= 2 else 66
-    lenses = ""
-    for cx in cam_xs:
-        lenses += f"""
-<circle cx="{cx}" cy="92" r="19" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.5"/>
-<circle cx="{cx}" cy="92" r="14" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.2"/>
-<circle cx="{cx}" cy="92" r="11" fill="url(#lens{gid})"/>
-<circle cx="{cx}" cy="92" r="4" fill="#04040a"/>
-<circle cx="{cx - 4}" cy="87.5" r="2.6" fill="#ffffff" opacity="0.55"/>"""
-    flash_x = 178 if cams >= 2 else 126
-    camera = f"""
-<rect x="72" y="62" width="{plate_w}" height="60" rx="20" fill="{plate}"/>
-<rect x="72" y="62" width="{plate_w}" height="60" rx="20" fill="url(#sheen{gid})" opacity="0.5"/>
-<rect x="72.7" y="62.7" width="{plate_w - 1.4}" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
-<circle cx="{flash_x}" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
-{lenses}"""
+    # カメラ島(左上・横持ち基準)。形状は design.plate、レンズ数はspecsと一致
+    def lens_at(cx, cy, r=19):
+        return f"""
+<circle cx="{cx}" cy="{cy}" r="{r}" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.5"/>
+<circle cx="{cx}" cy="{cy}" r="{r - 5}" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.2"/>
+<circle cx="{cx}" cy="{cy}" r="{r - 8}" fill="url(#lens{gid})"/>
+<circle cx="{cx}" cy="{cy}" r="4" fill="#04040a"/>
+<circle cx="{cx - 4}" cy="{cy - 4.5}" r="2.6" fill="#ffffff" opacity="0.55"/>"""
+
+    plate_kind = d.get("plate", "corner")
+    if plate_kind == "band":
+        # 横長バンド: 2眼+角丸スクエア望遠セル+フラッシュ(旗艦の顔)
+        camera = f"""
+<rect x="66" y="58" width="238" height="68" rx="22" fill="{plate}"/>
+<rect x="66" y="58" width="238" height="68" rx="22" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="66.7" y="58.7" width="236.6" height="66.6" rx="21.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
+{lens_at(102, 92)}{lens_at(154, 92)}
+<rect x="196" y="70" width="44" height="44" rx="10" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.5"/>
+<rect x="203" y="77" width="30" height="30" rx="6" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.2"/>
+<circle cx="218" cy="92" r="10" fill="url(#lens{gid})"/>
+<circle cx="218" cy="92" r="3.4" fill="#04040a"/>
+<circle cx="262" cy="76" r="4.5" fill="#f4efdf" opacity="0.9"/>
+<text x="262" y="112" font-family="'Noto Sans JP',sans-serif" font-size="7.5" font-weight="700" fill="{ink}" opacity="0.5" letter-spacing="2" text-anchor="middle">TENGAN</text>"""
+    elif plate_kind == "square":
+        camera = f"""
+<rect x="70" y="60" width="86" height="86" rx="18" fill="{plate}"/>
+<rect x="70" y="60" width="86" height="86" rx="18" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="70.7" y="60.7" width="84.6" height="84.6" rx="17.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
+{lens_at(113, 96, 22)}
+<circle cx="140" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>"""
+    elif plate_kind == "diag":
+        camera = f"""
+<path d="M78 60 h116 a18 18 0 0 1 18 18 v22 a18 18 0 0 1 -18 18 l-116 14 a18 18 0 0 1 -18 -18 v-36 a18 18 0 0 1 18 -18z" fill="{plate}"/>
+<path d="M78 60 h116 a18 18 0 0 1 18 18 v22 a18 18 0 0 1 -18 18 l-116 14 a18 18 0 0 1 -18 -18 v-36 a18 18 0 0 1 18 -18z" fill="url(#sheen{gid})" opacity="0.5"/>
+{lens_at(102, 92, 18)}{lens_at(158, 98, 18)}
+<circle cx="192" cy="78" r="4" fill="#f4efdf" opacity="0.9"/>"""
+    elif plate_kind == "none":
+        # プレート無し: 素のリングレンズ(エントリーの潔さ)
+        camera = f"""
+{lens_at(96, 88, 21)}
+<circle cx="132" cy="72" r="3.6" fill="#f4efdf" opacity="0.85"/>"""
+    else:  # corner
+        flash = '<circle cx="126" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>' if d.get("flash") else ""
+        camera = f"""
+<rect x="72" y="62" width="66" height="60" rx="20" fill="{plate}"/>
+<rect x="72" y="62" width="66" height="60" rx="20" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="72.7" y="62.7" width="64.6" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
+{lens_at(104, 92)}
+{flash}"""
+
+    # 背面のLED/ファン(ゲーミング)またはエンブレム(スタンダード)。
+    # LED開始位置はカメラ島の右端から取り、プレート形状と干渉しない。
+    _plate_right = {"band": 304, "square": 156, "diag": 212, "none": 130}.get(plate_kind, 138)
+    led_x0 = _plate_right + 28
+    led_kind = d.get("led", "slash3" if gaming else "none")
+    if led_kind == "slash3":
+        leds = "".join(
+            f'<path d="M{led_x0 + i * 58} 78 h38 l-11 11 h-38 z" fill="{glow}" opacity="{o}"/>'
+            for i, o in enumerate((0.92, 0.55, 0.28)))
+    elif led_kind == "slash1":
+        leds = f'<path d="M{led_x0} 78 h96 l-13 12 h-96 z" fill="{glow}" opacity="0.85"/>'
+    elif led_kind == "dot":
+        leds = "".join(
+            f'<circle cx="{led_x0 + 10 + i * 26}" cy="84" r="4.6" fill="{glow}" opacity="{o}"/>'
+            for i, o in enumerate((0.9, 0.6, 0.32)))
+    else:
+        leds = ""
 
     if gaming:
-        slashes = "".join(
-            f'<path d="M{224 + i * 58} 78 h38 l-11 11 h-38 z" fill="{glow}" opacity="{o}"/>'
-            for i, o in enumerate((0.92, 0.55, 0.28)))
+        fan_r = 52 if plate_kind == "band" else 44
         blades = "".join(
-            f'<path d="M320 238 L320 210" stroke="{blade}" stroke-width="8" stroke-linecap="round" transform="rotate({a} 320 238)"/>'
+            f'<path d="M320 238 L320 {238 - fan_r + 12}" stroke="{blade}" stroke-width="8" stroke-linecap="round" transform="rotate({a} 320 238)"/>'
             for a in range(0, 360, 40))
+        vents = "".join(
+            f'<rect x="{596.5}" y="{150 + i * 30}" width="5" height="20" rx="2.5" fill="{dark2}"/>' for i in range(4))
         feature = f"""
-{slashes}
-<circle cx="320" cy="238" r="44" fill="{dark2}"/>
-<circle cx="320" cy="238" r="44" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="2"/>
-<circle cx="320" cy="238" r="37" fill="#0a0b10"/>
+{leds}
+<circle cx="320" cy="238" r="{fan_r}" fill="{dark2}"/>
+<circle cx="320" cy="238" r="{fan_r}" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="320" cy="238" r="{fan_r - 7}" fill="#0a0b10"/>
 {blades}
 <circle cx="320" cy="238" r="11" fill="#101018" stroke="{glow}" stroke-opacity="0.8" stroke-width="1.5"/>
 <circle cx="320" cy="238" r="3.5" fill="{glow}"/>
-<text x="320" y="300" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="{ink}" opacity="0.5" text-anchor="middle" letter-spacing="3">SENPU COOLING</text>"""
+{vents}
+<text x="320" y="{238 + fan_r + 18}" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="{ink}" opacity="0.5" text-anchor="middle" letter-spacing="3">SENPU COOLING</text>"""
         top_btn = f"""
 <rect x="128" y="17.5" width="52" height="5" rx="2.5" fill="{glow}"/>
 <rect x="196" y="17.5" width="40" height="5" rx="2.5" fill="{dark2}"/>"""
     else:
-        feature = f"""
+        emblem_kind = d.get("emblem", "small")
+        if emblem_kind == "large":
+            emblem = f"""
+<g transform="translate(252 168) scale(2.6)" opacity="0.92">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="{glow}" stroke-width="2.4" stroke-linejoin="round"/>
+  <circle cx="24" cy="31.5" r="3.2" fill="{glow}"/>
+</g>
+<text x="320" y="322" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="{ink}" opacity="0.42" text-anchor="middle" letter-spacing="4">TSUBAME PAD</text>"""
+        elif emblem_kind == "outline":
+            emblem = f"""
+<g transform="translate(288 208) scale(1.4)" opacity="0.55">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="{ink}" stroke-width="2" stroke-linejoin="round"/>
+</g>"""
+        else:
+            emblem = f"""
 <g transform="translate(276 194) scale(1.85)" opacity="0.9">
   <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="{glow}" stroke-width="2.6" stroke-linejoin="round"/>
   <circle cx="24" cy="31.5" r="3.2" fill="{glow}"/>
-</g>
-{"".join(f'<circle cx="{296 + i * 24}" cy="436" r="4" fill="{dark2}" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>' for i in range(3))}"""
+</g>"""
+        pogo = ("".join(
+            f'<circle cx="{296 + i * 24}" cy="436" r="4" fill="{dark2}" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>'
+            for i in range(3)) if d.get("pogo") else "")
+        spk_n = {"large": 4, "outline": 2}.get(emblem_kind, 0)
+        spks = "".join(
+            f'<rect x="{560 - i * 18}" y="436.5" width="10" height="3.5" rx="1.75" fill="{dark2}"/>' for i in range(spk_n))
+        feature = f"""
+{leds}
+{emblem}
+{pogo}
+{spks}"""
         top_btn = f'<rect x="128" y="17.5" width="52" height="5" rx="2.5" fill="{dark2}"/>'
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="{label}">
@@ -709,6 +802,25 @@ def _front_scene_phone(line, glow, hz, motif, scene=None):
     画面領域: x54〜286, y41〜559(中心 x=170)。"""
     fps = hz.replace("Hz", "")
     fjp = "'Noto Sans JP',sans-serif"
+    if scene == "hud-ai":
+        # Neo系HUD: リング計器+AIフレーム生成/予測冷却バッジ(トリガー無し構成)
+        ring_c = 2 * math.pi * 66
+        return f"""
+<text x="170" y="118" font-family="{fjp}" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="6">GAME SPACE</text>
+<circle cx="170" cy="236" r="66" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="9"/>
+<circle cx="170" cy="236" r="66" fill="none" stroke="{glow}" stroke-width="9" stroke-linecap="round"
+  stroke-dasharray="{ring_c * 0.78:.0f} {ring_c:.0f}" transform="rotate(-90 170 236)"/>
+<text x="170" y="248" font-family="{fjp}" font-size="46" font-weight="900" fill="#ffffff" text-anchor="middle">{fps}</text>
+<text x="170" y="274" font-family="{fjp}" font-size="10" fill="{glow}" text-anchor="middle" letter-spacing="5">FPS</text>
+<rect x="70" y="336" width="200" height="42" rx="12" fill="{glow}" opacity="0.13"/>
+<rect x="70" y="336" width="200" height="42" rx="12" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="1.4"/>
+<text x="86" y="354" font-family="{fjp}" font-size="10" font-weight="800" fill="#ffffff">AIフレーム生成 ON</text>
+<text x="86" y="370" font-family="{fjp}" font-size="8.5" fill="#c9c9d6">神楽 KAGURA ・ 60→{fps}fps 補間</text>
+<rect x="70" y="392" width="200" height="42" rx="12" fill="#ffffff" opacity="0.06"/>
+<text x="86" y="410" font-family="{fjp}" font-size="10" font-weight="700" fill="#ececf2">予測冷却 スタンバイ</text>
+<text x="86" y="426" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">負荷を先読みしてファンを助走</text>
+<rect x="70" y="486" width="200" height="26" rx="13" fill="#ffffff" opacity="0.07"/>
+<text x="170" y="503" font-family="{fjp}" font-size="9" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">ゲームライブラリ 42本</text>"""
     if scene == "hud2":
         # 一世代前のGAME SPACE: 左上に大きなfps+横長グラフ+下部トグル
         bars = "".join(
@@ -888,7 +1000,14 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
     gid = "f" + pid.replace("-", "")
     d = design or {}
     dark2 = _shade(body_hex, -0.6)
-    punch = d.get("punch", line in ("tsubame", "lite"))
+    # パンチホール位置: none(UDC)/center/left。旧booleanも受ける
+    punch = d.get("punch", "center" if line in ("tsubame", "lite") else "none")
+    if punch is True:
+        punch = "center"
+    elif punch is False:
+        punch = "none"
+    thick = d.get("bezel") == "thick"  # 旧世代機の太ベゼル
+    scr_x, scr_y, scr_w, scr_h = (58, 47, 224, 506) if thick else (54, 41, 232, 518)
     # フレーム角丸は背面の筐体形状に合わせる(残響=角形モノリス等)
     rx_out = d.get("front_rx", 47)
     rx_in = max(6, rx_out - 5)
@@ -915,7 +1034,7 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
   <feGaussianBlur stdDeviation="7"/>
 </filter>
 <filter id="fzf" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
-<clipPath id="clip{gid}"><rect x="54" y="41" width="232" height="518" rx="{rx_scr}"/></clipPath>
+<clipPath id="clip{gid}"><rect x="{scr_x}" y="{scr_y}" width="{scr_w}" height="{scr_h}" rx="{rx_scr}"/></clipPath>
 </defs>"""
     scene = _front_scene_phone(line, glow, hz, motif, d.get("scene"))
     status = f"""
@@ -929,30 +1048,35 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
 <ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.4" filter="url(#soft{gid})"/>
 <rect x="43" y="30" width="254" height="540" rx="{rx_out}" fill="url(#frame{gid})"/>
 <rect x="48" y="35" width="244" height="530" rx="{rx_in}" fill="#06060a"/>
-<rect x="54" y="41" width="232" height="518" rx="{rx_scr}" fill="url(#scr{gid})"/>
+<rect x="{scr_x}" y="{scr_y}" width="{scr_w}" height="{scr_h}" rx="{rx_scr}" fill="url(#scr{gid})"/>
 <g clip-path="url(#clip{gid})">
 <ellipse cx="170" cy="210" rx="180" ry="200" fill="url(#flare{gid})"/>
 {scene}
 {status}
-{f'<circle cx="170" cy="62" r="5.5" fill="#04040a" stroke="#2a2a36" stroke-width="1.4"/>' if punch else ''}
+{f'<circle cx="{84 if punch == "left" else 170}" cy="64" r="5.5" fill="#04040a" stroke="#2a2a36" stroke-width="1.4"/>' if punch != 'none' else ''}
 <rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
 <path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="{rx_scr}" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="{scr_x + 0.8}" y="{scr_y + 0.8}" width="{scr_w - 1.6}" height="{scr_h - 1.6}" rx="{rx_scr}" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="{dark2}"/>
 <rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="{dark2}"/>
 </svg>"""
 
 
-def svg_tablet_front(pid, body_hex, glow, label, line="pad", hz="120Hz"):
+def svg_tablet_front(pid, body_hex, glow, label, line="pad", hz="120Hz", design=None):
     """タブレット正面ビュー(横持ち・ディスプレイ点灯状態)。
-    ゲーミング系はfps HUD、スタンダード系はホーム画面を映す。"""
+    design.scene で機種ごとに画面内容を描き分ける:
+    hud=リング計器 / hud2=左寄せ大fps+フレームタイム / classic=タイル+設定行 /
+    home=ホーム / reader=動画+読書 / home-lite=時計と電池のみ。"""
+    d = design or {}
     gid = "f" + pid.replace("-", "")
-    gaming = line in ("pad", "pad-neo")
+    gaming = d.get("fan", line in ("pad", "pad-neo"))
+    scene_kind = d.get("scene", "hud" if gaming else "home")
+    rx_scr = d.get("front_rx", 22)
     dark2 = _shade(body_hex, -0.6)
     fps = hz.replace("Hz", "")
     fjp = "'Noto Sans JP',sans-serif"
-    if gaming:
+    if scene_kind == "hud":
         ring_c = 2 * math.pi * 62
         bars = "".join(
             f'<text x="368" y="{170 + i * 44}" font-family="{fjp}" font-size="11" font-weight="700" fill="#9c9cb0">{l}</text>'
@@ -971,6 +1095,61 @@ def svg_tablet_front(pid, body_hex, glow, label, line="pad", hz="120Hz"):
 <rect x="368" y="300" width="192" height="46" rx="12" fill="#ffffff" opacity="0.05"/>
 <text x="380" y="320" font-family="{fjp}" font-size="9.5" font-weight="700" fill="#ececf2">旋風ファン 21,000rpm</text>
 <text x="380" y="336" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">表面温度 38.2℃ ・ 静音モード</text>"""
+    elif scene_kind == "hud2":
+        cols = "".join(
+            f'<rect x="{368 + i * 22}" y="{330 - h}" width="14" height="{h}" rx="3" fill="{glow}" opacity="{0.4 + (h - 44) * 0.012:.2f}"/>'
+            for i, h in enumerate((48, 52, 46, 50, 47, 53, 49, 46, 51)))
+        scene = f"""
+<text x="96" y="132" font-family="{fjp}" font-size="10" fill="#9c9cb0" letter-spacing="6">GAME SPACE</text>
+<text x="90" y="238" font-family="{fjp}" font-size="86" font-weight="900" fill="#ffffff">{fps}</text>
+<text x="96" y="268" font-family="{fjp}" font-size="11" fill="{glow}" letter-spacing="4">FPS ・ 安定率 99.1%</text>
+<rect x="90" y="292" width="200" height="52" rx="12" fill="#ffffff" opacity="0.05"/>
+<text x="104" y="314" font-family="{fjp}" font-size="9.5" font-weight="700" fill="#ececf2">冷却ブースト ON</text>
+<text x="104" y="330" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">旋風ファン 20,000rpm</text>
+<text x="368" y="132" font-family="{fjp}" font-size="10" fill="#9c9cb0" letter-spacing="3">フレームタイム(直近60秒)</text>
+<rect x="360" y="148" width="212" height="196" rx="14" fill="#ffffff" opacity="0.04"/>
+{cols}
+<text x="368" y="366" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">分散 0.4ms ・ ドロップ 0</text>"""
+    elif scene_kind == "classic":
+        rows = "".join(
+            f'<rect x="356" y="{150 + i * 62}" width="204" height="48" rx="12" fill="#ffffff" opacity="0.06"/>'
+            f'<text x="372" y="{179 + i * 62}" font-family="{fjp}" font-size="10.5" font-weight="700" fill="#ececf2">{l}</text>'
+            f'<text x="544" y="{179 + i * 62}" font-family="{fjp}" font-size="10" font-weight="700" fill="{glow}" text-anchor="end">{v}</text>'
+            for i, (l, v) in enumerate((("パフォーマンス", "高"), ("冷却ファン", "自動"), ("録画", "OFF"))))
+        scene = f"""
+<text x="200" y="140" font-family="{fjp}" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="6">GAME SPACE</text>
+<rect x="130" y="162" width="140" height="140" rx="30" fill="{glow}" opacity="0.14"/>
+<rect x="130" y="162" width="140" height="140" rx="30" fill="none" stroke="{glow}" stroke-opacity="0.6" stroke-width="2"/>
+<text x="200" y="242" font-family="{fjp}" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle">{fps}</text>
+<text x="200" y="268" font-family="{fjp}" font-size="10" fill="{glow}" text-anchor="middle" letter-spacing="4">FPS</text>
+<text x="200" y="336" font-family="{fjp}" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="2">フレーム安定率 98.9%</text>
+{rows}"""
+    elif scene_kind == "reader":
+        scene = f"""
+<rect x="86" y="120" width="250" height="150" rx="16" fill="#ffffff" opacity="0.07"/>
+<rect x="86" y="120" width="250" height="150" rx="16" fill="{glow}" opacity="0.08"/>
+<path d="M196 178 l32 17 -32 17z" fill="#ffffff" opacity="0.9"/>
+<rect x="102" y="242" width="150" height="5" rx="2.5" fill="#ffffff" opacity="0.16"/>
+<rect x="102" y="242" width="96" height="5" rx="2.5" fill="{glow}" opacity="0.9"/>
+<text x="86" y="298" font-family="{fjp}" font-size="11" font-weight="700" fill="#ececf2">ドキュメンタリー「朱雀の設計室」</text>
+<text x="86" y="318" font-family="{fjp}" font-size="9" fill="#9c9cb0">42:10 / 65:00 ・ 燐光ディスプレイで再生中</text>
+<rect x="368" y="120" width="192" height="120" rx="16" fill="#ffffff" opacity="0.06"/>
+<path d="M388 148 h44 v64 l-22 -12 -22 12 z" fill="none" stroke="{glow}" stroke-width="2.2"/>
+<text x="448" y="168" font-family="{fjp}" font-size="10.5" font-weight="700" fill="#ececf2">続きから読む</text>
+<text x="448" y="186" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">「熱設計の教科書」</text>
+<text x="448" y="202" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">第4章 ・ 62%</text>
+<rect x="368" y="258" width="192" height="70" rx="16" fill="#ffffff" opacity="0.05"/>
+<text x="384" y="286" font-family="{fjp}" font-size="10" font-weight="700" fill="#ececf2">メモ 3件</text>
+<text x="384" y="304" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">キーボード接続中 ・ ポゴピン</text>"""
+    elif scene_kind == "home-lite":
+        scene = f"""
+<text x="320" y="216" font-family="{fjp}" font-size="64" font-weight="300" fill="#ffffff" text-anchor="middle" letter-spacing="2">12:34</text>
+<text x="320" y="246" font-family="{fjp}" font-size="12" fill="#b9b9c8" text-anchor="middle" letter-spacing="2">7月10日(金)</text>
+<rect x="222" y="278" width="196" height="52" rx="14" fill="#ffffff" opacity="0.05"/>
+<path d="M252 316 c-4 -11 4 -18 8 -25 c4 7 12 14 8 25 a8 8 0 0 1 -16 0z" fill="none" stroke="{glow}" stroke-width="2"/>
+<text x="280" y="300" font-family="{fjp}" font-size="10" font-weight="700" fill="#ececf2">バッテリー 91%</text>
+<text x="280" y="316" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">低電力モード ON</text>
+{"".join(f'<rect x="{262 + i * 60}" y="352" width="40" height="40" rx="11" fill="{c}" opacity="{o}"/>' for i, (c, o) in enumerate(((glow, 0.8), ("#ffffff", 0.12))))}"""
     else:
         scene = f"""
 <text x="200" y="200" font-family="{fjp}" font-size="58" font-weight="300" fill="#ffffff" text-anchor="middle" letter-spacing="2">12:34</text>
@@ -1007,12 +1186,12 @@ def svg_tablet_front(pid, body_hex, glow, label, line="pad", hz="120Hz"):
 <filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
 </filter>
-<clipPath id="clip{gid}"><rect x="58" y="44" width="524" height="388" rx="22"/></clipPath>
+<clipPath id="clip{gid}"><rect x="58" y="44" width="524" height="388" rx="{rx_scr}"/></clipPath>
 </defs>
 <ellipse cx="320" cy="459" rx="216" ry="11" fill="#000000" opacity="0.4" filter="url(#soft{gid})"/>
 <rect x="36" y="22" width="568" height="428" rx="35" fill="url(#frame{gid})"/>
 <rect x="42" y="28" width="556" height="416" rx="30" fill="#06060a"/>
-<rect x="58" y="44" width="524" height="388" rx="22" fill="url(#scr{gid})"/>
+<rect x="58" y="44" width="524" height="388" rx="{rx_scr}" fill="url(#scr{gid})"/>
 <g clip-path="url(#clip{gid})">
 <ellipse cx="320" cy="200" rx="300" ry="180" fill="url(#flare{gid})"/>
 {scene}
@@ -1023,7 +1202,7 @@ def svg_tablet_front(pid, body_hex, glow, label, line="pad", hz="120Hz"):
 <rect x="275" y="418" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.5"/>
 <path d="M58 44 L300 44 L120 432 L58 432 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="58.8" y="44.8" width="522.4" height="386.4" rx="21.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="58.8" y="44.8" width="522.4" height="386.4" rx="{rx_scr - 0.6}" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <circle cx="320" cy="36" r="4" fill="#04040a" stroke="#2a2a36" stroke-width="1.2"/>
 </svg>"""
 

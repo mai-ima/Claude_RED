@@ -3492,7 +3492,7 @@ def build_assets():
             front = svg_art.svg_phone_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif, design)
             (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")
         elif p["cat"] == "tablet":
-            front = svg_art.svg_tablet_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz)
+            front = svg_art.svg_tablet_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, design)
             (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")
 
 

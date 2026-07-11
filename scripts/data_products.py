@@ -1653,30 +1653,30 @@ ACCESSORIES = [
 # ==========================================================================
 _DESIGNS = {
     # スマートフォン(世代×ラインで全機種の背面を判別可能にする)
-    "suzaku-4":       {"cams": 2, "tele": True,  "plate": "band",   "fan": True,  "led": "slash3", "tex": "carbon", "scene": "hud"},
-    "suzaku-3":       {"cams": 2, "plate": "pill",   "fan": True,  "led": "slash2", "tex": "hairline", "scene": "hud2"},
-    "suzaku-2":       {"cams": 2, "plate": "square", "fan": True,  "led": "dot",    "tex": "matte", "scene": "classic"},
-    "suzaku-one":     {"cams": 2, "plate": "circle", "fan": True,  "led": "none",   "tex": "gloss", "scene": "classic"},
-    "neo-3":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "slash1", "tex": "matte", "scene": "hud"},
-    "neo-2":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "dot",    "tex": "hairline", "scene": "hud2"},
-    "neo":            {"cams": 1, "plate": "corner", "fan": True,  "led": "none",   "tex": "matte", "scene": "classic"},
-    "tsubame-3":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "gloss"},
-    "tsubame-2":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "hairline"},
-    "tsubame":        {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte"},
-    "tsubame-lite-2": {"cams": 1, "macro": True, "plate": "corner", "fan": False, "led": "none", "tex": "matte", "scene": "home-lite"},
-    "tsubame-lite":   {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte", "scene": "home-lite"},
+    "suzaku-4":       {"cams": 2, "tele": True,  "plate": "band",   "fan": True,  "led": "slash3", "tex": "carbon", "scene": "hud", "punch": "none"},
+    "suzaku-3":       {"cams": 2, "plate": "pill",   "fan": True,  "led": "slash2", "tex": "hairline", "scene": "hud2", "punch": "center"},
+    "suzaku-2":       {"cams": 2, "plate": "square", "fan": True,  "led": "dot",    "tex": "matte", "scene": "classic", "punch": "center", "bezel": "thick"},
+    "suzaku-one":     {"cams": 2, "plate": "circle", "fan": True,  "led": "none",   "tex": "gloss", "scene": "classic", "punch": "center", "bezel": "thick"},
+    "neo-3":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "slash1", "tex": "matte", "scene": "hud-ai", "punch": "left"},
+    "neo-2":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "dot",    "tex": "hairline", "scene": "hud2", "punch": "left"},
+    "neo":            {"cams": 1, "plate": "corner", "fan": True,  "led": "none",   "tex": "matte", "scene": "classic", "punch": "center", "bezel": "thick"},
+    "tsubame-3":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "gloss", "punch": "center"},
+    "tsubame-2":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "hairline", "punch": "center"},
+    "tsubame":        {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte", "punch": "center", "bezel": "thick"},
+    "tsubame-lite-2": {"cams": 1, "macro": True, "plate": "corner", "fan": False, "led": "none", "tex": "matte", "scene": "home-lite", "punch": "left"},
+    "tsubame-lite":   {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte", "scene": "home-lite", "punch": "left"},
     # コラボ4機種は完全専用描画(svg_art.py の _PHONE_CUSTOM)
     "shichiyo": {"custom": "shichiyo"},
     "zankyo":   {"custom": "zankyo", "front_rx": 16},
     "yako":     {"custom": "yako"},
     "zensen":   {"custom": "zensen", "punch": True},
-    # タブレット
-    "pad-2":      {"cams": 2, "fan": True},
-    "pad":        {"cams": 1, "fan": True},
-    "pad-neo":    {"cams": 2, "fan": True},
-    "t-pad-2":    {"cams": 1, "fan": False},
-    "t-pad":      {"cams": 1, "fan": False},
-    "t-pad-lite": {"cams": 1, "fan": False},
+    # タブレット(背面: plate/tex/led/emblem、正面: scene/front_rx で全機種判別可能に)
+    "pad-2":      {"cams": 2, "fan": True,  "plate": "band",   "tex": "carbon",   "led": "slash3", "scene": "hud"},
+    "pad":        {"cams": 1, "fan": True,  "plate": "square", "tex": "hairline", "led": "slash1", "scene": "hud2"},
+    "pad-neo":    {"cams": 2, "fan": True,  "plate": "diag",   "tex": "matte",    "led": "dot",    "scene": "classic"},
+    "t-pad-2":    {"cams": 1, "fan": False, "plate": "corner", "tex": "gloss",  "flash": True, "emblem": "large", "scene": "home", "front_rx": 26},
+    "t-pad":      {"cams": 1, "fan": False, "plate": "corner", "tex": "hairline", "emblem": "small", "pogo": True, "scene": "reader", "front_rx": 22},
+    "t-pad-lite": {"cams": 1, "fan": False, "plate": "none",   "tex": "matte",    "emblem": "outline", "scene": "home-lite", "front_rx": 18},
 }
 
 # カメラ仕様が未記載だった旧機種・タブレットへ、描画と一致する仕様を補完

@@ -23,8 +23,9 @@
   <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
-<pattern id="textpadlite0" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+<pattern id="textpadlite0" width="9" height="9" patternUnits="userSpaceOnUse">
+  <circle cx="2" cy="3" r="0.7" fill="#ffffff" fill-opacity="0.045"/>
+  <circle cx="6.5" cy="7" r="0.6" fill="#000000" fill-opacity="0.1"/>
 </pattern>
 <filter id="softtpadlite0" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
@@ -38,22 +39,21 @@
 <rect x="43" y="29" width="554" height="414" rx="29" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.5"/>
 <path d="M120 22 v6 M520 22 v6 M120 444 v6 M520 444 v6" stroke="#5e5e5a" stroke-width="3"/>
 
-<rect x="72" y="62" width="66" height="60" rx="20" fill="#a5a49e"/>
-<rect x="72" y="62" width="66" height="60" rx="20" fill="url(#sheentpadlite0)" opacity="0.5"/>
-<rect x="72.7" y="62.7" width="64.6" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
-<circle cx="126" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
 
-<circle cx="104" cy="92" r="19" fill="#0b0d13" stroke="#f2f0eb" stroke-width="1.5"/>
-<circle cx="104" cy="92" r="14" fill="none" stroke="#38b6a5" stroke-opacity="0.5" stroke-width="1.2"/>
-<circle cx="104" cy="92" r="11" fill="url(#lenstpadlite0)"/>
-<circle cx="104" cy="92" r="4" fill="#04040a"/>
-<circle cx="100" cy="87.5" r="2.6" fill="#ffffff" opacity="0.55"/>
+<circle cx="96" cy="88" r="21" fill="#0b0d13" stroke="#f2f0eb" stroke-width="1.5"/>
+<circle cx="96" cy="88" r="16" fill="none" stroke="#38b6a5" stroke-opacity="0.5" stroke-width="1.2"/>
+<circle cx="96" cy="88" r="13" fill="url(#lenstpadlite0)"/>
+<circle cx="96" cy="88" r="4" fill="#04040a"/>
+<circle cx="92" cy="83.5" r="2.6" fill="#ffffff" opacity="0.55"/>
+<circle cx="132" cy="72" r="3.6" fill="#f4efdf" opacity="0.85"/>
 
-<g transform="translate(276 194) scale(1.85)" opacity="0.9">
-  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#38b6a5" stroke-width="2.6" stroke-linejoin="round"/>
-  <circle cx="24" cy="31.5" r="3.2" fill="#38b6a5"/>
+
+
+<g transform="translate(288 208) scale(1.4)" opacity="0.55">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#1c1c26" stroke-width="2" stroke-linejoin="round"/>
 </g>
-<circle cx="296" cy="436" r="4" fill="#5e5e5a" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/><circle cx="320" cy="436" r="4" fill="#5e5e5a" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/><circle cx="344" cy="436" r="4" fill="#5e5e5a" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>
+
+<rect x="560" y="436.5" width="10" height="3.5" rx="1.75" fill="#5e5e5a"/><rect x="542" y="436.5" width="10" height="3.5" rx="1.75" fill="#5e5e5a"/>
 <text x="320" y="368" font-family="'Noto Sans JP',sans-serif" font-size="17" font-weight="800" fill="#1c1c26" opacity="0.72" text-anchor="middle" letter-spacing="3">TSUBAME Pad Lite</text>
 <text x="320" y="392" font-family="'Noto Sans JP',sans-serif" font-size="9.5" fill="#1c1c26" opacity="0.4" text-anchor="middle" letter-spacing="4">燕 Pad Lite</text>
 <text x="556" y="430" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="#1c1c26" opacity="0.38" text-anchor="end" letter-spacing="2">DESIGNED BY SUZAKU ・ 60Hz</text>

@@ -38,24 +38,25 @@
 <rect x="43" y="29" width="554" height="414" rx="29" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.5"/>
 <path d="M120 22 v6 M520 22 v6 M120 444 v6 M520 444 v6" stroke="#09090c" stroke-width="3"/>
 
-<rect x="72" y="62" width="66" height="60" rx="20" fill="#0f0f15"/>
-<rect x="72" y="62" width="66" height="60" rx="20" fill="url(#sheenpad0)" opacity="0.5"/>
-<rect x="72.7" y="62.7" width="64.6" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
-<circle cx="126" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
+<rect x="70" y="60" width="86" height="86" rx="18" fill="#0f0f15"/>
+<rect x="70" y="60" width="86" height="86" rx="18" fill="url(#sheenpad0)" opacity="0.5"/>
+<rect x="70.7" y="60.7" width="84.6" height="84.6" rx="17.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
 
-<circle cx="104" cy="92" r="19" fill="#0b0d13" stroke="#5c5c62" stroke-width="1.5"/>
-<circle cx="104" cy="92" r="14" fill="none" stroke="#e8442e" stroke-opacity="0.5" stroke-width="1.2"/>
-<circle cx="104" cy="92" r="11" fill="url(#lenspad0)"/>
-<circle cx="104" cy="92" r="4" fill="#04040a"/>
-<circle cx="100" cy="87.5" r="2.6" fill="#ffffff" opacity="0.55"/>
+<circle cx="113" cy="96" r="22" fill="#0b0d13" stroke="#5c5c62" stroke-width="1.5"/>
+<circle cx="113" cy="96" r="17" fill="none" stroke="#e8442e" stroke-opacity="0.5" stroke-width="1.2"/>
+<circle cx="113" cy="96" r="14" fill="url(#lenspad0)"/>
+<circle cx="113" cy="96" r="4" fill="#04040a"/>
+<circle cx="109" cy="91.5" r="2.6" fill="#ffffff" opacity="0.55"/>
+<circle cx="140" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
 
-<path d="M224 78 h38 l-11 11 h-38 z" fill="#e8442e" opacity="0.92"/><path d="M282 78 h38 l-11 11 h-38 z" fill="#e8442e" opacity="0.55"/><path d="M340 78 h38 l-11 11 h-38 z" fill="#e8442e" opacity="0.28"/>
+<path d="M184 78 h96 l-13 12 h-96 z" fill="#e8442e" opacity="0.85"/>
 <circle cx="320" cy="238" r="44" fill="#09090c"/>
 <circle cx="320" cy="238" r="44" fill="none" stroke="#e8442e" stroke-opacity="0.55" stroke-width="2"/>
 <circle cx="320" cy="238" r="37" fill="#0a0b10"/>
-<path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(0 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(40 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(80 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(120 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(160 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(200 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(240 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(280 320 238)"/><path d="M320 238 L320 210" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(320 320 238)"/>
+<path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(0 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(40 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(80 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(120 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(160 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(200 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(240 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(280 320 238)"/><path d="M320 238 L320 206" stroke="#494950" stroke-width="8" stroke-linecap="round" transform="rotate(320 320 238)"/>
 <circle cx="320" cy="238" r="11" fill="#101018" stroke="#e8442e" stroke-opacity="0.8" stroke-width="1.5"/>
 <circle cx="320" cy="238" r="3.5" fill="#e8442e"/>
+<rect x="596.5" y="150" width="5" height="20" rx="2.5" fill="#09090c"/><rect x="596.5" y="180" width="5" height="20" rx="2.5" fill="#09090c"/><rect x="596.5" y="210" width="5" height="20" rx="2.5" fill="#09090c"/><rect x="596.5" y="240" width="5" height="20" rx="2.5" fill="#09090c"/>
 <text x="320" y="300" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="#ffffff" opacity="0.5" text-anchor="middle" letter-spacing="3">SENPU COOLING</text>
 <text x="320" y="368" font-family="'Noto Sans JP',sans-serif" font-size="17" font-weight="800" fill="#ffffff" opacity="0.72" text-anchor="middle" letter-spacing="3">SUZAKU Pad</text>
 <text x="320" y="392" font-family="'Noto Sans JP',sans-serif" font-size="9.5" fill="#ffffff" opacity="0.4" text-anchor="middle" letter-spacing="4">朱雀 Pad</text>

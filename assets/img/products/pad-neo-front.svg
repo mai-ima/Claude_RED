@@ -29,17 +29,13 @@
 <g clip-path="url(#clipfpadneo)">
 <ellipse cx="320" cy="200" rx="300" ry="180" fill="url(#flarefpadneo)"/>
 
-<text x="210" y="122" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="6">GAME SPACE</text>
-<circle cx="210" cy="240" r="62" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="9"/>
-<circle cx="210" cy="240" r="62" fill="none" stroke="#ff8a3d" stroke-width="9" stroke-linecap="round"
-  stroke-dasharray="312 390" transform="rotate(-90 210 240)"/>
-<text x="210" y="252" font-family="'Noto Sans JP',sans-serif" font-size="42" font-weight="900" fill="#ffffff" text-anchor="middle">144</text>
-<text x="210" y="278" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#ff8a3d" text-anchor="middle" letter-spacing="5">FPS</text>
-<text x="210" y="342" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">フレーム安定率 99.2%</text>
-<text x="368" y="170" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#9c9cb0">GPU</text><rect x="410" y="161" width="150" height="10" rx="3" fill="#ffffff" opacity="0.08"/><rect x="410" y="161" width="126" height="10" rx="3" fill="#ff8a3d" opacity="0.95"/><text x="368" y="214" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#9c9cb0">CPU</text><rect x="410" y="205" width="150" height="10" rx="3" fill="#ffffff" opacity="0.08"/><rect x="410" y="205" width="93" height="10" rx="3" fill="#ff8a3d" opacity="0.77"/><text x="368" y="258" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#9c9cb0">温度</text><rect x="410" y="249" width="150" height="10" rx="3" fill="#ffffff" opacity="0.08"/><rect x="410" y="249" width="54" height="10" rx="3" fill="#ff8a3d" opacity="0.59"/>
-<rect x="368" y="300" width="192" height="46" rx="12" fill="#ffffff" opacity="0.05"/>
-<text x="380" y="320" font-family="'Noto Sans JP',sans-serif" font-size="9.5" font-weight="700" fill="#ececf2">旋風ファン 21,000rpm</text>
-<text x="380" y="336" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#9c9cb0">表面温度 38.2℃ ・ 静音モード</text>
+<text x="200" y="140" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="6">GAME SPACE</text>
+<rect x="130" y="162" width="140" height="140" rx="30" fill="#ff8a3d" opacity="0.14"/>
+<rect x="130" y="162" width="140" height="140" rx="30" fill="none" stroke="#ff8a3d" stroke-opacity="0.6" stroke-width="2"/>
+<text x="200" y="242" font-family="'Noto Sans JP',sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle">144</text>
+<text x="200" y="268" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#ff8a3d" text-anchor="middle" letter-spacing="4">FPS</text>
+<text x="200" y="336" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="2">フレーム安定率 98.9%</text>
+<rect x="356" y="150" width="204" height="48" rx="12" fill="#ffffff" opacity="0.06"/><text x="372" y="179" font-family="'Noto Sans JP',sans-serif" font-size="10.5" font-weight="700" fill="#ececf2">パフォーマンス</text><text x="544" y="179" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#ff8a3d" text-anchor="end">高</text><rect x="356" y="212" width="204" height="48" rx="12" fill="#ffffff" opacity="0.06"/><text x="372" y="241" font-family="'Noto Sans JP',sans-serif" font-size="10.5" font-weight="700" fill="#ececf2">冷却ファン</text><text x="544" y="241" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#ff8a3d" text-anchor="end">自動</text><rect x="356" y="274" width="204" height="48" rx="12" fill="#ffffff" opacity="0.06"/><text x="372" y="303" font-family="'Noto Sans JP',sans-serif" font-size="10.5" font-weight="700" fill="#ececf2">録画</text><text x="544" y="303" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#ff8a3d" text-anchor="end">OFF</text>
 <text x="78" y="74" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#e6e6ee">12:34</text>
 <rect x="536" y="63.5" width="20" height="10" rx="3" fill="none" stroke="#c9c9d6" stroke-width="1.3"/>
 <rect x="538" y="65.5" width="13" height="6" rx="1.5" fill="#ff8a3d"/>

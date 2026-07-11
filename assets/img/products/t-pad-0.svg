@@ -41,7 +41,6 @@
 <rect x="72" y="62" width="66" height="60" rx="20" fill="#a2a19c"/>
 <rect x="72" y="62" width="66" height="60" rx="20" fill="url(#sheentpad0)" opacity="0.5"/>
 <rect x="72.7" y="62.7" width="64.6" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
-<circle cx="126" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
 
 <circle cx="104" cy="92" r="19" fill="#0b0d13" stroke="#efeee9" stroke-width="1.5"/>
 <circle cx="104" cy="92" r="14" fill="none" stroke="#3d8bff" stroke-opacity="0.5" stroke-width="1.2"/>
@@ -49,11 +48,15 @@
 <circle cx="104" cy="92" r="4" fill="#04040a"/>
 <circle cx="100" cy="87.5" r="2.6" fill="#ffffff" opacity="0.55"/>
 
+
+
+
 <g transform="translate(276 194) scale(1.85)" opacity="0.9">
   <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#3d8bff" stroke-width="2.6" stroke-linejoin="round"/>
   <circle cx="24" cy="31.5" r="3.2" fill="#3d8bff"/>
 </g>
 <circle cx="296" cy="436" r="4" fill="#5d5c59" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/><circle cx="320" cy="436" r="4" fill="#5d5c59" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/><circle cx="344" cy="436" r="4" fill="#5d5c59" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>
+
 <text x="320" y="368" font-family="'Noto Sans JP',sans-serif" font-size="17" font-weight="800" fill="#1c1c26" opacity="0.72" text-anchor="middle" letter-spacing="3">TSUBAME Pad</text>
 <text x="320" y="392" font-family="'Noto Sans JP',sans-serif" font-size="9.5" fill="#1c1c26" opacity="0.4" text-anchor="middle" letter-spacing="4">燕 Pad</text>
 <text x="556" y="430" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="#1c1c26" opacity="0.38" text-anchor="end" letter-spacing="2">DESIGNED BY SUZAKU ・ 90Hz</text>

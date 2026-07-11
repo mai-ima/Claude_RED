@@ -20,12 +20,12 @@
 <filter id="softftpad2" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
 </filter>
-<clipPath id="clipftpad2"><rect x="58" y="44" width="524" height="388" rx="22"/></clipPath>
+<clipPath id="clipftpad2"><rect x="58" y="44" width="524" height="388" rx="26"/></clipPath>
 </defs>
 <ellipse cx="320" cy="459" rx="216" ry="11" fill="#000000" opacity="0.4" filter="url(#softftpad2)"/>
 <rect x="36" y="22" width="568" height="428" rx="35" fill="url(#frameftpad2)"/>
 <rect x="42" y="28" width="556" height="416" rx="30" fill="#06060a"/>
-<rect x="58" y="44" width="524" height="388" rx="22" fill="url(#scrftpad2)"/>
+<rect x="58" y="44" width="524" height="388" rx="26" fill="url(#scrftpad2)"/>
 <g clip-path="url(#clipftpad2)">
 <ellipse cx="320" cy="200" rx="300" ry="180" fill="url(#flareftpad2)"/>
 
@@ -48,6 +48,6 @@
 <rect x="275" y="418" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.5"/>
 <path d="M58 44 L300 44 L120 432 L58 432 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="58.8" y="44.8" width="522.4" height="386.4" rx="21.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="58.8" y="44.8" width="522.4" height="386.4" rx="25.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <circle cx="320" cy="36" r="4" fill="#04040a" stroke="#2a2a36" stroke-width="1.2"/>
 </svg>

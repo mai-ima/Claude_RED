@@ -2869,7 +2869,7 @@ def build_product_hubs():
     </div>
   </div>
 </section>
-{build_line_section('phone', 'collab', '人気ゲームタイトルとの数量限定・期間限定コラボレーション。史上最高性能の特別選別チップと、作品世界をまとった限定デザイン。')}
+{build_line_section('phone', 'collab', '人気ゲームタイトルとの数量限定・期間限定コラボレーション。筐体からSoCまで各作品のためだけに新規設計した、完全オリジナルの限定モデル。')}
 {build_line_section('phone', 'suzaku', '自社SoC・多層冷却・独自OSのすべてを注ぎ込む、SUZAKUの旗艦ライン。2023年の初代から毎年更新。')}
 {build_line_section('phone', 'neo', '前年フラッグシップの技術を受け継ぎ、価格を抑えたゲーミングスタンダード。「去年の頂点を、今年の普通に」。')}
 {build_line_section('phone', 'tsubame', 'ゲーミングで培った技術を日常へ。軽さ・カメラ・電池持ちを磨いた一般向けライン。')}

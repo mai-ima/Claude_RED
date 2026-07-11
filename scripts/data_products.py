@@ -753,6 +753,7 @@ PHONES = [
             ]),
             ("性能", [
                 ("SoC", "元素炉 GENSORO-E1(3nm・オクタコア・最大3.85GHz・七耀専用設計)"),
+                ("ベンチマーク", "AnTuTu 408万点(当社測定)"),
                 ("GPU", "幻彩 GENSAI-GX(レイトレーシング + 色管理コプロ統合)"),
                 ("NPU", "星詠 HOSHIYOMI(118TOPS)"),
                 ("メモリ", "星屑 HOSHIKUZU LPDDR6 16GB / 24GB(11,000Mbps)"),
@@ -835,6 +836,7 @@ PHONES = [
             ]),
             ("性能", [
                 ("SoC", "共振 KYOSHIN-W1(3nm・オクタコア・最大4.1GHz・残響専用設計)"),
+                ("ベンチマーク", "AnTuTu 418万点(SUZAKU史上最速・当社測定)"),
                 ("GPU", "疾波 SHIPPA-GX(1.32GHz・瞬間クロック特化)"),
                 ("NPU", "空澄 SORASUMI(122TOPS)"),
                 ("メモリ", "波導 HADO LPDDR6 16GB / 24GB(11,600Mbps・低レイテンシ)"),
@@ -916,6 +918,7 @@ PHONES = [
             ]),
             ("性能", [
                 ("SoC", "夜想 YASO-N1(3nm・オクタコア・最大3.9GHz・夜行専用設計・デュアルISP)"),
+                ("ベンチマーク", "AnTuTu 410万点(当社測定)"),
                 ("GPU", "極夜 KYOKUYA-GX(夜景デノイズ協調)"),
                 ("NPU", "宵詠 YOIYOMI(120TOPS)"),
                 ("メモリ", "宵闇 YOIYAMI LPDDR6 16GB / 24GB(11,200Mbps)"),
@@ -999,6 +1002,7 @@ PHONES = [
             ]),
             ("性能", [
                 ("SoC", "基幹 KIKAN-F1(3nm・オクタコア・最大3.8GHz・前線専用設計・持続特化)"),
+                ("ベンチマーク", "AnTuTu 403万点・60分持続99%(当社測定)"),
                 ("GPU", "重工 JUKO-GX(持続クロック固定)"),
                 ("NPU", "測量 SOKURYO(115TOPS)"),
                 ("メモリ", "岩盤 GANBAN LPDDR6 16GB / 24GB(10,800Mbps・高信頼リフレッシュ)"),

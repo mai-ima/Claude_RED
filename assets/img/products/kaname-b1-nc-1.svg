@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="要 KANAME B1">
+<defs>
+<linearGradient id="bodykanameb1nc1" x1="0" y1="0" x2="0.9" y2="1">
+  <stop offset="0" stop-color="#e7e8e5"/>
+  <stop offset="0.28" stop-color="#ddded9"/>
+  <stop offset="0.62" stop-color="#d6d8d2"/>
+  <stop offset="1" stop-color="#858682"/>
+</linearGradient>
+<linearGradient id="framekanameb1nc1" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#ededeb"/>
+  <stop offset="0.12" stop-color="#b6b8b2"/>
+  <stop offset="0.5" stop-color="#565654"/>
+  <stop offset="0.88" stop-color="#abada8"/>
+  <stop offset="1" stop-color="#e4e6e2"/>
+</linearGradient>
+<radialGradient id="lenskanameb1nc1" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#3c4454"/>
+  <stop offset="0.35" stop-color="#141821"/>
+  <stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<linearGradient id="sheenkanameb1nc1" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+  <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
+  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+</linearGradient>
+<pattern id="texkanameb1nc1" width="9" height="9" patternUnits="userSpaceOnUse">
+  <circle cx="2" cy="3" r="0.7" fill="#ffffff" fill-opacity="0.045"/>
+  <circle cx="6.5" cy="7" r="0.6" fill="#000000" fill-opacity="0.1"/>
+</pattern>
+<filter id="softkanameb1nc1" x="-40%" y="-40%" width="180%" height="180%">
+  <feGaussianBlur stdDeviation="7"/>
+</filter>
+</defs>
+<ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.4" filter="url(#softkanameb1nc1)"/>
+<rect x="43" y="30" width="254" height="540" rx="47" fill="url(#framekanameb1nc1)"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="#d6d8d2"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="url(#bodykanameb1nc1)"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="url(#texkanameb1nc1)"/>
+<rect x="50" y="37" width="240" height="526" rx="41" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6"/>
+<path d="M43 128 h6 M43 448 h6 M291 128 h6 M291 448 h6" stroke="#565654" stroke-width="3"/>
+
+<rect x="66" y="60" width="208" height="92" rx="18" fill="none" stroke="#1c1c26" stroke-opacity="0.16" stroke-width="1.4"/>
+<path d="M170 76 l22 10 v15 c0 14 -10 23 -22 28 c-12 -5 -22 -14 -22 -28 v-15 z" fill="none" stroke="#4a7ac8" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="M161 103 l7 7 12 -14" fill="none" stroke="#4a7ac8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="170" y="142" font-family="'Noto Sans JP',sans-serif" font-size="8" font-weight="700" fill="#1c1c26" opacity="0.55" text-anchor="middle" letter-spacing="3">SECURE ・ NO CAMERA</text>
+
+
+<g transform="translate(122 268) scale(2)" opacity="0.9">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#4a7ac8" stroke-width="2.6" stroke-linejoin="round"/>
+  <circle cx="24" cy="31.5" r="3.2" fill="#4a7ac8"/>
+</g>
+
+<text x="170" y="462" font-family="'Noto Sans JP',sans-serif" font-size="14.5" font-weight="800" fill="#1c1c26" opacity="0.72" text-anchor="middle" letter-spacing="2.5">要 KANAME B1</text>
+<text x="170" y="487" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#1c1c26" opacity="0.4" text-anchor="middle" letter-spacing="4">かなめ B1</text>
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="#1c1c26" opacity="0.38" text-anchor="middle" letter-spacing="2">DESIGNED BY SUZAKU ・ 120Hz</text>
+<path d="M78 36 L206 36 L96 564 L49 564 L49 300 Z" fill="url(#sheenkanameb1nc1)"/>
+<path d="M232 36 L262 36 L150 564 L124 564 Z" fill="#ffffff" opacity="0.05"/>
+<rect x="292.5" y="162" width="5" height="56" rx="2.5" fill="#565654"/>
+<rect x="42.5" y="146" width="5" height="62" rx="2.5" fill="#565654"/>
+</svg>

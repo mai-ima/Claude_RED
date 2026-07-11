@@ -211,6 +211,16 @@ def acc_compat_table(p):
 
 
 LINE_FAQ = {
+    "biz": [
+        ("個人でも購入できますか?",
+         "はい、購入自体は可能です。ただし要 KANAME B1 は法人運用(MDM管理・キッティング・保守契約)を前提に設計されており、ボリュームディスカウントや引取交換保守などは<a href='/business/contact/'>法人窓口</a>経由のご契約が対象です。"),
+        ("カメラレス仕様は後からカメラを追加できますか?",
+         "できません。カメラレス仕様はソフトウェアでの無効化ではなく、カメラモジュールを物理的に搭載しない構成です。撮影禁止区域の持ち込み審査でも、背面のSECURE刻印と型番で判別できます。"),
+        ("MDMは何に対応していますか?",
+         "主要なMDM(EMM)サービスのゼロタッチ登録に対応します。端末IDの事前登録により、開梱後の初回起動で自動的にポリシーが適用されます。詳細な対応一覧は法人窓口へお問い合わせください。"),
+        ("保守はどのような内容ですか?",
+         "法人契約でセキュリティ更新5年+引取交換保守を提供します。故障時は代替機を先出しし、業務停止時間を最小化します。"),
+    ],
     "suzaku": [
         ("ファンの音はゲーム中どのくらい聞こえますか?",
          "自動モードでは28〜38dB(ささやき声〜静かな図書館程度)で制御されます。動画視聴などの低負荷時はファンは停止します。「陣」から手動で4段階+停止を選択できます。"),
@@ -1056,6 +1066,16 @@ def build_product_page(p):
         <span class="choice__price">{yen(p['price'] + s['delta'])}</span>
       </label>""" for i, s in enumerate(p["storage"])) if p["storage"] else ""
 
+    # カメラ構成オプション(法人機など)。選択で購入画像がカメラレス背面に切り替わる
+    camopts = "".join(f"""
+      <label class="choice">
+        <input type="radio" name="camopt" value="{i}" {"checked" if i == 0 else ""}>
+        <span class="choice__radio"></span>
+        <span class="choice__body"><span class="choice__title">{esc(o['label'])}</span>
+        <span class="choice__sub t-micro t-faint">{esc(o.get('note', ''))}</span></span>
+        <span class="choice__price">{('+' + yen(o['delta'])) if o.get('delta') else '±¥0'}</span>
+      </label>""" for i, o in enumerate(p.get("camera_options", []))) if p.get("camera_options") else ""
+
     if p["status"] == "current":
         buy_actions = f"""
         <p class="buy-price"><span id="buyPrice">{yen(p['price'])}</span> <small class="t-faint">(税込)</small></p>
@@ -1091,6 +1111,7 @@ def build_product_page(p):
         <div class="field"><label>カラー — <span id="colorName">{esc(p['colors'][0]['name'])}</span>(全{len(p['colors'])}色: {esc(color_names)})</label>
           <div class="cluster">{swatches}</div></div>
         {'<div class="field"><label>メモリとストレージ</label><div class="choice-grid">' + storages + '</div></div>' if storages else ''}
+        {'<div class="field"><label>カメラ構成</label><div class="choice-grid">' + camopts + '</div></div>' if camopts else ''}
         {buy_actions}
         <p class="t-micro t-faint">発売日: {p['release']} / 型番: SZ-{p['id'].upper().replace('-', '')}</p>
       </div>
@@ -3316,6 +3337,7 @@ def build_product_hubs():
 {build_line_section('phone', 'neo', '前年フラッグシップの技術を受け継ぎ、価格を抑えたゲーミングスタンダード。「去年の頂点を、今年の普通に」。')}
 {build_line_section('phone', 'tsubame', 'ゲーミングで培った技術を日常へ。軽さ・カメラ・電池持ちを磨いた一般向けライン。')}
 {build_line_section('phone', 'lite', '3万円台から、SUZAKU品質。はじめての一台にも2台目にも応えるエントリーライン。')}
+{build_line_section('phone', 'biz', '仕事の道具に徹した法人専用ブランド「要 KANAME」。MDM標準対応・5年保守、カメラレス構成も選べます。')}
 {quick_table('phone')}
 {cta_band('迷ったら、比較ツールへ。', '全12機種をスペックで並べて比較できます。', [('製品を比較する', '/products/compare/', 'btn--primary'), ('ストアで見る', '/store/', 'btn--ghost')])}
 """
@@ -3487,6 +3509,12 @@ def build_assets():
             else:
                 svg = svg_art.svg_art(p.get("art", "chip"), glow, c["hex"], motif)
             (img / "products" / f"{p['id']}-{i}.svg").write_text(svg, encoding="utf-8")
+            # カメラ構成オプション持ち(法人機)はカメラレス背面も生成する
+            if p.get("camera_options") and p["cat"] == "phone":
+                nc_design = dict(design or {})
+                nc_design["cams"] = 0
+                nc = svg_art.svg_phone(f"{p['id']}nc{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz, nc_design)
+                (img / "products" / f"{p['id']}-nc-{i}.svg").write_text(nc, encoding="utf-8")
         # デバイスは正面(ディスプレイ点灯)ビューも生成する
         if p["cat"] == "phone":
             front = svg_art.svg_phone_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif, design)

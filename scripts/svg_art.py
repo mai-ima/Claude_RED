@@ -218,7 +218,16 @@ def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz", de
     tex_kind = d.get("tex", "matte")
 
     defs = _phone_defs(gid, body_hex, tex_kind)
-    camera, plate_bottom = _phone_camera(d, gid, body_hex, glow, ink)
+    if d.get("cams") == 0:
+        # カメラレス(セキュア仕様): レンズの代わりに盾の刻印+規格表記
+        camera = f"""
+<rect x="66" y="60" width="208" height="92" rx="18" fill="none" stroke="{ink}" stroke-opacity="0.16" stroke-width="1.4"/>
+<path d="M170 76 l22 10 v15 c0 14 -10 23 -22 28 c-12 -5 -22 -14 -22 -28 v-15 z" fill="none" stroke="{glow}" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="M161 103 l7 7 12 -14" fill="none" stroke="{glow}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="170" y="142" font-family="'Noto Sans JP',sans-serif" font-size="8" font-weight="700" fill="{ink}" opacity="0.55" text-anchor="middle" letter-spacing="3">SECURE ・ NO CAMERA</text>"""
+        plate_bottom = 152
+    else:
+        camera, plate_bottom = _phone_camera(d, gid, body_hex, glow, ink)
 
     # LED意匠(カメラ島の下端から距離を取り干渉を防ぐ)
     led_kind = d.get("led", "none")
@@ -821,6 +830,29 @@ def _front_scene_phone(line, glow, hz, motif, scene=None):
 <text x="86" y="426" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">負荷を先読みしてファンを助走</text>
 <rect x="70" y="486" width="200" height="26" rx="13" fill="#ffffff" opacity="0.07"/>
 <text x="170" y="503" font-family="{fjp}" font-size="9" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">ゲームライブラリ 42本</text>"""
+    if scene == "work":
+        # 法人機: 業務ホーム(予定・メール・MDM管理バッジ)
+        return f"""
+<text x="70" y="132" font-family="{fjp}" font-size="34" font-weight="300" fill="#ffffff" letter-spacing="1">12:34</text>
+<text x="70" y="154" font-family="{fjp}" font-size="10" fill="#b9b9c8" letter-spacing="2">7月10日(金) ・ 社給端末</text>
+<rect x="70" y="176" width="200" height="72" rx="14" fill="#ffffff" opacity="0.07"/>
+<rect x="70" y="176" width="4" height="72" rx="2" fill="{glow}"/>
+<text x="88" y="200" font-family="{fjp}" font-size="10.5" font-weight="800" fill="#ececf2">13:00 定例ミーティング</text>
+<text x="88" y="218" font-family="{fjp}" font-size="9" fill="#9c9cb0">第2会議室 ・ あと26分</text>
+<text x="88" y="236" font-family="{fjp}" font-size="9" fill="#9c9cb0">15:30 現場巡回(A棟)</text>
+<rect x="70" y="262" width="200" height="56" rx="14" fill="#ffffff" opacity="0.05"/>
+<path d="M86 282 h28 v20 h-28 z M86 282 l14 11 14 -11" fill="none" stroke="{glow}" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="126" y="288" font-family="{fjp}" font-size="10" font-weight="700" fill="#ececf2">未読メール 4件</text>
+<text x="126" y="306" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">うち承認待ち 2件</text>
+<rect x="70" y="332" width="200" height="44" rx="12" fill="{glow}" opacity="0.13"/>
+<rect x="70" y="332" width="200" height="44" rx="12" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="1.4"/>
+<path d="M86 344 l9 4 v6 c0 6 -4 9 -9 11 c-5 -2 -9 -5 -9 -11 v-6 z" fill="none" stroke="{glow}" stroke-width="1.7"/>
+<text x="104" y="350" font-family="{fjp}" font-size="9.5" font-weight="800" fill="#ffffff">MDM管理下 ・ ポリシー適用中</text>
+<text x="104" y="366" font-family="{fjp}" font-size="8" fill="#c9c9d6">情報システム部 ・ 最終同期 3分前</text>
+<rect x="70" y="486" width="96" height="26" rx="13" fill="#ffffff" opacity="0.07"/>
+<text x="118" y="503" font-family="{fjp}" font-size="9" font-weight="700" fill="#ececf2" text-anchor="middle">業務アプリ</text>
+<rect x="174" y="486" width="96" height="26" rx="13" fill="#ffffff" opacity="0.07"/>
+<text x="222" y="503" font-family="{fjp}" font-size="9" font-weight="700" fill="#ececf2" text-anchor="middle">内線</text>"""
     if scene == "hud2":
         # 一世代前のGAME SPACE: 左上に大きなfps+横長グラフ+下部トグル
         bars = "".join(
@@ -1644,6 +1676,26 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
 {"".join(f'<rect x="{170 + i * 26}" y="305" width="14" height="8" rx="2" fill="#07070b"/>' for i in range(6))}
 <circle cx="336" cy="264" r="4.5" fill="{g}"/>
 <text x="240" y="342" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">4K/120 OUT ・ 80W DOCK</text>"""
+    elif kind == "shield":
+        # 法人MDM: 盾+ポリシー行+管理下の端末群(フリート管理コンソールの図)
+        rows = "".join(
+            f'<rect x="252" y="{116 + i * 34}" width="150" height="24" rx="6" fill="#ffffff" fill-opacity="0.05"/>'
+            f'<circle cx="266" cy="{128 + i * 34}" r="5" fill="none" stroke="{g}" stroke-width="1.6"/>'
+            f'<path d="M263 {128 + i * 34} l2.4 2.6 4 -5" fill="none" stroke="{g}" stroke-width="1.6" stroke-linecap="round"/>'
+            f'<rect x="280" y="{124 + i * 34}" width="{w}" height="7" rx="3" fill="#9aa4b8" opacity="0.7"/>'
+            for i, w in enumerate((96, 78, 108, 66)))
+        fleet = "".join(
+            f'<rect x="{96 + i * 34}" y="272" width="22" height="38" rx="5" fill="#10131a" stroke="{"#4a7ac8" if i < 4 else "#3a3f4c"}" stroke-width="1.5"/>'
+            f'<circle cx="{107 + i * 34}" cy="304" r="1.8" fill="{"#7ee787" if i < 4 else "#3a3f4c"}"/>'
+            for i in range(5))
+        body = f"""{shadow(240, 322, 130)}
+<path d="M162 78 l62 -26 62 26 v52 c0 46 -28 74 -62 90 c-34 -16 -62 -44 -62 -90 z" fill="#10131a" stroke="{g}" stroke-width="3" stroke-linejoin="round"/>
+<path d="M162 78 l62 -26 62 26 v52 c0 46 -28 74 -62 90 c-34 -16 -62 -44 -62 -90 z" fill="url(#ag{u})" opacity="0.25"/>
+<path d="M198 128 l18 19 34 -40" fill="none" stroke="{g}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="327" y="100" font-family="sans-serif" font-size="10" font-weight="700" fill="#9aa4b8" letter-spacing="2">POLICY</text>
+{rows}
+{fleet}
+<text x="240" y="340" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">MDM READY ・ ZERO-TOUCH</text>"""
     elif kind == "clcase":
         # コラボ専用ケース。motifごとに完全個別デザイン(端末の意匠を引き継ぐ)。
         if motif == "genshin":

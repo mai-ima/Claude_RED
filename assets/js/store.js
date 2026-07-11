@@ -80,15 +80,25 @@
       return r ? parseInt(r.value, 10) : 0;
     }
     var buyView = "back"; // 背面⇔正面トグル(正面はカラー共通の1枚)
+    function camlessSelected() {
+      var r = buyBox.querySelector("input[name=camopt]:checked");
+      return r && r.value === "1"; // 1 = カメラレス(セキュア仕様)
+    }
+    function backImgSrc() {
+      var v = (window.SZ && window.SZ.assetV) ? "?v=" + window.SZ.assetV : "";
+      return camlessSelected()
+        ? "/assets/img/products/" + pid + "-nc-" + colorIdx + ".svg" + v
+        : productImg(pid, colorIdx);
+    }
     function refresh() {
       if (!p) return;
       var img = $("#buyImage");
       if (img) {
         if (buyView === "front") {
           var fb = buyBox.querySelector("[data-buyview=front]");
-          img.src = fb ? fb.getAttribute("data-front-src") : productImg(pid, colorIdx);
+          img.src = fb ? fb.getAttribute("data-front-src") : backImgSrc();
         } else {
-          img.src = productImg(pid, colorIdx);
+          img.src = backImgSrc();
         }
       }
       var cn = $("#colorName");
@@ -113,6 +123,17 @@
         sw.classList.add("is-active");
         colorIdx = parseInt(sw.getAttribute("data-color-index"), 10);
         buyView = "back"; // カラー選択時は背面に戻して色を見せる
+        $$("[data-buyview]", buyBox).forEach(function (b) {
+          var on = b.getAttribute("data-buyview") === "back";
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        refresh();
+      });
+    });
+    $$("input[name=camopt]", buyBox).forEach(function (r) {
+      r.addEventListener("change", function () {
+        buyView = "back"; // 構成変更は背面(刻印の有無)を見せる
         $$("[data-buyview]", buyBox).forEach(function (b) {
           var on = b.getAttribute("data-buyview") === "back";
           b.classList.toggle("is-active", on);

@@ -41,7 +41,7 @@ COLLABS = [
             "lead": "旅人の旅路のために、ゼロから共同設計したオリジナル端末「七耀」。白磁×金彩の筐体に、元素の輝きが宿ります。",
             "tagline": "七耀 — SHICHIYO",
         },
-        "phone_id": "shichiyo", "accessory_ids": ["pb-genshin"],
+        "phone_id": "shichiyo", "accessory_ids": ["pb-genshin", "cs-genshin", "bd-genshin"],
         "limited": {"until": "2026-08-31T23:59:59", "qty": 8000, "sold": 5240},
         "world": "空高くそびえる大地テイワット。七つの元素が交差する世界で、旅人は今日も歩き続ける。その旅の色を、一台に封じ込めました。",
         "highlights": [
@@ -82,7 +82,7 @@ COLLABS = [
             "lead": "漂泊者とともにソラリス-3を征くための、漆黒のモノリス「残響」。SUZAKU史上最速のSoCが、音もなく駆動する。",
             "tagline": "残響 — ZANKYO",
         },
-        "phone_id": "zankyo", "accessory_ids": ["pb-wuwa"],
+        "phone_id": "zankyo", "accessory_ids": ["pb-wuwa", "cs-wuwa", "bd-wuwa"],
         "limited": {"until": "2026-09-30T23:59:59", "qty": 7000, "sold": 3110},
         "world": "厄災「悲鳴」のあとの世界、ソラリス-3。音のかたちを宿す音骸とともに、漂泊者は静かな戦場を駆ける。その静けさと速さを、一台に。",
         "highlights": [
@@ -123,7 +123,7 @@ COLLABS = [
             "lead": "異象が息づく超現実都市で、鑑定士の相棒になるオリジナル端末「夜行」。1/0.98型センサーが、眠らない街を撮り切る。",
             "tagline": "夜行 — YAKO",
         },
-        "phone_id": "yako", "accessory_ids": ["pb-nte"],
+        "phone_id": "yako", "accessory_ids": ["pb-nte", "cs-nte", "bd-nte"],
         "limited": {"until": "2026-10-31T23:59:59", "qty": 6000, "sold": 1980},
         "world": "異象と日常が隣り合う大都市ヘロシティ。骨董品店エイボンの鑑定士は、今夜も路地の光を追いかける。その夜の色を、一台に。",
         "highlights": [
@@ -164,7 +164,7 @@ COLLABS = [
             "lead": "タロⅡの過酷な環境に挑む管理人のために設計した堅牢機「前線」。IP68+MIL準拠の装甲、8,500mAh、持続99%。作戦の間、信頼できる道具であること。",
             "tagline": "前線 — ZENSEN",
         },
-        "phone_id": "zensen", "accessory_ids": ["pb-endfield"],
+        "phone_id": "zensen", "accessory_ids": ["pb-endfield", "cs-endfield", "bd-endfield"],
         "limited": {"until": "2026-11-30T23:59:59", "qty": 6500, "sold": 2470},
         "world": "惑星タロスの衛星、タロⅡ。エンドフィールド工業を率いる管理人は、オペレーターとともに未知の脅威と広大な大地に挑む。その旅路と作戦に耐える道具を。",
         "highlights": [

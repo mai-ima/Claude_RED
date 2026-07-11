@@ -174,9 +174,19 @@ def box_items(p):
 
 def acc_compat_table(p):
     """スマホ/タブレット向け: 純正アクセサリ対応表。"""
+    _collab_phone = {"genshin": ("shichiyo", "七耀"), "wuwa": ("zankyo", "残響"),
+                     "nte": ("yako", "夜行"), "endfield": ("zensen", "前線")}
+
     def compat(acc_id):
         if acc_id == "shield-case":
             return ("対応", "専用設計") if p["id"] == "suzaku-4" else ("非対応", "SUZAKU 4 専用")
+        if acc_id.startswith("cs-"):
+            pid, name = _collab_phone[acc_id[3:]]
+            return ("対応", "専用設計") if p["id"] == pid else ("非対応", f"{name} 専用")
+        if acc_id.startswith("bd-"):
+            return ("対応", "Bluetooth 5.4 接続")
+        if acc_id.startswith("pb-"):
+            return ("対応", "マグネット吸着+有線") if p["cat"] == "phone" else ("対応", "有線接続で利用可")
         if acc_id in ("hyoran-cooler", "grip-pro"):
             return ("対応", "幅67〜82mm") if p["cat"] == "phone" else ("非対応", "スマートフォン専用")
         if acc_id == "dock":

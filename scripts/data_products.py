@@ -1430,4 +1430,60 @@ ACCESSORIES = [
                     "ハザードストライプと計器意匠の無骨なマグネット式モバイルバッテリー。10,000mAh・最大45Wワイヤレス給電。"),
 ]
 
+
+# ==========================================================================
+# ビジュアル設計プロファイル(SVGモックとスペックの一致を保証する単一ソース)
+#   cams  … 背面レンズ数 / tele … ペリスコープ望遠セル / tof … ToF測距
+#   macro … 小型マクロ副眼 / plate … カメラ島の形状 / fan … 冷却ファン窓
+#   led   … 背面LED意匠 / tex … 背面テクスチャ / custom … コラボ専用描画
+# ==========================================================================
+_DESIGNS = {
+    # スマートフォン(世代×ラインで全機種の背面を判別可能にする)
+    "suzaku-4":       {"cams": 2, "tele": True,  "plate": "band",   "fan": True,  "led": "slash3", "tex": "carbon"},
+    "suzaku-3":       {"cams": 2, "plate": "pill",   "fan": True,  "led": "slash2", "tex": "hairline"},
+    "suzaku-2":       {"cams": 2, "plate": "square", "fan": True,  "led": "dot",    "tex": "matte"},
+    "suzaku-one":     {"cams": 2, "plate": "circle", "fan": True,  "led": "none",   "tex": "gloss"},
+    "neo-3":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "slash1", "tex": "matte"},
+    "neo-2":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "dot",    "tex": "hairline"},
+    "neo":            {"cams": 1, "plate": "corner", "fan": True,  "led": "none",   "tex": "matte"},
+    "tsubame-3":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "gloss"},
+    "tsubame-2":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "hairline"},
+    "tsubame":        {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte"},
+    "tsubame-lite-2": {"cams": 1, "macro": True, "plate": "corner", "fan": False, "led": "none", "tex": "matte"},
+    "tsubame-lite":   {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte"},
+    # コラボ4機種は完全専用描画(svg_art.py の _PHONE_CUSTOM)
+    "shichiyo": {"custom": "shichiyo"},
+    "zankyo":   {"custom": "zankyo"},
+    "yako":     {"custom": "yako"},
+    "zensen":   {"custom": "zensen", "punch": True},
+    # タブレット
+    "pad-2":      {"cams": 2, "fan": True},
+    "pad":        {"cams": 1, "fan": True},
+    "pad-neo":    {"cams": 2, "fan": True},
+    "t-pad-2":    {"cams": 1, "fan": False},
+    "t-pad":      {"cams": 1, "fan": False},
+    "t-pad-lite": {"cams": 1, "fan": False},
+}
+
+# カメラ仕様が未記載だった旧機種・タブレットへ、描画と一致する仕様を補完
+_EXTRA_CAMERA = {
+    "suzaku-2":   [("リアカメラ", "50MP 天眼 RS-1+ 広角(OIS)+ 13MP 超広角"), ("フロントカメラ", "16MP")],
+    "suzaku-one": [("リアカメラ", "50MP 天眼 RS-1 広角(OIS)+ 8MP 超広角"), ("フロントカメラ", "12MP")],
+    "neo-2":      [("リアカメラ", "50MP 天眼 RS-1 広角(OIS)+ 8MP 超広角"), ("フロントカメラ", "16MP")],
+    "neo":        [("リアカメラ", "50MP 広角(OIS)"), ("フロントカメラ", "12MP")],
+    "pad-2":      [("リアカメラ", "13MP 広角 + 8MP 超広角"), ("フロントカメラ", "12MP(横持ち中央)")],
+    "pad":        [("リアカメラ", "13MP 広角"), ("フロントカメラ", "8MP(横持ち中央)")],
+    "pad-neo":    [("リアカメラ", "13MP 広角 + 5MP 超広角"), ("フロントカメラ", "12MP(横持ち中央)")],
+    "t-pad-2":    [("リアカメラ", "13MP 広角"), ("フロントカメラ", "8MP(横持ち中央)")],
+    "t-pad":      [("リアカメラ", "8MP 広角"), ("フロントカメラ", "5MP(横持ち中央)")],
+    "t-pad-lite": [("リアカメラ", "8MP 広角"), ("フロントカメラ", "5MP(横持ち中央)")],
+}
+
+for _p in PHONES + TABLETS:
+    if _p["id"] in _DESIGNS:
+        _p["design"] = _DESIGNS[_p["id"]]
+    if _p["id"] in _EXTRA_CAMERA and not any("カメラ" in _g for _g, _ in _p["specs"]):
+        _idx = next((_i for _i, (_g, _) in enumerate(_p["specs"]) if "ディスプレイ" in _g), len(_p["specs"]) - 1)
+        _p["specs"].insert(_idx + 1, ("カメラ", _EXTRA_CAMERA[_p["id"]]))
+
 ALL_PRODUCTS = PHONES + TABLETS + ACCESSORIES

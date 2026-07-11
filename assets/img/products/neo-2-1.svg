@@ -23,8 +23,8 @@
   <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
-<pattern id="texneo21" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+<pattern id="texneo21" width="6" height="3" patternUnits="userSpaceOnUse">
+  <path d="M0 1 H6" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
 </pattern>
 <filter id="softneo21" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
@@ -38,29 +38,22 @@
 <rect x="50" y="37" width="240" height="526" rx="41" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6"/>
 <path d="M43 128 h6 M43 448 h6 M291 128 h6 M291 448 h6" stroke="#171b22" stroke-width="3"/>
 
-<rect x="66" y="64" width="208" height="90" rx="26" fill="#292f3c"/>
-<rect x="66" y="64" width="208" height="90" rx="26" fill="url(#sheenneo21)" opacity="0.5"/>
-<rect x="66.7" y="64.7" width="206.6" height="88.6" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
-<circle cx="86" cy="80" r="5" fill="#f4efdf" opacity="0.9"/>
-<text x="262" y="83" font-family="'Noto Sans JP',sans-serif" font-size="8.5" font-weight="700" fill="#ffffff" opacity="0.5" text-anchor="end" letter-spacing="2">TENGAN</text>
+<path d="M66 70 h158 a18 18 0 0 1 17 23 l-18 64 a18 18 0 0 1 -17 13 h-140 a18 18 0 0 1 -18 -18 v-64 a18 18 0 0 1 18 -18z" fill="#292f3c"/>
+<path d="M66 70 h158 a18 18 0 0 1 17 23 l-18 64 a18 18 0 0 1 -17 13 h-140 a18 18 0 0 1 -18 -18 v-64 a18 18 0 0 1 18 -18z" fill="url(#sheenneo21)" opacity="0.5"/>
+<circle cx="222" cy="152" r="5" fill="#f4efdf" opacity="0.9"/>
+<text x="94" y="160" font-family="'Noto Sans JP',sans-serif" font-size="8" font-weight="700" fill="#ffffff" opacity="0.5" letter-spacing="2">TENGAN</text>
+<circle cx="112" cy="108" r="26" fill="#0b0d13" stroke="#757b89" stroke-width="1.6"/>
+<circle cx="112" cy="108" r="20" fill="none" stroke="#ff8a3d" stroke-opacity="0.5" stroke-width="1.3"/>
+<circle cx="112" cy="108" r="16" fill="url(#lensneo21)"/>
+<circle cx="112" cy="108" r="6" fill="#04040a"/>
+<circle cx="106" cy="102" r="3.6" fill="#ffffff" opacity="0.55"/>
+<circle cx="186" cy="116" r="22" fill="#0b0d13" stroke="#757b89" stroke-width="1.6"/>
+<circle cx="186" cy="116" r="17" fill="none" stroke="#ff8a3d" stroke-opacity="0.5" stroke-width="1.3"/>
+<circle cx="186" cy="116" r="13" fill="url(#lensneo21)"/>
+<circle cx="186" cy="116" r="5" fill="#04040a"/>
+<circle cx="181" cy="111" r="3.1" fill="#ffffff" opacity="0.55"/>
+<circle cx="92" cy="202" r="5" fill="#ff8a3d" opacity="0.9"/><circle cx="118" cy="202" r="5" fill="#ff8a3d" opacity="0.62"/><circle cx="144" cy="202" r="5" fill="#ff8a3d" opacity="0.33999999999999997"/>
 
-<circle cx="108" cy="116" r="25" fill="#0b0d13" stroke="#757b89" stroke-width="1.6"/>
-<circle cx="108" cy="116" r="19" fill="none" stroke="#ff8a3d" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="108" cy="116" r="15" fill="url(#lensneo21)"/>
-<circle cx="108" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="102.5" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>
-<circle cx="170" cy="116" r="25" fill="#0b0d13" stroke="#757b89" stroke-width="1.6"/>
-<circle cx="170" cy="116" r="19" fill="none" stroke="#ff8a3d" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="170" cy="116" r="15" fill="url(#lensneo21)"/>
-<circle cx="170" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="164.5" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>
-<circle cx="232" cy="116" r="25" fill="#0b0d13" stroke="#757b89" stroke-width="1.6"/>
-<circle cx="232" cy="116" r="19" fill="none" stroke="#ff8a3d" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="232" cy="116" r="15" fill="url(#lensneo21)"/>
-<circle cx="232" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="226.5" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>
-
-<path d="M66 178 h44 l-13 13 h-44 z" fill="#ff8a3d" opacity="0.92"/><path d="M132 178 h44 l-13 13 h-44 z" fill="#ff8a3d" opacity="0.55"/><path d="M198 178 h44 l-13 13 h-44 z" fill="#ff8a3d" opacity="0.28"/>
 <circle cx="170" cy="328" r="50" fill="#171b22"/>
 <circle cx="170" cy="328" r="50" fill="none" stroke="#ff8a3d" stroke-opacity="0.55" stroke-width="2"/>
 <circle cx="170" cy="328" r="42" fill="#0a0b10"/>

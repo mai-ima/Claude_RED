@@ -15,10 +15,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=f0f385efc0">
-<link rel="stylesheet" href="/assets/css/base.css?v=f0f385efc0">
-<link rel="stylesheet" href="/assets/css/components.css?v=f0f385efc0">
-<link rel="stylesheet" href="/assets/css/animations.css?v=f0f385efc0">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=0f13abe8ad">
+<link rel="stylesheet" href="/assets/css/base.css?v=0f13abe8ad">
+<link rel="stylesheet" href="/assets/css/components.css?v=0f13abe8ad">
+<link rel="stylesheet" href="/assets/css/animations.css?v=0f13abe8ad">
 
 </head>
 <body class="page-tech-gpu-homura-x1">
@@ -279,26 +279,44 @@
         <div id="overview" style="scroll-margin-top:90px" class="stack stack--lg">
           <div class="chip-visual reveal-scale" style="max-width:520px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="HOMURA-X1">
 <defs>
-<linearGradient id="pcbhomurax1" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0" stop-color="#15151e"/><stop offset="1" stop-color="#0b0b10"/>
+<linearGradient id="subhomurax1" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#1b2426"/><stop offset="1" stop-color="#101718"/>
 </linearGradient>
-<radialGradient id="corehomurax1" cx="0.5" cy="0.5" r="0.7">
-  <stop offset="0" stop-color="#ff8a3d" stop-opacity="0.85"/>
-  <stop offset="0.65" stop-color="#ff8a3d" stop-opacity="0.2"/>
-  <stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
-</radialGradient>
+<linearGradient id="ihshomurax1" x1="0" y1="0" x2="0.7" y2="1">
+  <stop offset="0" stop-color="#c8ccd4"/>
+  <stop offset="0.24" stop-color="#9aa0aa"/>
+  <stop offset="0.55" stop-color="#7d838e"/>
+  <stop offset="0.78" stop-color="#9aa0aa"/>
+  <stop offset="1" stop-color="#6c727c"/>
+</linearGradient>
+<pattern id="brushhomurax1" width="5" height="5" patternUnits="userSpaceOnUse">
+  <path d="M0 2.5 H5" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+</pattern>
+<filter id="dshhomurax1" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
 </defs>
-<rect x="30" y="30" width="420" height="420" rx="26" fill="url(#pcbhomurax1)" stroke="#ff8a3d" stroke-opacity="0.4" stroke-width="1.5"/>
-<line x1="60" y1="30" x2="60" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="100" y1="30" x2="100" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="140" y1="30" x2="140" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="180" y1="30" x2="180" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="220" y1="30" x2="220" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="260" y1="30" x2="260" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="300" y1="30" x2="300" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="340" y1="30" x2="340" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="380" y1="30" x2="380" y2="14" stroke="#3d3d4e" stroke-width="5"/><line x1="420" y1="30" x2="420" y2="14" stroke="#3d3d4e" stroke-width="5"/>
-<line x1="60" y1="450" x2="60" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="100" y1="450" x2="100" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="140" y1="450" x2="140" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="180" y1="450" x2="180" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="220" y1="450" x2="220" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="260" y1="450" x2="260" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="300" y1="450" x2="300" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="340" y1="450" x2="340" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="380" y1="450" x2="380" y2="466" stroke="#3d3d4e" stroke-width="5"/><line x1="420" y1="450" x2="420" y2="466" stroke="#3d3d4e" stroke-width="5"/>
-<line x1="30" y1="60" x2="14" y2="60" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="100" x2="14" y2="100" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="140" x2="14" y2="140" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="180" x2="14" y2="180" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="220" x2="14" y2="220" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="260" x2="14" y2="260" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="300" x2="14" y2="300" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="340" x2="14" y2="340" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="380" x2="14" y2="380" stroke="#3d3d4e" stroke-width="5"/><line x1="30" y1="420" x2="14" y2="420" stroke="#3d3d4e" stroke-width="5"/>
-<line x1="450" y1="60" x2="466" y2="60" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="100" x2="466" y2="100" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="140" x2="466" y2="140" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="180" x2="466" y2="180" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="220" x2="466" y2="220" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="260" x2="466" y2="260" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="300" x2="466" y2="300" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="340" x2="466" y2="340" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="380" x2="466" y2="380" stroke="#3d3d4e" stroke-width="5"/><line x1="450" y1="420" x2="466" y2="420" stroke="#3d3d4e" stroke-width="5"/>
-<rect x="86" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.40"/><rect x="132" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.21"/><rect x="178" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.16"/><rect x="224" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.31"/><rect x="270" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.39"/><rect x="316" y="86" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.27"/><rect x="86" y="132" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.19"/><rect x="316" y="132" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.21"/><rect x="86" y="178" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.21"/><rect x="316" y="178" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.44"/><rect x="86" y="224" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.42"/><rect x="316" y="224" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.23"/><rect x="86" y="270" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.43"/><rect x="316" y="270" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.35"/><rect x="86" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.17"/><rect x="132" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.24"/><rect x="178" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.19"/><rect x="224" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.33"/><rect x="270" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.22"/><rect x="316" y="316" width="40" height="40" rx="3" fill="#ff8a3d" opacity="0.31"/>
-<rect x="132" y="132" width="216" height="216" rx="10" fill="#0a0a10" stroke="#ff8a3d" stroke-opacity="0.8" stroke-width="2"/>
-<circle cx="240" cy="240" r="130" fill="url(#corehomurax1)"/>
-<path d="M240 168 c-9 37 -46 53 -46 92 a46 46 0 0 0 92 0 c0 -39 -37 -55 -46 -92z" fill="none" stroke="#ff8a3d" stroke-width="5" stroke-linejoin="round"/>
-<text x="240" y="298" font-family="'Noto Sans JP',sans-serif" font-size="26" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="3">HOMURA-X1</text>
-<text x="240" y="322" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">SUZAKU GPU / 2023</text>
+<rect width="480" height="480" fill="#0b0b10"/>
+<ellipse cx="240" cy="250" rx="220" ry="200" fill="#ff8a3d" opacity="0.08"/>
+<rect x="238" y="462" width="4" height="0" fill="none"/>
+<ellipse cx="240" cy="452" rx="180" ry="12" fill="#000" opacity="0.5" filter="url(#dshhomurax1)"/>
+<rect x="56" y="56" width="368" height="368" rx="10" fill="url(#subhomurax1)" stroke="#2c3a3c" stroke-width="2"/>
+<rect x="60" y="60" width="360" height="360" rx="8" fill="none" stroke="#31494b" stroke-opacity="0.6" stroke-width="1"/>
+<rect x="96" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="96" y="66" width="4" height="7" fill="#7a5a22"/><rect x="96" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="106" y="407" width="4" height="7" fill="#7a5a22"/><rect x="128" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="128" y="66" width="4" height="7" fill="#7a5a22"/><rect x="128" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="138" y="407" width="4" height="7" fill="#7a5a22"/><rect x="160" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="160" y="66" width="4" height="7" fill="#7a5a22"/><rect x="160" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="170" y="407" width="4" height="7" fill="#7a5a22"/><rect x="192" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="192" y="66" width="4" height="7" fill="#7a5a22"/><rect x="192" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="202" y="407" width="4" height="7" fill="#7a5a22"/><rect x="224" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="224" y="66" width="4" height="7" fill="#7a5a22"/><rect x="224" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="234" y="407" width="4" height="7" fill="#7a5a22"/><rect x="256" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="256" y="66" width="4" height="7" fill="#7a5a22"/><rect x="256" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="266" y="407" width="4" height="7" fill="#7a5a22"/><rect x="288" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="288" y="66" width="4" height="7" fill="#7a5a22"/><rect x="288" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="298" y="407" width="4" height="7" fill="#7a5a22"/><rect x="320" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="320" y="66" width="4" height="7" fill="#7a5a22"/><rect x="320" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="330" y="407" width="4" height="7" fill="#7a5a22"/><rect x="352" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="352" y="66" width="4" height="7" fill="#7a5a22"/><rect x="352" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/><rect x="362" y="407" width="4" height="7" fill="#7a5a22"/><rect x="66" y="128" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="407" y="128" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="66" y="168" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="407" y="168" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="66" y="208" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="407" y="208" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="66" y="248" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="407" y="248" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="66" y="288" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="407" y="288" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="66" y="328" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="407" y="328" width="7" height="14" rx="1.5" fill="#8a8a96"/><rect x="74" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="98" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="122" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="146" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="170" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="194" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="218" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="242" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="266" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="290" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="314" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="338" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="362" y="446" width="14" height="8" rx="1" fill="#c8a24a"/><rect x="386" y="446" width="14" height="8" rx="1" fill="#c8a24a"/>
+<rect x="118" y="118" width="244" height="244" rx="14" fill="url(#ihshomurax1)" stroke="#4c525c" stroke-width="2"/>
+<rect x="118" y="118" width="244" height="244" rx="14" fill="url(#brushhomurax1)"/>
+<path d="M118 190 L362 190 M118 290 L362 290" stroke="#ffffff" stroke-opacity="0.08" stroke-width="30" />
+<circle cx="140" cy="140" r="6" fill="none" stroke="#3a4048" stroke-width="2"/>
+<circle cx="140" cy="140" r="2.2" fill="#3a4048"/>
+<path d="M226 152 c-4.5 17 -21 24 -21 42 a21 21 0 0 0 42 0 c0 -18 -16.5 -25 -21 -42z" fill="none" stroke="#ff8a3d" stroke-width="3" stroke-linejoin="round" transform="translate(14 0)"/>
+<text x="240" y="252" font-family="'Noto Sans JP',sans-serif" font-size="27" font-weight="900" fill="#22262c" text-anchor="middle" letter-spacing="2.5">HOMURA-X1</text>
+<text x="240" y="251" font-family="'Noto Sans JP',sans-serif" font-size="27" font-weight="900" fill="#f0f2f5" fill-opacity="0.9" text-anchor="middle" letter-spacing="2.5">HOMURA-X1</text>
+<text x="240" y="278" font-family="ui-monospace,monospace" font-size="11" fill="#30343c" text-anchor="middle" letter-spacing="2">SUZAKU GPU / 2023</text>
+<text x="240" y="298" font-family="ui-monospace,monospace" font-size="10" fill="#3c414a" text-anchor="middle" letter-spacing="3">SZK2491-794 ・ 3nm</text>
+<rect x="318" y="318" width="26" height="26" fill="#22262c"/>
+<rect x="321" y="321" width="4" height="4" fill="#22262c"/><rect x="326" y="321" width="4" height="4" fill="#f0f2f5"/><rect x="331" y="321" width="4" height="4" fill="#f0f2f5"/><rect x="336" y="321" width="4" height="4" fill="#22262c"/><rect x="321" y="326" width="4" height="4" fill="#f0f2f5"/><rect x="326" y="326" width="4" height="4" fill="#f0f2f5"/><rect x="331" y="326" width="4" height="4" fill="#22262c"/><rect x="336" y="326" width="4" height="4" fill="#f0f2f5"/><rect x="321" y="331" width="4" height="4" fill="#f0f2f5"/><rect x="326" y="331" width="4" height="4" fill="#22262c"/><rect x="331" y="331" width="4" height="4" fill="#f0f2f5"/><rect x="336" y="331" width="4" height="4" fill="#f0f2f5"/><rect x="321" y="336" width="4" height="4" fill="#22262c"/><rect x="326" y="336" width="4" height="4" fill="#f0f2f5"/><rect x="331" y="336" width="4" height="4" fill="#f0f2f5"/><rect x="336" y="336" width="4" height="4" fill="#22262c"/>
+<path d="M124 124 L200 124 L142 356 L124 356 Z" fill="#ffffff" opacity="0.1"/>
+<circle cx="240" cy="240" r="0.1" fill="none"/>
+<path d="M56 92 h-14 M56 388 h-14 M424 92 h14 M424 388 h14" stroke="#ff8a3d" stroke-opacity="0.6" stroke-width="2"/>
+<text x="240" y="443" font-family="ui-monospace,monospace" font-size="9" fill="#5d6a6c" text-anchor="middle" letter-spacing="4">SUZAKU SILICON ・ JAPAN</text>
 </svg></div>
           <div class="stat-row reveal-stagger" style="--stat-cols:4"><div class="stat"><p class="stat__value" data-count>512<span class="unit">ALU</span></p><p class="stat__label">シェーダーコア</p></div><div class="stat"><p class="stat__value" data-count>1.0<span class="unit">TFLOPS</span></p><p class="stat__label">理論性能</p></div><div class="stat"><p class="stat__value" data-count>144<span class="unit">fps</span></p><p class="stat__label">主要タイトル実測(当時)</p></div><div class="stat"><p class="stat__value" data-count>第1<span class="unit">世代</span></p><p class="stat__label">焔アーキテクチャ</p></div></div>
         </div>
@@ -360,7 +378,7 @@
 <div id="products" style="scroll-margin-top:90px">
   <h2 class="t-h3" style="margin-bottom:18px">焔 HOMURA-X1 搭載製品</h2>
   <div class="grid grid--3 grid--cards reveal-stagger"><a class="product-card" href="/products/phone/suzaku-one/">
-  <div class="product-card__media"><img src="/assets/img/products/suzaku-one-0.svg?v=f0f385efc0" alt="SUZAKU One" loading="lazy" width="360" height="640"></div>
+  <div class="product-card__media"><img src="/assets/img/products/suzaku-one-0.svg?v=0f13abe8ad" alt="SUZAKU One" loading="lazy" width="360" height="640"></div>
   <div class="product-card__body">
     <p class="product-card__tag">ゲーミングフラッグシップ / 2023</p>
     <p class="product-card__name">SUZAKU One <span class="badge badge--end">販売終了</span></p>
@@ -368,7 +386,7 @@
     <p class="product-card__price t-faint">販売終了モデル</p>
   </div>
 </a><a class="product-card" href="/products/phone/neo/">
-  <div class="product-card__media"><img src="/assets/img/products/neo-0.svg?v=f0f385efc0" alt="SUZAKU Neo" loading="lazy" width="360" height="640"></div>
+  <div class="product-card__media"><img src="/assets/img/products/neo-0.svg?v=0f13abe8ad" alt="SUZAKU Neo" loading="lazy" width="360" height="640"></div>
   <div class="product-card__body">
     <p class="product-card__tag">ゲーミングスタンダード / 2024</p>
     <p class="product-card__name">SUZAKU Neo <span class="badge badge--end">販売終了</span></p>
@@ -436,18 +454,18 @@
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="/assets/js/keys.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/fmt.js?v=f0f385efc0" defer></script>
-<script src="/data/products.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/main.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/charts.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/store.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/pages.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/auth-core.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/auth-guard.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/auth-account.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/auth-admin.js?v=f0f385efc0" defer></script>
-<script src="/assets/js/auth-status.js?v=f0f385efc0" defer></script>
+<script src="/assets/js/keys.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/fmt.js?v=0f13abe8ad" defer></script>
+<script src="/data/products.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/main.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/charts.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/store.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/pages.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/auth-core.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/auth-guard.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/auth-account.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/auth-admin.js?v=0f13abe8ad" defer></script>
+<script src="/assets/js/auth-status.js?v=0f13abe8ad" defer></script>
 
 </body>
 </html>

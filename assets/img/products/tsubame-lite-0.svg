@@ -23,8 +23,9 @@
   <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
-<pattern id="textsubamelite0" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+<pattern id="textsubamelite0" width="9" height="9" patternUnits="userSpaceOnUse">
+  <circle cx="2" cy="3" r="0.7" fill="#ffffff" fill-opacity="0.045"/>
+  <circle cx="6.5" cy="7" r="0.6" fill="#000000" fill-opacity="0.1"/>
 </pattern>
 <filter id="softtsubamelite0" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
@@ -38,27 +39,15 @@
 <rect x="50" y="37" width="240" height="526" rx="41" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6"/>
 <path d="M43 128 h6 M43 448 h6 M291 128 h6 M291 448 h6" stroke="#5e5e5a" stroke-width="3"/>
 
-<rect x="66" y="64" width="208" height="90" rx="26" fill="#a5a49e"/>
-<rect x="66" y="64" width="208" height="90" rx="26" fill="url(#sheentsubamelite0)" opacity="0.5"/>
-<rect x="66.7" y="64.7" width="206.6" height="88.6" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
-<circle cx="86" cy="80" r="5" fill="#f4efdf" opacity="0.9"/>
-<text x="262" y="83" font-family="'Noto Sans JP',sans-serif" font-size="8.5" font-weight="700" fill="#1c1c26" opacity="0.5" text-anchor="end" letter-spacing="2">TENGAN</text>
+<rect x="66" y="58" width="92" height="92" rx="26" fill="#a5a49e"/>
+<rect x="66" y="58" width="92" height="92" rx="26" fill="url(#sheentsubamelite0)" opacity="0.5"/>
+<rect x="66.7" y="58.7" width="90.6" height="90.6" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
+<circle cx="112" cy="104" r="28" fill="#0b0d13" stroke="#f2f0eb" stroke-width="1.6"/>
+<circle cx="112" cy="104" r="21" fill="none" stroke="#38b6a5" stroke-opacity="0.5" stroke-width="1.3"/>
+<circle cx="112" cy="104" r="17" fill="url(#lenstsubamelite0)"/>
+<circle cx="112" cy="104" r="6" fill="#04040a"/>
+<circle cx="106" cy="97" r="3.9" fill="#ffffff" opacity="0.55"/><circle cx="182" cy="76" r="5" fill="#f4efdf" opacity="0.9"/>
 
-<circle cx="108" cy="116" r="25" fill="#0b0d13" stroke="#f2f0eb" stroke-width="1.6"/>
-<circle cx="108" cy="116" r="19" fill="none" stroke="#38b6a5" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="108" cy="116" r="15" fill="url(#lenstsubamelite0)"/>
-<circle cx="108" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="102.5" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>
-<circle cx="170" cy="116" r="25" fill="#0b0d13" stroke="#f2f0eb" stroke-width="1.6"/>
-<circle cx="170" cy="116" r="19" fill="none" stroke="#38b6a5" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="170" cy="116" r="15" fill="url(#lenstsubamelite0)"/>
-<circle cx="170" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="164.5" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>
-<circle cx="232" cy="116" r="25" fill="#0b0d13" stroke="#f2f0eb" stroke-width="1.6"/>
-<circle cx="232" cy="116" r="19" fill="none" stroke="#38b6a5" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="232" cy="116" r="15" fill="url(#lenstsubamelite0)"/>
-<circle cx="232" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="226.5" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>
 
 <g transform="translate(122 268) scale(2)" opacity="0.9">
   <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="#38b6a5" stroke-width="2.6" stroke-linejoin="round"/>

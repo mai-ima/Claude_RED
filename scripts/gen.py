@@ -2677,12 +2677,15 @@ def build_collab_silicon_page(cfg, comp):
     body = f"""
 {_cl_lpnav(cfg, None)}
 <section class="cl-shero">
-  <div class="cl-wrap">
-    <p class="cl-eyebrow">DEDICATED SILICON — {esc(cfg['game'])}</p>
-    <h1 class="cl-shero__title">{esc(name)}</h1>
-    <p class="cl-shero__kick">{esc(comp['kicker'])}</p>
-    <p class="cl-lead">{esc(cfg['edition'])} のためだけに新規設計した専用{esc(comp['comp'])}。既存チップの選別・流用ではありません。</p>
-    <div class="cl-hero__tags"><span class="cl-tag">完全専用設計</span><span class="cl-tag">{esc(comp['comp'])}</span><span class="cl-tag">{esc(comp['en'])}</span></div>
+  <div class="cl-wrap cl-shero__grid">
+    <div>
+      <p class="cl-eyebrow">DEDICATED SILICON — {esc(cfg['game'])}</p>
+      <h1 class="cl-shero__title">{esc(name)}</h1>
+      <p class="cl-shero__kick">{esc(comp['kicker'])}</p>
+      <p class="cl-lead">{esc(cfg['edition'])} のためだけに新規設計した専用{esc(comp['comp'])}。既存チップの選別・流用ではありません。</p>
+      <div class="cl-hero__tags"><span class="cl-tag">完全専用設計</span><span class="cl-tag">{esc(comp['comp'])}</span><span class="cl-tag">{esc(comp['en'])}</span></div>
+    </div>
+    <div class="cl-shero__art">{svg_art.svg_die(f"{slug}-{comp['key']}", esc(name), esc(comp['en']), cfg['tokens']['glow'], cfg['tokens']['accent2'])}</div>
   </div>
 </section>
 
@@ -3017,17 +3020,18 @@ def build_assets():
         hz = f"{num(get_spec(p, ['ディスプレイ'], 'リフレッシュレート')) or 60}Hz" if p["cat"] in ("phone", "tablet") else "60Hz"
         # コラボ意匠の出し分け(製品の collab フィールド = 作品slug)
         motif = p.get("collab")
+        design = p.get("design")
         for i, c in enumerate(p["colors"]):
             if p["cat"] == "phone":
-                svg = svg_art.svg_phone(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)
+                svg = svg_art.svg_phone(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz, design)
             elif p["cat"] == "tablet":
-                svg = svg_art.svg_tablet(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz)
+                svg = svg_art.svg_tablet(f"{p['id']}{i}", c["hex"], glow, p["name"], p["kana"], p["line"], hz, design)
             else:
                 svg = svg_art.svg_art(p.get("art", "chip"), glow, c["hex"], motif)
             (img / "products" / f"{p['id']}-{i}.svg").write_text(svg, encoding="utf-8")
         # デバイスは正面(ディスプレイ点灯)ビューも生成する
         if p["cat"] == "phone":
-            front = svg_art.svg_phone_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif)
+            front = svg_art.svg_phone_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif, design)
             (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")
         elif p["cat"] == "tablet":
             front = svg_art.svg_tablet_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz)

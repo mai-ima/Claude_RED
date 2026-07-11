@@ -480,3 +480,10 @@
   .cl-stock__fill { transition: none; }
   .cl-btn, .cl-acc, .cl-si-card { transition: none; }
 }
+
+/* --- シリコンページのパッケージ図 --- */
+.cl-shero__grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(1.6rem, 4vw, 3.5rem); align-items: center; }
+
+.cl-shero__art svg { width: 100%; max-width: 380px; height: auto; border-radius: 14px; border: 1px solid var(--cl-line); display: block; margin-inline: auto; }
+
+@media (max-width: 820px) { .cl-shero__grid { grid-template-columns: 1fr; } .cl-shero__art { order: -1; } }

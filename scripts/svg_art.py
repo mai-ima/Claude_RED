@@ -26,26 +26,31 @@ def _is_light(hex_color):
     return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 150
 
 
-def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
-    """スマートフォン背面ビュー(実機比率 約76.5×164mm ≒ 1:2.15)。
-
-    カラー選択で切り替わる画像のため、実機のカラバリ訴求と同じ「背面」を描く。
-    ボディカラーの多段グラデーション・蒸着テクスチャ・ガラスの斜めシーン・
-    金属フレーム・カメラモジュールで質感を出し、ゲーミング系ラインには
-    冷却ファン窓とLEDスラッシュを載せる。"""
-    gid = pid.replace("-", "")
-    gaming = line in ("suzaku", "neo", "collab")
+def _phone_defs(gid, body_hex, tex_kind="matte"):
+    """背面共通の材質定義(ボディ/フレーム/レンズ/シーン/テクスチャ/影)。"""
     lite = _shade(body_hex, 0.42)
     lite2 = _shade(body_hex, 0.16)
     dark = _shade(body_hex, -0.38)
     dark2 = _shade(body_hex, -0.6)
-    plate = _shade(body_hex, -0.3)
-    # 明色ボディ(白銀・白練など)では刻印・ブレードを黒系に反転して視認性を保つ
-    light_body = _is_light(body_hex)
-    ink = "#1c1c26" if light_body else "#ffffff"
-    blade = _shade(body_hex, -0.35) if light_body else _shade(body_hex, 0.22)
-
-    defs = f"""<defs>
+    if tex_kind == "carbon":
+        tex = f"""<pattern id="tex{gid}" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+  <path d="M0 0 V8 M4 0 V8" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1.4"/>
+  <path d="M0 0 H8" stroke="#000000" stroke-opacity="0.14" stroke-width="1.4"/>
+</pattern>"""
+    elif tex_kind == "hairline":
+        tex = f"""<pattern id="tex{gid}" width="6" height="3" patternUnits="userSpaceOnUse">
+  <path d="M0 1 H6" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+</pattern>"""
+    elif tex_kind == "gloss":
+        tex = f"""<pattern id="tex{gid}" width="10" height="10" patternUnits="userSpaceOnUse">
+  <path d="M0 0" stroke="none"/>
+</pattern>"""
+    else:  # matte: 微細ノイズドット
+        tex = f"""<pattern id="tex{gid}" width="9" height="9" patternUnits="userSpaceOnUse">
+  <circle cx="2" cy="3" r="0.7" fill="#ffffff" fill-opacity="0.045"/>
+  <circle cx="6.5" cy="7" r="0.6" fill="#000000" fill-opacity="0.1"/>
+</pattern>"""
+    return f"""<defs>
 <linearGradient id="body{gid}" x1="0" y1="0" x2="0.9" y2="1">
   <stop offset="0" stop-color="{lite}"/>
   <stop offset="0.28" stop-color="{lite2}"/>
@@ -65,45 +70,169 @@ def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
   <stop offset="1" stop-color="#04040a"/>
 </radialGradient>
 <linearGradient id="sheen{gid}" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+  <stop offset="0" stop-color="#ffffff" stop-opacity="{0.4 if tex_kind == 'gloss' else 0.28}"/>
   <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03"/>
   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
-<pattern id="tex{gid}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-  <path d="M0 0 V7" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
-</pattern>
+{tex}
 <filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%">
   <feGaussianBlur stdDeviation="7"/>
 </filter>
 </defs>"""
 
-    # カメラモジュール(天眼トリプル+フラッシュ)
-    lenses = ""
-    for cx in (108, 170, 232):
-        lenses += f"""
-<circle cx="{cx}" cy="116" r="25" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.6"/>
-<circle cx="{cx}" cy="116" r="19" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.3"/>
-<circle cx="{cx}" cy="116" r="15" fill="url(#lens{gid})"/>
-<circle cx="{cx}" cy="116" r="5.5" fill="#04040a"/>
-<circle cx="{cx - 5.5}" cy="110" r="3.4" fill="#ffffff" opacity="0.55"/>"""
-    camera = f"""
-<rect x="66" y="64" width="208" height="90" rx="26" fill="{plate}"/>
+
+def _lens(cx, cy, r, gid, body_hex, glow):
+    """単一の円形レンズ(外環+グローリング+ガラス+瞳+スペキュラ)。"""
+    return f"""
+<circle cx="{cx}" cy="{cy}" r="{r}" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.6"/>
+<circle cx="{cx}" cy="{cy}" r="{r * 0.76:.0f}" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.3"/>
+<circle cx="{cx}" cy="{cy}" r="{r * 0.6:.0f}" fill="url(#lens{gid})"/>
+<circle cx="{cx}" cy="{cy}" r="{r * 0.22:.0f}" fill="#04040a"/>
+<circle cx="{cx - r * 0.22:.0f}" cy="{cy - r * 0.24:.0f}" r="{max(2.4, r * 0.14):.1f}" fill="#ffffff" opacity="0.55"/>"""
+
+
+def _peri_cell(x, y, w, gid, body_hex, glow):
+    """ペリスコープ望遠の角形セル。"""
+    return f"""
+<rect x="{x}" y="{y}" width="{w}" height="{w}" rx="{w * 0.22:.0f}" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.6"/>
+<rect x="{x + w * 0.16:.0f}" y="{y + w * 0.16:.0f}" width="{w * 0.68:.0f}" height="{w * 0.68:.0f}" rx="{w * 0.14:.0f}" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.3"/>
+<circle cx="{x + w / 2:.0f}" cy="{y + w / 2:.0f}" r="{w * 0.24:.0f}" fill="url(#lens{gid})"/>
+<circle cx="{x + w / 2:.0f}" cy="{y + w / 2:.0f}" r="{w * 0.09:.0f}" fill="#04040a"/>"""
+
+
+def _phone_camera(d, gid, body_hex, glow, ink):
+    """designプロファイル(plate/cams/tele/macro)に従ってカメラ島を描く。
+    レンズ数・構成はspecsのリアカメラ表記と一致させる。"""
+    plate_kind = d.get("plate", "band")
+    cams = d.get("cams", 2)
+    plate_fill = _shade(body_hex, -0.3)
+    out = ""
+    if plate_kind == "band":
+        # 全幅の帯型プレート(現行旗艦)。丸レンズ cams 個 + tele で角形セル
+        slots = cams + (1 if d.get("tele") else 0)
+        xs = {1: [170], 2: [130, 210], 3: [108, 170, 232]}[slots]
+        out += f"""
+<rect x="66" y="64" width="208" height="90" rx="26" fill="{plate_fill}"/>
 <rect x="66" y="64" width="208" height="90" rx="26" fill="url(#sheen{gid})" opacity="0.5"/>
 <rect x="66.7" y="64.7" width="206.6" height="88.6" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
 <circle cx="86" cy="80" r="5" fill="#f4efdf" opacity="0.9"/>
-<text x="262" y="83" font-family="'Noto Sans JP',sans-serif" font-size="8.5" font-weight="700" fill="{ink}" opacity="0.5" text-anchor="end" letter-spacing="2">TENGAN</text>
-{lenses}"""
+<text x="262" y="83" font-family="'Noto Sans JP',sans-serif" font-size="8.5" font-weight="700" fill="{ink}" opacity="0.5" text-anchor="end" letter-spacing="2">TENGAN</text>"""
+        for i, cx in enumerate(xs):
+            if d.get("tele") and i == len(xs) - 1:
+                out += _peri_cell(cx - 24, 92, 48, gid, body_hex, glow)
+            else:
+                out += _lens(cx, 116, 25, gid, body_hex, glow)
+    elif plate_kind == "pill":
+        # 縦長ピル(左上)。レンズ縦積み
+        h = 76 + cams * 62
+        out += f"""
+<rect x="66" y="58" width="88" height="{h}" rx="44" fill="{plate_fill}"/>
+<rect x="66" y="58" width="88" height="{h}" rx="44" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="66.7" y="58.7" width="86.6" height="{h - 1.4}" rx="43.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
+<circle cx="186" cy="86" r="6" fill="#f4efdf" opacity="0.9"/>
+<text x="186" y="118" font-family="'Noto Sans JP',sans-serif" font-size="8" font-weight="700" fill="{ink}" opacity="0.5" letter-spacing="2" text-anchor="middle">TENGAN</text>"""
+        for i in range(cams):
+            out += _lens(110, 102 + i * 62, 27, gid, body_hex, glow)
+    elif plate_kind == "square":
+        # 角形プレート(左上)・レンズ斜め配置
+        out += f"""
+<rect x="66" y="58" width="126" height="126" rx="20" fill="{plate_fill}"/>
+<rect x="66" y="58" width="126" height="126" rx="20" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="66.7" y="58.7" width="124.6" height="124.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
+<circle cx="216" cy="80" r="5.5" fill="#f4efdf" opacity="0.9"/>"""
+        out += _lens(102, 94, 24, gid, body_hex, glow)
+        if cams >= 2:
+            out += _lens(156, 148, 24, gid, body_hex, glow)
+        out += f'<circle cx="156" cy="94" r="7" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.2"/>'
+    elif plate_kind == "circle":
+        # 大円プレート(初代旗艦の意匠)
+        out += f"""
+<circle cx="170" cy="128" r="64" fill="{plate_fill}"/>
+<circle cx="170" cy="128" r="64" fill="url(#sheen{gid})" opacity="0.5"/>
+<circle cx="170" cy="128" r="63.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
+<circle cx="170" cy="128" r="56" fill="none" stroke="{glow}" stroke-opacity="0.35" stroke-width="1.4"/>"""
+        if cams == 1:
+            out += _lens(170, 128, 30, gid, body_hex, glow)
+        else:
+            out += _lens(143, 128, 22, gid, body_hex, glow) + _lens(197, 128, 22, gid, body_hex, glow)
+        out += '<circle cx="170" cy="176" r="4.5" fill="#f4efdf" opacity="0.9"/>'
+    elif plate_kind == "diag":
+        # 斜めプレート(NEO系)・レンズを斜めに段付き配置
+        out += f"""
+<path d="M66 70 h158 a18 18 0 0 1 17 23 l-18 64 a18 18 0 0 1 -17 13 h-140 a18 18 0 0 1 -18 -18 v-64 a18 18 0 0 1 18 -18z" fill="{plate_fill}"/>
+<path d="M66 70 h158 a18 18 0 0 1 17 23 l-18 64 a18 18 0 0 1 -17 13 h-140 a18 18 0 0 1 -18 -18 v-64 a18 18 0 0 1 18 -18z" fill="url(#sheen{gid})" opacity="0.5"/>
+<circle cx="222" cy="152" r="5" fill="#f4efdf" opacity="0.9"/>
+<text x="94" y="160" font-family="'Noto Sans JP',sans-serif" font-size="8" font-weight="700" fill="{ink}" opacity="0.5" letter-spacing="2">TENGAN</text>"""
+        out += _lens(112, 108, 26, gid, body_hex, glow)
+        if cams >= 2:
+            out += _lens(186, 116, 22, gid, body_hex, glow)
+    else:
+        # corner: 角丸スクエア(左上)・スタンダード系
+        if cams == 1 and not d.get("macro"):
+            out += f"""
+<rect x="66" y="58" width="92" height="92" rx="26" fill="{plate_fill}"/>
+<rect x="66" y="58" width="92" height="92" rx="26" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="66.7" y="58.7" width="90.6" height="90.6" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>"""
+            out += _lens(112, 104, 28, gid, body_hex, glow)
+            out += '<circle cx="182" cy="76" r="5" fill="#f4efdf" opacity="0.9"/>'
+        else:
+            h = 158 if (cams >= 2 or d.get("macro")) else 92
+            out += f"""
+<rect x="66" y="58" width="92" height="{h}" rx="26" fill="{plate_fill}"/>
+<rect x="66" y="58" width="92" height="{h}" rx="26" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="66.7" y="58.7" width="90.6" height="{h - 1.4}" rx="25.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
+<circle cx="182" cy="76" r="5" fill="#f4efdf" opacity="0.9"/>"""
+            out += _lens(112, 100, 26, gid, body_hex, glow)
+            if d.get("macro"):
+                out += _lens(112, 168, 13, gid, body_hex, glow)
+            elif cams >= 2:
+                out += _lens(112, 168, 22, gid, body_hex, glow)
+    return out
 
+
+def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz", design=None):
+    """スマートフォン背面ビュー(実機比率 約76.5×164mm ≒ 1:2.15)。
+
+    designプロファイル(data_products.py)駆動で、カメラ構成・プレート形状・
+    LED・テクスチャ・ファン窓を機種ごとに変える。specsの記載と描画を一致させ、
+    廉価版/最上級/旧世代の背面がすべて判別できるようにする。
+    コラボ機は _PHONE_CUSTOM の完全専用描画に委譲する。"""
+    d = design or {}
+    if d.get("custom"):
+        return _PHONE_CUSTOM[d["custom"]](pid, body_hex, glow, label, kana, hz)
+
+    gid = pid.replace("-", "")
+    gaming = d.get("fan", line in ("suzaku", "neo", "collab"))
+    dark2 = _shade(body_hex, -0.6)
+    light_body = _is_light(body_hex)
+    ink = "#1c1c26" if light_body else "#ffffff"
+    blade = _shade(body_hex, -0.35) if light_body else _shade(body_hex, 0.22)
+    tex_kind = d.get("tex", "matte")
+
+    defs = _phone_defs(gid, body_hex, tex_kind)
+    camera = _phone_camera(d, gid, body_hex, glow, ink)
+
+    # LED意匠
+    led_kind = d.get("led", "none")
+    led = ""
+    led_y = 196 if d.get("plate") in ("pill", "square", "diag", "circle") else 178
+    if led_kind.startswith("slash"):
+        n = int(led_kind[-1])
+        ops = (0.92, 0.55, 0.28)[:n]
+        led = "".join(
+            f'<path d="M{66 + i * 66} {led_y} h44 l-13 13 h-44 z" fill="{glow}" opacity="{o}"/>'
+            for i, o in enumerate(ops))
+    elif led_kind == "dot":
+        led = "".join(
+            f'<circle cx="{92 + i * 26}" cy="{led_y + 6}" r="5" fill="{glow}" opacity="{0.9 - i * 0.28}"/>'
+            for i in range(3))
+
+    # 中央の特徴(ファン窓 or エンブレム)
     if gaming:
-        # LEDスラッシュ + 冷却ファン窓
-        slashes = "".join(
-            f'<path d="M{66 + i * 66} 178 h44 l-13 13 h-44 z" fill="{glow}" opacity="{o}"/>'
-            for i, o in enumerate((0.92, 0.55, 0.28)))
         blades = "".join(
             f'<path d="M170 328 L170 296" stroke="{blade}" stroke-width="9" stroke-linecap="round" transform="rotate({a} 170 328)"/>'
             for a in range(0, 360, 40))
         feature = f"""
-{slashes}
 <circle cx="170" cy="328" r="50" fill="{dark2}"/>
 <circle cx="170" cy="328" r="50" fill="none" stroke="{glow}" stroke-opacity="0.55" stroke-width="2"/>
 <circle cx="170" cy="328" r="42" fill="#0a0b10"/>
@@ -116,7 +245,6 @@ def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
 <rect x="292.5" y="172" width="5" height="44" rx="2.5" fill="{glow}"/>
 <rect x="292.5" y="250" width="5" height="48" rx="2.5" fill="{dark2}"/>"""
     else:
-        # 一般ライン: 朱雀エンブレムの型押し
         feature = f"""
 <g transform="translate(122 268) scale(2)" opacity="0.9">
   <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="{glow}" stroke-width="2.6" stroke-linejoin="round"/>
@@ -147,6 +275,7 @@ def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
 <rect x="50" y="37" width="240" height="526" rx="41" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6"/>
 <path d="M43 128 h6 M43 448 h6 M291 128 h6 M291 448 h6" stroke="{dark2}" stroke-width="3"/>
 {camera}
+{led}
 {feature}
 {etched}
 <text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.38" text-anchor="middle" letter-spacing="2">DESIGNED BY SUZAKU ・ {hz}</text>
@@ -157,13 +286,306 @@ def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz"):
 </svg>"""
 
 
-def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz"):
+# ==========================================================================
+# コラボ4機種の完全専用背面(共通フレームを使わないゼロ設計)
+# ==========================================================================
+
+def _phone_shichiyo(pid, body_hex, glow, label, kana, hz):
+    """七耀(原神): 白磁×金彩・中央円形デュアルカメラ+七元素リング発光。"""
+    gid = pid.replace("-", "")
+    gold = "#c9a24b"
+    gold_d = "#8d6c1e"
+    ink = "#3a3324" if _is_light(body_hex) else "#f4efe0"
+    elems = ("#74c2a8", "#d8b45c", "#a68cc8", "#9ac546", "#4cc2f1", "#ef7938", "#9fd6e3")
+    ring_dots = ""
+    for i, c in enumerate(elems):
+        a = math.radians(-90 + i * 360 / 7)
+        x, y = 170 + 96 * math.cos(a), 150 + 96 * math.sin(a)
+        ring_dots += f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{c}"/><circle cx="{x:.1f}" cy="{y:.1f}" r="9" fill="none" stroke="{c}" stroke-opacity="0.4" stroke-width="1.4"/>'
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="{label}">
+<defs>
+<linearGradient id="body{gid}" x1="0" y1="0" x2="0.85" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.5)}"/>
+  <stop offset="0.3" stop-color="{_shade(body_hex, 0.18)}"/>
+  <stop offset="0.62" stop-color="{body_hex}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, -0.16)}"/>
+</linearGradient>
+<linearGradient id="irid{gid}" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#2fb9a3" stop-opacity="0.1"/>
+  <stop offset="0.5" stop-color="#cbb26a" stop-opacity="0.12"/>
+  <stop offset="1" stop-color="#a68cc8" stop-opacity="0.1"/>
+</linearGradient>
+<linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#e8d391"/>
+  <stop offset="0.5" stop-color="{gold_d}"/>
+  <stop offset="1" stop-color="#dcc57e"/>
+</linearGradient>
+<radialGradient id="lens{gid}" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#3c4454"/><stop offset="0.35" stop-color="#141821"/><stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.35" filter="url(#soft{gid})"/>
+<rect x="43" y="30" width="254" height="540" rx="47" fill="url(#frame{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="{body_hex}"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="url(#body{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="42" fill="url(#irid{gid})"/>
+<rect x="50.2" y="37.2" width="239.6" height="525.6" rx="40.8" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.2"/>
+<circle cx="170" cy="150" r="96" fill="none" stroke="{gold}" stroke-opacity="0.55" stroke-width="1.6" stroke-dasharray="2 5"/>
+{ring_dots}
+<circle cx="170" cy="150" r="66" fill="{_shade(body_hex, -0.12)}" stroke="{gold}" stroke-width="2.4"/>
+<circle cx="170" cy="150" r="58" fill="none" stroke="{gold}" stroke-opacity="0.5" stroke-width="1"/>
+<circle cx="145" cy="150" r="23" fill="#0b0d13" stroke="{gold}" stroke-width="1.6"/>
+<circle cx="145" cy="150" r="17" fill="none" stroke="#2fb9a3" stroke-opacity="0.55" stroke-width="1.2"/>
+<circle cx="145" cy="150" r="13" fill="url(#lens{gid})"/>
+<circle cx="140" cy="144" r="3" fill="#ffffff" opacity="0.55"/>
+<circle cx="196" cy="150" r="23" fill="#0b0d13" stroke="{gold}" stroke-width="1.6"/>
+<circle cx="196" cy="150" r="17" fill="none" stroke="#2fb9a3" stroke-opacity="0.55" stroke-width="1.2"/>
+<circle cx="196" cy="150" r="13" fill="url(#lens{gid})"/>
+<circle cx="191" cy="144" r="3" fill="#ffffff" opacity="0.55"/>
+<circle cx="170" cy="186" r="7" fill="#101018" stroke="{gold}" stroke-width="1.3"/>
+<circle cx="170" cy="186" r="3" fill="#2fb9a3"/>
+<circle cx="170" cy="114" r="4.5" fill="#f4efdf" stroke="{gold}" stroke-width="1"/>
+<text x="170" y="292" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="{gold_d}" opacity="0.85" text-anchor="middle" letter-spacing="5">ELEMENTAL RING</text>
+<path d="M60 320 H280" stroke="{gold}" stroke-opacity="0.5" stroke-width="1"/>
+<g transform="translate(146 348) scale(1)" opacity="0.95">
+  <path d="M24 6 C21.4 16.5 12 21 12 30 a12 12 0 0 0 24 0 C36 21 26.6 16.5 24 6 Z" fill="none" stroke="{gold_d}" stroke-width="2.4" stroke-linejoin="round"/>
+  <circle cx="24" cy="31.5" r="3" fill="{gold_d}"/>
+</g>
+<path d="M60 412 H280" stroke="{gold}" stroke-opacity="0.5" stroke-width="1"/>
+<text x="170" y="452" font-family="'Shippori Mincho','Noto Sans JP',serif" font-size="15" font-weight="800" fill="{ink}" opacity="0.85" text-anchor="middle" letter-spacing="3">SUZAKU × 原神</text>
+<text x="170" y="476" font-family="'Shippori Mincho','Noto Sans JP',serif" font-size="20" font-weight="800" fill="{gold_d}" text-anchor="middle" letter-spacing="10">七 耀</text>
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.45" text-anchor="middle" letter-spacing="2">SHICHIYO ・ JOINT DESIGN ・ {hz}</text>
+<path d="M84 36 L200 36 L100 564 L49 564 L49 320 Z" fill="#ffffff" opacity="0.16"/>
+<rect x="292.5" y="140" width="5" height="48" rx="2.5" fill="{gold_d}"/>
+<rect x="292.5" y="202" width="5" height="70" rx="2.5" fill="{gold_d}"/>
+</svg>"""
+
+
+def _phone_zankyo(pid, body_hex, glow, label, kana, hz):
+    """残響(鳴潮): 漆黒モノリス・縦列トリプル(丸2+角形ペリスコ)・音叉LED。"""
+    gid = pid.replace("-", "")
+    light_body = _is_light(body_hex)
+    ink = "#1c1c26" if light_body else "#e9e9f0"
+    ln = _shade(body_hex, -0.35) if light_body else _shade(body_hex, 0.3)
+    cyan = "#00e0ff"
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="{label}">
+<defs>
+<linearGradient id="body{gid}" x1="0" y1="0" x2="0.85" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.26)}"/>
+  <stop offset="0.5" stop-color="{body_hex}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, -0.34)}"/>
+</linearGradient>
+<linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.4)}"/>
+  <stop offset="0.5" stop-color="{_shade(body_hex, -0.55)}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, 0.22)}"/>
+</linearGradient>
+<radialGradient id="lens{gid}" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#39414f"/><stop offset="0.35" stop-color="#12151d"/><stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<pattern id="tex{gid}" width="4" height="7" patternUnits="userSpaceOnUse">
+  <path d="M1 0 V7" stroke="{'#000000' if light_body else '#ffffff'}" stroke-opacity="0.05" stroke-width="1"/>
+</pattern>
+<filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<ellipse cx="170" cy="577" rx="112" ry="12" fill="#000000" opacity="0.5" filter="url(#soft{gid})"/>
+<rect x="45" y="30" width="250" height="540" rx="16" fill="url(#frame{gid})"/>
+<rect x="50" y="35" width="240" height="530" rx="12" fill="{body_hex}"/>
+<rect x="50" y="35" width="240" height="530" rx="12" fill="url(#body{gid})"/>
+<rect x="50" y="35" width="240" height="530" rx="12" fill="url(#tex{gid})"/>
+<rect x="51" y="36" width="238" height="528" rx="11" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1.2"/>
+<rect x="66" y="54" width="86" height="228" rx="12" fill="{_shade(body_hex, -0.28)}"/>
+<rect x="66.6" y="54.6" width="84.8" height="226.8" rx="11.4" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1.2"/>
+<circle cx="109" cy="94" r="26" fill="#0b0d13" stroke="{ln}" stroke-width="1.5"/>
+<circle cx="109" cy="94" r="19" fill="none" stroke="{cyan}" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="109" cy="94" r="15" fill="url(#lens{gid})"/>
+<circle cx="103" cy="88" r="3.2" fill="#ffffff" opacity="0.5"/>
+<circle cx="109" cy="158" r="26" fill="#0b0d13" stroke="{ln}" stroke-width="1.5"/>
+<circle cx="109" cy="158" r="19" fill="none" stroke="{cyan}" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="109" cy="158" r="15" fill="url(#lens{gid})"/>
+<circle cx="103" cy="152" r="3.2" fill="#ffffff" opacity="0.5"/>
+<rect x="83" y="204" width="52" height="52" rx="11" fill="#0b0d13" stroke="{ln}" stroke-width="1.5"/>
+<rect x="92" y="213" width="34" height="34" rx="8" fill="none" stroke="{cyan}" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="109" cy="230" r="10" fill="url(#lens{gid})"/>
+<circle cx="178" cy="70" r="5" fill="#f4efdf" opacity="0.9"/>
+<text x="178" y="98" font-family="'Noto Sans JP',sans-serif" font-size="7.5" fill="{ink}" opacity="0.5" letter-spacing="2">50MP ×2</text>
+<text x="178" y="112" font-family="'Noto Sans JP',sans-serif" font-size="7.5" fill="{ink}" opacity="0.5" letter-spacing="2">64MP PERI</text>
+<path d="M158 330 v54 M182 330 v54 M158 384 a12 12 0 0 0 24 0" fill="none" stroke="{cyan}" stroke-opacity="0.75" stroke-width="3" stroke-linecap="round"/>
+<path d="M146 344 h-10 M204 344 h-10" stroke="{cyan}" stroke-opacity="0.35" stroke-width="2" stroke-linecap="round"/>
+<text x="170" y="428" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.5" text-anchor="middle" letter-spacing="4">RESONANCE FORK</text>
+<text x="170" y="474" font-family="'Zen Old Mincho','Noto Sans JP',serif" font-size="19" font-weight="900" fill="{ink}" opacity="0.85" text-anchor="middle" letter-spacing="12">残 響</text>
+<text x="170" y="496" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="{ink}" opacity="0.45" text-anchor="middle" letter-spacing="3">SUZAKU × 鳴潮 ・ ZANKYO</text>
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.38" text-anchor="middle" letter-spacing="2">MONOLITH 8.2mm ・ {hz}</text>
+<path d="M70 35 L180 35 L92 565 L50 565 L50 300 Z" fill="#ffffff" opacity="{0.12 if light_body else 0.045}"/>
+<rect x="292.5" y="128" width="5" height="44" rx="2.5" fill="{cyan}" opacity="0.85"/>
+<rect x="292.5" y="184" width="5" height="66" rx="2.5" fill="{_shade(body_hex, -0.5)}"/>
+</svg>"""
+
+
+def _phone_yako(pid, body_hex, glow, label, kana, hz):
+    """夜行(NTE): EL発光ガラス背面・超大型デュアルカメラ・ネオン管サイン。"""
+    gid = pid.replace("-", "")
+    ink = "#1c1c26" if _is_light(body_hex) else "#f4ecff"
+    mag = "#ff3ea5"
+    cyanc = "#39d7f5"
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="{label}">
+<defs>
+<linearGradient id="body{gid}" x1="0" y1="0" x2="0.85" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.34)}"/>
+  <stop offset="0.32" stop-color="{_shade(body_hex, 0.1)}"/>
+  <stop offset="0.66" stop-color="{body_hex}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, -0.4)}"/>
+</linearGradient>
+<linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.5)}"/>
+  <stop offset="0.5" stop-color="{_shade(body_hex, -0.6)}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, 0.3)}"/>
+</linearGradient>
+<radialGradient id="lens{gid}" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#3c4454"/><stop offset="0.35" stop-color="#141821"/><stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<filter id="glow{gid}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>
+<filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.5" filter="url(#soft{gid})"/>
+<rect x="43" y="30" width="254" height="540" rx="40" fill="url(#frame{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="35" fill="{body_hex}"/>
+<rect x="49" y="36" width="242" height="528" rx="35" fill="url(#body{gid})"/>
+<rect x="55" y="42" width="230" height="516" rx="30" fill="none" stroke="{mag}" stroke-opacity="0.4" stroke-width="1.6"/>
+<rect x="66" y="62" width="208" height="116" rx="34" fill="{_shade(body_hex, -0.3)}"/>
+<rect x="66.7" y="62.7" width="206.6" height="114.6" rx="33.3" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.4"/>
+<circle cx="122" cy="120" r="36" fill="#0b0d13" stroke="{_shade(body_hex, 0.35)}" stroke-width="1.8"/>
+<circle cx="122" cy="120" r="28" fill="none" stroke="{mag}" stroke-opacity="0.55" stroke-width="1.4"/>
+<circle cx="122" cy="120" r="22" fill="url(#lens{gid})"/>
+<circle cx="122" cy="120" r="8" fill="#04040a"/>
+<circle cx="113" cy="110" r="4.5" fill="#ffffff" opacity="0.55"/>
+<circle cx="212" cy="120" r="30" fill="#0b0d13" stroke="{_shade(body_hex, 0.35)}" stroke-width="1.8"/>
+<circle cx="212" cy="120" r="23" fill="none" stroke="{cyanc}" stroke-opacity="0.5" stroke-width="1.4"/>
+<circle cx="212" cy="120" r="17" fill="url(#lens{gid})"/>
+<circle cx="205" cy="112" r="3.8" fill="#ffffff" opacity="0.55"/>
+<circle cx="256" cy="86" r="5" fill="#f4efdf" opacity="0.9"/>
+<text x="256" y="152" font-family="'Noto Sans JP',sans-serif" font-size="7.5" fill="{ink}" opacity="0.55" text-anchor="middle" letter-spacing="1">1/0.98"</text>
+<path d="M92 250 h60 a16 16 0 0 1 0 32 h-40 a16 16 0 0 0 0 32 h60" fill="none" stroke="{mag}" stroke-width="5" stroke-linecap="round" filter="url(#glow{gid})" opacity="0.7"/>
+<path d="M92 250 h60 a16 16 0 0 1 0 32 h-40 a16 16 0 0 0 0 32 h60" fill="none" stroke="{mag}" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M206 268 l16 -18 v50 l16 -18" fill="none" stroke="{cyanc}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow{gid})" opacity="0.7"/>
+<path d="M206 268 l16 -18 v50 l16 -18" fill="none" stroke="{cyanc}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="170" y="372" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="{ink}" opacity="0.5" text-anchor="middle" letter-spacing="4">NEON SIGN EL</text>
+{"".join(f'<circle cx="{104 + i * 26}" cy="400" r="3.5" fill="{c}" opacity="0.8"/>' for i, c in enumerate((mag, cyanc, "#ffd166", mag, cyanc, "#ffd166")))}
+<text x="170" y="462" font-family="'Archivo','Noto Sans JP',sans-serif" font-size="26" font-weight="900" font-style="italic" fill="none" stroke="{mag}" stroke-width="1.2" text-anchor="middle" letter-spacing="6">YAKO</text>
+<text x="170" y="486" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="{ink}" opacity="0.5" text-anchor="middle" letter-spacing="3">SUZAKU × NTE ・ 夜行</text>
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.38" text-anchor="middle" letter-spacing="2">HETHEREAU NIGHT ・ {hz}</text>
+<path d="M80 36 L206 36 L98 564 L49 564 L49 300 Z" fill="#ffffff" opacity="0.06"/>
+<rect x="292.5" y="128" width="5" height="44" rx="2.5" fill="{mag}"/>
+<rect x="292.5" y="184" width="5" height="66" rx="2.5" fill="{_shade(body_hex, -0.5)}"/>
+</svg>"""
+
+
+def _phone_zensen(pid, body_hex, glow, label, kana, hz):
+    """前線(エンドフィールド): 装甲リブ・ハザード・2眼+ToF・計器窓・防塵ファン。"""
+    gid = pid.replace("-", "")
+    light_body = _is_light(body_hex)
+    ink = "#1c1c26" if light_body else "#f2f1ec"
+    yl = "#f2d800"
+    dk = _shade(body_hex, -0.5)
+    ribs = "".join(
+        f'<path d="{d}" fill="{_shade(body_hex, -0.25)}" stroke="{_shade(body_hex, 0.2)}" stroke-width="1"/>'
+        for d in ("M49 78 L49 46 Q49 36 62 36 L94 36 L94 50 L66 50 L63 78 Z",
+                  "M291 78 L291 46 Q291 36 278 36 L246 36 L246 50 L274 50 L277 78 Z",
+                  "M49 522 L49 554 Q49 564 62 564 L94 564 L94 550 L66 550 L63 522 Z",
+                  "M291 522 L291 554 Q291 564 278 564 L246 564 L246 550 L274 550 L277 522 Z"))
+    screws = "".join(
+        f'<circle cx="{x}" cy="{y}" r="4" fill="{dk}" stroke="{_shade(body_hex, 0.3)}" stroke-width="1"/><path d="M{x - 2} {y} h4 M{x} {y - 2} v4" stroke="{_shade(body_hex, 0.35)}" stroke-width="0.9"/>'
+        for x, y in ((72, 62, ), (268, 62), (72, 538), (268, 538)))
+    slats = "".join(f'<rect x="128" y="{306 + i * 14}" width="84" height="6" rx="3" fill="{dk}"/>' for i in range(4))
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="{label}">
+<defs>
+<linearGradient id="body{gid}" x1="0" y1="0" x2="0.85" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.3)}"/>
+  <stop offset="0.5" stop-color="{body_hex}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, -0.3)}"/>
+</linearGradient>
+<linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="{_shade(body_hex, 0.42)}"/>
+  <stop offset="0.5" stop-color="{_shade(body_hex, -0.55)}"/>
+  <stop offset="1" stop-color="{_shade(body_hex, 0.25)}"/>
+</linearGradient>
+<radialGradient id="lens{gid}" cx="0.38" cy="0.32" r="0.95">
+  <stop offset="0" stop-color="#3c4454"/><stop offset="0.35" stop-color="#141821"/><stop offset="1" stop-color="#04040a"/>
+</radialGradient>
+<pattern id="hz{gid}" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+  <rect width="13" height="26" fill="{yl}"/>
+  <rect x="13" width="13" height="26" fill="#17171a"/>
+</pattern>
+<pattern id="tex{gid}" width="14" height="14" patternUnits="userSpaceOnUse">
+  <path d="M0 7 H14" stroke="{'#000' if light_body else '#fff'}" stroke-opacity="0.05" stroke-width="2"/>
+</pattern>
+<filter id="soft{gid}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<ellipse cx="170" cy="578" rx="120" ry="13" fill="#000000" opacity="0.45" filter="url(#soft{gid})"/>
+<rect x="41" y="28" width="258" height="544" rx="26" fill="url(#frame{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="20" fill="{body_hex}"/>
+<rect x="49" y="36" width="242" height="528" rx="20" fill="url(#body{gid})"/>
+<rect x="49" y="36" width="242" height="528" rx="20" fill="url(#tex{gid})"/>
+{ribs}
+{screws}
+<rect x="66" y="58" width="130" height="130" rx="16" fill="{_shade(body_hex, -0.32)}" stroke="{_shade(body_hex, 0.25)}" stroke-width="1.4"/>
+<circle cx="103" cy="96" r="25" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.6"/>
+<circle cx="103" cy="96" r="18" fill="none" stroke="{yl}" stroke-opacity="0.55" stroke-width="1.3"/>
+<circle cx="103" cy="96" r="14" fill="url(#lens{gid})"/>
+<circle cx="98" cy="90" r="3" fill="#ffffff" opacity="0.5"/>
+<circle cx="159" cy="150" r="25" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.6"/>
+<circle cx="159" cy="150" r="18" fill="none" stroke="{yl}" stroke-opacity="0.55" stroke-width="1.3"/>
+<circle cx="159" cy="150" r="14" fill="url(#lens{gid})"/>
+<circle cx="154" cy="144" r="3" fill="#ffffff" opacity="0.5"/>
+<rect x="146" y="82" width="26" height="26" rx="6" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.4"/>
+<circle cx="159" cy="95" r="6" fill="url(#lens{gid})"/>
+<text x="159" y="76" font-family="ui-monospace,monospace" font-size="7" fill="{ink}" opacity="0.6" text-anchor="middle">ToF</text>
+<circle cx="96" cy="156" r="5" fill="#f4efdf" opacity="0.9"/>
+<rect x="212" y="70" width="62" height="30" rx="6" fill="url(#hz{gid})" opacity="0.95"/>
+<rect x="212" y="70" width="62" height="30" rx="6" fill="none" stroke="{_shade(body_hex, 0.25)}" stroke-width="1.2"/>
+<rect x="210" y="128" width="66" height="40" rx="8" fill="#101010" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.4"/>
+<rect x="216" y="146" width="54" height="8" rx="3" fill="#2a2a22"/>
+<rect x="216" y="146" width="50" height="8" rx="3" fill="{yl}"/>
+<text x="243" y="141" font-family="ui-monospace,monospace" font-size="8" fill="{yl}" text-anchor="middle" letter-spacing="1">PWR 99%</text>
+<circle cx="170" cy="328" r="52" fill="{dk}"/>
+<circle cx="170" cy="328" r="52" fill="none" stroke="{yl}" stroke-opacity="0.6" stroke-width="2.2"/>
+<circle cx="170" cy="328" r="44" fill="#0a0b0a"/>
+{"".join(f'<path d="M170 328 L170 294" stroke="{_shade(body_hex, 0.24)}" stroke-width="9" stroke-linecap="round" transform="rotate({a} 170 328)"/>' for a in range(0, 360, 40))}
+{slats}
+<circle cx="170" cy="328" r="12" fill="#101010" stroke="{yl}" stroke-opacity="0.85" stroke-width="1.6"/>
+<circle cx="170" cy="328" r="3.6" fill="{yl}"/>
+<text x="170" y="402" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="{ink}" opacity="0.55" text-anchor="middle" letter-spacing="3">SEALED FAN ・ IP68</text>
+<rect x="66" y="428" width="208" height="1.6" fill="{yl}" opacity="0.7"/>
+<text x="170" y="458" font-family="'Oswald','Noto Sans JP',sans-serif" font-size="21" font-weight="700" fill="{ink}" opacity="0.9" text-anchor="middle" letter-spacing="4">// ZENSEN</text>
+<text x="170" y="480" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="{ink}" opacity="0.55" text-anchor="middle" letter-spacing="2">SUZAKU × エンドフィールド 前線</text>
+<text x="170" y="502" font-family="ui-monospace,monospace" font-size="7" fill="{ink}" opacity="0.42" text-anchor="middle" letter-spacing="1.5">MIL-STD-810H / -20〜45C / {hz}</text>
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="{ink}" opacity="0.38" text-anchor="middle" letter-spacing="2">ENDFIELD INDUSTRIES ・ JOINT ENGINEERING</text>
+<path d="M84 36 L196 36 L100 564 L49 564 L49 320 Z" fill="#ffffff" opacity="{0.1 if light_body else 0.05}"/>
+<rect x="292.5" y="120" width="6" height="46" rx="2" fill="{yl}"/>
+<rect x="292.5" y="178" width="6" height="46" rx="2" fill="{dk}"/>
+<rect x="292.5" y="250" width="6" height="52" rx="2" fill="{dk}"/>
+</svg>"""
+
+
+_PHONE_CUSTOM = {
+    "shichiyo": _phone_shichiyo,
+    "zankyo": _phone_zankyo,
+    "yako": _phone_yako,
+    "zensen": _phone_zensen,
+}
+
+
+def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz", design=None):
     """タブレット背面ビュー(横持ち)。スマホ背面と同じ質感エンジンで描く。
 
+    designプロファイルでカメラ数(specsと一致)とファン有無を制御。
     ゲーミング系(pad/pad-neo)は冷却ファン窓+LEDスラッシュ、
     スタンダード系(t-pad)は朱雀エンブレム型押し+キーボード用ポゴピン。"""
+    d = design or {}
+    cams = d.get("cams", 2)
     gid = pid.replace("-", "")
-    gaming = line in ("pad", "pad-neo")
+    gaming = d.get("fan", line in ("pad", "pad-neo"))
     lite = _shade(body_hex, 0.42)
     lite2 = _shade(body_hex, 0.16)
     dark = _shade(body_hex, -0.38)
@@ -205,20 +627,23 @@ def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz"):
 </filter>
 </defs>"""
 
-    # デュアルカメラ(左上・横持ち基準)
+    # カメラ(左上・横持ち基準)。レンズ数はspecsのリアカメラ表記と一致
+    cam_xs = (104, 156)[:cams]
+    plate_w = 118 if cams >= 2 else 66
     lenses = ""
-    for cx in (104, 156):
+    for cx in cam_xs:
         lenses += f"""
 <circle cx="{cx}" cy="92" r="19" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.5"/>
 <circle cx="{cx}" cy="92" r="14" fill="none" stroke="{glow}" stroke-opacity="0.5" stroke-width="1.2"/>
 <circle cx="{cx}" cy="92" r="11" fill="url(#lens{gid})"/>
 <circle cx="{cx}" cy="92" r="4" fill="#04040a"/>
 <circle cx="{cx - 4}" cy="87.5" r="2.6" fill="#ffffff" opacity="0.55"/>"""
+    flash_x = 178 if cams >= 2 else 126
     camera = f"""
-<rect x="72" y="62" width="118" height="60" rx="20" fill="{plate}"/>
-<rect x="72" y="62" width="118" height="60" rx="20" fill="url(#sheen{gid})" opacity="0.5"/>
-<rect x="72.7" y="62.7" width="116.6" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
-<circle cx="178" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
+<rect x="72" y="62" width="{plate_w}" height="60" rx="20" fill="{plate}"/>
+<rect x="72" y="62" width="{plate_w}" height="60" rx="20" fill="url(#sheen{gid})" opacity="0.5"/>
+<rect x="72.7" y="62.7" width="{plate_w - 1.4}" height="58.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.3"/>
+<circle cx="{flash_x}" cy="76" r="4" fill="#f4efdf" opacity="0.9"/>
 {lenses}"""
 
     if gaming:
@@ -400,14 +825,14 @@ def _front_scene_phone(line, glow, hz, motif):
 {dock}"""
 
 
-def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif=None):
+def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif=None, design=None):
     """スマートフォン正面ビュー(ディスプレイ点灯状態)。
 
     ライン/コラボ作品ごとに画面内シーンを差し替えて差別化する。
     旗艦系はアンダーディスプレイカメラのためパンチホール無し。"""
     gid = "f" + pid.replace("-", "")
     dark2 = _shade(body_hex, -0.6)
-    punch = line in ("tsubame", "lite")
+    punch = (design or {}).get("punch", line in ("tsubame", "lite"))
     defs = f"""<defs>
 <linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
   <stop offset="0" stop-color="{_shade(body_hex, 0.55)}"/>
@@ -543,41 +968,75 @@ def svg_tablet_front(pid, body_hex, glow, label, line="pad", hz="120Hz"):
 </svg>"""
 
 
-def svg_die(gid, label, sub, glow):
-    """半導体ダイショット風ビジュアル(CPU/GPU/メモリ/ストレージ)。"""
+def svg_die(gid, label, sub, glow, accent2=None):
+    """実チップパッケージ風ビジュアル(基板+金属リッド+シルク印字+周辺部品)。
+
+    技術ページのヒーローとコラボ専用シリコンページで使用。CPUパッケージの
+    外観(サブストレート・IHSリッド・コーナーインデックス・受動部品)を再現する。"""
     gid = gid.replace("-", "")
-    cells = []
+    a2 = accent2 or glow
     import random
     rnd = random.Random(gid)
-    for r in range(6):
-        for c in range(6):
-            if 1 <= r <= 4 and 1 <= c <= 4:
-                continue
-            o = 0.16 + rnd.random() * 0.3
-            cells.append(
-                f'<rect x="{86 + c * 46}" y="{86 + r * 46}" width="40" height="40" rx="3" fill="{glow}" opacity="{o:.2f}"/>')
+    # サブストレート上の受動部品(コンデンサ列)
+    caps = ""
+    for i in range(9):
+        x = 96 + i * 32
+        caps += (f'<rect x="{x}" y="66" width="14" height="7" rx="1.5" fill="#b58a3c"/>'
+                 f'<rect x="{x}" y="66" width="4" height="7" fill="#7a5a22"/>')
+        caps += (f'<rect x="{x}" y="407" width="14" height="7" rx="1.5" fill="#b58a3c"/>'
+                 f'<rect x="{x + 10}" y="407" width="4" height="7" fill="#7a5a22"/>')
+    caps2 = ""
+    for i in range(6):
+        y = 128 + i * 40
+        caps2 += f'<rect x="66" y="{y}" width="7" height="14" rx="1.5" fill="#8a8a96"/>'
+        caps2 += f'<rect x="407" y="{y}" width="7" height="14" rx="1.5" fill="#8a8a96"/>'
+    # 基板端の金メッキパッド
+    pads = "".join(
+        f'<rect x="{74 + i * 24}" y="446" width="14" height="8" rx="1" fill="#c8a24a"/>'
+        for i in range(14))
+    lot = f"SZK{rnd.randint(2400, 2699)}-{rnd.randint(100, 999)}"
+    # 刻印はリッド幅(244px)に収まるよう文字数でサイズを落とす
+    fs = 27 if len(label) <= 9 else (20 if len(label) <= 13 else 16)
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="{label}">
 <defs>
-<linearGradient id="pcb{gid}" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0" stop-color="#15151e"/><stop offset="1" stop-color="#0b0b10"/>
+<linearGradient id="sub{gid}" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#1b2426"/><stop offset="1" stop-color="#101718"/>
 </linearGradient>
-<radialGradient id="core{gid}" cx="0.5" cy="0.5" r="0.7">
-  <stop offset="0" stop-color="{glow}" stop-opacity="0.85"/>
-  <stop offset="0.65" stop-color="{glow}" stop-opacity="0.2"/>
-  <stop offset="1" stop-color="{glow}" stop-opacity="0"/>
-</radialGradient>
+<linearGradient id="ihs{gid}" x1="0" y1="0" x2="0.7" y2="1">
+  <stop offset="0" stop-color="#c8ccd4"/>
+  <stop offset="0.24" stop-color="#9aa0aa"/>
+  <stop offset="0.55" stop-color="#7d838e"/>
+  <stop offset="0.78" stop-color="#9aa0aa"/>
+  <stop offset="1" stop-color="#6c727c"/>
+</linearGradient>
+<pattern id="brush{gid}" width="5" height="5" patternUnits="userSpaceOnUse">
+  <path d="M0 2.5 H5" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+</pattern>
+<filter id="dsh{gid}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
 </defs>
-<rect x="30" y="30" width="420" height="420" rx="26" fill="url(#pcb{gid})" stroke="{glow}" stroke-opacity="0.4" stroke-width="1.5"/>
-{"".join(f'<line x1="{60 + i * 40}" y1="30" x2="{60 + i * 40}" y2="14" stroke="#3d3d4e" stroke-width="5"/>' for i in range(10))}
-{"".join(f'<line x1="{60 + i * 40}" y1="450" x2="{60 + i * 40}" y2="466" stroke="#3d3d4e" stroke-width="5"/>' for i in range(10))}
-{"".join(f'<line x1="30" y1="{60 + i * 40}" x2="14" y2="{60 + i * 40}" stroke="#3d3d4e" stroke-width="5"/>' for i in range(10))}
-{"".join(f'<line x1="450" y1="{60 + i * 40}" x2="466" y2="{60 + i * 40}" stroke="#3d3d4e" stroke-width="5"/>' for i in range(10))}
-{''.join(cells)}
-<rect x="132" y="132" width="216" height="216" rx="10" fill="#0a0a10" stroke="{glow}" stroke-opacity="0.8" stroke-width="2"/>
-<circle cx="240" cy="240" r="130" fill="url(#core{gid})"/>
-<path d="M240 168 c-9 37 -46 53 -46 92 a46 46 0 0 0 92 0 c0 -39 -37 -55 -46 -92z" fill="none" stroke="{glow}" stroke-width="5" stroke-linejoin="round"/>
-<text x="240" y="298" font-family="'Noto Sans JP',sans-serif" font-size="26" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="3">{label}</text>
-<text x="240" y="322" font-family="'Noto Sans JP',sans-serif" font-size="12" fill="#9c9cb0" text-anchor="middle" letter-spacing="4">{sub}</text>
+<rect width="480" height="480" fill="#0b0b10"/>
+<ellipse cx="240" cy="250" rx="220" ry="200" fill="{glow}" opacity="0.08"/>
+<rect x="238" y="462" width="4" height="0" fill="none"/>
+<ellipse cx="240" cy="452" rx="180" ry="12" fill="#000" opacity="0.5" filter="url(#dsh{gid})"/>
+<rect x="56" y="56" width="368" height="368" rx="10" fill="url(#sub{gid})" stroke="#2c3a3c" stroke-width="2"/>
+<rect x="60" y="60" width="360" height="360" rx="8" fill="none" stroke="#31494b" stroke-opacity="0.6" stroke-width="1"/>
+{caps}{caps2}{pads}
+<rect x="118" y="118" width="244" height="244" rx="14" fill="url(#ihs{gid})" stroke="#4c525c" stroke-width="2"/>
+<rect x="118" y="118" width="244" height="244" rx="14" fill="url(#brush{gid})"/>
+<path d="M118 190 L362 190 M118 290 L362 290" stroke="#ffffff" stroke-opacity="0.08" stroke-width="30" />
+<circle cx="140" cy="140" r="6" fill="none" stroke="#3a4048" stroke-width="2"/>
+<circle cx="140" cy="140" r="2.2" fill="#3a4048"/>
+<path d="M226 152 c-4.5 17 -21 24 -21 42 a21 21 0 0 0 42 0 c0 -18 -16.5 -25 -21 -42z" fill="none" stroke="{glow}" stroke-width="3" stroke-linejoin="round" transform="translate(14 0)"/>
+<text x="240" y="252" font-family="'Noto Sans JP',sans-serif" font-size="{fs}" font-weight="900" fill="#22262c" text-anchor="middle" letter-spacing="2.5">{label}</text>
+<text x="240" y="251" font-family="'Noto Sans JP',sans-serif" font-size="{fs}" font-weight="900" fill="#f0f2f5" fill-opacity="0.9" text-anchor="middle" letter-spacing="2.5">{label}</text>
+<text x="240" y="278" font-family="ui-monospace,monospace" font-size="11" fill="#30343c" text-anchor="middle" letter-spacing="2">{sub}</text>
+<text x="240" y="298" font-family="ui-monospace,monospace" font-size="10" fill="#3c414a" text-anchor="middle" letter-spacing="3">{lot} ・ 3nm</text>
+<rect x="318" y="318" width="26" height="26" fill="#22262c"/>
+{"".join(f'<rect x="{321 + (i % 4) * 5}" y="{321 + (i // 4) * 5}" width="4" height="4" fill="{"#f0f2f5" if (i * 7) % 3 else "#22262c"}"/>' for i in range(16))}
+<path d="M124 124 L200 124 L142 356 L124 356 Z" fill="#ffffff" opacity="0.1"/>
+<circle cx="240" cy="240" r="0.1" fill="none"/>
+<path d="M56 92 h-14 M56 388 h-14 M424 92 h14 M424 388 h14" stroke="{a2}" stroke-opacity="0.6" stroke-width="2"/>
+<text x="240" y="443" font-family="ui-monospace,monospace" font-size="9" fill="#5d6a6c" text-anchor="middle" letter-spacing="4">SUZAKU SILICON ・ JAPAN</text>
 </svg>"""
 
 
@@ -933,31 +1392,79 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
 <circle cx="348" cy="248" r="5" fill="{g}"/>
 <text x="240" y="342" font-family="sans-serif" font-size="10" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="3">4K/120 ・ 80W</text>"""
     elif kind == "powerbank":
-        # コラボ・モバイルバッテリー。motif(slug)ごとに意匠を差し替える
-        deco = ""
+        # コラボ・モバイルバッテリー。motif(作品slug)ごとにシルエットから別設計。
         if motif == "genshin":
+            # 七天神像の石碑を思わせる縦長アーチ型・白磁×金リング
             elems = ("#74c2a8", "#d8b45c", "#a68cc8", "#9ac546", "#4cc2f1", "#ef7938", "#9fd6e3")
-            deco = "".join(
-                f'<circle cx="{240 + 54 * math.cos(math.radians(-90 + i * 360 / 7)):.1f}" cy="{150 + 54 * math.sin(math.radians(-90 + i * 360 / 7)):.1f}" r="7" fill="none" stroke="{c}" stroke-width="2.4" opacity="0.95"/>'
-                for i, c in enumerate(elems)) + f'<circle cx="240" cy="150" r="54" fill="none" stroke="{g}" stroke-opacity="0.35" stroke-width="1.5"/>'
+            dots = "".join(
+                f'<circle cx="{240 + 52 * math.cos(math.radians(-90 + i * 360 / 7)):.1f}" cy="{150 + 52 * math.sin(math.radians(-90 + i * 360 / 7)):.1f}" r="6" fill="{c}" opacity="0.95"/>'
+                for i, c in enumerate(elems))
+            body = f"""{shadow(240, 312, 96)}
+<path d="M164 312 V150 a76 76 0 0 1 152 0 v162 z" fill="url(#mb{u})"/>
+<path d="M164 312 V150 a76 76 0 0 1 152 0 v162 z" fill="url(#mt{u})"/>
+<path d="M165.4 310.6 V150 a74.6 74.6 0 0 1 149.2 0 v160.6 z" fill="none" stroke="#c9a24b" stroke-width="2.2"/>
+<circle cx="240" cy="150" r="52" fill="none" stroke="#c9a24b" stroke-opacity="0.6" stroke-width="1.6" stroke-dasharray="2 5"/>
+{dots}
+<path d="M240 128 c-5 18 -22 25 -22 44 a22 22 0 0 0 44 0 c0 -19 -17 -26 -22 -44z" fill="none" stroke="#c9a24b" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M188 236 H292" stroke="#c9a24b" stroke-opacity="0.55" stroke-width="1.2"/>
+<text x="240" y="262" font-family="'Shippori Mincho',serif" font-size="11" font-weight="800" fill="{ink}" opacity="0.8" text-anchor="middle" letter-spacing="3">七耀の灯</text>
+{"".join(f'<circle cx="{216 + i * 16}" cy="284" r="4" fill="#c9a24b" opacity="{0.95 - i * 0.22:.2f}"/>' for i in range(4))}
+<rect x="222" y="304" width="36" height="8" rx="4" fill="#07070b" stroke="#c9a24b" stroke-width="1.2"/>
+<text x="240" y="336" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">10000mAh ・ 45W MAGNETIC</text>"""
         elif motif == "wuwa":
-            deco = f'<path d="M162 150 l14 0 6 -22 10 44 10 -34 8 12 h68" fill="none" stroke="{g}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' \
-                   f'<path d="M162 150 h156" stroke="{g}" stroke-opacity="0.25" stroke-width="1.5"/>'
+            # 漆黒の薄板モノリス・波形窓・音叉マーク(端末「残響」と同意匠)
+            body = f"""{shadow(240, 306, 110)}
+<rect x="150" y="66" width="180" height="240" rx="10" fill="url(#mb{u})"/>
+<rect x="150" y="66" width="180" height="240" rx="10" fill="url(#mt{u})"/>
+<rect x="151.2" y="67.2" width="177.6" height="237.6" rx="9" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.4"/>
+<rect x="170" y="96" width="140" height="58" rx="6" fill="#07070b" stroke="{_shade(b, 0.3)}" stroke-width="1.2"/>
+<path d="M180 125 l14 0 5 -16 8 32 8 -24 6 8 h60" fill="none" stroke="#00e0ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M226 196 v40 M254 196 v40 M226 236 a14 14 0 0 0 28 0" fill="none" stroke="{g}" stroke-opacity="0.85" stroke-width="2.6" stroke-linecap="round"/>
+{"".join(f'<circle cx="{216 + i * 16}" cy="262" r="3.5" fill="{g}" opacity="{0.95 - i * 0.22:.2f}"/>' for i in range(4))}
+<rect x="222" y="284" width="36" height="8" rx="4" fill="#07070b" stroke="{_shade(b, 0.3)}" stroke-width="1.2"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">10000mAh ・ 45W ・ 12.8mm SLIM</text>"""
         elif motif == "nte":
-            deco = f'<path d="M190 128 h100 v44 h-100 z" fill="none" stroke="{g}" stroke-width="2.5" opacity="0.9"/>' \
-                   f'<path d="M204 172 v14 M240 172 v20 M276 172 v14" stroke="{g}" stroke-width="2.5" opacity="0.7"/>' \
-                   f'<text x="240" y="157" font-family="sans-serif" font-size="15" font-weight="800" fill="{g}" text-anchor="middle" letter-spacing="4">NEON</text>'
+            # ネオン看板ボックス・ネオン管の縁とサイン
+            body = f"""{shadow(240, 300, 108)}
+<rect x="146" y="76" width="188" height="216" rx="22" fill="url(#mb{u})"/>
+<rect x="146" y="76" width="188" height="216" rx="22" fill="url(#mt{u})"/>
+<rect x="154" y="84" width="172" height="200" rx="16" fill="none" stroke="{g}" stroke-width="2.6" opacity="0.9" filter="url(#fz{u})"/>
+<rect x="154" y="84" width="172" height="200" rx="16" fill="none" stroke="{g}" stroke-width="1.6"/>
+<path d="M186 138 h44 a12 12 0 0 1 0 24 h-28 a12 12 0 0 0 0 24 h44" fill="none" stroke="{g}" stroke-width="4" stroke-linecap="round" filter="url(#fz{u})" opacity="0.7"/>
+<path d="M186 138 h44 a12 12 0 0 1 0 24 h-28 a12 12 0 0 0 0 24 h44" fill="none" stroke="{g}" stroke-width="2" stroke-linecap="round"/>
+<path d="M262 150 l12 -14 v38 l12 -14" fill="none" stroke="#39d7f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#fz{u})" opacity="0.8"/>
+<path d="M262 150 l12 -14 v38 l12 -14" fill="none" stroke="#39d7f5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+{"".join(f'<circle cx="{198 + i * 18}" cy="222" r="3.5" fill="{c}" opacity="0.85"/>' for i, c in enumerate((g, "#39d7f5", "#ffd166", g, "#39d7f5")))}
+{"".join(f'<circle cx="{212 + i * 16}" cy="250" r="3.5" fill="{g}" opacity="{0.95 - i * 0.22:.2f}"/>' for i in range(4))}
+<rect x="222" y="268" width="36" height="8" rx="4" fill="#07070b" stroke="{_shade(b, 0.3)}" stroke-width="1.2"/>
+<text x="240" y="318" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">10000mAh ・ 45W ・ EL SIGN</text>"""
         elif motif == "endfield":
-            deco = "".join(f'<path d="M{170 + i * 30} 128 l16 0 l-12 44 l-16 0 z" fill="{g}" opacity="{0.85 - i * 0.15:.2f}"/>' for i in range(4))
+            # リブ付き工具箱型・ハザードコーナー・計器LED(端末「前線」と同意匠)
+            ribs = "".join(f'<rect x="{168 + i * 30}" y="84" width="12" height="200" rx="5" fill="#000000" opacity="0.16"/>' for i in range(5))
+            body = f"""{shadow(240, 300, 116)}
+<rect x="142" y="76" width="196" height="216" rx="14" fill="url(#mb{u})"/>
+<rect x="142" y="76" width="196" height="216" rx="14" fill="url(#mt{u})"/>
+{ribs}
+<rect x="143.4" y="77.4" width="193.2" height="213.2" rx="12.6" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6"/>
+<path d="M142 100 l24 -24 h20 l-24 24 z" fill="{g}"/>
+<path d="M314 268 l24 24 h-20 l-24 -24 z" fill="{g}"/>
+{"".join(f'<circle cx="{x}" cy="{y}" r="3.6" fill="{_shade(b, -0.45)}" stroke="{_shade(b, 0.3)}" stroke-width="1"/>' for x, y in ((156, 90, ), (324, 90), (156, 278), (324, 278)))}
+<rect x="180" y="128" width="120" height="44" rx="8" fill="#101010" stroke="{_shade(b, 0.3)}" stroke-width="1.4"/>
+<text x="240" y="147" font-family="ui-monospace,monospace" font-size="9" fill="{g}" text-anchor="middle" letter-spacing="1">PWR ▮▮▮▮▮ 100%</text>
+<rect x="188" y="154" width="104" height="7" rx="3" fill="#2a2a22"/>
+<rect x="188" y="154" width="98" height="7" rx="3" fill="{g}"/>
+<text x="240" y="204" font-family="'Oswald',sans-serif" font-size="13" font-weight="700" fill="{ink}" opacity="0.8" text-anchor="middle" letter-spacing="3">// ZENSEN PACK</text>
+{"".join(f'<circle cx="{212 + i * 16}" cy="232" r="3.5" fill="{g}" opacity="{0.95 - i * 0.22:.2f}"/>' for i in range(4))}
+<rect x="216" y="256" width="48" height="12" rx="4" fill="#07070b" stroke="{_shade(b, 0.3)}" stroke-width="1.4"/>
+<text x="240" y="318" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">10000mAh ・ 45W ・ 18W OUT</text>"""
         else:
-            deco = f'<path d="M240 118 c-7 26 -32 37 -32 64 a32 32 0 0 0 64 0 c0 -27 -25 -38 -32 -64z" fill="none" stroke="{g}" stroke-width="3.4"/>'
-        leds = "".join(f'<circle cx="{204 + i * 24}" cy="238" r="5" fill="{g}" opacity="{0.95 - i * 0.22:.2f}"/>' for i in range(4))
-        body = f"""{shadow(240, 302, 120)}
+            leds = "".join(f'<circle cx="{204 + i * 24}" cy="238" r="5" fill="{g}" opacity="{0.95 - i * 0.22:.2f}"/>' for i in range(4))
+            body = f"""{shadow(240, 302, 120)}
 <rect x="140" y="72" width="200" height="216" rx="30" fill="url(#mb{u})"/>
 <rect x="140" y="72" width="200" height="216" rx="30" fill="url(#mt{u})"/>
 <rect x="141.4" y="73.4" width="197.2" height="213.2" rx="28.6" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.8"/>
 <circle cx="240" cy="150" r="66" fill="none" stroke="{_shade(b, 0.28)}" stroke-width="2" stroke-dasharray="7 7" opacity="0.9"/>
-{deco}
+<path d="M240 118 c-7 26 -32 37 -32 64 a32 32 0 0 0 64 0 c0 -27 -25 -38 -32 -64z" fill="none" stroke="{g}" stroke-width="3.4"/>
 {leds}
 <rect x="286" y="230" width="34" height="16" rx="8" fill="#07070b" stroke="{_shade(b, 0.3)}" stroke-width="1.4"/>
 <rect x="222" y="286" width="36" height="9" rx="4.5" fill="#07070b" stroke="{_shade(b, 0.3)}" stroke-width="1.4"/>

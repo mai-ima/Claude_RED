@@ -102,10 +102,12 @@ def _peri_cell(x, y, w, gid, body_hex, glow):
 
 def _phone_camera(d, gid, body_hex, glow, ink):
     """designプロファイル(plate/cams/tele/macro)に従ってカメラ島を描く。
-    レンズ数・構成はspecsのリアカメラ表記と一致させる。"""
+    レンズ数・構成はspecsのリアカメラ表記と一致させる。
+    戻り値: (svg断片, プレート下端y)。LED等の干渉防止に使う。"""
     plate_kind = d.get("plate", "band")
     cams = d.get("cams", 2)
     plate_fill = _shade(body_hex, -0.3)
+    bottom = 154
     out = ""
     if plate_kind == "band":
         # 全幅の帯型プレート(現行旗艦)。丸レンズ cams 個 + tele で角形セル
@@ -125,6 +127,7 @@ def _phone_camera(d, gid, body_hex, glow, ink):
     elif plate_kind == "pill":
         # 縦長ピル(左上)。レンズ縦積み
         h = 76 + cams * 62
+        bottom = 58 + h
         out += f"""
 <rect x="66" y="58" width="88" height="{h}" rx="44" fill="{plate_fill}"/>
 <rect x="66" y="58" width="88" height="{h}" rx="44" fill="url(#sheen{gid})" opacity="0.5"/>
@@ -135,17 +138,19 @@ def _phone_camera(d, gid, body_hex, glow, ink):
             out += _lens(110, 102 + i * 62, 27, gid, body_hex, glow)
     elif plate_kind == "square":
         # 角形プレート(左上)・レンズ斜め配置
+        bottom = 184
         out += f"""
 <rect x="66" y="58" width="126" height="126" rx="20" fill="{plate_fill}"/>
 <rect x="66" y="58" width="126" height="126" rx="20" fill="url(#sheen{gid})" opacity="0.5"/>
 <rect x="66.7" y="58.7" width="124.6" height="124.6" rx="19.3" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.4"/>
-<circle cx="216" cy="80" r="5.5" fill="#f4efdf" opacity="0.9"/>"""
+<circle cx="168" cy="86" r="5.5" fill="#f4efdf" opacity="0.9"/>"""
         out += _lens(102, 94, 24, gid, body_hex, glow)
         if cams >= 2:
             out += _lens(156, 148, 24, gid, body_hex, glow)
-        out += f'<circle cx="156" cy="94" r="7" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.2"/>'
+        out += f'<circle cx="102" cy="152" r="7" fill="#0b0d13" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.2"/>'
     elif plate_kind == "circle":
         # 大円プレート(初代旗艦の意匠)
+        bottom = 192
         out += f"""
 <circle cx="170" cy="128" r="64" fill="{plate_fill}"/>
 <circle cx="170" cy="128" r="64" fill="url(#sheen{gid})" opacity="0.5"/>
@@ -158,6 +163,7 @@ def _phone_camera(d, gid, body_hex, glow, ink):
         out += '<circle cx="170" cy="176" r="4.5" fill="#f4efdf" opacity="0.9"/>'
     elif plate_kind == "diag":
         # 斜めプレート(NEO系)・レンズを斜めに段付き配置
+        bottom = 170
         out += f"""
 <path d="M66 70 h158 a18 18 0 0 1 17 23 l-18 64 a18 18 0 0 1 -17 13 h-140 a18 18 0 0 1 -18 -18 v-64 a18 18 0 0 1 18 -18z" fill="{plate_fill}"/>
 <path d="M66 70 h158 a18 18 0 0 1 17 23 l-18 64 a18 18 0 0 1 -17 13 h-140 a18 18 0 0 1 -18 -18 v-64 a18 18 0 0 1 18 -18z" fill="url(#sheen{gid})" opacity="0.5"/>
@@ -169,6 +175,7 @@ def _phone_camera(d, gid, body_hex, glow, ink):
     else:
         # corner: 角丸スクエア(左上)・スタンダード系
         if cams == 1 and not d.get("macro"):
+            bottom = 150
             out += f"""
 <rect x="66" y="58" width="92" height="92" rx="26" fill="{plate_fill}"/>
 <rect x="66" y="58" width="92" height="92" rx="26" fill="url(#sheen{gid})" opacity="0.5"/>
@@ -177,6 +184,7 @@ def _phone_camera(d, gid, body_hex, glow, ink):
             out += '<circle cx="182" cy="76" r="5" fill="#f4efdf" opacity="0.9"/>'
         else:
             h = 158 if (cams >= 2 or d.get("macro")) else 92
+            bottom = 58 + h
             out += f"""
 <rect x="66" y="58" width="92" height="{h}" rx="26" fill="{plate_fill}"/>
 <rect x="66" y="58" width="92" height="{h}" rx="26" fill="url(#sheen{gid})" opacity="0.5"/>
@@ -187,7 +195,7 @@ def _phone_camera(d, gid, body_hex, glow, ink):
                 out += _lens(112, 168, 13, gid, body_hex, glow)
             elif cams >= 2:
                 out += _lens(112, 168, 22, gid, body_hex, glow)
-    return out
+    return out, bottom
 
 
 def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz", design=None):
@@ -210,12 +218,12 @@ def svg_phone(pid, body_hex, glow, label, kana="", line="suzaku", hz="144Hz", de
     tex_kind = d.get("tex", "matte")
 
     defs = _phone_defs(gid, body_hex, tex_kind)
-    camera = _phone_camera(d, gid, body_hex, glow, ink)
+    camera, plate_bottom = _phone_camera(d, gid, body_hex, glow, ink)
 
-    # LED意匠
+    # LED意匠(カメラ島の下端から距離を取り干渉を防ぐ)
     led_kind = d.get("led", "none")
     led = ""
-    led_y = 196 if d.get("plate") in ("pill", "square", "diag", "circle") else 178
+    led_y = plate_bottom + 24
     if led_kind.startswith("slash"):
         n = int(led_kind[-1])
         ops = (0.92, 0.55, 0.28)[:n]
@@ -542,8 +550,8 @@ def _phone_zensen(pid, body_hex, glow, label, kana, hz):
 <circle cx="159" cy="95" r="6" fill="url(#lens{gid})"/>
 <text x="159" y="76" font-family="ui-monospace,monospace" font-size="7" fill="{ink}" opacity="0.6" text-anchor="middle">ToF</text>
 <circle cx="96" cy="156" r="5" fill="#f4efdf" opacity="0.9"/>
-<rect x="212" y="70" width="62" height="30" rx="6" fill="url(#hz{gid})" opacity="0.95"/>
-<rect x="212" y="70" width="62" height="30" rx="6" fill="none" stroke="{_shade(body_hex, 0.25)}" stroke-width="1.2"/>
+<rect x="206" y="78" width="56" height="26" rx="5" fill="url(#hz{gid})" opacity="0.95"/>
+<rect x="206" y="78" width="56" height="26" rx="5" fill="none" stroke="{_shade(body_hex, 0.25)}" stroke-width="1.2"/>
 <rect x="210" y="128" width="66" height="40" rx="8" fill="#101010" stroke="{_shade(body_hex, 0.3)}" stroke-width="1.4"/>
 <rect x="216" y="146" width="54" height="8" rx="3" fill="#2a2a22"/>
 <rect x="216" y="146" width="50" height="8" rx="3" fill="{yl}"/>
@@ -694,11 +702,58 @@ def svg_tablet(pid, body_hex, glow, label, kana="", line="pad", hz="120Hz", desi
 </svg>"""
 
 
-def _front_scene_phone(line, glow, hz, motif):
-    """スマホ正面ビューの画面内シーン(ライン/コラボ作品ごとに差し替え)。
+def _front_scene_phone(line, glow, hz, motif, scene=None):
+    """スマホ正面ビューの画面内シーン。ライン/コラボ作品/世代(scene)で差し替える。
+    scene: hud(現行HUD) / hud2(横バー型HUD) / classic(旧世代OS) /
+           home(標準ホーム) / home-lite(エントリー簡易ホーム)。
     画面領域: x54〜286, y41〜559(中心 x=170)。"""
     fps = hz.replace("Hz", "")
     fjp = "'Noto Sans JP',sans-serif"
+    if scene == "hud2":
+        # 一世代前のGAME SPACE: 左上に大きなfps+横長グラフ+下部トグル
+        bars = "".join(
+            f'<rect x="{66 + i * 20}" y="{318 - h}" width="12" height="{h}" rx="3" fill="{glow}" opacity="{0.85 - i * 0.055:.2f}"/>'
+            for i, h in enumerate((58, 74, 66, 82, 70, 88, 76, 62, 72, 58, 66)))
+        return f"""
+<text x="66" y="118" font-family="{fjp}" font-size="10" fill="#9c9cb0" letter-spacing="5">GAME SPACE</text>
+<text x="66" y="188" font-family="{fjp}" font-size="58" font-weight="900" fill="#ffffff">{fps}</text>
+<text x="66" y="212" font-family="{fjp}" font-size="10" fill="{glow}" letter-spacing="4">FPS ・ 安定率 99.1%</text>
+<path d="M62 318 H278" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1"/>
+{bars}
+<text x="66" y="352" font-family="{fjp}" font-size="9" fill="#9c9cb0" letter-spacing="2">フレームタイム(直近60秒)</text>
+<rect x="66" y="392" width="204" height="44" rx="12" fill="#ffffff" opacity="0.07"/>
+<text x="82" y="412" font-family="{fjp}" font-size="9.5" font-weight="700" fill="#ececf2">冷却ブースト ON</text>
+<text x="82" y="428" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">旋風ファン 22,000rpm</text>
+<rect x="66" y="452" width="204" height="44" rx="12" fill="#ffffff" opacity="0.05"/>
+<text x="82" y="472" font-family="{fjp}" font-size="9.5" font-weight="700" fill="#ececf2">通知ブロック ON</text>
+<text x="82" y="488" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">プレイ中の割り込みを遮断</text>"""
+    if scene == "classic":
+        # 旧世代 SUZAKU OS: 角丸スクエアのfpsタイルと簡素なリスト
+        rows = "".join(
+            f'<rect x="66" y="{330 + i * 52}" width="204" height="40" rx="10" fill="#ffffff" opacity="0.06"/>'
+            f'<text x="82" y="{355 + i * 52}" font-family="{fjp}" font-size="10" font-weight="700" fill="#ececf2">{t}</text>'
+            f'<text x="254" y="{355 + i * 52}" font-family="{fjp}" font-size="10" fill="{glow}" text-anchor="end">{v}</text>'
+            for i, (t, v) in enumerate((("パフォーマンス", "高"), ("冷却ファン", "自動"), ("録画", "OFF"))))
+        return f"""
+<text x="170" y="128" font-family="{fjp}" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="5">GAME SPACE</text>
+<rect x="102" y="156" width="136" height="136" rx="26" fill="#ffffff" opacity="0.07"/>
+<rect x="102" y="156" width="136" height="136" rx="26" fill="none" stroke="{glow}" stroke-opacity="0.6" stroke-width="2"/>
+<text x="170" y="232" font-family="{fjp}" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle">{fps}</text>
+<text x="170" y="258" font-family="{fjp}" font-size="9" fill="{glow}" text-anchor="middle" letter-spacing="4">FPS</text>
+{rows}"""
+    if scene == "home-lite":
+        # エントリー: 時計+電池だけの簡素なホーム
+        dock = "".join(
+            f'<rect x="{104 + i * 46}" y="472" width="38" height="38" rx="11" fill="{c}" opacity="{o}"/>'
+            for i, (c, o) in enumerate(((glow, 0.85), ("#ffffff", 0.13), ("#ffffff", 0.1))))
+        return f"""
+<text x="170" y="196" font-family="{fjp}" font-size="52" font-weight="300" fill="#ffffff" text-anchor="middle" letter-spacing="2">12:34</text>
+<text x="170" y="222" font-family="{fjp}" font-size="11" fill="#b9b9c8" text-anchor="middle" letter-spacing="2">7月10日(金)</text>
+<rect x="70" y="262" width="200" height="58" rx="15" fill="#ffffff" opacity="0.06"/>
+<path d="M96 302 c-3.5 -12 4 -19 8 -26 c4 7 11.5 14 8 26 a8 8 0 0 1 -16 0z" fill="none" stroke="{glow}" stroke-width="2"/>
+<text x="122" y="288" font-family="{fjp}" font-size="10" font-weight="700" fill="#ececf2">バッテリー 86%</text>
+<text x="122" y="305" font-family="{fjp}" font-size="8.5" fill="#9c9cb0">省電力モード ON</text>
+{dock}"""
     if motif == "genshin":
         # 七元素ホイール(七耀 SHICHIYO)
         cols = ("#74c2a8", "#d8b45c", "#a68cc8", "#9ac546", "#4cc2f1", "#ef7938", "#9fd6e3")
@@ -831,8 +886,13 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
     ライン/コラボ作品ごとに画面内シーンを差し替えて差別化する。
     旗艦系はアンダーディスプレイカメラのためパンチホール無し。"""
     gid = "f" + pid.replace("-", "")
+    d = design or {}
     dark2 = _shade(body_hex, -0.6)
-    punch = (design or {}).get("punch", line in ("tsubame", "lite"))
+    punch = d.get("punch", line in ("tsubame", "lite"))
+    # フレーム角丸は背面の筐体形状に合わせる(残響=角形モノリス等)
+    rx_out = d.get("front_rx", 47)
+    rx_in = max(6, rx_out - 5)
+    rx_scr = max(4, rx_out - 10)
     defs = f"""<defs>
 <linearGradient id="frame{gid}" x1="0" y1="0" x2="0" y2="1">
   <stop offset="0" stop-color="{_shade(body_hex, 0.55)}"/>
@@ -855,9 +915,9 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
   <feGaussianBlur stdDeviation="7"/>
 </filter>
 <filter id="fzf" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
-<clipPath id="clip{gid}"><rect x="54" y="41" width="232" height="518" rx="37"/></clipPath>
+<clipPath id="clip{gid}"><rect x="54" y="41" width="232" height="518" rx="{rx_scr}"/></clipPath>
 </defs>"""
-    scene = _front_scene_phone(line, glow, hz, motif)
+    scene = _front_scene_phone(line, glow, hz, motif, d.get("scene"))
     status = f"""
 <text x="70" y="72" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#e6e6ee">12:34</text>
 {"".join(f'<rect x="{222 + i * 6}" y="{70 - i * 2.5}" width="3.5" height="{5 + i * 2.5}" rx="1" fill="#c9c9d6" opacity="{0.55 + i * 0.15}"/>' for i in range(3))}
@@ -867,9 +927,9 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 600" role="img" aria-label="{label} 正面">
 {defs}
 <ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.4" filter="url(#soft{gid})"/>
-<rect x="43" y="30" width="254" height="540" rx="47" fill="url(#frame{gid})"/>
-<rect x="48" y="35" width="244" height="530" rx="42" fill="#06060a"/>
-<rect x="54" y="41" width="232" height="518" rx="37" fill="url(#scr{gid})"/>
+<rect x="43" y="30" width="254" height="540" rx="{rx_out}" fill="url(#frame{gid})"/>
+<rect x="48" y="35" width="244" height="530" rx="{rx_in}" fill="#06060a"/>
+<rect x="54" y="41" width="232" height="518" rx="{rx_scr}" fill="url(#scr{gid})"/>
 <g clip-path="url(#clip{gid})">
 <ellipse cx="170" cy="210" rx="180" ry="200" fill="url(#flare{gid})"/>
 {scene}
@@ -878,7 +938,7 @@ def svg_phone_front(pid, body_hex, glow, label, line="suzaku", hz="144Hz", motif
 <rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
 <path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="36.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="{rx_scr}" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="{dark2}"/>
 <rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="{dark2}"/>
 </svg>"""
@@ -1301,17 +1361,22 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
         blades = "".join(
             f'<path d="M240 168 q30 -32 68 -19" fill="none" stroke="{g}" stroke-width="9" stroke-linecap="round" opacity="0.92" transform="rotate({i * 51.4:.0f} 240 168)"/>'
             for i in range(7))
-        body = f"""{shadow(240, 322, 110)}
-<path d="M150 96 h180 a26 26 0 0 1 26 26 v150 a26 26 0 0 1 -26 26 h-180 a26 26 0 0 1 -26 -26 v-150 a26 26 0 0 1 26 -26z" fill="url(#mb{u})"/>
-<path d="M150 96 h180 a26 26 0 0 1 26 26 v150 a26 26 0 0 1 -26 26 h-180 a26 26 0 0 1 -26 -26 v-150 a26 26 0 0 1 26 -26z" fill="url(#mt{u})"/>
-<path d="M104 140 q-26 10 -26 34 M376 140 q26 10 26 34" fill="none" stroke="{bd2}" stroke-width="10" stroke-linecap="round"/>
-<circle cx="240" cy="168" r="84" fill="#07070c" stroke="{g}" stroke-width="2.6"/>
+        body = f"""{shadow(240, 310, 120)}
+<rect x="196" y="60" width="88" height="216" rx="14" fill="{_shade(b, -0.35)}" opacity="0.55"/>
+<path d="M158 96 h-26 a12 12 0 0 0 -12 12 v14 h14 v-12 a4 4 0 0 1 4 -4 h20 z" fill="url(#mb{u})" stroke="{_shade(b, 0.25)}" stroke-width="1.2"/>
+<path d="M322 96 h26 a12 12 0 0 1 12 12 v14 h-14 v-12 a4 4 0 0 0 -4 -4 h-20 z" fill="url(#mb{u})" stroke="{_shade(b, 0.25)}" stroke-width="1.2"/>
+<path d="M158 240 h-26 a12 12 0 0 1 -12 -12 v-14 h14 v12 a4 4 0 0 0 4 4 h20 z" fill="url(#mb{u})" stroke="{_shade(b, 0.25)}" stroke-width="1.2"/>
+<path d="M322 240 h26 a12 12 0 0 0 12 -12 v-14 h-14 v12 a4 4 0 0 1 -4 4 h-20 z" fill="url(#mb{u})" stroke="{_shade(b, 0.25)}" stroke-width="1.2"/>
+<rect x="148" y="76" width="184" height="184" rx="30" fill="url(#mb{u})"/>
+<rect x="148" y="76" width="184" height="184" rx="30" fill="url(#mt{u})"/>
+<rect x="149.4" y="77.4" width="181.2" height="181.2" rx="28.6" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1.6"/>
+<circle cx="240" cy="168" r="76" fill="#07070c" stroke="{g}" stroke-width="2.6"/>
 {blades}
-<circle cx="240" cy="168" r="22" fill="#0d0d16" stroke="{g}" stroke-width="2.6"/>
-<circle cx="240" cy="168" r="7" fill="{g}"/>
-{"".join(f'<circle cx="{c}" cy="82" r="3" fill="#bfe8ff" opacity="0.8"/>' for c in (196, 240, 284))}
-<rect x="214" y="300" width="52" height="12" rx="6" fill="{bd2}"/>
-<text x="240" y="340" font-family="sans-serif" font-size="10" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="3">PELTIER -28℃</text>"""
+<circle cx="240" cy="168" r="20" fill="#0d0d16" stroke="{g}" stroke-width="2.4"/>
+<circle cx="240" cy="168" r="6" fill="{g}"/>
+<rect x="228" y="260" width="24" height="14" rx="4" fill="{_shade(b, -0.45)}" stroke="{_shade(b, 0.25)}" stroke-width="1.2"/>
+<path d="M240 274 v22 q0 10 12 10 h20" fill="none" stroke="{_shade(b, -0.4)}" stroke-width="5" stroke-linecap="round"/>
+<text x="240" y="326" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">PELTIER -28℃ ・ CLAMP MOUNT</text>"""
     elif kind == "grip":
         abxy = "".join(
             f'<circle cx="{352 + dx}" cy="{172 + dy}" r="8.5" fill="{c}"/>'
@@ -1328,31 +1393,37 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
 <circle cx="128" cy="172" r="30" fill="none" stroke="{g}" stroke-opacity="0.5" stroke-width="1.4"/>
 <circle cx="128" cy="172" r="13" fill="url(#gl{u})" stroke="{g}" stroke-width="1.6"/>
 {abxy}
-<rect x="98" y="108" width="52" height="12" rx="6" fill="{g}"/>
-<rect x="330" y="108" width="52" height="12" rx="6" fill="{g}"/>
+<path d="M98 128 v-10 a8 8 0 0 1 8 -8 h36 a8 8 0 0 1 8 8 v4" fill="{g}"/>
+<path d="M382 128 v-10 a8 8 0 0 0 -8 -8 h-36 a8 8 0 0 0 -8 8 v4" fill="{g}"/>
 <circle cx="222" cy="216" r="5" fill="{g}"/><circle cx="258" cy="216" r="5" fill="{g}" opacity="0.5"/>
-<text x="240" y="300" font-family="sans-serif" font-size="10" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="3">HALL EFFECT ・ 0.8ms</text>"""
+<text x="240" y="300" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">HALL EFFECT ・ 0.8ms</text>"""
     elif kind == "buds":
-        def bud(cx, flip):
-            s = -1 if flip else 1
-            return f"""
-<g transform="translate({cx} 0)">
-<path d="M0 132 a34 34 0 0 1 34 34 v10 a20 20 0 0 1 -40 0 z" fill="url(#mb{u})" transform="scale({s} 1)"/>
-<path d="M0 132 a34 34 0 0 1 34 34 v10 a20 20 0 0 1 -40 0 z" fill="url(#mt{u})" transform="scale({s} 1)"/>
-<rect x="{-8 if flip else -12}" y="176" width="20" height="58" rx="10" fill="url(#mb{u})"/>
-<rect x="{-8 if flip else -12}" y="176" width="20" height="58" rx="10" fill="url(#mt{u})"/>
-<circle cx="{s * 14}" cy="160" r="9" fill="url(#gl{u})" stroke="{g}" stroke-width="1.6"/>
-<circle cx="{-2 if flip else 2}" cy="226" r="3" fill="{g}"/>
-</g>"""
-        body = f"""{shadow(240, 306, 130)}
-<path d="M132 236 a108 62 0 0 1 216 0 v18 a108 46 0 0 1 -216 0 z" fill="url(#mb{u})"/>
-<path d="M132 236 a108 62 0 0 1 216 0 v18 a108 46 0 0 1 -216 0 z" fill="url(#mt{u})"/>
-<path d="M132 236 a108 62 0 0 1 216 0" fill="none" stroke="{_shade(b, 0.35)}" stroke-width="2"/>
-<rect x="216" y="252" width="48" height="7" rx="3.5" fill="{g}" opacity="0.9"/>
-{bud(186, False)}{bud(294, True)}
-<path d="M112 96 q-18 20 0 40 M96 82 q-30 34 0 68" fill="none" stroke="{g}" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-<path d="M368 96 q18 20 0 40 M384 82 q30 34 0 68" fill="none" stroke="{g}" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-<text x="240" y="340" font-family="sans-serif" font-size="10" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="3">38ms LOW LATENCY</text>"""
+        body = f"""{shadow(215, 296, 120)}
+<rect x="118" y="118" width="190" height="160" rx="34" fill="url(#mb{u})"/>
+<rect x="118" y="118" width="190" height="160" rx="34" fill="url(#mt{u})"/>
+<rect x="119.6" y="119.6" width="186.8" height="156.8" rx="32.4" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.6"/>
+<path d="M120 184 h186" stroke="#000000" stroke-opacity="0.5" stroke-width="3"/>
+<path d="M120 188 h186" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1.2"/>
+<rect x="186" y="112" width="54" height="10" rx="5" fill="{_shade(b, -0.35)}" stroke="{_shade(b, 0.25)}" stroke-width="1.2"/>
+<circle cx="213" cy="206" r="4" fill="{g}"/>
+<rect x="196" y="270" width="34" height="8" rx="4" fill="#000000" opacity="0.5"/>
+<text x="213" y="246" font-family="sans-serif" font-size="9" fill="{ink}" opacity="0.4" text-anchor="middle" letter-spacing="3">SUZAKU</text>
+<g transform="rotate(-14 352 172)">
+<circle cx="352" cy="172" r="24" fill="url(#mb{u})" stroke="{_shade(b, 0.32)}" stroke-width="1.6"/>
+<circle cx="352" cy="172" r="24" fill="url(#mt{u})"/>
+<rect x="342" y="190" width="19" height="52" rx="9" fill="url(#mb{u})" stroke="{_shade(b, 0.32)}" stroke-width="1.4"/>
+<rect x="342" y="190" width="19" height="52" rx="9" fill="url(#mt{u})"/>
+<rect x="345" y="228" width="13" height="4" rx="2" fill="{g}" opacity="0.9"/>
+<circle cx="352" cy="172" r="7" fill="{g}" opacity="0.55"/>
+</g>
+<g transform="rotate(62 402 268)">
+<circle cx="402" cy="268" r="24" fill="url(#mb{u})" stroke="{_shade(b, 0.32)}" stroke-width="1.6"/>
+<ellipse cx="402" cy="268" rx="15" ry="15" fill="{_shade(b, -0.4)}"/>
+<ellipse cx="402" cy="268" rx="9" ry="9" fill="#07070b" stroke="{_shade(b, 0.2)}" stroke-width="1"/>
+<rect x="392" y="286" width="19" height="52" rx="9" fill="url(#mb{u})" stroke="{_shade(b, 0.32)}" stroke-width="1.4"/>
+</g>
+<path d="M330 96 q-12 14 0 28 M348 84 q-20 24 0 48" fill="none" stroke="{g}" stroke-width="2.6" stroke-linecap="round" opacity="0.55"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">38ms LOW LATENCY ・ LDAC</text>"""
     elif kind == "charger":
         body = f"""{shadow(240, 292, 110)}
 <rect x="152" y="84" width="176" height="176" rx="34" fill="url(#mb{u})"/>
@@ -1362,35 +1433,148 @@ def svg_art(kind, glow="#e8442e", body_hex="#181820", motif=None):
 <rect x="192" y="260" width="16" height="34" rx="5" fill="url(#mt{u})" stroke="{bd2}" stroke-width="1"/>
 <rect x="272" y="260" width="16" height="34" rx="5" fill="url(#mt{u})" stroke="{bd2}" stroke-width="1"/>
 <rect x="222" y="176" width="36" height="14" rx="7" fill="#07070b" stroke="{g}" stroke-opacity="0.7" stroke-width="1.4" transform="translate(0 62)"/>
-<text x="240" y="330" font-family="sans-serif" font-size="12" font-weight="700" fill="{ink}" opacity="0.7" text-anchor="middle" letter-spacing="3">120W GaN</text>"""
+<text x="240" y="330" font-family="sans-serif" font-size="12" font-weight="700" fill="#e9e9f2" opacity="0.7" text-anchor="middle" letter-spacing="3">120W GaN</text>"""
     elif kind == "case":
         lattice = "".join(
-            f'<path d="M{200 + i * 22} 150 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="{g}" stroke-opacity="0.35" stroke-width="2"/>'
+            f'<path d="M{200 + i * 22} 168 l14 24 l-14 24 l-14 -24 z" fill="none" stroke="{g}" stroke-opacity="0.35" stroke-width="2"/>'
             for i in range(5))
         body = f"""{shadow(240, 322, 100)}
 <rect x="152" y="48" width="176" height="266" rx="32" fill="url(#mb{u})"/>
 <rect x="152" y="48" width="176" height="266" rx="32" fill="url(#mt{u})"/>
 <rect x="153.4" y="49.4" width="173.2" height="263.2" rx="30.6" fill="none" stroke="#ffffff" stroke-opacity="0.13" stroke-width="1.8"/>
-<rect x="170" y="64" width="140" height="96" rx="22" fill="{bd2}"/>
-{"".join(f'<circle cx="{198 + i * 42}" cy="100" r="16" fill="#0a0d13" stroke="{_shade(b, 0.35)}" stroke-width="1.6"/><circle cx="{198 + i * 42}" cy="100" r="10" fill="url(#gl{u})"/>' for i in range(3))}
+<rect x="170" y="64" width="118" height="92" rx="22" fill="#08080c"/>
+<rect x="170" y="64" width="118" height="92" rx="22" fill="none" stroke="{_shade(b, 0.4)}" stroke-width="3"/>
+<rect x="176" y="70" width="106" height="80" rx="17" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1.5"/>
+<text x="229" y="115" font-family="sans-serif" font-size="8" fill="#3c3c48" text-anchor="middle" letter-spacing="2">CAMERA CUTOUT</text>
 {lattice}
-<path d="M240 232 c-6 20 -25 29 -25 49 a25 25 0 0 0 50 0 c0 -20 -19 -29 -25 -49z" fill="none" stroke="{g}" stroke-width="2.8" stroke-linejoin="round"/>
-<rect x="326" y="120" width="6" height="42" rx="3" fill="{bd2}"/>
-<rect x="326" y="176" width="6" height="30" rx="3" fill="{bd2}"/>
-<text x="240" y="342" font-family="sans-serif" font-size="10" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="3">MIL-STD-810H</text>"""
+<path d="M240 236 c-6 20 -25 29 -25 49 a25 25 0 0 0 50 0 c0 -20 -19 -29 -25 -49z" fill="none" stroke="{g}" stroke-width="2.8" stroke-linejoin="round"/>
+<rect x="326" y="120" width="7" height="42" rx="3.5" fill="{_shade(b, 0.28)}"/>
+<rect x="326" y="176" width="7" height="30" rx="3.5" fill="{_shade(b, 0.28)}"/>
+<circle cx="163" cy="292" r="5" fill="#08080c" stroke="{_shade(b, 0.3)}" stroke-width="1.2"/>
+<text x="240" y="342" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">MIL-STD-810H ・ 1.8m DROP</text>"""
     elif kind == "dock":
-        body = f"""{shadow(240, 316, 150)}
-<path d="M120 296 L360 296 L332 176 L148 176 Z" fill="url(#mb{u})"/>
-<path d="M120 296 L360 296 L332 176 L148 176 Z" fill="url(#mt{u})"/>
-<rect x="108" y="292" width="264" height="20" rx="10" fill="{bd2}"/>
-{"".join(f'<rect x="{150 + i * 20}" y="298" width="10" height="8" rx="2" fill="#07070b"/>' for i in range(9))}
-<rect x="146" y="70" width="188" height="118" rx="14" fill="#0c0c14" stroke="{_shade(b, 0.3)}" stroke-width="2"/>
-<rect x="154" y="78" width="172" height="102" rx="9" fill="#07070b"/>
-<rect x="154" y="78" width="172" height="102" rx="9" fill="url(#ag{u})"/>
-<path d="M240 100 c-6 22 -28 31 -28 54 a28 28 0 0 0 56 0 c0 -23 -22 -32 -28 -54z" fill="none" stroke="{g}" stroke-width="3" stroke-linejoin="round"/>
-<rect x="196" y="196" width="88 " height="10" rx="5" fill="{bd2}"/>
-<circle cx="348" cy="248" r="5" fill="{g}"/>
-<text x="240" y="342" font-family="sans-serif" font-size="10" fill="{ink}" opacity="0.6" text-anchor="middle" letter-spacing="3">4K/120 ・ 80W</text>"""
+        body = f"""{shadow(240, 318, 140)}
+<rect x="196" y="64" width="120" height="222" rx="18" fill="#0c0c14" stroke="{_shade(b, 0.32)}" stroke-width="2" transform="rotate(-8 256 175)"/>
+<rect x="204" y="72" width="104" height="206" rx="12" fill="#07070b" transform="rotate(-8 256 175)"/>
+<rect x="204" y="72" width="104" height="206" rx="12" fill="url(#ag{u})" opacity="0.55" transform="rotate(-8 256 175)"/>
+<path d="M256 128 c-6 22 -28 31 -28 54 a28 28 0 0 0 56 0 c0 -23 -22 -32 -28 -54z" fill="none" stroke="{g}" stroke-width="3" stroke-linejoin="round" transform="rotate(-8 256 175)"/>
+<text x="256" y="238" font-family="sans-serif" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="2" transform="rotate(-8 256 175)">80W WIRELESS</text>
+<path d="M132 306 L354 306 L332 236 a16 16 0 0 0 -15 -11 L172 225 a16 16 0 0 0 -16 12 Z" fill="url(#mb{u})"/>
+<path d="M132 306 L354 306 L332 236 a16 16 0 0 0 -15 -11 L172 225 a16 16 0 0 0 -16 12 Z" fill="url(#mt{u})"/>
+<rect x="120" y="300" width="246" height="18" rx="9" fill="{_shade(b, -0.5)}"/>
+{"".join(f'<rect x="{170 + i * 26}" y="305" width="14" height="8" rx="2" fill="#07070b"/>' for i in range(6))}
+<circle cx="336" cy="264" r="4.5" fill="{g}"/>
+<text x="240" y="342" font-family="sans-serif" font-size="10" fill="#e9e9f2" opacity="0.6" text-anchor="middle" letter-spacing="3">4K/120 OUT ・ 80W DOCK</text>"""
+    elif kind == "clcase":
+        # コラボ専用ケース。motifごとに完全個別デザイン(端末の意匠を引き継ぐ)。
+        if motif == "genshin":
+            elems = ("#74c2a8", "#d8b45c", "#a68cc8", "#9ac546", "#4cc2f1", "#ef7938", "#9fd6e3")
+            dots = "".join(
+                f'<circle cx="{240 + 58 * math.cos(math.radians(-90 + i * 360 / 7)):.1f}" cy="{136 + 58 * math.sin(math.radians(-90 + i * 360 / 7)):.1f}" r="4.5" fill="{c}"/>'
+                for i, c in enumerate(elems))
+            body = f"""{shadow(240, 322, 92)}
+<rect x="162" y="48" width="156" height="272" rx="30" fill="url(#mb{u})"/>
+<rect x="162" y="48" width="156" height="272" rx="30" fill="url(#mt{u})"/>
+<rect x="163.4" y="49.4" width="153.2" height="269.2" rx="28.6" fill="none" stroke="#c9a24b" stroke-width="2"/>
+<circle cx="240" cy="136" r="46" fill="#0e0e12" stroke="#c9a24b" stroke-width="2.4"/>
+<circle cx="240" cy="136" r="58" fill="none" stroke="#c9a24b" stroke-opacity="0.5" stroke-width="1.2" stroke-dasharray="2 5"/>
+{dots}
+<path d="M240 216 c-4.5 16 -20 22 -20 39 a20 20 0 0 0 40 0 c0 -17 -15.5 -23 -20 -39z" fill="none" stroke="#c9a24b" stroke-width="2.2"/>
+<path d="M176 62 h-8 v8 M304 62 h8 v8 M176 306 h-8 v-8 M304 306 h8 v-8" fill="none" stroke="#c9a24b" stroke-width="2"/>
+<text x="240" y="340" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">SHICHIYO PORCELAIN CASE</text>"""
+        elif motif == "wuwa":
+            body = f"""{shadow(240, 322, 92)}
+<rect x="166" y="48" width="148" height="272" rx="10" fill="url(#mb{u})"/>
+<rect x="166" y="48" width="148" height="272" rx="10" fill="url(#mt{u})"/>
+<rect x="167.2" y="49.2" width="145.6" height="269.6" rx="9" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.4"/>
+<rect x="180" y="62" width="58" height="132" rx="10" fill="#0b0b0f" stroke="{_shade(b, 0.3)}" stroke-width="1.4"/>
+<path d="M226 232 v30 M246 232 v30 M226 262 a10 10 0 0 0 20 0" fill="none" stroke="{g}" stroke-opacity="0.8" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M188 216 l10 0 4 -12 6 24 6 -18 4 6 h12" fill="none" stroke="{g}" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" transform="translate(52 60)"/>
+<text x="240" y="340" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">ZANKYO MONOLITH CASE</text>"""
+        elif motif == "nte":
+            body = f"""{shadow(240, 322, 92)}
+<rect x="162" y="48" width="156" height="272" rx="26" fill="{_shade(b, -0.2)}" opacity="0.55"/>
+<rect x="162" y="48" width="156" height="272" rx="26" fill="url(#mt{u})" opacity="0.6"/>
+<rect x="163.4" y="49.4" width="153.2" height="269.2" rx="24.6" fill="none" stroke="{g}" stroke-width="2.2" filter="url(#fz{u})" opacity="0.8"/>
+<rect x="163.4" y="49.4" width="153.2" height="269.2" rx="24.6" fill="none" stroke="{g}" stroke-width="1.4"/>
+<rect x="176" y="62" width="128" height="74" rx="22" fill="#0b0b0f" stroke="{_shade(b, 0.35)}" stroke-width="1.4"/>
+<path d="M196 196 h34 a10 10 0 0 1 0 20 h-22 a10 10 0 0 0 0 20 h34" fill="none" stroke="{g}" stroke-width="3" stroke-linecap="round" filter="url(#fz{u})" opacity="0.7"/>
+<path d="M196 196 h34 a10 10 0 0 1 0 20 h-22 a10 10 0 0 0 0 20 h34" fill="none" stroke="{g}" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M262 208 l10 -12 v32 l10 -12" fill="none" stroke="#39d7f5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="240" y="340" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">YAKO CLEAR EL CASE</text>"""
+        else:  # endfield
+            ribs = "".join(f'<rect x="{178 + i * 26}" y="150" width="10" height="150" rx="4" fill="#000000" opacity="0.18"/>' for i in range(5))
+            body = f"""{shadow(240, 322, 96)}
+<rect x="158" y="44" width="164" height="280" rx="18" fill="url(#mb{u})"/>
+<rect x="158" y="44" width="164" height="280" rx="18" fill="url(#mt{u})"/>
+{ribs}
+<rect x="159.6" y="45.6" width="160.8" height="276.8" rx="16.4" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.6"/>
+<rect x="172" y="58" width="94" height="94" rx="14" fill="#0e0e0c" stroke="{_shade(b, 0.3)}" stroke-width="1.6"/>
+<path d="M158 70 l20 -20 h16 l-20 20 z" fill="{g}"/>
+<path d="M302 304 l20 20 h-16 l-20 -20 z" fill="{g}"/>
+{"".join(f'<circle cx="{x}" cy="{y}" r="3.4" fill="{_shade(b, -0.45)}" stroke="{_shade(b, 0.3)}" stroke-width="1"/>' for x, y in ((172, 60, ), (308, 60), (172, 310), (308, 310)))}
+<circle cx="296" cy="288" r="10" fill="none" stroke="{_shade(b, 0.35)}" stroke-width="4"/>
+<text x="240" y="196" font-family="'Oswald',sans-serif" font-size="11" font-weight="700" fill="{ink}" opacity="0.7" text-anchor="middle" letter-spacing="2">// ARMOR CASE</text>
+<text x="240" y="340" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">MIL-SPEC ・ LANYARD READY</text>"""
+    elif kind == "clbuds":
+        # コラボ専用ワイヤレスイヤホン。motifごとに完全個別デザイン。
+        if motif == "genshin":
+            elems = ("#74c2a8", "#d8b45c", "#a68cc8", "#9ac546", "#4cc2f1", "#ef7938", "#9fd6e3")
+            dots = "".join(
+                f'<circle cx="{212 + 46 * math.cos(math.radians(-90 + i * 360 / 7)):.1f}" cy="{186 + 46 * math.sin(math.radians(-90 + i * 360 / 7)):.1f}" r="3.6" fill="{c}"/>'
+                for i, c in enumerate(elems))
+            body = f"""{shadow(240, 296, 100)}
+<circle cx="212" cy="186" r="72" fill="url(#mb{u})"/>
+<circle cx="212" cy="186" r="72" fill="url(#mt{u})"/>
+<circle cx="212" cy="186" r="70.6" fill="none" stroke="#c9a24b" stroke-width="2"/>
+<circle cx="212" cy="186" r="46" fill="none" stroke="#c9a24b" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="2 4"/>
+{dots}
+<path d="M212 166 c-3.6 13 -16 18 -16 31 a16 16 0 0 0 32 0 c0 -13 -12.4 -18 -16 -31z" fill="none" stroke="#c9a24b" stroke-width="2"/>
+<ellipse cx="322" cy="150" rx="22" ry="26" fill="url(#mb{u})" stroke="#c9a24b" stroke-width="1.4"/>
+<rect x="314" y="170" width="14" height="42" rx="7" fill="url(#mb{u})" stroke="#c9a24b" stroke-width="1.2"/>
+<ellipse cx="352" cy="216" rx="22" ry="26" fill="url(#mb{u})" stroke="#c9a24b" stroke-width="1.4"/>
+<rect x="344" y="236" width="14" height="42" rx="7" fill="url(#mb{u})" stroke="#c9a24b" stroke-width="1.2"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">元素の音 ・ LDAC ・ 32H</text>"""
+        elif motif == "wuwa":
+            body = f"""{shadow(240, 292, 104)}
+<rect x="140" y="120" width="150" height="130" rx="12" fill="url(#mb{u})"/>
+<rect x="140" y="120" width="150" height="130" rx="12" fill="url(#mt{u})"/>
+<rect x="141.2" y="121.2" width="147.6" height="127.6" rx="11" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.2"/>
+<path d="M158 186 l12 0 5 -14 8 28 8 -20 5 6 h20" fill="none" stroke="{g}" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="272" cy="136" r="3" fill="{g}"/>
+<ellipse cx="322" cy="160" rx="20" ry="24" fill="url(#mb{u})" stroke="{_shade(b, 0.35)}" stroke-width="1.4"/>
+<path d="M318 178 v26 M326 178 v26 M318 204 a4 4 0 0 0 8 0" fill="none" stroke="{g}" stroke-opacity="0.8" stroke-width="1.8" stroke-linecap="round"/>
+<ellipse cx="360" cy="212" rx="20" ry="24" fill="url(#mb{u})" stroke="{_shade(b, 0.35)}" stroke-width="1.4"/>
+<path d="M356 230 v26 M364 230 v26 M356 256 a4 4 0 0 0 8 0" fill="none" stroke="{g}" stroke-opacity="0.8" stroke-width="1.8" stroke-linecap="round"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">残響の音叉ステム ・ 24bit</text>"""
+        elif motif == "nte":
+            body = f"""{shadow(240, 292, 104)}
+<rect x="146" y="128" width="150" height="116" rx="58" fill="{_shade(b, -0.15)}" opacity="0.6"/>
+<rect x="146" y="128" width="150" height="116" rx="58" fill="url(#mt{u})" opacity="0.6"/>
+<rect x="147.4" y="129.4" width="147.2" height="113.2" rx="56.6" fill="none" stroke="{g}" stroke-width="2" filter="url(#fz{u})" opacity="0.8"/>
+<rect x="147.4" y="129.4" width="147.2" height="113.2" rx="56.6" fill="none" stroke="{g}" stroke-width="1.3"/>
+<path d="M186 172 h22 a8 8 0 0 1 0 16 h-14 a8 8 0 0 0 0 16 h22" fill="none" stroke="{g}" stroke-width="2" stroke-linecap="round"/>
+<path d="M244 180 l8 -10 v26 l8 -10" fill="none" stroke="#39d7f5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="330" cy="164" rx="21" ry="25" fill="{_shade(b, -0.1)}" stroke="{g}" stroke-width="1.6"/>
+<circle cx="330" cy="158" r="6" fill="{g}" opacity="0.9"/>
+<ellipse cx="362" cy="220" rx="21" ry="25" fill="{_shade(b, -0.1)}" stroke="#39d7f5" stroke-width="1.6"/>
+<circle cx="362" cy="214" r="6" fill="#39d7f5" opacity="0.9"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">EL GLOW ・ 空間オーディオ</text>"""
+        else:  # endfield
+            body = f"""{shadow(240, 296, 104)}
+<rect x="136" y="116" width="156" height="140" rx="14" fill="url(#mb{u})"/>
+<rect x="136" y="116" width="156" height="140" rx="14" fill="url(#mt{u})"/>
+<rect x="137.4" y="117.4" width="153.2" height="137.2" rx="12.6" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.4"/>
+<path d="M136 128 l14 -14 h12 l-14 14 z" fill="{g}"/>
+{"".join(f'<rect x="{150 + i * 24}" y="132" width="9" height="108" rx="4" fill="#000000" opacity="0.16"/>' for i in range(5))}
+<rect x="152" y="226" width="70 " height="8" rx="3" fill="#2a2a22"/>
+<rect x="152" y="226" width="62" height="8" rx="3" fill="{g}"/>
+<circle cx="286" cy="132" r="9" fill="none" stroke="{_shade(b, 0.35)}" stroke-width="3.4"/>
+<ellipse cx="330" cy="168" rx="21" ry="25" fill="url(#mb{u})" stroke="{g}" stroke-width="1.6"/>
+<rect x="322" y="188" width="15" height="34" rx="7" fill="url(#mb{u})" stroke="{g}" stroke-width="1.2"/>
+<ellipse cx="366" cy="224" rx="21" ry="25" fill="url(#mb{u})" stroke="{g}" stroke-width="1.6"/>
+<rect x="358" y="244" width="15" height="34" rx="7" fill="url(#mb{u})" stroke="{g}" stroke-width="1.2"/>
+<text x="240" y="330" font-family="sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">// FIELD BUDS ・ IP57</text>"""
     elif kind == "powerbank":
         # コラボ・モバイルバッテリー。motif(作品slug)ごとにシルエットから別設計。
         if motif == "genshin":

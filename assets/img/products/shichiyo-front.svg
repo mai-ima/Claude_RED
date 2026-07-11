@@ -48,7 +48,7 @@
 <rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
 <path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="36.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="37" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="#5e5c56"/>
 <rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="#5e5c56"/>
 </svg>

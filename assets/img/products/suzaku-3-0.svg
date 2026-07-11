@@ -53,7 +53,7 @@
 <circle cx="110" cy="164" r="16" fill="url(#lenssuzaku30)"/>
 <circle cx="110" cy="164" r="6" fill="#04040a"/>
 <circle cx="104" cy="158" r="3.8" fill="#ffffff" opacity="0.55"/>
-<path d="M66 196 h44 l-13 13 h-44 z" fill="#e8442e" opacity="0.92"/><path d="M132 196 h44 l-13 13 h-44 z" fill="#e8442e" opacity="0.55"/>
+<path d="M66 282 h44 l-13 13 h-44 z" fill="#e8442e" opacity="0.92"/><path d="M132 282 h44 l-13 13 h-44 z" fill="#e8442e" opacity="0.55"/>
 
 <circle cx="170" cy="328" r="50" fill="#09090c"/>
 <circle cx="170" cy="328" r="50" fill="none" stroke="#e8442e" stroke-opacity="0.55" stroke-width="2"/>

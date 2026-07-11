@@ -21,12 +21,12 @@
   <feGaussianBlur stdDeviation="7"/>
 </filter>
 <filter id="fzf" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
-<clipPath id="clipfzankyo"><rect x="54" y="41" width="232" height="518" rx="37"/></clipPath>
+<clipPath id="clipfzankyo"><rect x="54" y="41" width="232" height="518" rx="6"/></clipPath>
 </defs>
 <ellipse cx="170" cy="577" rx="116" ry="13" fill="#000000" opacity="0.4" filter="url(#softfzankyo)"/>
-<rect x="43" y="30" width="254" height="540" rx="47" fill="url(#framefzankyo)"/>
-<rect x="48" y="35" width="244" height="530" rx="42" fill="#06060a"/>
-<rect x="54" y="41" width="232" height="518" rx="37" fill="url(#scrfzankyo)"/>
+<rect x="43" y="30" width="254" height="540" rx="16" fill="url(#framefzankyo)"/>
+<rect x="48" y="35" width="244" height="530" rx="11" fill="#06060a"/>
+<rect x="54" y="41" width="232" height="518" rx="6" fill="url(#scrfzankyo)"/>
 <g clip-path="url(#clipfzankyo)">
 <ellipse cx="170" cy="210" rx="180" ry="200" fill="url(#flarefzankyo)"/>
 
@@ -50,7 +50,7 @@
 <rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
 <path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="36.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="6" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="#050506"/>
 <rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="#050506"/>
 </svg>

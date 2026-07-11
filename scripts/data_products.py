@@ -1439,21 +1439,21 @@ ACCESSORIES = [
 # ==========================================================================
 _DESIGNS = {
     # スマートフォン(世代×ラインで全機種の背面を判別可能にする)
-    "suzaku-4":       {"cams": 2, "tele": True,  "plate": "band",   "fan": True,  "led": "slash3", "tex": "carbon"},
-    "suzaku-3":       {"cams": 2, "plate": "pill",   "fan": True,  "led": "slash2", "tex": "hairline"},
-    "suzaku-2":       {"cams": 2, "plate": "square", "fan": True,  "led": "dot",    "tex": "matte"},
-    "suzaku-one":     {"cams": 2, "plate": "circle", "fan": True,  "led": "none",   "tex": "gloss"},
-    "neo-3":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "slash1", "tex": "matte"},
-    "neo-2":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "dot",    "tex": "hairline"},
-    "neo":            {"cams": 1, "plate": "corner", "fan": True,  "led": "none",   "tex": "matte"},
+    "suzaku-4":       {"cams": 2, "tele": True,  "plate": "band",   "fan": True,  "led": "slash3", "tex": "carbon", "scene": "hud"},
+    "suzaku-3":       {"cams": 2, "plate": "pill",   "fan": True,  "led": "slash2", "tex": "hairline", "scene": "hud2"},
+    "suzaku-2":       {"cams": 2, "plate": "square", "fan": True,  "led": "dot",    "tex": "matte", "scene": "classic"},
+    "suzaku-one":     {"cams": 2, "plate": "circle", "fan": True,  "led": "none",   "tex": "gloss", "scene": "classic"},
+    "neo-3":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "slash1", "tex": "matte", "scene": "hud"},
+    "neo-2":          {"cams": 2, "plate": "diag",   "fan": True,  "led": "dot",    "tex": "hairline", "scene": "hud2"},
+    "neo":            {"cams": 1, "plate": "corner", "fan": True,  "led": "none",   "tex": "matte", "scene": "classic"},
     "tsubame-3":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "gloss"},
     "tsubame-2":      {"cams": 2, "plate": "corner", "fan": False, "led": "none",   "tex": "hairline"},
     "tsubame":        {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte"},
-    "tsubame-lite-2": {"cams": 1, "macro": True, "plate": "corner", "fan": False, "led": "none", "tex": "matte"},
-    "tsubame-lite":   {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte"},
+    "tsubame-lite-2": {"cams": 1, "macro": True, "plate": "corner", "fan": False, "led": "none", "tex": "matte", "scene": "home-lite"},
+    "tsubame-lite":   {"cams": 1, "plate": "corner", "fan": False, "led": "none",   "tex": "matte", "scene": "home-lite"},
     # コラボ4機種は完全専用描画(svg_art.py の _PHONE_CUSTOM)
     "shichiyo": {"custom": "shichiyo"},
-    "zankyo":   {"custom": "zankyo"},
+    "zankyo":   {"custom": "zankyo", "front_rx": 16},
     "yako":     {"custom": "yako"},
     "zensen":   {"custom": "zensen", "punch": True},
     # タブレット

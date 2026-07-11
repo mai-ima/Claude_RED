@@ -30,18 +30,18 @@
 <g clip-path="url(#clipfneo2)">
 <ellipse cx="170" cy="210" rx="180" ry="200" fill="url(#flarefneo2)"/>
 
-<text x="170" y="118" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#9c9cb0" text-anchor="middle" letter-spacing="6">GAME SPACE</text>
-<circle cx="170" cy="240" r="66" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="9"/>
-<circle cx="170" cy="240" r="66" fill="none" stroke="#ff8a3d" stroke-width="9" stroke-linecap="round"
-  stroke-dasharray="332 415" transform="rotate(-90 170 240)"/>
-<text x="170" y="252" font-family="'Noto Sans JP',sans-serif" font-size="46" font-weight="900" fill="#ffffff" text-anchor="middle">144</text>
-<text x="170" y="278" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#ff8a3d" text-anchor="middle" letter-spacing="5">FPS</text>
-<text x="170" y="344" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#9c9cb0" text-anchor="middle" letter-spacing="3">フレーム安定率 99.4%</text>
-<text x="70" y="392" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#9c9cb0">GPU</text><rect x="104" y="384" width="166" height="9" rx="3" fill="#ffffff" opacity="0.08"/><rect x="104" y="384" width="136" height="9" rx="3" fill="#ff8a3d" opacity="0.95"/><text x="70" y="426" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#9c9cb0">CPU</text><rect x="104" y="418" width="166" height="9" rx="3" fill="#ffffff" opacity="0.08"/><rect x="104" y="418" width="106" height="9" rx="3" fill="#ff8a3d" opacity="0.77"/><text x="70" y="460" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#9c9cb0">温度</text><rect x="104" y="452" width="166" height="9" rx="3" fill="#ffffff" opacity="0.08"/><rect x="104" y="452" width="63" height="9" rx="3" fill="#ff8a3d" opacity="0.59"/>
-<rect x="70" y="486" width="96" height="26" rx="13" fill="#ffffff" opacity="0.07"/>
-<text x="118" y="503" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">Lトリガー ON</text>
-<rect x="174" y="486" width="96" height="26" rx="13" fill="#ffffff" opacity="0.07"/>
-<text x="222" y="503" font-family="'Noto Sans JP',sans-serif" font-size="9" font-weight="700" fill="#ececf2" text-anchor="middle" letter-spacing="1">Rトリガー ON</text>
+<text x="66" y="118" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#9c9cb0" letter-spacing="5">GAME SPACE</text>
+<text x="66" y="188" font-family="'Noto Sans JP',sans-serif" font-size="58" font-weight="900" fill="#ffffff">144</text>
+<text x="66" y="212" font-family="'Noto Sans JP',sans-serif" font-size="10" fill="#ff8a3d" letter-spacing="4">FPS ・ 安定率 99.1%</text>
+<path d="M62 318 H278" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1"/>
+<rect x="66" y="260" width="12" height="58" rx="3" fill="#ff8a3d" opacity="0.85"/><rect x="86" y="244" width="12" height="74" rx="3" fill="#ff8a3d" opacity="0.79"/><rect x="106" y="252" width="12" height="66" rx="3" fill="#ff8a3d" opacity="0.74"/><rect x="126" y="236" width="12" height="82" rx="3" fill="#ff8a3d" opacity="0.68"/><rect x="146" y="248" width="12" height="70" rx="3" fill="#ff8a3d" opacity="0.63"/><rect x="166" y="230" width="12" height="88" rx="3" fill="#ff8a3d" opacity="0.57"/><rect x="186" y="242" width="12" height="76" rx="3" fill="#ff8a3d" opacity="0.52"/><rect x="206" y="256" width="12" height="62" rx="3" fill="#ff8a3d" opacity="0.46"/><rect x="226" y="246" width="12" height="72" rx="3" fill="#ff8a3d" opacity="0.41"/><rect x="246" y="260" width="12" height="58" rx="3" fill="#ff8a3d" opacity="0.35"/><rect x="266" y="252" width="12" height="66" rx="3" fill="#ff8a3d" opacity="0.30"/>
+<text x="66" y="352" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#9c9cb0" letter-spacing="2">フレームタイム(直近60秒)</text>
+<rect x="66" y="392" width="204" height="44" rx="12" fill="#ffffff" opacity="0.07"/>
+<text x="82" y="412" font-family="'Noto Sans JP',sans-serif" font-size="9.5" font-weight="700" fill="#ececf2">冷却ブースト ON</text>
+<text x="82" y="428" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#9c9cb0">旋風ファン 22,000rpm</text>
+<rect x="66" y="452" width="204" height="44" rx="12" fill="#ffffff" opacity="0.05"/>
+<text x="82" y="472" font-family="'Noto Sans JP',sans-serif" font-size="9.5" font-weight="700" fill="#ececf2">通知ブロック ON</text>
+<text x="82" y="488" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#9c9cb0">プレイ中の割り込みを遮断</text>
 
 <text x="70" y="72" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#e6e6ee">12:34</text>
 <rect x="222" y="70.0" width="3.5" height="5.0" rx="1" fill="#c9c9d6" opacity="0.55"/><rect x="228" y="67.5" width="3.5" height="7.5" rx="1" fill="#c9c9d6" opacity="0.7000000000000001"/><rect x="234" y="65.0" width="3.5" height="10.0" rx="1" fill="#c9c9d6" opacity="0.8500000000000001"/>
@@ -52,7 +52,7 @@
 <rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
 <path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="36.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="37" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="#09090c"/>
 <rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="#09090c"/>
 </svg>

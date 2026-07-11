@@ -53,7 +53,7 @@
 <circle cx="186" cy="116" r="13" fill="url(#lensneo30)"/>
 <circle cx="186" cy="116" r="5" fill="#04040a"/>
 <circle cx="181" cy="111" r="3.1" fill="#ffffff" opacity="0.55"/>
-<path d="M66 196 h44 l-13 13 h-44 z" fill="#ff8a3d" opacity="0.92"/>
+<path d="M66 194 h44 l-13 13 h-44 z" fill="#ff8a3d" opacity="0.92"/>
 
 <circle cx="170" cy="328" r="50" fill="#09090c"/>
 <circle cx="170" cy="328" r="50" fill="none" stroke="#ff8a3d" stroke-opacity="0.55" stroke-width="2"/>

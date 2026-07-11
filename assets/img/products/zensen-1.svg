@@ -42,8 +42,8 @@
 <circle cx="159" cy="95" r="6" fill="url(#lenszensen1)"/>
 <text x="159" y="76" font-family="ui-monospace,monospace" font-size="7" fill="#1c1c26" opacity="0.6" text-anchor="middle">ToF</text>
 <circle cx="96" cy="156" r="5" fill="#f4efdf" opacity="0.9"/>
-<rect x="212" y="70" width="62" height="30" rx="6" fill="url(#hzzensen1)" opacity="0.95"/>
-<rect x="212" y="70" width="62" height="30" rx="6" fill="none" stroke="#c6b458" stroke-width="1.2"/>
+<rect x="206" y="78" width="56" height="26" rx="5" fill="url(#hzzensen1)" opacity="0.95"/>
+<rect x="206" y="78" width="56" height="26" rx="5" fill="none" stroke="#c6b458" stroke-width="1.2"/>
 <rect x="210" y="128" width="66" height="40" rx="8" fill="#101010" stroke="#cab963" stroke-width="1.4"/>
 <rect x="216" y="146" width="54" height="8" rx="3" fill="#2a2a22"/>
 <rect x="216" y="146" width="50" height="8" rx="3" fill="#f2d800"/>

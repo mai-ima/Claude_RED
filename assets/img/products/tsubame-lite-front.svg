@@ -30,18 +30,13 @@
 <g clip-path="url(#clipftsubamelite)">
 <ellipse cx="170" cy="210" rx="180" ry="200" fill="url(#flareftsubamelite)"/>
 
-<text x="170" y="172" font-family="'Noto Sans JP',sans-serif" font-size="52" font-weight="300" fill="#ffffff" text-anchor="middle" letter-spacing="2">12:34</text>
-<text x="170" y="198" font-family="'Noto Sans JP',sans-serif" font-size="11" fill="#b9b9c8" text-anchor="middle" letter-spacing="2">7月10日(金)</text>
-<rect x="70" y="232" width="200" height="66" rx="16" fill="#ffffff" opacity="0.07"/>
-<circle cx="106" cy="265" r="15" fill="none" stroke="#f2c14e" stroke-width="2.5"/>
-<path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(0 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(45 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(90 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(135 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(180 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(225 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(270 106 265)"/><path d="M106 243 v-6" stroke="#f2c14e" stroke-width="2.5" stroke-linecap="round" transform="rotate(315 106 265)"/>
-<text x="136" y="261" font-family="'Noto Sans JP',sans-serif" font-size="15" font-weight="800" fill="#ffffff">24℃</text>
-<text x="136" y="281" font-family="'Noto Sans JP',sans-serif" font-size="9.5" fill="#b9b9c8">東京 ・ 晴れ</text>
-<rect x="70" y="312" width="200" height="52" rx="14" fill="#ffffff" opacity="0.05"/>
-<path d="M92 352 c-3.5 -12 4 -19 8 -26 c4 7 11.5 14 8 26 a8 8 0 0 1 -16 0z" fill="none" stroke="#38b6a5" stroke-width="2"/>
-<text x="118" y="336" font-family="'Noto Sans JP',sans-serif" font-size="9.5" font-weight="700" fill="#ececf2">バッテリー 82%</text>
-<text x="118" y="352" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#9c9cb0">あと1日と4時間</text>
-<rect x="82" y="472" width="38" height="38" rx="11" fill="#38b6a5" opacity="0.85"/><rect x="128" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.14"/><rect x="174" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.11"/><rect x="220" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.14"/>
+<text x="170" y="196" font-family="'Noto Sans JP',sans-serif" font-size="52" font-weight="300" fill="#ffffff" text-anchor="middle" letter-spacing="2">12:34</text>
+<text x="170" y="222" font-family="'Noto Sans JP',sans-serif" font-size="11" fill="#b9b9c8" text-anchor="middle" letter-spacing="2">7月10日(金)</text>
+<rect x="70" y="262" width="200" height="58" rx="15" fill="#ffffff" opacity="0.06"/>
+<path d="M96 302 c-3.5 -12 4 -19 8 -26 c4 7 11.5 14 8 26 a8 8 0 0 1 -16 0z" fill="none" stroke="#38b6a5" stroke-width="2"/>
+<text x="122" y="288" font-family="'Noto Sans JP',sans-serif" font-size="10" font-weight="700" fill="#ececf2">バッテリー 86%</text>
+<text x="122" y="305" font-family="'Noto Sans JP',sans-serif" font-size="8.5" fill="#9c9cb0">省電力モード ON</text>
+<rect x="104" y="472" width="38" height="38" rx="11" fill="#38b6a5" opacity="0.85"/><rect x="150" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.13"/><rect x="196" y="472" width="38" height="38" rx="11" fill="#ffffff" opacity="0.1"/>
 
 <text x="70" y="72" font-family="'Noto Sans JP',sans-serif" font-size="11" font-weight="700" fill="#e6e6ee">12:34</text>
 <rect x="222" y="70.0" width="3.5" height="5.0" rx="1" fill="#c9c9d6" opacity="0.55"/><rect x="228" y="67.5" width="3.5" height="7.5" rx="1" fill="#c9c9d6" opacity="0.7000000000000001"/><rect x="234" y="65.0" width="3.5" height="10.0" rx="1" fill="#c9c9d6" opacity="0.8500000000000001"/>
@@ -52,7 +47,7 @@
 <rect x="125" y="544" width="90" height="4.5" rx="2.25" fill="#ffffff" opacity="0.55"/>
 <path d="M54 41 L206 41 L84 559 L54 559 Z" fill="#ffffff" opacity="0.035"/>
 </g>
-<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="36.4" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
+<rect x="54.8" y="41.8" width="230.4" height="516.4" rx="37" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.4"/>
 <rect x="292.5" y="140" width="5" height="46" rx="2.5" fill="#5e5e5a"/>
 <rect x="292.5" y="200" width="5" height="70" rx="2.5" fill="#5e5e5a"/>
 </svg>

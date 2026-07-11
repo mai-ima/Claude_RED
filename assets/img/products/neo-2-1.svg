@@ -52,7 +52,7 @@
 <circle cx="186" cy="116" r="13" fill="url(#lensneo21)"/>
 <circle cx="186" cy="116" r="5" fill="#04040a"/>
 <circle cx="181" cy="111" r="3.1" fill="#ffffff" opacity="0.55"/>
-<circle cx="92" cy="202" r="5" fill="#ff8a3d" opacity="0.9"/><circle cx="118" cy="202" r="5" fill="#ff8a3d" opacity="0.62"/><circle cx="144" cy="202" r="5" fill="#ff8a3d" opacity="0.33999999999999997"/>
+<circle cx="92" cy="200" r="5" fill="#ff8a3d" opacity="0.9"/><circle cx="118" cy="200" r="5" fill="#ff8a3d" opacity="0.62"/><circle cx="144" cy="200" r="5" fill="#ff8a3d" opacity="0.33999999999999997"/>
 
 <circle cx="170" cy="328" r="50" fill="#171b22"/>
 <circle cx="170" cy="328" r="50" fill="none" stroke="#ff8a3d" stroke-opacity="0.55" stroke-width="2"/>

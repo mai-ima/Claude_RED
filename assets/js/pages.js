@@ -174,22 +174,62 @@
     }
     var index = buildIndex();
 
+    /* 表記ゆれ正規化: NFKC(全角英数→半角等)+ カタカナ→ひらがな折りたたみ。
+       「スザク」「suzaku」「SUZAKU」等を同一視するための共通形。 */
+    function szNorm(s) {
+      return String(s).normalize("NFKC").toLowerCase().replace(/[ァ-ヶ]/g, function (ch) {
+        return String.fromCharCode(ch.charCodeAt(0) - 0x60);
+      });
+    }
+    /* エイリアス辞書(同義語リング)。各要素は szNorm 済み表記で書く。
+       かな⇔漢字⇔ラテンの橋渡し用(カナ⇔かなは szNorm が吸収する)。 */
+    var ALIASES = [
+      ["すざく", "朱雀", "suzaku"],
+      ["らい", "雷", "rai"],
+      ["つばめ", "燕", "tsubame"],
+      ["ねお", "neo"],
+      ["しちよう", "七耀", "shichiyo"],
+      ["ざんきょう", "残響", "zankyo"],
+      ["やこう", "夜行", "yako"],
+      ["ぜんせん", "前線", "zensen"],
+      ["げんしん", "原神", "genshin"],
+      ["めいちょう", "鳴潮", "wuwa"],
+      ["えぬてぃーいー", "nte"],
+      ["えんどふぃーるど", "endfield", "エンドフィールド"],
+      ["でんち", "電池", "ばってりー"],
+      ["れいきゃく", "冷却"],
+      ["いやほん", "イヤホン", "buds"],
+      ["けーす", "ケース", "case"]
+    ].map(function (g) { return g.map(szNorm); });
+    function variantsOf(t) {
+      var out = [t];
+      ALIASES.forEach(function (g) {
+        if (g.indexOf(t) !== -1) {
+          g.forEach(function (v) { if (out.indexOf(v) === -1) out.push(v); });
+        }
+      });
+      return out;
+    }
+
     function doSearch(q) {
-      q = q.trim().toLowerCase();
+      q = szNorm(q.trim());
       var info = $("#searchInfo");
       if (!q) {
         searchResults.innerHTML = "";
         if (info) info.textContent = "キーワードを入力してください(例: SUZAKU 4、冷却、修理、保証)。";
         return;
       }
-      var terms = q.split(/\s+/);
+      var terms = q.split(/\s+/).map(variantsOf);
       var hits = index.map(function (item) {
-        var hay = (item.title + " " + item.text).toLowerCase();
+        var hay = szNorm(item.title + " " + item.text);
+        var title = szNorm(item.title);
         var score = 0;
-        var ok = terms.every(function (t) { return hay.indexOf(t) !== -1; });
+        var ok = terms.every(function (vs) {
+          return vs.some(function (v) { return hay.indexOf(v) !== -1; });
+        });
         if (!ok) return null;
-        terms.forEach(function (t) {
-          if (item.title.toLowerCase().indexOf(t) !== -1) score += 3;
+        terms.forEach(function (vs) {
+          if (vs.some(function (v) { return title.indexOf(v) !== -1; })) score += 3;
           score += 1;
         });
         return { item: item, score: score };

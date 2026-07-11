@@ -1312,6 +1312,35 @@ body.drawer-open .cookie-banner {
 
 .buy-media img { max-height: 420px; width: auto; }
 
+.buy-media { position: relative; }
+
+.buy-view {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 14px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.buy-view__btn {
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.buy-view__btn.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+
 .buy-price {
   font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem);
   font-weight: 900;

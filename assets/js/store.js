@@ -79,20 +79,45 @@
       var r = buyBox.querySelector("input[name=storage]:checked");
       return r ? parseInt(r.value, 10) : 0;
     }
+    var buyView = "back"; // 背面⇔正面トグル(正面はカラー共通の1枚)
     function refresh() {
       if (!p) return;
       var img = $("#buyImage");
-      if (img) img.src = productImg(pid, colorIdx);
+      if (img) {
+        if (buyView === "front") {
+          var fb = buyBox.querySelector("[data-buyview=front]");
+          img.src = fb ? fb.getAttribute("data-front-src") : productImg(pid, colorIdx);
+        } else {
+          img.src = productImg(pid, colorIdx);
+        }
+      }
       var cn = $("#colorName");
       if (cn && p.colors[colorIdx]) cn.textContent = p.colors[colorIdx].name;
       var priceEl = $("#buyPrice");
       if (priceEl) priceEl.textContent = yen(unitPrice(p, storageIdx()));
     }
+    $$("[data-buyview]", buyBox).forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        buyView = btn.getAttribute("data-buyview");
+        $$("[data-buyview]", buyBox).forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        refresh();
+      });
+    });
     $$(".swatch", buyBox).forEach(function (sw) {
       sw.addEventListener("click", function () {
         $$(".swatch", buyBox).forEach(function (s) { s.classList.remove("is-active"); });
         sw.classList.add("is-active");
         colorIdx = parseInt(sw.getAttribute("data-color-index"), 10);
+        buyView = "back"; // カラー選択時は背面に戻して色を見せる
+        $$("[data-buyview]", buyBox).forEach(function (b) {
+          var on = b.getAttribute("data-buyview") === "back";
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
         refresh();
       });
     });
@@ -543,7 +568,9 @@
         return '<th scope="col"><a href="' + p.url + '" style="color:var(--accent)">' + p.name + "</a></th>";
       }).join("") + "</tr>";
       var imgs = "<tr><th></th>" + chosen.map(function (p) {
-        return '<td><img src="' + p.img + '" alt="' + p.name + '" style="max-height:150px;margin-inline:auto"></td>';
+        var v = (window.SZ && window.SZ.assetV) ? "?v=" + window.SZ.assetV : "";
+        var src = "/assets/img/products/" + p.id + "-front.svg" + v; // 正面ビューで画面差を見せる
+        return '<td><img src="' + src + '" alt="' + p.name + ' 正面" style="max-height:150px;margin-inline:auto"></td>';
       }).join("") + "</tr>";
       var rows = ROWS.map(function (key) {
         return '<tr><th scope="row">' + key + "</th>" + chosen.map(function (p) {

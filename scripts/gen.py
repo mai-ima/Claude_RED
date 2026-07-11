@@ -1078,7 +1078,13 @@ def build_product_page(p):
 <section class="section--sm" id="buy">
   <div class="container">
     <div class="buy-grid" data-product="{p['id']}">
-      <div class="buy-media reveal-l"><img id="buyImage" src="{pimg(p['id'])}" alt="{esc(p['name'])}" width="360" height="640"></div>
+      <div class="buy-media reveal-l">
+        <img id="buyImage" src="{pimg(p['id'])}" alt="{esc(p['name'])}" width="360" height="640">
+        {f'''<div class="buy-view" role="group" aria-label="表示切替">
+          <button type="button" class="buy-view__btn is-active" data-buyview="back" aria-pressed="true">背面</button>
+          <button type="button" class="buy-view__btn" data-buyview="front" data-front-src="{pimg_front(p['id'])}" aria-pressed="false">正面</button>
+        </div>''' if is_device else ''}
+      </div>
       <div class="stack reveal-r">
         <p class="eyebrow">{line['label']}</p>
         <h2 class="t-h3">{esc(p['name'])} を構成する</h2>
@@ -3061,6 +3067,45 @@ def history_timeline_html():
     return "".join(items)
 
 
+def faq_list_html():
+    """FAQ全件をサーバー描画(SEO・no-JS対応)。マークアップは pages.js の
+    renderFaq と同一形にし、JS有効時はフィルタ操作でそのまま再描画される。"""
+    items = "".join(
+        f'<div class="accordion__item"><button class="accordion__q" aria-expanded="false">'
+        f'<span><span class="badge" style="margin-right:10px">{esc(f["cat"])}</span>{esc(f["q"])}</span></button>'
+        f'<div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">{f["a"]}</div></div></div></div>'
+        for f in FAQ)
+    return f'<div class="accordion">{items}</div>'
+
+
+def news_list_html():
+    """ニュース一覧をサーバー描画。JS有効時は年・カテゴリフィルタで再描画される。"""
+    items = sorted(NEWS, key=lambda n: n["date"], reverse=True)
+    return "".join(
+        f'<a class="card card--hover" href="/news/{n["id"]}/">'
+        f'<p class="t-micro t-faint">{n["date"].replace("-", ".")} <span class="badge" style="margin-left:8px">{esc(n["cat"])}</span></p>'
+        f'<h2 class="t-h4">{esc(n["title"])}</h2>'
+        f'<p class="t-small t-soft">{esc(n["excerpt"])}</p>'
+        f'<p class="link-arrow">読む</p></a>'
+        for n in items)
+
+
+def glossary_list_html():
+    """用語集をサーバー描画(読み順)。JS有効時はカテゴリ/検索で再描画される。"""
+    def slug(t):
+        return re.sub(r"[^0-9A-Za-z一-龠ぁ-んァ-ヶー]+", "-", t).lower()
+    cards = []
+    for t in sorted(GLOSSARY, key=lambda x: x["reading"]):
+        link = f'<div style="margin-top:10px"><a class="link-arrow" href="{esc(t["link"])}">関連ページを見る</a></div>' if t.get("link") else ""
+        cards.append(
+            f'<article class="card reveal" id="term-{slug(t["term"])}">'
+            f'<div class="spread" style="align-items:baseline;gap:10px"><h2 class="t-h4">{esc(t["term"])} '
+            f'<small class="t-faint" style="font-weight:400">{esc(t["reading"])}</small></h2>'
+            f'<span class="badge">{esc(t["cat"])}</span></div>'
+            f'<p class="t-soft t-small" style="margin-top:8px">{t["desc"]}</p>{link}</article>')
+    return "".join(cards)
+
+
 def build_fragments():
     if not SRC.exists():
         return
@@ -3074,6 +3119,12 @@ def build_fragments():
         # ビルド時プレースホルダ(データ駆動セクションのサーバー描画)
         if "<!--HISTORY_TIMELINE-->" in body:
             body = body.replace("<!--HISTORY_TIMELINE-->", history_timeline_html())
+        if "<!--FAQ_LIST-->" in body:
+            body = body.replace("<!--FAQ_LIST-->", faq_list_html())
+        if "<!--NEWS_LIST-->" in body:
+            body = body.replace("<!--NEWS_LIST-->", news_list_html())
+        if "<!--GLOSSARY_LIST-->" in body:
+            body = body.replace("<!--GLOSSARY_LIST-->", glossary_list_html())
         # 図版プレースホルダ <!--ART:kind:glow--> → svg_art 生成(手書き旧図版の一掃用)
         body = re.sub(
             r"<!--ART:([a-z-]+):(#[0-9a-fA-F]{6})-->",

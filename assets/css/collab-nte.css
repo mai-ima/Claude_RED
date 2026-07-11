@@ -355,3 +355,102 @@
 
 /* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
 .collab--nte:not(.cl-lp) .t-hero { font-family: "Archivo", "Noto Sans JP", sans-serif; font-style: italic; font-weight: 900; }
+
+/* ============ 追補セクション(夜景ラボ/看板カタログ/講座/鑑定書/スコア) ============ */
+.cl-lp.collab--nte .nt-lab__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.cl-lp.collab--nte .nt-lab__cell {
+  text-align: center; background: #1b1721; border: 1px solid rgba(255, 62, 165, 0.25);
+  border-radius: 14px; padding: 22px 12px; box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.4);
+}
+.cl-lp.collab--nte .nt-lab__cell b { font-size: 2.1rem; font-weight: 900; font-style: italic; color: var(--lc); text-shadow: 0 0 18px color-mix(in srgb, var(--lc) 60%, transparent); }
+.cl-lp.collab--nte .nt-lab__cell i { font-style: normal; color: var(--lc); margin-left: 2px; }
+.cl-lp.collab--nte .nt-lab__cell span { display: block; margin-top: 8px; font-size: 0.78rem; color: #b9aec8; }
+@media (max-width: 860px) { .cl-lp.collab--nte .nt-lab__grid { grid-template-columns: repeat(2, 1fr); } }
+.cl-lp.collab--nte .nt-expo { margin-top: 24px; background: #17121c; border: 1px solid rgba(255, 62, 165, 0.2); border-radius: 14px; padding: 22px; }
+.cl-lp.collab--nte .nt-expo__cap { font-size: 0.8rem; color: #b9aec8; margin-bottom: 16px; }
+.cl-lp.collab--nte .nt-expo__row { display: grid; grid-template-columns: 240px 1fr auto; gap: 12px; align-items: center; padding: 8px 0; }
+.cl-lp.collab--nte .nt-expo__row span { font-size: 0.82rem; color: #b9aec8; }
+.cl-lp.collab--nte .nt-expo__row i { display: block; height: 12px; border-radius: 6px; width: var(--w); background: #3a3344; }
+.cl-lp.collab--nte .nt-expo__row b { font-size: 0.8rem; color: #c8f24a; font-style: italic; }
+.cl-lp.collab--nte .nt-expo__row--hi i { background: linear-gradient(90deg, #ff3ea5, #c8f24a); box-shadow: 0 0 16px rgba(255, 62, 165, 0.5); }
+@media (max-width: 700px) { .cl-lp.collab--nte .nt-expo__row { grid-template-columns: 1fr; gap: 4px; } }
+
+.cl-lp.collab--nte .nt-signs__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.cl-lp.collab--nte .nt-sign { background: #0d0a11; border: 1px solid rgba(255, 62, 165, 0.2); border-radius: 14px; padding: 18px; }
+.cl-lp.collab--nte .nt-sign__frame {
+  display: grid; place-items: center; height: 96px; border-radius: 10px; background: #060409;
+  border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 12px; overflow: hidden;
+}
+.cl-lp.collab--nte .nt-sign__frame em {
+  font-style: italic; font-weight: 900; font-size: 1.5rem; letter-spacing: 0.2em; color: #ff3ea5;
+  text-shadow: 0 0 14px #ff3ea5, 0 0 40px rgba(255, 62, 165, 0.5);
+}
+.cl-lp.collab--nte .nt-sign p { font-size: 0.82rem; color: #b9aec8; line-height: 1.8; }
+.cl-lp.collab--nte .nt-sign--pulse em { animation: ntSignPulse 2.2s ease-in-out infinite; }
+@keyframes ntSignPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.cl-lp.collab--nte .nt-sign--beat em { animation: ntSignBeat 0.9s steps(2) infinite; color: #c8f24a; text-shadow: 0 0 14px #c8f24a; }
+@keyframes ntSignBeat { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.cl-lp.collab--nte .nt-sign--rain em { color: #3fb6ff; text-shadow: 0 0 14px #3fb6ff; animation: ntSignRain 1.6s linear infinite; }
+@keyframes ntSignRain { 0% { transform: translateY(-14px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
+.cl-lp.collab--nte .nt-sign--wave em { animation: ntSignWave 1.8s ease-in-out infinite; }
+@keyframes ntSignWave { 0%, 100% { transform: translateX(-12px); } 50% { transform: translateX(12px); } }
+.cl-lp.collab--nte .nt-sign--text em { color: #b18bff; text-shadow: 0 0 14px #b18bff; animation: ntSignPulse 3.4s steps(1) infinite; }
+.cl-lp.collab--nte .nt-sign--off em { color: #2c2733; text-shadow: none; }
+@media (max-width: 860px) { .cl-lp.collab--nte .nt-signs__grid { grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: reduce) { .cl-lp.collab--nte .nt-sign em { animation: none !important; } }
+
+.cl-lp.collab--nte .nt-lessons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.cl-lp.collab--nte .nt-lesson {
+  background: #1b1721; border: 1px solid rgba(200, 242, 74, 0.3); border-radius: 14px; padding: 24px 20px;
+  transform: rotate(-0.6deg);
+}
+.cl-lp.collab--nte .nt-lesson:nth-child(2) { transform: rotate(0.5deg); }
+.cl-lp.collab--nte .nt-lesson:nth-child(3) { transform: rotate(-0.3deg); }
+.cl-lp.collab--nte .nt-lesson__no {
+  display: inline-block; font-style: italic; font-weight: 900; font-size: 0.75rem; letter-spacing: 0.14em;
+  color: #0d0a11; background: #c8f24a; border-radius: 999px; padding: 4px 12px;
+}
+.cl-lp.collab--nte .nt-lesson h3 { font-size: 1.05rem; font-style: italic; color: #f4ecff; margin: 12px 0 10px; }
+.cl-lp.collab--nte .nt-lesson p { font-size: 0.85rem; color: #b9aec8; line-height: 1.9; }
+@media (max-width: 860px) { .cl-lp.collab--nte .nt-lessons { grid-template-columns: 1fr; } }
+
+.cl-lp.collab--nte .nt-cert__card {
+  max-width: 720px; background: #f4ecff; color: #221f26; border-radius: 14px; padding: 26px 28px;
+  transform: rotate(-0.8deg); box-shadow: 8px 10px 0 rgba(255, 62, 165, 0.35);
+}
+.cl-lp.collab--nte .nt-cert__head {
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  font-weight: 900; font-style: italic; font-size: 0.8rem; letter-spacing: 0.1em;
+  border-bottom: 2px solid #221f26; padding-bottom: 10px; margin-bottom: 6px;
+}
+.cl-lp.collab--nte .nt-cert__head span { color: #8a2352; }
+.cl-lp.collab--nte .nt-cert__row {
+  display: grid; grid-template-columns: 90px 1fr 52px; grid-template-rows: auto auto; column-gap: 12px;
+  align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(34, 31, 38, 0.3);
+}
+.cl-lp.collab--nte .nt-cert__row > span { font-weight: 800; font-size: 0.9rem; }
+.cl-lp.collab--nte .nt-cert__row i { display: block; height: 1px; background: repeating-linear-gradient(90deg, #221f26 0 4px, transparent 4px 8px); opacity: 0.4; }
+.cl-lp.collab--nte .nt-cert__rank {
+  grid-row: 1 / 3; font-style: italic; font-weight: 900; font-size: 1.7rem; text-align: center;
+  color: #fff; background: var(--rk); border-radius: 10px; padding: 4px 0;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.cl-lp.collab--nte .nt-cert__row small { grid-column: 1 / 3; font-size: 0.78rem; color: #5c5468; }
+.cl-lp.collab--nte .nt-cert__foot { margin-top: 14px; font-size: 0.9rem; font-weight: 700; }
+.cl-lp.collab--nte .nt-cert__foot b {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: #ff3ea5; color: #fff; font-style: italic; margin-right: 8px;
+}
+
+.cl-lp.collab--nte .nt-score__table { max-width: 780px; margin-bottom: 26px; }
+.cl-lp.collab--nte .nt-score__head, .cl-lp.collab--nte .nt-score__row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; align-items: baseline;
+  padding: 13px 6px; border-bottom: 1px solid rgba(255, 62, 165, 0.25);
+}
+.cl-lp.collab--nte .nt-score__head b { font-style: italic; font-weight: 900; font-size: 1.1rem; color: #ff3ea5; }
+.cl-lp.collab--nte .nt-score__head span { font-size: 0.85rem; color: #b9aec8; }
+.cl-lp.collab--nte .nt-score__k { font-size: 0.85rem; color: #b9aec8; }
+.cl-lp.collab--nte .nt-score__y { font-style: italic; font-weight: 900; font-size: 1.1rem; color: #f4ecff; }
+.cl-lp.collab--nte .nt-score__y.is-win { color: #c8f24a; text-shadow: 0 0 12px rgba(200, 242, 74, 0.4); }
+.cl-lp.collab--nte .nt-score__y.is-win::after { content: " ★"; font-size: 0.8rem; }
+.cl-lp.collab--nte .nt-score__s { font-size: 0.9rem; color: #8f8499; }

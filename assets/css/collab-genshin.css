@@ -350,3 +350,79 @@
 
 /* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
 .collab--genshin:not(.cl-lp) .t-hero { font-family: "Shippori Mincho", "Noto Sans JP", serif; }
+
+/* ============ 追補セクション(元素チューニング/紀行/実測/テーマ/箱) ============ */
+.cl-lp.collab--genshin .gs-tunes { display: grid; gap: 10px; }
+.cl-lp.collab--genshin .gs-tune {
+  display: grid; grid-template-columns: 64px 1fr 1fr 1fr; gap: 14px; align-items: center;
+  background: #fffdf6; border: 1px solid rgba(168, 132, 44, 0.3); border-radius: 12px;
+  padding: 14px 18px; border-left: 4px solid var(--el, #a8842c);
+}
+.cl-lp.collab--genshin .gs-tune__el {
+  font-family: "Shippori Mincho", serif; font-size: 1.7rem; font-weight: 800; color: var(--el);
+  display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--el);
+  border-radius: 50%; background: color-mix(in srgb, var(--el) 8%, #fff);
+}
+.cl-lp.collab--genshin .gs-tune small {
+  display: block; font-size: 0.68rem; letter-spacing: 0.14em; color: #a08c5a; margin-bottom: 3px;
+}
+.cl-lp.collab--genshin .gs-tune__tone, .cl-lp.collab--genshin .gs-tune__hap, .cl-lp.collab--genshin .gs-tune__ring { font-size: 0.92rem; color: #443c28; }
+.cl-lp.collab--genshin .gs-tuning__note { margin-top: 14px; font-size: 0.85rem; color: #85744a; text-align: center; }
+@media (max-width: 860px) {
+  .cl-lp.collab--genshin .gs-tune { grid-template-columns: 48px 1fr; }
+  .cl-lp.collab--genshin .gs-tune__el { width: 42px; height: 42px; font-size: 1.3rem; }
+}
+
+.cl-lp.collab--genshin .gs-journey__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.cl-lp.collab--genshin .gs-journey__ch {
+  position: relative; background: #fffdf6; border: 1px solid rgba(168, 132, 44, 0.35);
+  border-radius: 14px; padding: 30px 24px 26px; overflow: hidden;
+}
+.cl-lp.collab--genshin .gs-journey__ch::before {
+  content: ""; position: absolute; inset: 6px; border: 1px solid rgba(168, 132, 44, 0.2); border-radius: 10px; pointer-events: none;
+}
+.cl-lp.collab--genshin .gs-journey__no {
+  font-family: "Shippori Mincho", serif; font-size: 2.4rem; color: rgba(168, 132, 44, 0.55); line-height: 1;
+}
+.cl-lp.collab--genshin .gs-journey__ch h3 { font-family: "Shippori Mincho", serif; font-size: 1.15rem; margin: 10px 0 12px; color: #2c261a; }
+.cl-lp.collab--genshin .gs-journey__ch p { font-size: 0.92rem; line-height: 2; color: #55492e; }
+@media (max-width: 860px) { .cl-lp.collab--genshin .gs-journey__grid { grid-template-columns: 1fr; } }
+
+.cl-lp.collab--genshin .gs-lab__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.cl-lp.collab--genshin .gs-lab__cell {
+  text-align: center; background: #fffdf6; border: 1px solid rgba(168, 132, 44, 0.3); border-radius: 12px; padding: 22px 12px;
+}
+.cl-lp.collab--genshin .gs-lab__cell b { font-family: "Shippori Mincho", serif; font-size: 2.2rem; color: #a8842c; }
+.cl-lp.collab--genshin .gs-lab__cell i { font-style: normal; color: #a8842c; margin-left: 2px; }
+.cl-lp.collab--genshin .gs-lab__cell span { display: block; margin-top: 8px; font-size: 0.8rem; color: #6b6353; }
+.cl-lp.collab--genshin .gs-fps { margin-top: 26px; background: #fffdf6; border: 1px solid rgba(168, 132, 44, 0.3); border-radius: 12px; padding: 22px; }
+.cl-lp.collab--genshin .gs-fps__cap { font-size: 0.82rem; color: #85744a; margin-bottom: 16px; }
+.cl-lp.collab--genshin .gs-fps__cols { display: flex; align-items: flex-end; gap: 12px; height: 120px; }
+.cl-lp.collab--genshin .gs-fpscol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.cl-lp.collab--genshin .gs-fpscol i {
+  width: 100%; max-width: 54px; height: calc(var(--h) * 0.9px); border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #d9b65a, #a8842c);
+}
+.cl-lp.collab--genshin .gs-fpscol span { font-size: 0.72rem; color: #85744a; }
+@media (max-width: 860px) { .cl-lp.collab--genshin .gs-lab__grid { grid-template-columns: repeat(2, 1fr); } }
+
+.cl-lp.collab--genshin .gs-theme__list { display: grid; gap: 10px; margin-top: 16px; }
+.cl-lp.collab--genshin .gs-theme__i {
+  display: grid; gap: 2px; background: #fffdf6; border: 1px solid rgba(168, 132, 44, 0.28);
+  border-radius: 10px; padding: 12px 16px; list-style: none;
+}
+.cl-lp.collab--genshin .gs-theme__i b { font-family: "Shippori Mincho", serif; font-size: 0.98rem; color: #2c261a; }
+.cl-lp.collab--genshin .gs-theme__i span { font-size: 0.85rem; color: #6b6353; }
+
+.cl-lp.collab--genshin .gs-box__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.cl-lp.collab--genshin .gs-box__i {
+  display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 12px;
+  background: #fffdf6; border: 1px solid rgba(168, 132, 44, 0.3); border-radius: 12px; padding: 16px;
+}
+.cl-lp.collab--genshin .gs-box__no {
+  grid-row: 1 / 3; font-family: "Shippori Mincho", serif; font-size: 1.4rem; color: #fff;
+  background: linear-gradient(160deg, #c9a24a, #a8842c); display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+}
+.cl-lp.collab--genshin .gs-box__i b { font-size: 0.95rem; color: #2c261a; align-self: end; }
+.cl-lp.collab--genshin .gs-box__d { font-size: 0.8rem; color: #85744a; }

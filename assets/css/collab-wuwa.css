@@ -225,3 +225,70 @@
 
 /* --- コラボ製品ページ(通常レイアウト)への最小注入 --- */
 .collab--wuwa:not(.cl-lp) .t-hero { font-family: "Zen Old Mincho", "Noto Sans JP", serif; letter-spacing: 0.08em; }
+
+/* ============ 追補セクション(遅延実測/断面/波形/言葉/対比) ============ */
+.cl-lp.collab--wuwa .ww-lat__chart { display: grid; gap: 18px; max-width: 760px; }
+.cl-lp.collab--wuwa .ww-lat__row { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.cl-lp.collab--wuwa .ww-lat__row span { font-size: 0.85rem; color: #9a9aa6; letter-spacing: 0.06em; }
+.cl-lp.collab--wuwa .ww-lat__row i {
+  display: block; height: 2px; background: #3a3a42; position: relative; width: var(--w);
+  transition: width 1s ease;
+}
+.cl-lp.collab--wuwa .ww-lat__row i::after {
+  content: ""; position: absolute; right: -3px; top: -3px; width: 8px; height: 8px;
+  border-radius: 50%; background: #6a6a74;
+}
+.cl-lp.collab--wuwa .ww-lat__row b { font-family: "Zen Old Mincho", serif; font-size: 1.6rem; font-weight: 600; color: #d9d9e0; }
+.cl-lp.collab--wuwa .ww-lat__row b small { font-size: 0.8rem; margin-left: 2px; color: #9a9aa6; }
+.cl-lp.collab--wuwa .ww-lat__row--hi i { background: #f2f2f4; }
+.cl-lp.collab--wuwa .ww-lat__row--hi i::after { background: #00e0ff; box-shadow: 0 0 12px #00e0ff; }
+.cl-lp.collab--wuwa .ww-lat__row--hi b { color: #ffffff; font-size: 2rem; }
+
+.cl-lp.collab--wuwa .ww-layers { display: grid; gap: 0; max-width: 820px; }
+.cl-lp.collab--wuwa .ww-layer {
+  display: grid; grid-template-columns: 84px 60px 1fr; align-items: center; gap: 18px;
+  padding: 20px 0; border-bottom: 1px solid rgba(242, 242, 244, 0.12);
+}
+.cl-lp.collab--wuwa .ww-layer:first-child { border-top: 1px solid rgba(242, 242, 244, 0.12); }
+.cl-lp.collab--wuwa .ww-layer__mm { font-family: "Zen Old Mincho", serif; font-size: 1.25rem; color: #f2f2f4; text-align: right; }
+.cl-lp.collab--wuwa .ww-layer__line { display: block; height: 1px; background: linear-gradient(90deg, #f2f2f4, transparent); }
+.cl-lp.collab--wuwa .ww-layer__body b { display: block; font-size: 0.98rem; color: #e8e8ec; font-weight: 600; letter-spacing: 0.04em; }
+.cl-lp.collab--wuwa .ww-layer__body small { display: block; margin-top: 4px; font-size: 0.83rem; color: #9a9aa6; line-height: 1.8; }
+
+.cl-lp.collab--wuwa .ww-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.cl-lp.collab--wuwa .ww-preset {
+  background: #101014; border: 1px solid rgba(242, 242, 244, 0.14); padding: 22px 18px;
+  transition: border-color 0.3s ease;
+}
+.cl-lp.collab--wuwa .ww-preset:hover { border-color: #00e0ff; }
+.cl-lp.collab--wuwa .ww-preset svg { width: 100%; height: 40px; }
+.cl-lp.collab--wuwa .ww-preset svg path { stroke: #d9d9e0; stroke-width: 1.4; }
+.cl-lp.collab--wuwa .ww-preset:hover svg path { stroke: #00e0ff; }
+.cl-lp.collab--wuwa .ww-preset h3 { font-family: "Zen Old Mincho", serif; font-size: 1.1rem; margin: 12px 0 8px; color: #f2f2f4; font-weight: 600; }
+.cl-lp.collab--wuwa .ww-preset p { font-size: 0.82rem; color: #9a9aa6; line-height: 1.9; }
+@media (max-width: 860px) { .cl-lp.collab--wuwa .ww-presets { grid-template-columns: repeat(2, 1fr); } }
+
+.cl-lp.collab--wuwa .ww-words__row { display: flex; justify-content: center; gap: clamp(24px, 6vw, 72px); }
+.cl-lp.collab--wuwa .ww-word { margin: 0; }
+.cl-lp.collab--wuwa .ww-word blockquote {
+  writing-mode: vertical-rl; font-family: "Zen Old Mincho", serif; font-size: 1.05rem; line-height: 2.4;
+  color: #e8e8ec; height: 300px; margin: 0; letter-spacing: 0.12em;
+}
+.cl-lp.collab--wuwa .ww-word figcaption { margin-top: 14px; font-size: 0.72rem; color: #9a9aa6; letter-spacing: 0.1em; text-align: center; }
+@media (max-width: 700px) {
+  .cl-lp.collab--wuwa .ww-words__row { flex-direction: column; align-items: center; gap: 32px; }
+  .cl-lp.collab--wuwa .ww-word blockquote { height: 240px; }
+}
+
+.cl-lp.collab--wuwa .ww-vs__table { max-width: 780px; margin-bottom: 26px; }
+.cl-lp.collab--wuwa .ww-vs__head, .cl-lp.collab--wuwa .ww-vs__row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; align-items: baseline;
+  padding: 14px 4px; border-bottom: 1px solid rgba(242, 242, 244, 0.12);
+}
+.cl-lp.collab--wuwa .ww-vs__head { border-bottom-width: 2px; border-color: rgba(242, 242, 244, 0.3); }
+.cl-lp.collab--wuwa .ww-vs__head b { font-family: "Zen Old Mincho", serif; font-size: 1.05rem; color: #fff; }
+.cl-lp.collab--wuwa .ww-vs__head span { font-size: 0.85rem; color: #9a9aa6; }
+.cl-lp.collab--wuwa .ww-vs__k { font-size: 0.85rem; color: #9a9aa6; letter-spacing: 0.05em; }
+.cl-lp.collab--wuwa .ww-vs__a { font-family: "Zen Old Mincho", serif; font-size: 1.15rem; color: #f2f2f4; font-weight: 600; }
+.cl-lp.collab--wuwa .ww-vs__a.is-win::after { content: "◂"; color: #00e0ff; margin-left: 8px; font-size: 0.8rem; }
+.cl-lp.collab--wuwa .ww-vs__b { font-size: 0.92rem; color: #7a7a86; }

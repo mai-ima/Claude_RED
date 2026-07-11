@@ -1983,6 +1983,126 @@ def _collab_lp_genshin(cfg, phone, accs):
     ]
     term_cards = "".join(
         f'<div class="gs-term reveal"><h3>{esc(t)}</h3><p>{esc(b)}</p></div>' for t, b in terms)
+
+    # --- 追補: 七元素チューニング表(元素ごとの表示・触覚・リング発光の作り込み) ---
+    tunings = [
+        ("風", "#4dd6c1", "翡翠の残光", "そよぐ長い余韻の微振動", "円環が時計回りに流れる"),
+        ("岩", "#e5b53a", "琥珀の重心", "短く硬い、岩を打つ手応え", "全周が一拍で点灯し沈む"),
+        ("雷", "#b18bff", "紫電の走査", "鋭い二連の刺激", "対角2点が交互に瞬く"),
+        ("草", "#8bd450", "若葉の階調", "柔らかい波状の連なり", "下から上へ芽吹くように点る"),
+        ("水", "#3fb6ff", "深浅の青緻", "揺れて減衰する波紋", "波紋状に外周へ広がる"),
+        ("炎", "#ff6a4d", "緋色の高輝", "立ち上がりの速い熱い一撃", "鼓動のように強弱を刻む"),
+        ("氷", "#7fe8ff", "霜白の冷艶", "細かく凍てつく粒の連打", "結晶状に6点が同時に灯る"),
+    ]
+    tune_rows = "".join(
+        f'<div class="gs-tune reveal" style="--el:{c}"><span class="gs-tune__el">{e}</span>'
+        f'<span class="gs-tune__tone"><small>表示チューニング</small>{esc(tone)}</span>'
+        f'<span class="gs-tune__hap"><small>共鳴ハプティクス</small>{esc(hap)}</span>'
+        f'<span class="gs-tune__ring"><small>元素リング発光</small>{esc(ring)}</span></div>'
+        for e, c, tone, hap, ring in tunings)
+
+    # --- 追補: 開発紀行(共同開発の長文3章) ---
+    journeys = [
+        ("壱", "白磁を、焼き物から学ぶ", "七耀の白は、ディスプレイの白ではなく、器の白です。共同チームは企画初期に磁器工房を訪ね、釉薬の「沈む白」を分光計で採取しました。ガラス蒸着を42回試作し、光を反射するのではなく一度含んでから返す白磁調の積層に到達。テイワットの陶都の空気を、背面ガラス0.7mmの中に封じています。"),
+        ("弐", "空の色を、実測する", "原神の空は時間で色を変えます。開発チームはゲーム内の朝・昼・黄昏・夜の空を計1,200フレームぶん色度計で実測し、元素燐光ディスプレイの色管理テーブルへ翻訳しました。BT.2020 110%という数字は、あの黄昏の茜色を諦めないための下限値です。"),
+        ("参", "金彩は、線の細さで決まる", "フレームの金彩は、太いと武具になり、細いと消えます。0.4mmから1.6mmまで9段階の飾り線を削り出し、手に持ったときに視界の端で「ほのかに光る」1.1mmを採用しました。178回目の蒸着試作に、チームは「これは道具ではなく、旅の記念品だ」と記しています。"),
+    ]
+    journey_blocks = "".join(
+        f'<article class="gs-journey__ch reveal"><span class="gs-journey__no">{no}</span>'
+        f'<h3>{esc(t)}</h3><p>{esc(b)}</p></article>'
+        for no, t, b in journeys)
+
+    # --- 追補: 実測レポート(原神プレイの当社試験値) ---
+    fps_cols = "".join(
+        f'<div class="gs-fpscol"><i style="--h:{h}%"></i><span>{m}</span></div>'
+        for m, h in [("0分", 100), ("10分", 100), ("20分", 99), ("30分", 99), ("45分", 99), ("60分", 98)])
+    lab_stats = [
+        ("60", "fps", "最高画質・60fps設定で張り付き(当社試験値)"),
+        ("99.2", "%", "60分連続プレイのフレーム安定率"),
+        ("11.4", "時間", "フィールド探索の連続駆動(7,900mAh)"),
+        ("42.8", "℃", "60分後の背面最高温度"),
+    ]
+    lab_cells = "".join(
+        f'<div class="gs-lab__cell reveal"><b>{v}</b><i>{u}</i><span>{esc(d)}</span></div>'
+        for v, u, d in lab_stats)
+
+    # --- 追補: 限定テーマパック詳細 ---
+    theme_items = [
+        ("ロック画面「七耀の空」", "時間帯で空の色が移ろい、選択中の元素の粒子が舞う"),
+        ("アイコンセット「金彩」", "白磁地に金の細線で描き直した約120種"),
+        ("通知音「七元素の音階」", "元素ごとに音色が変わる7音のチャイム"),
+        ("起動音とリング連動", "起動時に背面リングが七色を一巡して点灯"),
+        ("AOD「元素時計」", "常時表示に元素ホイールの時計盤"),
+        ("限定壁紙 14枚", "七元素×昼夜の描き下ろし(デモ表記)"),
+    ]
+    theme_rows = "".join(
+        f'<li class="gs-theme__i reveal"><b>{esc(t)}</b><span>{esc(d)}</span></li>'
+        for t, d in theme_items)
+
+    # --- 追補: コレクターズボックス展開 ---
+    box_items = [
+        ("一", "七耀 本体", "白磁または金彩"),
+        ("二", "七天神像モバイルバッテリー引換券", "同梱バンドルの案内状"),
+        ("三", "白磁ケース", "薄型1.2mm・金彩リム"),
+        ("四", "金彩カード「旅の許可証」", "シリアル番号入り(8,000分の1)"),
+        ("五", "元素リング・クロス", "白磁の艶を保つ専用クロス"),
+        ("六", "100W 充電アダプタ", "白磁調の限定色"),
+        ("七", "テーマパック引換コード", "七耀の空・金彩アイコン他"),
+    ]
+    box_rows = "".join(
+        f'<div class="gs-box__i reveal"><span class="gs-box__no">{no}</span><b>{esc(t)}</b><span class="gs-box__d">{esc(d)}</span></div>'
+        for no, t, d in box_items)
+
+    gs_ext = f"""
+<section class="cl-section gs-tuning">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">ELEMENTAL TUNING</p><h2 class="cl-h2">七元素、七通りの作り込み。</h2>
+    <p class="cl-lead">元素テーマは色替えではありません。表示の色調・共鳴ハプティクスの波形・背面リングの点灯パターンまで、七元素それぞれに専用チューニングを施しました。</p></div>
+    <div class="gs-tunes">{tune_rows}</div>
+    <p class="gs-tuning__note">テーマ切替は 設定 → テーマ → 七耀 から。元素はホーム画面の長押しでも変更できます。</p>
+  </div>
+</section>
+
+<section class="cl-section gs-journey">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">DEVELOPMENT NOTES</p><h2 class="cl-h2">開発紀行 — 白磁と金彩の記録。</h2>
+    <p class="cl-lead">SUZAKUとHoYoverseの共同設計チームが残した、七耀ができるまでの三つの章。</p></div>
+    <div class="gs-journey__grid">{journey_blocks}</div>
+  </div>
+</section>
+
+<section class="cl-section gs-lab">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">FIELD REPORT</p><h2 class="cl-h2">実測レポート — 原神を、七耀で。</h2>
+    <p class="cl-lead">最高画質・60fps設定での当社試験値。数字は誇張ではなく、旅の実感のために。</p></div>
+    <div class="gs-lab__grid">{lab_cells}</div>
+    <div class="gs-fps reveal">
+      <p class="gs-fps__cap">60分連続プレイのfps推移(最高画質・60fps設定・当社試験値)</p>
+      <div class="gs-fps__cols">{fps_cols}</div>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section gs-themepack">
+  <div class="cl-wrap gs-split">
+    <div class="gs-split__media reveal"><img src="{pimg_front(phone['id'])}" alt="七耀 限定テーマの正面表示" width="250" height="441" loading="lazy"></div>
+    <div class="gs-split__copy reveal">
+      <p class="cl-eyebrow">THEME PACK</p>
+      <h2 class="cl-h2">限定テーマパック、全6点。</h2>
+      <p>画面の中まで、七耀です。ロック画面・アイコン・通知音・AODを白磁と金彩の意匠で描き直しました。</p>
+      <ul class="gs-theme__list">{theme_rows}</ul>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section gs-boxsec">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">COLLECTOR'S BOX</p><h2 class="cl-h2">コレクターズボックス、七つの同梱。</h2>
+    <p class="cl-lead">飾って残せる白磁調の二重箱。蓋を開くと金の飾り罫が現れ、七点が段違いに収まります。</p></div>
+    <div class="gs-box__grid">{box_rows}</div>
+    <p class="gs-tuning__note">外箱: 218 × 118 × 92mm / 白磁調エンボス紙・金箔押し。数量限定{cfg['limited']['qty']:,}箱、再生産はありません。</p>
+  </div>
+</section>"""
     return f"""
 {_cl_lpnav(cfg, phone)}
 <div class="gs-intro" id="gsIntro" aria-hidden="true"><div class="gs-intro__ring">{intro_dots}</div><p class="gs-intro__t">七耀</p></div>
@@ -2068,7 +2188,7 @@ def _collab_lp_genshin(cfg, phone, accs):
     <div style="margin-top:18px"><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
   </div>
 </section>
-
+{gs_ext}
 {_cl_silicon(cfg)}
 {_cl_accs(cfg, accs)}
 {_cl_bundle(cfg)}
@@ -2093,6 +2213,111 @@ def _collab_lp_wuwa(cfg, phone, accs):
         f'<div class="ww-bench__row{" ww-bench__row--hi" if hi else ""}"><span>{esc(n)}</span>'
         f'<i style="--w:{v / 4.18:.1f}%"></i><b>{v}万点</b></div>'
         for n, v, hi in bench)
+
+    # --- 追補: タッチ・トゥ・フォトン実測(触れてから光るまで) ---
+    lat = [("残響(185Hz・タッチ3200Hz)", 18, True),
+           ("SUZAKU 4(175Hz・タッチ2500Hz)", 26, False),
+           ("一般的なハイエンド(120Hz)", 45, False)]
+    lat_rows = "".join(
+        f'<div class="ww-lat__row{" ww-lat__row--hi" if hi else ""}"><span>{esc(n)}</span>'
+        f'<i style="--w:{v / 0.45:.0f}%"></i><b>{v}<small>ms</small></b></div>'
+        for n, v, hi in lat)
+
+    # --- 追補: 静寂の断面(積層を細線で見せる) ---
+    layers = [
+        ("0.9mm", "精密鍛造アルミ背板", "マイクロアーク酸化仕上げ。指紋も、音も、残さない。"),
+        ("0.3mm", "音叉LED導光層", "背面の唯一の光。音の振幅だけを写す。"),
+        ("3.9mm", "両面実装 7,000mAh電池", "基板の裏表に電池を分け、8.2mmの薄さを成立させる。"),
+        ("1.9mm", "超薄型旋風ファン", "羽根を非対称ピッチにし、風切り音の山を消した。"),
+        ("0.4mm", "ベイパーチャンバー", "熱を面で受け、共振 KYOSHIN-W1 の4.1GHzを支える。"),
+    ]
+    layer_rows = "".join(
+        f'<div class="ww-layer reveal"><b class="ww-layer__mm">{mm}</b>'
+        f'<span class="ww-layer__line" aria-hidden="true"></span>'
+        f'<span class="ww-layer__body"><b>{esc(t)}</b><small>{esc(d)}</small></span></div>'
+        for mm, t, d in layers)
+
+    # --- 追補: 共鳴ハプティクス波形プリセット ---
+    presets = [
+        ("刃鳴", "M0 20 L8 20 L11 3 L14 34 L17 12 L20 26 L24 20 L60 20 L63 5 L66 32 L70 20 L120 20",
+         "パリィの一瞬に、鋭い二段の手応え。立ち上がり0.8ms。"),
+        ("水面", "M0 20 Q15 8 30 20 T60 20 T90 20 T120 20",
+         "揺れて、減衰する。着水や泳ぎの場面に沈む柔らかい波。"),
+        ("心拍", "M0 20 L20 20 L24 10 L28 30 L32 20 L64 20 L68 10 L72 30 L76 20 L120 20",
+         "静かな場面の底で脈を打つ、最小振幅の鼓動。"),
+        ("無音", "M0 20 L120 20",
+         "振動をすべて断つ。音楽と画面だけに集中するための静寂。"),
+    ]
+    preset_cards = "".join(
+        f'<div class="ww-preset reveal"><svg viewBox="0 0 120 40" aria-hidden="true"><path d="{d}" fill="none"/></svg>'
+        f'<h3>{esc(t)}</h3><p>{esc(b)}</p></div>'
+        for t, d, b in presets)
+
+    # --- 追補: 開発の言葉(縦書き) ---
+    words = [
+        ("音を足すのは簡単だ。引き算で速さを聴かせるのが、残響の仕事だった。", "共同設計チーム — 音響"),
+        ("最速のSoCに、光る箱は要らない。黒い板の中で静かに燃えていればいい。", "共同設計チーム — 筐体"),
+        ("漂泊者の旅は長い。だから数字より先に、手に残る静けさを設計した。", "共同設計チーム — 体験"),
+    ]
+    word_cols = "".join(
+        f'<figure class="ww-word reveal"><blockquote>{esc(q)}</blockquote><figcaption>{esc(c)}</figcaption></figure>'
+        for q, c in words)
+
+    # --- 追補: 対比の静学(残響 vs SUZAKU 4) ---
+    vs_rows = [
+        ("AnTuTu", "418万点", "385万点", True),
+        ("最大クロック", "4.1GHz", "3.8GHz", True),
+        ("リフレッシュレート", "185Hz", "175Hz", True),
+        ("タッチサンプリング", "3,200Hz", "2,500Hz", True),
+        ("重量", "199g", "229g", True),
+        ("厚さ", "8.2mm", "—(通常筐体)", True),
+        ("背面の光", "音叉LEDのみ", "ロゴ+LEDスラッシュ", False),
+    ]
+    vs_html = "".join(
+        f'<div class="ww-vs__row reveal"><span class="ww-vs__k">{esc(k)}</span>'
+        f'<b class="ww-vs__a{" is-win" if win else ""}">{esc(a)}</b><span class="ww-vs__b">{esc(b)}</span></div>'
+        for k, a, b, win in vs_rows)
+
+    ww_ext = f"""
+<section class="cl-section ww-lat">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">TOUCH TO PHOTON</p><h2 class="cl-h2">触れてから、光るまで。</h2>
+    <p class="cl-lead">指が触れてから画面が応えるまでの実測遅延(当社試験値)。185Hz表示とタッチ3200Hzは、この18msのためにあります。</p></div>
+    <div class="ww-lat__chart">{lat_rows}</div>
+  </div>
+</section>
+
+<section class="cl-section ww-anatomy">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">ANATOMY</p><h2 class="cl-h2">静寂の断面。</h2>
+    <p class="cl-lead">8.2mmの内側を、上から順に。速さのための部品だけが、薄く重なっています。</p></div>
+    <div class="ww-layers">{layer_rows}</div>
+  </div>
+</section>
+
+<section class="cl-section ww-hapt">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">RESONANCE HAPTICS</p><h2 class="cl-h2">四つの波形、四つの手応え。</h2>
+    <p class="cl-lead">共鳴ハプティクスの専用波形エンジンに、鳴潮のために起こした4プリセットを収録。設定 → サウンドと振動 から切替できます。</p></div>
+    <div class="ww-presets">{preset_cards}</div>
+  </div>
+</section>
+
+<section class="cl-section ww-words">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">WORDS</p><h2 class="cl-h2">開発の言葉。</h2></div>
+    <div class="ww-words__row">{word_cols}</div>
+  </div>
+</section>
+
+<section class="cl-section ww-vs">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">COMPARISON</p><h2 class="cl-h2">対比の静学 — 残響とSUZAKU 4。</h2>
+    <p class="cl-lead">旗艦を置き換えるのではなく、別の答えとして。速さに関わる項目だけを、静かに並べます。</p></div>
+    <div class="ww-vs__table"><div class="ww-vs__head"><span></span><b>残響</b><span>SUZAKU 4</span></div>{vs_html}</div>
+    <a class="cl-btn cl-btn--ghost" href="/products/compare/">比較ツールで全項目を見る</a>
+  </div>
+</section>"""
     return f"""
 {_cl_lpnav(cfg, phone)}
 <section class="ww-hero">
@@ -2151,7 +2376,7 @@ def _collab_lp_wuwa(cfg, phone, accs):
     <div style="margin-top:18px"><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
   </div>
 </section>
-
+{ww_ext}
 {_cl_silicon(cfg)}
 {_cl_accs(cfg, accs)}
 {_cl_bundle(cfg)}
@@ -2175,6 +2400,119 @@ def _collab_lp_nte(cfg, phone, accs):
     bld = "".join(f'<span class="nt-bldg" style="--h:{h}%;--d:{d}s"></span>'
                   for h, d in [(58, 0.2), (86, 0.5), (44, 0.8), (95, 0.3), (70, 1.1), (52, 0.6),
                                (80, 0.9), (38, 1.3), (90, 0.4), (64, 1.0), (74, 0.7), (48, 1.2)])
+
+    # --- 追補: 夜景ラボ(露出実測) ---
+    lab_cells = "".join(
+        f'<div class="nt-lab__cell reveal" style="--lc:{c}"><b>{v}</b><i>{u}</i><span>{esc(d)}</span></div>'
+        for v, u, d, c in [
+            ("1/4", "秒", "手持ち夜景の限界シャッター(OIS+夜景ISP)", "#ff3ea5"),
+            ("-35", "%", "低照度ノイズ(前世代比・当社試験値)", "#c8f24a"),
+            ("0.9", "秒", "夜景モードの合成待ち時間", "#3fb6ff"),
+            ("30", "秒", "三脚いらずの星空モード最長露光", "#b18bff"),
+        ])
+    expo = [("一般的なハイエンド", 34, ""), ("SUZAKU 4(天眼 RS-2+ 1/1.28型)", 58, ""), ("夜行(夜行センサー 1/0.98型)", 100, "hi")]
+    expo_rows = "".join(
+        f'<div class="nt-expo__row{" nt-expo__row--hi" if hi else ""}"><span>{esc(n)}</span>'
+        f'<i style="--w:{w}%"></i><b>{"基準の2.9倍" if hi else ""}</b></div>'
+        for n, w, hi in expo)
+
+    # --- 追補: EL看板カタログ(発光パターン全6種) ---
+    signs = [
+        ("PULSE", "nt-sign--pulse", "通知に合わせて一拍、静かに脈打つ標準パターン"),
+        ("BEAT", "nt-sign--beat", "再生中の音楽のBPMに同期して明滅する"),
+        ("RAIN", "nt-sign--rain", "ネオンの雨が上から下へ流れ落ちる"),
+        ("WAVE", "nt-sign--wave", "左右へ波が往復する。充電中の残量表示を兼ねる"),
+        ("TEXT", "nt-sign--text", "着信名の頭文字をドットで一瞬だけ描く"),
+        ("OFF", "nt-sign--off", "すべて消灯。夜行は黒い板に戻る"),
+    ]
+    sign_cards = "".join(
+        f'<div class="nt-sign {cls} reveal"><span class="nt-sign__frame" aria-hidden="true"><em>{t}</em></span>'
+        f'<p>{esc(d)}</p></div>'
+        for t, cls, d in signs)
+
+    # --- 追補: 夜スナップ講座(鑑定士の三課) ---
+    lessons = [
+        ("第一課", "看板は白飛びさせない", "ネオン管の中心は輝度が高く、普通のスマホでは白く潰れます。夜行の夜景ISPは看板領域を検出して局所的に露出を落とし、文字の輪郭とガラス管の色を残します。"),
+        ("第二課", "路地は影を黒く残す", "夜景モードの多くは影を持ち上げすぎて昼のようになります。夜行は「夜が夜に見える」階調カーブを既定にし、影は影のまま、その中の質感だけを引き出します。"),
+        ("第三課", "動くものは連写でなく1枚で", "1/0.98型の受光量は、シャッターを速くする余裕そのものです。歩く人も走る車も、1/125秒で夜のまま止められます。"),
+    ]
+    lesson_cards = "".join(
+        f'<div class="nt-lesson reveal"><span class="nt-lesson__no">{no}</span><h3>{esc(t)}</h3><p>{esc(b)}</p></div>'
+        for no, t, b in lessons)
+
+    # --- 追補: エイボン鑑定書 ---
+    cert_rows = "".join(
+        f'<div class="nt-cert__row"><span>{esc(k)}</span><i aria-hidden="true"></i><b class="nt-cert__rank" style="--rk:{c}">{r}</b><small>{esc(d)}</small></div>'
+        for k, r, d, c in [
+            ("夜景描写", "S", "1/0.98型+夜景専用ISP。現行SUZAKU最高", "#ff3ea5"),
+            ("処理速度", "A", "夜想 YASO-N1 — AnTuTu 410万点", "#c8f24a"),
+            ("記録容量", "S", "最大2TB。8Kナイトビデオ対応", "#ff3ea5"),
+            ("稼働時間", "A", "7,400mAh・90W急速充電", "#c8f24a"),
+            ("携行性", "B+", "218g。大型センサーとELの代償", "#3fb6ff"),
+        ])
+
+    # --- 追補: スコアボード(夜行 vs SUZAKU 4) ---
+    score_rows = "".join(
+        f'<div class="nt-score__row reveal"><span class="nt-score__k">{esc(k)}</span>'
+        f'<b class="nt-score__y{" is-win" if win else ""}">{esc(y)}</b><span class="nt-score__s">{esc(s)}</span></div>'
+        for k, y, s, win in [
+            ("センサーサイズ", "1/0.98型", "1/1.28型", True),
+            ("夜景ISP", "2基(1基は夜景専用)", "1基", True),
+            ("最大ストレージ", "2TB", "1TB", True),
+            ("AnTuTu", "410万点", "385万点", True),
+            ("リフレッシュレート", "165Hz", "175Hz", False),
+            ("背面の遊び", "ネオンサインEL", "LEDスラッシュ", True),
+        ])
+
+    nt_ext = f"""
+<section class="cl-section nt-lab">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">NIGHT LAB</p><h2 class="cl-h2">夜景ラボ — 露出の実測。</h2>
+    <p class="cl-lead">夜行センサー 1/0.98型の受光量は、そのまま撮影の自由になります。すべて当社試験値。</p></div>
+    <div class="nt-lab__grid">{lab_cells}</div>
+    <div class="nt-expo reveal">
+      <p class="nt-expo__cap">同一夜景での相対受光量(センサー面積×レンズ、当社換算)</p>
+      {expo_rows}
+    </div>
+  </div>
+</section>
+
+<section class="cl-section nt-signs">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">EL SIGN CATALOG</p><h2 class="cl-h2">看板カタログ — 発光パターン全6種。</h2>
+    <p class="cl-lead">背面ELの点灯パターンは6種類。テーマまたはクイック設定からいつでも掛け替えられます。</p></div>
+    <div class="nt-signs__grid">{sign_cards}</div>
+  </div>
+</section>
+
+<section class="cl-section nt-snap">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">NIGHT SNAP</p><h2 class="cl-h2">夜スナップ講座 — 鑑定士の三課。</h2>
+    <p class="cl-lead">ヘロシティの夜を撮り歩くための、夜行チーム直伝の作法。</p></div>
+    <div class="nt-lessons">{lesson_cards}</div>
+  </div>
+</section>
+
+<section class="cl-section nt-cert">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">APPRAISAL</p><h2 class="cl-h2">鑑定書 — 夜行 YAKO。</h2>
+    <p class="cl-lead">骨董品店の流儀で、この一台を鑑定しました。</p></div>
+    <div class="nt-cert__card reveal">
+      <p class="nt-cert__head">EIBON ANTIQUE SHOP — APPRAISAL REPORT <span>No. YAKO-{cfg['limited']['qty']}</span></p>
+      {cert_rows}
+      <p class="nt-cert__foot">総合評価 <b>S</b> — 「夜を持ち歩く道具として、出色。看板の光を写して減点なし。」</p>
+    </div>
+  </div>
+</section>
+
+<section class="cl-section nt-score">
+  <div class="cl-wrap">
+    <div class="cl-head"><p class="cl-eyebrow">SCOREBOARD</p><h2 class="cl-h2">スコアボード — 夜行 vs SUZAKU 4。</h2>
+    <p class="cl-lead">昼の王者と、夜の専門家。負けている項目も、正直に灯します。</p></div>
+    <div class="nt-score__table"><div class="nt-score__head"><span></span><b>夜行</b><span>SUZAKU 4</span></div>{score_rows}</div>
+    <a class="cl-btn cl-btn--ghost" href="/products/compare/">比較ツールで全項目を見る</a>
+  </div>
+</section>"""
     return f"""
 {_cl_lpnav(cfg, phone)}
 <section class="nt-hero">
@@ -2238,7 +2576,7 @@ def _collab_lp_nte(cfg, phone, accs):
     <div style="margin-top:18px" class="nt-ctas"><a class="cl-btn cl-btn--ghost" href="/collab/nte/silicon/soc/">夜想 YASO-N1 の詳細</a><a class="cl-btn cl-btn--ghost" href="{product_url(phone)}specs/">すべての仕様を見る</a></div>
   </div>
 </section>
-
+{nt_ext}
 {_cl_silicon(cfg)}
 {_cl_accs(cfg, accs)}
 {_cl_bundle(cfg)}
@@ -2379,6 +2717,110 @@ def _collab_lp_endfield(cfg, phone, accs):
     gallery = "".join(
         f'<figure class="ef-rec reveal"><img src="{src}" alt="{alt}" loading="lazy" width="220" height="388">'
         f'<figcaption>{cap}</figcaption></figure>' for src, cap, alt in shots)
+
+    # --- 追補S12 集成工業システム(端末内部を生産ラインとして描く) ---
+    flow_nodes = [
+        ("電力", "8,500mAh", "供給 100%", "/products/phone/zensen/specs/"),
+        ("制御", "基幹 KIKAN-F1", "定速 3.8GHz", "/collab/endfield/silicon/soc/"),
+        ("冷却", "密閉 定速ファン", "IP68内蔵", "/tech/cooling/"),
+        ("出力", "144fps 表示", "維持率 99%", "#efSustain"),
+    ]
+    flow_html = ""
+    for i, (t, n, s, href) in enumerate(flow_nodes):
+        if i:
+            flow_html += '<span class="ef-flow__belt" aria-hidden="true"><i></i><i></i><i></i></span>'
+        flow_html += (f'<a class="ef-flow__node" href="{href}"><span class="ef-flow__t">{t}</span>'
+                      f'<b>{esc(n)}</b><small>{esc(s)}</small></a>')
+
+    # --- 追補S13 タロⅡ環境モニタ ---
+    env_tiles = "".join(
+        f'<div class="ef-env__tile reveal"><span class="ef-env__k">{esc(k)}</span><b class="ef-env__v">{v}</b>'
+        f'<span class="ef-env__s{" is-warn" if warn else ""}">{tag}</span><small>{esc(d)}</small></div>'
+        for k, v, tag, warn, d in [
+            ("気温", "-20℃", "動作保証内", False, "寒冷地試験: 電池ヒーター併用で起動・連続稼働を確認"),
+            ("気温", "45℃", "動作保証内", False, "高温試験: 定速ガバナーがクロックを保ったまま完走"),
+            ("粉塵", "濃度・高", "IP6X", False, "防塵試験: タルク粉8時間曝露後もファン駆動に異常なし"),
+            ("降雨", "豪雨相当", "IP68", False, "水深1.5m・30分の浸漬後、全機能の動作を確認"),
+            ("落下", "1.8m", "26方向 PASS", False, "コンクリート面への全稜線・全面落下試験"),
+            ("振動", "輸送相当", "MIL-STD-810H", True, "装軌車両輸送を模した長時間振動。計器窓の表示乱れなし"),
+        ])
+
+    # --- 追補S14 運用記録(通信ログ) ---
+    crew_logs = [
+        ("REC 06:42", "整備班", "氷点下の朝は、グローブを外した瞬間に指が動かなくなる。前線は手袋のまま全部の操作が通る。計器窓で残量を見て、そのままポケットに戻せるのがいい。"),
+        ("REC 13:05", "測量班", "粉塵の多い現場でファン付きは不安だったが、密閉ファンは8時間回しても異音なし。夕方の逆給電で測距計を2回充電した。道具として数に入れられる。"),
+        ("REC 21:37", "管理人室", "1日の終わりに残量が残っているかどうかで、翌日の計画が変わる。8,500mAhは数字ではなく、締切前の1時間の余裕として効いている。"),
+    ]
+    crew_html = "".join(
+        f'<div class="ef-crew__log reveal"><span class="ef-crew__rec"><i aria-hidden="true"></i>{t}</span>'
+        f'<b class="ef-crew__who">{esc(w)}</b><p>{esc(b)}</p></div>'
+        for t, w, b in crew_logs)
+
+    # --- 追補S15 現場運用手順書(SOP) ---
+    sop_steps = [
+        ("01", "グローブモードの起動", "設定 → 表示 → グローブ操作をON。感圧しきい値が下がり、厚手手袋・濡れ手でのタッチが通ります。"),
+        ("02", "計器窓の読み方", "背面の計器窓は上段が電池残量、下段が背面温度。点滅は高温警告 — 直射日光を避けて2分で復帰します。"),
+        ("03", "逆給電の手順", "USB-Cを接続し、クイック設定の「給電」をタップ。18Wで測距計・照明・イヤホンへ給電できます(残量20%で自動停止)。"),
+        ("04", "現場後の手入れ", "IP68のため水洗い可。ファン吸気口は流水を当ててから振って乾かすだけ。溶剤・超音波洗浄は不可です。"),
+    ]
+    sop_html = "".join(
+        f'<li class="ef-sop__step reveal"><span class="ef-sop__no">{no}</span>'
+        f'<div><b>{esc(t)}</b><p>{esc(b)}</p></div></li>'
+        for no, t, b in sop_steps)
+
+    # --- 追補S16 補給計画(専用装備の運用表) ---
+    supply_rows = "".join(
+        f'<a class="ef-supply__row reveal" href="{href}"><span class="ef-supply__cat">{esc(c)}</span>'
+        f'<b>{esc(n)}</b><span class="ef-supply__use">{esc(u)}</span><i class="ef-supply__st">{s}</i></a>'
+        for c, n, u, s, href in [
+            ("電力", "ZENSEN PACK(モバイルバッテリー)", "長期行動日の予備電力。マグネット吸着で歩きながら充電", "配備可", "/products/accessories/pb-endfield/"),
+            ("防護", "前線 アーマーケース", "装甲リブに噛み合う二重装甲。単体でもMIL準拠", "配備可", "/products/accessories/cs-endfield/"),
+            ("通信", "前線 フィールドバッズ", "騒音下の通話用。骨伝導センサー+IP57", "配備可", "/products/accessories/bd-endfield/"),
+        ])
+
+    ef_ext = f"""
+<section class="ef-factory" aria-label="集成工業システム">
+  <div class="cl-wrap">
+    <p class="ef-slash">集成工業システム — 端末内部ライン</p>
+    <p class="ef-base__lead">前線の内部を、ひとつの生産ラインとして読む。電力から表示まで、各工程が定速で流れ続けます。</p>
+    <div class="ef-flow">{flow_html}</div>
+    <p class="ef-flow__note">ラインは負荷を先読みして流量を一定に保つ「定速ガバナー」で管理。工程間の詰まり(サーマルスロットリング)を許容しません。</p>
+  </div>
+  <span class="ef-meta" aria-hidden="true">SZ-ZENSEN-{lim['qty']} / FACTORY LINE</span>
+</section>
+
+<section class="ef-env" aria-label="環境モニタ">
+  <div class="cl-wrap">
+    <p class="ef-slash ef-slash--w">タロⅡ環境モニタ</p>
+    <p class="ef-base__lead">タロⅡ級の環境を想定した全26項目の試験から、代表6項目の記録を表示しています。</p>
+    <div class="ef-env__grid">{env_tiles}</div>
+  </div>
+  <span class="ef-meta" aria-hidden="true">SZ-ZENSEN-{lim['qty']} / ENV MONITOR</span>
+</section>
+
+<section class="ef-crew" aria-label="運用記録">
+  <div class="cl-wrap">
+    <p class="ef-slash">運用記録 — 現場交信ログ</p>
+    <p class="ef-base__lead">先行配備の試験運用から、3件の交信記録を抜粋(社内モニター運用・脚色なし)。</p>
+    <div class="ef-crew__grid">{crew_html}</div>
+  </div>
+</section>
+
+<section class="ef-sop" aria-label="現場運用手順書">
+  <div class="cl-wrap">
+    <p class="ef-slash ef-slash--y">現場運用手順書 — FIELD SOP</p>
+    <p class="ef-base__lead">配備初日に読む4項目。道具は、正しい手順で強くなります。</p>
+    <ol class="ef-sop__list">{sop_html}</ol>
+  </div>
+  <span class="ef-meta" aria-hidden="true">SZ-ZENSEN-{lim['qty']} / FIELD SOP</span>
+</section>
+
+<section class="ef-supply" aria-label="補給計画">
+  <div class="cl-wrap">
+    <p class="ef-slash">補給計画 — 専用装備の運用表</p>
+    <div class="ef-supply__table">{supply_rows}</div>
+  </div>
+</section>"""
 
     return f"""
 {_cl_lpnav(cfg, phone)}
@@ -2590,7 +3032,7 @@ def _collab_lp_endfield(cfg, phone, accs):
 </section>
 
 <div id="efAcc">{_cl_accs(cfg, accs)}</div>
-
+{ef_ext}
 <section class="ef-archive" aria-label="資料室">
   <div class="cl-wrap">
     <p class="ef-slash">資料室</p>
@@ -3152,8 +3594,50 @@ def build_sitemap():
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n", encoding="utf-8")
 
 
+def build_svg_gallery():
+    """SVG全点検グリッド(開発者向け・noindex)。全機種の背面+正面ペアと
+    アクセサリ全カラーバリエーションを1ページで目視点検できる。"""
+    pairs = ""
+    for p in PHONES + TABLETS:
+        pairs += (
+            f'<figure class="svgg-pair"><div class="svgg-pair__imgs">'
+            f'<img src="{pimg(p["id"])}" alt="{esc(p["name"])} 背面" loading="lazy" width="250" height="441">'
+            f'<img src="{pimg_front(p["id"])}" alt="{esc(p["name"])} 正面" loading="lazy" width="250" height="441">'
+            f'</div><figcaption>{esc(p["name"])} <code>{p["id"]}</code></figcaption></figure>')
+    accs = ""
+    for a in ACCESSORIES:
+        for i, c in enumerate(a["colors"]):
+            accs += (
+                f'<figure class="svgg-acc"><img src="{pimg(a["id"], i)}" alt="{esc(a["name"])} {esc(c["name"])}" loading="lazy" width="480" height="360">'
+                f'<figcaption>{esc(a["name"])} — {esc(c["name"])} <code>{a["id"]}-{i}</code></figcaption></figure>')
+    body = f"""
+<style>
+.svgg-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }}
+.svgg-pair, .svgg-acc {{ margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 14px; }}
+.svgg-pair__imgs {{ display: flex; gap: 8px; }}
+.svgg-pair__imgs img, .svgg-acc img {{ width: 100%; height: auto; min-width: 0; }}
+.svgg-pair figcaption, .svgg-acc figcaption {{ margin-top: 8px; text-align: center; font-size: 0.82rem; color: var(--text-soft); }}
+.svgg-pair figcaption code, .svgg-acc figcaption code {{ color: var(--accent); }}
+</style>
+<section class="section">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">DESIGN QA</p><h1 class="t-h1">SVG全点検グリッド</h1>
+    <p class="t-lead">全デバイスの背面+正面ペア({len(PHONES) + len(TABLETS)}機種)と、アクセサリ全カラーバリエーション({sum(len(a["colors"]) for a in ACCESSORIES)}点)の製品ビジュアル一覧。デザイン監査用の内部ページです。</p></div>
+    <h2 class="t-h3" style="margin-bottom:16px">デバイス — 背面 + 正面</h2>
+    <div class="svgg-grid">{pairs}</div>
+    <h2 class="t-h3" style="margin:32px 0 16px">アクセサリ — 全バリエーション</h2>
+    <div class="svgg-grid">{accs}</div>
+  </div>
+</section>"""
+    render_page("/dev/svg-gallery/", "SVG全点検グリッド(内部QA)",
+                "全機種の背面・正面と全アクセサリのSVGビジュアルを一覧点検する開発者向け内部ページ。",
+                body, "dark", [("ホーム", "/"), ("開発者向け", "/developers/"), ("SVG全点検", None)],
+                "開発者向け", noindex=True)
+
+
 def main():
     build_assets()
+    build_svg_gallery()
     for p in ALL_PRODUCTS:
         build_product_page(p)
     for t in TECHS:

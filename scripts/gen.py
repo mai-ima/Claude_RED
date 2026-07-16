@@ -2693,7 +2693,7 @@ def _collab_lp_endfield(cfg, phone, accs):
         ("第2弾", None, True),
     ]
     right_btns = "".join(
-        (f'<span class="ef-map__slot is-lock"><i>🔒</i>{label}</span>' if locked else
+        (f'<span class="ef-map__slot is-lock"><i><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></i>{label}</span>' if locked else
          f'<a class="ef-map__slot" href="{href}"><i>▣</i>{label}</a>')
         for label, href, locked in right_slots)
 
@@ -2982,7 +2982,7 @@ def _collab_lp_endfield(cfg, phone, accs):
 <section class="ef-dialog" id="efDura" aria-label="耐久試験">
   <div class="cl-wrap">
     <div class="ef-dlg">
-      <div class="ef-dlg__head"><span class="ef-dlg__ic">⚙</span><span class="ef-dlg__cap">// 耐久 <i>DURABILITY</i></span><h2 class="ef-dlg__t">過酷環境テスト</h2><button class="ef-x" type="button" aria-hidden="true" tabindex="-1">✕</button></div>
+      <div class="ef-dlg__head"><span class="ef-dlg__ic"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.4 5.4l2.2 2.2M16.4 16.4l2.2 2.2M18.6 5.4l-2.2 2.2M7.6 16.4l-2.2 2.2"/></svg></span><span class="ef-dlg__cap">// 耐久 <i>DURABILITY</i></span><h2 class="ef-dlg__t">過酷環境テスト</h2><button class="ef-x" type="button" aria-hidden="true" tabindex="-1">✕</button></div>
       <div class="ef-dlg__body">
         <div class="ef-dlg__icon" aria-hidden="true"><span class="ef-dlg__tri">!</span></div>
         <div class="ef-dlg__info">
@@ -2993,7 +2993,7 @@ def _collab_lp_endfield(cfg, phone, accs):
         </div>
       </div>
       <div class="ef-dlg__foot">
-        <span class="ef-dlg__warn">⚠ MIL-STD-810H 準拠</span>
+        <span class="ef-dlg__warn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> MIL-STD-810H 準拠</span>
         <a class="ef-pill ef-pill--go" href="{product_url(phone)}specs/"><span class="ef-pill__dash"></span>詳細仕様<b>◔</b></a>
       </div>
     </div>
@@ -3824,20 +3824,29 @@ def _dev_head(eyebrow, h1, lead):
 
 def build_dev_hub():
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    _ic = {
+        "ui": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+        "typography": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M12 6v13M8.5 19h7"/></svg>',
+        "colors": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c3 4.5 6 7 6 10a6 6 0 0 1-12 0c0-3 3-5.5 6-10z"/></svg>',
+        "animations": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12h4l2.5-6 4 12 2.5-6h4"/></svg>',
+        "art": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 16.5l5-4 4 3 3-2 4 3"/></svg>',
+        "charts": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19v-7M10 19V6M15 19V9M20 19v-4M3.5 19h17"/></svg>',
+        "svg-gallery": '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3.5" width="8" height="17" rx="2"/><path d="M11 18.5h2"/></svg>',
+    }
     sections = [
-        ("ui", "UIコンポーネント", "ボタン/バッジ/カード/フォーム/タブ/表/通知 — 全部品の実物カタログ", "🧩"),
-        ("typography", "タイポグラフィ", "見出し階層・本文・等幅・和欧混植の見本帳", "🔤"),
-        ("colors", "カラートークン", "基本トークン/製品ライングロー/コラボ4+1配色の全スウォッチ", "🎨"),
-        ("animations", "アニメーション", "reveal系・キーフレーム語彙・カウンタ/カウントダウン・演出見本", "✨"),
-        ("art", "図版カタログ", "svg_art 全kind+チップパッケージ(svg_die)の一覧", "🖼"),
-        ("charts", "チャート", "charts.js 4種(bar/line/radar/donut)の描画点検", "📊"),
-        ("svg-gallery", "SVG全点検", "全デバイス背面+正面ペアとアクセサリ全バリエーション", "📱"),
+        ("ui", "UIコンポーネント", "ボタン/バッジ/カード/フォーム/タブ/表/通知 — 全部品の実物カタログ"),
+        ("typography", "タイポグラフィ", "見出し階層・本文・等幅・和欧混植の見本帳"),
+        ("colors", "カラートークン", "基本トークン/製品ライングロー/コラボ4+1配色の全スウォッチ"),
+        ("animations", "アニメーション", "reveal系・キーフレーム語彙・カウンタ/カウントダウン・演出見本"),
+        ("art", "図版カタログ", "svg_art 全kind+チップパッケージ(svg_die)の一覧"),
+        ("charts", "チャート", "charts.js 4種(bar/line/radar/donut)の描画点検"),
+        ("svg-gallery", "SVG全点検", "全デバイス背面+正面ペアとアクセサリ全バリエーション"),
     ]
     cards = "".join(
         f'<a class="card card--hover reveal" href="/dev/{slug}/">'
-        f'<p class="eyebrow">{icon} {slug.upper()}</p><h2 class="t-h4">{esc(t)}</h2>'
+        f'<p class="eyebrow" style="display:flex;align-items:center;gap:8px">{_ic[slug]} {slug.upper()}</p><h2 class="t-h4">{esc(t)}</h2>'
         f'<p class="t-small t-soft">{esc(d)}</p><p class="link-arrow">開く</p></a>'
-        for slug, t, d, icon in sections)
+        for slug, t, d in sections)
     stats = [
         (str(len(PAGES)), "公開ページ(sitemap)"),
         (str(len(ALL_PRODUCTS)), "製品データ"),
@@ -4005,7 +4014,7 @@ def build_dev_colors():
 def build_dev_animations():
     kf_cells = [
         ("pulse 脈動", "devkf-pulse", '<span class="devkf-pulse"></span>'),
-        ("spin 回転(ファン)", "devkf-spin", '<span class="devkf-spin">✳</span>'),
+        ("spin 回転(ファン)", "devkf-spin", '<span class="devkf-spin"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 12V4.5M12 12l6.5-3.7M12 12l6.5 3.7M12 12v7.5M12 12l-6.5 3.7M12 12L5.5 8.3"/><circle cx="12" cy="12" r="2.2"/></svg></span>'),
         ("blink 点滅(REC)", "devkf-blink", '<span class="devkf-blink"></span> REC'),
         ("marquee 流し", "devkf-marquee", '<span class="devkf-marquee"><i>SUZAKU × NTE — WELCOME — SUZAKU × NTE — WELCOME — </i></span>'),
         ("neon 明滅", "devkf-neon", '<em class="devkf-neon">NEON</em>'),
@@ -4013,7 +4022,7 @@ def build_dev_animations():
         ("belt 搬送矢印", "devkf-belt", '<span class="devkf-belt"><i></i><i></i><i></i></span>'),
         ("shimmer スケルトン", "devkf-shimmer", '<span class="devkf-shimmer"></span>'),
         ("fill ゲージ", "devkf-fill", '<span class="devkf-fillwrap"><i class="devkf-fill"></i></span>'),
-        ("float 浮遊", "devkf-float", '<span class="devkf-float">📦</span>'),
+        ("float 浮遊", "devkf-float", '<span class="devkf-float"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5 12 4.5l8 4v7l-8 4-8-4z"/><path d="M4 8.5l8 4 8-4M12 12.5v7"/></svg></span>'),
     ]
     kf_html = "".join(
         f'<div class="card t-center reveal"><div style="height:64px;display:grid;place-items:center;overflow:hidden">{demo}</div>'
@@ -4024,7 +4033,7 @@ def build_dev_animations():
     <style>
     .devkf-pulse {{ width: 16px; height: 16px; border-radius: 50%; background: var(--accent); animation: devPulse 1.6s ease-in-out infinite; }}
     @keyframes devPulse {{ 0%, 100% {{ opacity: 1; transform: scale(1); }} 50% {{ opacity: 0.35; transform: scale(0.8); }} }}
-    .devkf-spin {{ font-size: 30px; color: var(--accent); animation: devSpin 2.4s linear infinite; display: inline-block; }}
+    .devkf-spin {{ color: var(--accent); animation: devSpin 2.4s linear infinite; display: inline-block; }}
     @keyframes devSpin {{ to {{ transform: rotate(360deg); }} }}
     .devkf-blink {{ width: 10px; height: 10px; border-radius: 50%; background: #d43a2e; display: inline-block; animation: devBlink 1.4s steps(2) infinite; }}
     @keyframes devBlink {{ 50% {{ opacity: 0.15; }} }}
@@ -4042,7 +4051,7 @@ def build_dev_animations():
     .devkf-fillwrap {{ width: 150px; height: 10px; border-radius: 5px; background: var(--line); display: inline-block; overflow: hidden; }}
     .devkf-fill {{ display: block; height: 100%; width: 0; border-radius: 5px; background: var(--accent); animation: devFill 2.4s ease-out infinite; }}
     @keyframes devFill {{ 60%, 100% {{ width: 82%; }} }}
-    .devkf-float {{ font-size: 26px; display: inline-block; animation: devFloat 3s ease-in-out infinite; }}
+    .devkf-float {{ color: var(--accent); display: inline-block; animation: devFloat 3s ease-in-out infinite; }}
     @keyframes devFloat {{ 0%, 100% {{ transform: translateY(4px); }} 50% {{ transform: translateY(-4px); }} }}
     @media (prefers-reduced-motion: reduce) {{
       .devkf-pulse, .devkf-spin, .devkf-blink, .devkf-marquee i, .devkf-neon, .devkf-glitch,

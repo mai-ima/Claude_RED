@@ -3850,7 +3850,7 @@ def build_dev_hub():
     body = f"""{_dev_head("INTERNAL QA HUB", "内部点検ハブ",
         "デザインシステムの部品・配色・動き・図版・チャートを1か所で目視点検するための内部ページ群です。検索エンジンには載りません(noindex)。")}
     <div class="grid grid--4" style="margin-bottom:var(--sp-6)">{stat_cells}</div>
-    <div class="grid grid--3 grid--cards">{cards}</div>
+    <div class="grid grid--3">{cards}</div>
     <p class="t-micro t-faint" style="margin-top:26px">ビルド: {now} / 機械検証: <code>python3 scripts/check_links.py</code> → <code>node scripts/audit.js</code></p>
   </div>
 </section>"""
@@ -3940,8 +3940,8 @@ def build_dev_typography():
              ("t-h3", "サブセクション"), ("t-h4", "カード見出し"), ("t-lead", "リード文"),
              ("t-small", "小さめ本文"), ("t-micro", "注記・キャプション")]
     rows = "".join(
-        f'<div class="card reveal" style="display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:baseline">'
-        f'<code class="t-micro t-faint">.{cls}</code><p class="{cls}" style="margin:0">{esc(label)} — 朱雀 SUZAKU 0123</p></div>'
+        f'<div class="card reveal" style="display:grid;grid-template-columns:minmax(72px,120px) minmax(0,1fr);gap:16px;align-items:baseline">'
+        f'<code class="t-micro t-faint">.{cls}</code><p class="{cls}" style="margin:0;overflow-wrap:anywhere">{esc(label)} — 朱雀 SUZAKU 0123</p></div>'
         for cls, label in scale)
     body = f"""{_dev_head("TYPOGRAPHY", "タイポグラフィ",
         "見出し階層と本文の見本帳。基本書体は Noto Sans JP、コラボLPのみ専用フォント(明朝/コンデンス系)を限定読み込みします。")}
@@ -4052,7 +4052,7 @@ def build_dev_animations():
 
     <div class="section-head"><p class="eyebrow">REVEAL</p><h2 class="t-h3">スクロール出現(reveal系)</h2></div>
     <p class="t-small t-soft" style="margin-bottom:14px">IntersectionObserverで .is-inview が付与されます。<button class="btn btn--soft btn--sm" type="button" id="devReplay">もう一度再生</button></p>
-    <div class="grid grid--4" id="devRevealRow">
+    <div class="grid grid--4" id="devRevealRow" style="overflow:hidden">
       <div class="card t-center reveal"><code class="t-micro">.reveal</code><p class="t-small t-soft">下から</p></div>
       <div class="card t-center reveal-l"><code class="t-micro">.reveal-l</code><p class="t-small t-soft">左から</p></div>
       <div class="card t-center reveal-r"><code class="t-micro">.reveal-r</code><p class="t-small t-soft">右から</p></div>

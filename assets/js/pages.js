@@ -210,6 +210,24 @@
       });
       return out;
     }
+    /* 「もしかして」表示用: エイリアス群の代表表記(サイト内の正式表記) */
+    var DISPLAY = [
+      "朱雀", "雷 RAI", "燕 TSUBAME", "Neo", "七耀", "残響", "夜行", "前線",
+      "原神", "鳴潮", "NTE", "エンドフィールド", "バッテリー", "冷却", "イヤホン", "ケース"
+    ];
+    function suggestFor(q) {
+      var seen = [];
+      q.split(/\s+/).forEach(function (t) {
+        ALIASES.forEach(function (g, gi) {
+          if (g.indexOf(t) !== -1) {
+            var disp = DISPLAY[gi];
+            // 入力がすでに代表表記(正規化一致)なら出さない
+            if (disp && szNorm(disp).indexOf(t) === -1 && seen.indexOf(disp) === -1) seen.push(disp);
+          }
+        });
+      });
+      return seen;
+    }
 
     function doSearch(q) {
       q = szNorm(q.trim());
@@ -235,6 +253,29 @@
         return { item: item, score: score };
       }).filter(Boolean).sort(function (a, b) { return b.score - a.score; }).slice(0, 40);
       if (info) info.textContent = '「' + q + '」の検索結果: ' + hits.length + "件";
+      /* もしかして: 表記ゆれの代表表記をチップで提案(0件時の救済を兼ねる) */
+      var sBox = $("#searchSuggest");
+      if (!sBox) {
+        sBox = document.createElement("p");
+        sBox.id = "searchSuggest";
+        sBox.className = "t-small";
+        sBox.style.margin = "6px 0 14px";
+        searchResults.parentNode.insertBefore(sBox, searchResults);
+        sBox.addEventListener("click", function (e) {
+          var c = e.target.closest("[data-suggest]");
+          if (!c) return;
+          var word = c.getAttribute("data-suggest");
+          if (input) input.value = word;
+          try { history.replaceState(null, "", "/search/?q=" + encodeURIComponent(word)); } catch (err) { /* noop */ }
+          doSearch(word);
+        });
+      }
+      var sug = suggestFor(q);
+      sBox.innerHTML = sug.length
+        ? 'もしかして: ' + sug.map(function (w) {
+            return '<button type="button" class="btn btn--soft btn--sm" data-suggest="' + esc(w) + '" style="margin-right:6px"><b style="color:var(--accent)">' + esc(w) + "</b></button>";
+          }).join("")
+        : "";
       if (!hits.length) {
         searchResults.innerHTML = '<div class="empty"><p class="empty__icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></p><p>一致する結果が見つかりませんでした。別のキーワードをお試しください。</p></div>';
         return;

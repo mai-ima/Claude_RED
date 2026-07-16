@@ -1038,7 +1038,7 @@ PHONES = [
     # ======================== 法人向け(完全新規ブランド) ========================
     {
         "id": "kaname-b1", "cat": "phone", "line": "biz",
-        "name": "要 KANAME B1", "kana": "KANAME B1",
+        "name": "要 KANAME B1", "kana": "BUSINESS MODEL",
         "year": 2026, "release": "2026年6月19日", "status": "current", "flag": "new",
         "tagline": "組織の要に、静かな一台を。",
         "sub": "MDM標準対応・5年保守・カメラレス構成も選べる法人専用スマートフォン。現場から役員室まで、仕事の道具に徹する設計です。",

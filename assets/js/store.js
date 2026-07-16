@@ -95,8 +95,12 @@
       var img = $("#buyImage");
       if (img) {
         if (buyView === "front") {
+          var v = (window.SZ && window.SZ.assetV) ? "?v=" + window.SZ.assetV : "";
           var fb = buyBox.querySelector("[data-buyview=front]");
-          img.src = fb ? fb.getAttribute("data-front-src") : backImgSrc();
+          // カメラレス構成はフロントカメラも非搭載のため、パンチ無しの専用正面へ
+          img.src = camlessSelected()
+            ? "/assets/img/products/" + pid + "-nc-front.svg" + v
+            : (fb ? fb.getAttribute("data-front-src") : backImgSrc());
         } else {
           img.src = backImgSrc();
         }
@@ -174,7 +178,8 @@
         "</div></div></div>";
     }
     function renderStore() {
-      var items = SZ.products.filter(function (p) { return p.status === "current"; });
+      // 法人ライン(biz)は法人ストア(/business/store/)で扱う
+      var items = SZ.products.filter(function (p) { return p.status === "current" && p.line !== "biz"; });
       if (cat !== "all") items = items.filter(function (p) { return p.cat === cat; });
       if (sort === "price-asc") items.sort(function (a, b) { return a.price - b.price; });
       else if (sort === "price-desc") items.sort(function (a, b) { return b.price - a.price; });
@@ -577,28 +582,58 @@
       sel.value = defaults[i] || "";
       sel.addEventListener("change", renderCompare);
     });
-    var ROWS = ["発売日", "価格", "ディスプレイ", "リフレッシュレート", "SoC", "GPU", "メモリ", "ストレージ", "冷却", "バッテリー", "充電", "重量", "OS"];
+    /* 人気プリセット: ワンタップで3機種をセット */
+    $$("#comparePresets [data-preset]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var ids = btn.getAttribute("data-preset").split(",");
+        sels.forEach(function (sel, i) { sel.value = ids[i] || ""; });
+        renderCompare();
+      });
+    });
+    var ROWS = ["発売日", "価格", "ディスプレイ", "リフレッシュレート", "タッチサンプリング", "SoC", "AnTuTu", "GPU", "メモリ", "ストレージ", "リアカメラ", "冷却", "バッテリー", "充電", "防塵防水", "重量", "OS", "アップデート"];
+    /* 行ごとの「最良」判定: max=数値が大きいほど良い / min=小さいほど良い */
+    var BEST = { "リフレッシュレート": "max", "タッチサンプリング": "max", "AnTuTu": "max", "バッテリー": "max", "重量": "min" };
+    function numOf(s) {
+      var m = String(s || "").replace(/,/g, "").match(/(\d+(?:\.\d+)?)/);
+      return m ? parseFloat(m[1]) : null;
+    }
+    function bestIdx(key, chosen) {
+      var mode = BEST[key];
+      if (!mode) return -1;
+      var vals = chosen.map(function (p) { return numOf(p.cmp[key]); });
+      if (vals.some(function (v) { return v === null; })) return -1;
+      var target = mode === "max" ? Math.max.apply(null, vals) : Math.min.apply(null, vals);
+      // 同値が並ぶ行はハイライトしない
+      if (vals.filter(function (v) { return v === target; }).length !== 1) return -1;
+      return vals.indexOf(target);
+    }
     function renderCompare() {
       var chosen = sels.map(function (s) { return product(s.value); }).filter(Boolean);
       var box = $("#compareResult");
+      var dash = $("#compareDash");
       if (chosen.length < 2) {
         box.innerHTML = '<div class="empty"><p>2機種以上を選択すると比較表が表示されます。</p></div>';
+        if (dash) dash.innerHTML = "";
         return;
       }
+      var v = (window.SZ && window.SZ.assetV) ? "?v=" + window.SZ.assetV : "";
       var head = "<tr><th></th>" + chosen.map(function (p) {
         return '<th scope="col"><a href="' + p.url + '" style="color:var(--accent)">' + p.name + "</a></th>";
       }).join("") + "</tr>";
-      var imgs = "<tr><th></th>" + chosen.map(function (p) {
-        var v = (window.SZ && window.SZ.assetV) ? "?v=" + window.SZ.assetV : "";
-        var src = "/assets/img/products/" + p.id + "-front.svg" + v; // 正面ビューで画面差を見せる
-        return '<td><img src="' + src + '" alt="' + p.name + ' 正面" style="max-height:150px;margin-inline:auto"></td>';
+      var imgs = '<tr><th scope="row" class="t-faint">正面 / 背面</th>' + chosen.map(function (p) {
+        return '<td><div style="display:flex;gap:6px;justify-content:center;align-items:flex-end">' +
+          '<img src="/assets/img/products/' + p.id + '-front.svg' + v + '" alt="' + p.name + ' 正面" style="max-height:140px">' +
+          '<img src="' + p.img + '" alt="' + p.name + ' 背面" style="max-height:140px"></div></td>';
       }).join("") + "</tr>";
       var rows = ROWS.map(function (key) {
-        return '<tr><th scope="row">' + key + "</th>" + chosen.map(function (p) {
-          return "<td>" + (p.cmp[key] || "—") + "</td>";
+        var hi = bestIdx(key, chosen);
+        return '<tr><th scope="row">' + key + "</th>" + chosen.map(function (p, i) {
+          var cls = i === hi ? ' class="compare-best"' : "";
+          return "<td" + cls + ">" + (p.cmp[key] || "—") + "</td>";
         }).join("") + "</tr>";
       }).join("");
       box.innerHTML = '<div class="scroll-x"><table class="spec-table compare-table"><thead>' + head + "</thead><tbody>" + imgs + rows + "</tbody></table></div>";
+      renderDash(chosen, dash);
       // 5軸レーダーチャートで重ね比較
       var radarBox = $("#compareRadar");
       if (radarBox && window.szCharts) {
@@ -617,6 +652,40 @@
           radarBox.hidden = true;
         }
       }
+    }
+    /* 実測ダッシュボード: 当社試験値4指標を機種別バーで並置 */
+    function renderDash(chosen, dash) {
+      if (!dash) return;
+      var withM = chosen.filter(function (p) { return p.m; });
+      if (withM.length < 2) { dash.innerHTML = ""; return; }
+      var METRICS = [
+        { key: "sustain", label: "30分後fps維持率", unit: "%", mode: "max", max: 100 },
+        { key: "latency", label: "タッチ遅延(小さいほど速い)", unit: "ms", mode: "min" },
+        { key: "charge50", label: "0→50%充電(短いほど速い)", unit: "分", mode: "min" },
+        { key: "costperf", label: "コスパ指数(万点/万円)", unit: "", mode: "max" }
+      ];
+      var html = '<div class="section-head"><p class="eyebrow">MEASURED</p><h2 class="t-h3">実測ダッシュボード(当社試験値)</h2></div><div class="grid grid--2">';
+      METRICS.forEach(function (mt) {
+        var vals = withM.map(function (p) {
+          if (mt.key === "costperf") {
+            return p.m.antutu ? Math.round(p.m.antutu / (p.price / 10000) * 10) / 10 : null;
+          }
+          return p.m[mt.key];
+        });
+        if (vals.some(function (x) { return x == null; })) return;
+        var scale = mt.max || Math.max.apply(null, vals);
+        var best = mt.mode === "max" ? Math.max.apply(null, vals) : Math.min.apply(null, vals);
+        var rows = withM.map(function (p, i) {
+          var w = Math.max(6, Math.round(vals[i] / scale * 100));
+          var isBest = vals[i] === best && vals.filter(function (x) { return x === best; }).length === 1;
+          return '<div style="display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:10px;align-items:center;padding:5px 0">' +
+            '<span class="t-micro t-soft">' + esc(p.name) + "</span>" +
+            '<span style="height:10px;border-radius:5px;background:var(--line);overflow:hidden;display:block"><i style="display:block;height:100%;width:' + w + '%;border-radius:5px;background:' + (isBest ? "var(--accent)" : "color-mix(in srgb, var(--accent) 40%, var(--line))") + '"></i></span>' +
+            '<b class="t-small"' + (isBest ? ' style="color:var(--accent)"' : "") + ">" + vals[i] + mt.unit + "</b></div>";
+        }).join("");
+        html += '<div class="card"><h3 class="t-h4" style="margin-bottom:10px">' + mt.label + "</h3>" + rows + "</div>";
+      });
+      dash.innerHTML = html + "</div>";
     }
     renderCompare();
   }

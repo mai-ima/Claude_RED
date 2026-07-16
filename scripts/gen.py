@@ -11,6 +11,7 @@
 
 Next.js移行時は、この出力ディレクトリ構造が app/ ルータのルートに1:1対応する。
 """
+import datetime
 import hashlib
 import json
 import re
@@ -965,6 +966,9 @@ def product_card(p, show_price=True):
 
 
 def product_url(p):
+    # 法人ライン(要 KANAME)は法人サイト傘下のURLに置く(一般製品と分離)
+    if p.get("line") == "biz":
+        return f"/business/products/{p['id']}/"
     seg = {"phone": "phone", "tablet": "tablet", "accessory": "accessories"}[p["cat"]]
     return f"/products/{seg}/{p['id']}/"
 
@@ -1053,6 +1057,8 @@ def build_product_page(p):
     p_motif = p.get("collab")
     cat_label = {"phone": "スマートフォン", "tablet": "タブレット", "accessory": "アクセサリ"}[p["cat"]]
     cat_url = {"phone": "/products/phone/", "tablet": "/products/tablet/", "accessory": "/products/accessories/"}[p["cat"]]
+    if p.get("line") == "biz":
+        cat_label, cat_url = "法人のお客様", "/business/"
 
     # --- 購入モジュール ---
     swatches = "".join(
@@ -1849,10 +1855,28 @@ def _cl_lpnav(cfg, phone):
 </div>"""
 
 
+def collab_presale(cfg):
+    """予約開始前なら開始日(YYYY-MM-DD)を返す。時間軸を現実の日付と一致させ、
+    「受付中」表記や受付終了カウントダウンが未来の予約開始と矛盾しないようにする。"""
+    sched = cfg.get("schedule") or []
+    if not sched:
+        return None
+    start = sched[0][0]
+    return start if datetime.date.today().isoformat() < start else None
+
+
 def _cl_commerce(cfg, phone):
-    """共通購入モジュール: カウントダウン+在庫メーター+CTA(collab-core.css)。"""
+    """共通購入モジュール: カウントダウン+在庫メーター+CTA(collab-core.css)。
+    予約開始前は「予約開始まで」のカウントダウンに切り替える。"""
     lim = cfg["limited"]
     slug = cfg["slug"]
+    presale = collab_presale(cfg)
+    if presale:
+        count_label, count_until = "予約開始まで", f"{presale}T10:00:00"
+        count_end = f"{presale.replace('-', '/')} 10:00 受付開始"
+    else:
+        count_label, count_until = "受付終了まで", lim["until"]
+        count_end = f"{lim['until'][:10]} まで"
     buy = ""
     price_html = ""
     if phone:
@@ -1862,15 +1886,15 @@ def _cl_commerce(cfg, phone):
     return f"""
 <section class="cl-section cl-limited" id="buy">
   <div class="cl-wrap cl-limited__grid">
-    <div class="cl-count" data-until="{lim['until']}" role="timer" aria-label="受付終了までの残り時間">
-      <p class="cl-eyebrow">受付終了まで</p>
+    <div class="cl-count" data-until="{esc(count_until)}" role="timer" aria-label="{esc(count_label)}の残り時間">
+      <p class="cl-eyebrow">{esc(count_label)}</p>
       <div class="cl-count__row">
         <span class="cl-count__unit"><b data-c="d">--</b><i>日</i></span>
         <span class="cl-count__unit"><b data-c="h">--</b><i>時間</i></span>
         <span class="cl-count__unit"><b data-c="m">--</b><i>分</i></span>
         <span class="cl-count__unit"><b data-c="s">--</b><i>秒</i></span>
       </div>
-      <p class="cl-count__end">{esc(lim['until'][:10])} まで</p>
+      <p class="cl-count__end">{esc(count_end)}</p>
     </div>
     <div class="cl-stock" data-slug="{slug}" data-qty="{lim['qty']}" data-sold="{lim['sold']}">
       <p class="cl-eyebrow">数量限定 生産数</p>
@@ -2619,6 +2643,7 @@ def _collab_lp_endfield(cfg, phone, accs):
     タイトル画面/拠点マップ/任務/端末ファイル/設備ダイアログ/持続計器/
     共同開発記録/記録画像/同梱テーマ/スカウト購入/資料室 の11画面+FAQ。"""
     lim = cfg["limited"]
+    _ef_presale = collab_presale(cfg)
 
     # --- S3 任務: 特徴をタスク行として、同梱物を任務報酬カードとして描く ---
     tasks = [
@@ -2907,7 +2932,7 @@ def _collab_lp_endfield(cfg, phone, accs):
       <div class="ef-rail2" aria-hidden="true"><span class="is-on">ALL</span><span>◆</span><span>▲</span><span>◇</span><span>▽</span></div>
       <div class="ef-mlist">
         <p class="ef-mlist__urgent"><b>受注</b>共同設計プロジェクト</p>
-        <div class="ef-mitem is-on"><span class="ef-mitem__t">前線、受注開始</span><span class="ef-mitem__meta">受付中 ◎ 〜{esc(lim['until'][5:10]).replace('-', '/')}</span></div>
+        <div class="ef-mitem is-on"><span class="ef-mitem__t">前線、受注{'準備中' if _ef_presale else '開始'}</span><span class="ef-mitem__meta">{f"予約開始 {_ef_presale[5:].replace('-', '/')}" if _ef_presale else "受付中 ◎ 〜" + esc(lim['until'][5:10]).replace('-', '/')}</span></div>
         <div class="ef-mitem"><span class="ef-mitem__t">タロⅡ 環境試験</span><span class="ef-mitem__meta">完了 — 全26項目 PASS</span></div>
         <div class="ef-mitem"><span class="ef-mitem__t">基幹 KIKAN-F1 実装</span><span class="ef-mitem__meta">完了 — 持続99%達成</span></div>
         <div class="ef-mitem"><span class="ef-mitem__t">専用アクセサリ配備</span><span class="ef-mitem__meta">進行中 → 購買部</span></div>
@@ -3041,9 +3066,9 @@ def _collab_lp_endfield(cfg, phone, accs):
     <div class="ef-scout__panel">
       <h2 class="ef-scout__t">数量限定<br>販売</h2>
       <p class="ef-scout__pick">対象端末 — 前線 ZENSEN</p>
-      <div class="cl-count ef-scout__count" data-until="{lim['until']}" role="timer" aria-label="受付終了までの残り時間">
-        <p class="ef-scout__cl">受付終了まで <b data-c="d">--</b>日 <b data-c="h">--</b>:<b data-c="m">--</b>:<b data-c="s">--</b></p>
-        <p class="ef-scout__end">終了: {esc(lim['until'][:10].replace('-', '/'))} 23:59 (JST)</p>
+      <div class="cl-count ef-scout__count" data-until="{f"{_ef_presale}T10:00:00" if _ef_presale else lim['until']}" role="timer" aria-label="残り時間">
+        <p class="ef-scout__cl">{'受付開始まで' if _ef_presale else '受付終了まで'} <b data-c="d">--</b>日 <b data-c="h">--</b>:<b data-c="m">--</b>:<b data-c="s">--</b></p>
+        <p class="ef-scout__end">{f"開始: {_ef_presale.replace('-', '/')} 10:00 (JST)" if _ef_presale else f"終了: {esc(lim['until'][:10].replace('-', '/'))} 23:59 (JST)"}</p>
       </div>
       <ul class="ef-scout__sure">
         <li>{lim['qty']:,}台以内 — 数量限定生産・完売次第終了</li>
@@ -3177,7 +3202,7 @@ def build_collab_hub():
                 f'<a class="collab-card" style="{style}" href="/collab/{cfg["slug"]}/">'
                 f'<span class="collab-card__game">{esc(cfg["game"])}</span>'
                 f'<span class="collab-card__edition">{esc(cfg["edition"])}</span>'
-                f'<span class="collab-card__tag">数量限定・期間限定 — 受付中</span>'
+                f'<span class="collab-card__tag">{"予約受付は " + collab_presale(cfg).replace("-", "/")[5:] + " から" if collab_presale(cfg) else "数量限定・期間限定 — 受付中"}</span>'
                 f'<span class="collab-card__go">特設ページへ →</span></a>')
         else:
             cards += (
@@ -3538,22 +3563,34 @@ def build_client_data():
     prods = []
     for p in ALL_PRODUCTS:
         cmp_data = None
+        measured = None
         if p["cat"] in ("phone", "tablet"):
+            antutu = product_antutu(p)
             cmp_data = {
                 "発売日": p["release"],
                 "価格": (yen(p["price"]) + "(税込)〜") if p["status"] == "current" else "販売終了",
                 "ディスプレイ": get_spec(p, ["ディスプレイ"], "パネル"),
                 "リフレッシュレート": get_spec(p, ["ディスプレイ"], "リフレッシュレート"),
+                "タッチサンプリング": get_spec(p, ["ディスプレイ"], "タッチサンプリング"),
                 "SoC": get_spec(p, ["性能"], "SoC"),
+                "AnTuTu": f"{antutu}万点(当社測定)" if antutu else "—",
                 "GPU": get_spec(p, ["性能"], "GPU"),
                 "メモリ": get_spec(p, ["性能"], "メモリ"),
                 "ストレージ": get_spec(p, ["性能"], "ストレージ"),
+                "リアカメラ": get_spec(p, ["カメラ"], "リアカメラ"),
                 "冷却": get_spec(p, ["冷却"], "冷却システム"),
                 "バッテリー": get_spec(p, ["バッテリー"], "バッテリー容量"),
                 "充電": get_spec(p, ["バッテリー"], "有線充電"),
+                "防塵防水": get_spec(p, ["本体"], "防塵防水"),
                 "重量": get_spec(p, ["本体"], "重量"),
                 "OS": get_spec(p, ["ソフトウェア"], "OS"),
+                "アップデート": get_spec(p, ["ソフトウェア"], "アップデート"),
             }
+            m = p.get("measured")
+            if m:
+                # 実測ダッシュボード用(数値)。コスパ指標はクライアント側で算出
+                measured = dict(m)
+                measured["antutu"] = antutu
         prods.append({
             "id": p["id"], "name": p["name"], "kana": p["kana"], "cat": p["cat"],
             "line": p["line"], "lineLabel": LINES[p["line"]]["label"], "year": p["year"],
@@ -3561,7 +3598,7 @@ def build_client_data():
             "tagline": p["tagline"], "release": p["release"],
             "colors": p["colors"], "storage": p["storage"],
             "img": pimg(p["id"]),
-            "url": product_url(p), "cmp": cmp_data,
+            "url": product_url(p), "cmp": cmp_data, "m": measured,
             "radar": radar_values(p) if cmp_data else None,
         })
     news = [{"id": n["id"], "date": n["date"], "cat": n["cat"], "title": n["title"],
@@ -3618,6 +3655,12 @@ def build_assets():
         if p["cat"] == "phone":
             front = svg_art.svg_phone_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif, design)
             (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")
+            # カメラレス構成はフロントカメラも非搭載 → パンチ無しの専用正面を生成
+            if p.get("camera_options"):
+                ncf_design = dict(design or {})
+                ncf_design["punch"] = "none"
+                ncf = svg_art.svg_phone_front(f"{p['id']}nc", p["colors"][0]["hex"], glow, p["name"], p["line"], hz, motif, ncf_design)
+                (img / "products" / f"{p['id']}-nc-front.svg").write_text(ncf, encoding="utf-8")
         elif p["cat"] == "tablet":
             front = svg_art.svg_tablet_front(p["id"], p["colors"][0]["hex"], glow, p["name"], p["line"], hz, design)
             (img / "products" / f"{p['id']}-front.svg").write_text(front, encoding="utf-8")

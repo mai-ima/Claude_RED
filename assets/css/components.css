@@ -2487,3 +2487,11 @@ body.has-announce-bar .drawer { top: calc(var(--header-h) + var(--announce-h, 32
   color: var(--cl-accent, var(--accent));
   border: 1px solid color-mix(in srgb, var(--cl-accent, var(--accent)) 60%, transparent);
 }
+
+/* 比較表: 行内の最良値セル */
+.compare-table td.compare-best {
+  color: var(--accent);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 65%, transparent);
+  border-radius: 6px;
+}

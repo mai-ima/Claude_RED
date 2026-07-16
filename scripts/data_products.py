@@ -1038,18 +1038,18 @@ PHONES = [
     # ======================== 法人向け(完全新規ブランド) ========================
     {
         "id": "kaname-b1", "cat": "phone", "line": "biz",
-        "name": "要 KANAME B1", "kana": "かなめ B1",
+        "name": "要 KANAME B1", "kana": "KANAME B1",
         "year": 2026, "release": "2026年6月19日", "status": "current", "flag": "new",
         "tagline": "組織の要に、静かな一台を。",
         "sub": "MDM標準対応・5年保守・カメラレス構成も選べる法人専用スマートフォン。現場から役員室まで、仕事の道具に徹する設計です。",
-        "price": 94800,
+        "price": 69800,
         "colors": [
             {"name": "墨紺", "hex": "#1e2430"},
             {"name": "灰白", "hex": "#d6d8d2"},
         ],
         "storage": [
-            {"label": "12GB + 256GB", "delta": 0},
-            {"label": "12GB + 512GB", "delta": 12000},
+            {"label": "8GB + 128GB", "delta": 0},
+            {"label": "8GB + 256GB", "delta": 8000},
         ],
         "camera_options": [
             {"label": "標準(50MPリアカメラ)", "note": "通常構成", "delta": 0},
@@ -1077,9 +1077,9 @@ PHONES = [
         ],
         "specs": [
             ("本体", [("サイズ", "158.9 × 74.2 × 8.9mm"), ("重量", "192g"), ("素材", "再生アルミフレーム+マット強化ガラス"), ("防塵防水", "IP68・グローブ/濡れ手操作対応"), ("カラー", "墨紺 / 灰白")]),
-            ("ディスプレイ", [("パネル", "6.5インチ AMOLED(ブルーライト低減)"), ("解像度", "2,400 × 1,080"), ("リフレッシュレート", "最大120Hz(1〜120Hz可変)"), ("輝度", "屋外ピーク2,000nit")]),
+            ("ディスプレイ", [("パネル", "6.5インチ AMOLED(ブルーライト低減)"), ("解像度", "2,400 × 1,080"), ("リフレッシュレート", "最大90Hz(業務向けに省電力調整)"), ("輝度", "屋外ピーク1,600nit")]),
             ("カメラ", [("リアカメラ", "50MP 広角(OIS)※カメラレス仕様選択時は非搭載"), ("フロントカメラ", "16MP ※カメラレス仕様選択時は非搭載"), ("書類スキャン", "歪み補正・影除去(標準構成)")]),
-            ("性能", [("SoC", "雷 RAI-G4(3nm・オクタコア)"), ("メモリ", "12GB LPDDR5X"), ("ストレージ", "256GB / 512GB UFS 4.0")]),
+            ("性能", [("SoC", "雷 RAI-G4A(3nm・オクタコア・省電力版)"), ("メモリ", "8GB LPDDR5X"), ("ストレージ", "128GB / 256GB UFS 4.0")]),
             ("バッテリー", [("容量", "5,800mAh"), ("有線充電", "45W(90分で満充電)"), ("電池寿命", "1,600サイクルで容量80%維持")]),
             ("法人機能", [("管理", "主要MDMゼロタッチ登録 / ポリシー配布 / リモート消去"), ("認証", "指紋(電源キー)+顔 / FeliCa"), ("回線", "nanoSIM + eSIM×2(デュアル待受)"), ("保守", "セキュリティ更新5年・引取交換保守(法人契約)")]),
             ("ソフトウェア", [("OS", "SUZAKU OS 4.0(ピュアモード初期設定)"), ("アップデート", "OS 3世代+セキュリティ5年")]),
@@ -1746,6 +1746,42 @@ _EXTRA_CAMERA = {
     "t-pad-lite": [("リアカメラ", "8MP 広角"), ("フロントカメラ", "5MP(横持ち中央)")],
 }
 
+# ==========================================================================
+# 実測ダッシュボード用の当社試験値(単一ソース)。
+#   sustain … 30分連続負荷後のfps維持率% / latency … タッチ・トゥ・フォトン ms
+#   charge50 … 0→50%充電の分数(充電スペックの括弧書きと一致させること)
+# 既出の確定値: zensen sustain=99(全SUZAKU最高) / zankyo latency=18 /
+#   suzaku-4 latency=26 / charge50はspecs記載(16分で50%等)と同値。
+# ==========================================================================
+MEASURED = {
+    "suzaku-4":       {"sustain": 97, "latency": 26, "charge50": 16},
+    "suzaku-3":       {"sustain": 95, "latency": 30, "charge50": 18},
+    "suzaku-2":       {"sustain": 92, "latency": 34, "charge50": 22},
+    "suzaku-one":     {"sustain": 90, "latency": 38, "charge50": 27},
+    "neo-3":          {"sustain": 95, "latency": 29, "charge50": 21},
+    "neo-2":          {"sustain": 93, "latency": 33, "charge50": 25},
+    "neo":            {"sustain": 90, "latency": 37, "charge50": 26},
+    "tsubame-3":      {"sustain": 88, "latency": 36, "charge50": 24},
+    "tsubame-2":      {"sustain": 86, "latency": 40, "charge50": 25},
+    "tsubame":        {"sustain": 84, "latency": 44, "charge50": 31},
+    "tsubame-lite-2": {"sustain": 82, "latency": 46, "charge50": 38},
+    "tsubame-lite":   {"sustain": 80, "latency": 48, "charge50": 55},
+    "shichiyo":       {"sustain": 96, "latency": 27, "charge50": 16},
+    "zankyo":         {"sustain": 94, "latency": 18, "charge50": 13},
+    "yako":           {"sustain": 95, "latency": 28, "charge50": 18},
+    "zensen":         {"sustain": 99, "latency": 30, "charge50": 24},
+    "kaname-b1":      {"sustain": 88, "latency": 40, "charge50": 30},
+    "pad-2":          {"sustain": 96, "latency": 28, "charge50": 24},
+    "pad":            {"sustain": 93, "latency": 32, "charge50": 28},
+    "pad-neo":        {"sustain": 92, "latency": 31, "charge50": 30},
+    "t-pad-2":        {"sustain": 85, "latency": 44, "charge50": 46},
+    "t-pad":          {"sustain": 82, "latency": 48, "charge50": 58},
+    "t-pad-lite":     {"sustain": 80, "latency": 52, "charge50": 66},
+}
+
+for _p in PHONES + TABLETS:
+    if _p["id"] in MEASURED:
+        _p["measured"] = MEASURED[_p["id"]]
 for _p in PHONES + TABLETS:
     if _p["id"] in _DESIGNS:
         _p["design"] = _DESIGNS[_p["id"]]

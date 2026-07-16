@@ -51,8 +51,8 @@
 </g>
 
 <text x="170" y="462" font-family="'Noto Sans JP',sans-serif" font-size="14.5" font-weight="800" fill="#1c1c26" opacity="0.72" text-anchor="middle" letter-spacing="2.5">要 KANAME B1</text>
-<text x="170" y="487" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#1c1c26" opacity="0.4" text-anchor="middle" letter-spacing="4">かなめ B1</text>
-<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="#1c1c26" opacity="0.38" text-anchor="middle" letter-spacing="2">DESIGNED BY SUZAKU ・ 120Hz</text>
+<text x="170" y="487" font-family="'Noto Sans JP',sans-serif" font-size="9" fill="#1c1c26" opacity="0.4" text-anchor="middle" letter-spacing="4">KANAME B1</text>
+<text x="170" y="546" font-family="'Noto Sans JP',sans-serif" font-size="8" fill="#1c1c26" opacity="0.38" text-anchor="middle" letter-spacing="2">DESIGNED BY SUZAKU ・ 90Hz</text>
 <path d="M78 36 L206 36 L96 564 L49 564 L49 300 Z" fill="url(#sheenkanameb1nc1)"/>
 <path d="M232 36 L262 36 L150 564 L124 564 Z" fill="#ffffff" opacity="0.05"/>
 <rect x="292.5" y="162" width="5" height="56" rx="2.5" fill="#565654"/>

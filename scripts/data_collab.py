@@ -83,7 +83,7 @@ COLLABS = [
             "tagline": "残響 — ZANKYO",
         },
         "phone_id": "zankyo", "accessory_ids": ["pb-wuwa", "cs-wuwa", "bd-wuwa"],
-        "limited": {"until": "2026-09-30T23:59:59", "qty": 7000, "sold": 3110},
+        "limited": {"until": "2026-09-30T23:59:59", "qty": 7000, "sold": 0},
         "world": "厄災「悲鳴」のあとの世界、ソラリス-3。音のかたちを宿す音骸とともに、漂泊者は静かな戦場を駆ける。その静けさと速さを、一台に。",
         "highlights": [
             {"title": "専用SoC「共振 KYOSHIN-W1」", "body": "最大4.1GHz・AnTuTu 418万点 — 雷 RAI-G4を超える、SUZAKU史上最速の専用設計3nm SoC。瞬間応答に振り切ったクロック制御を持ちます。"},
@@ -124,7 +124,7 @@ COLLABS = [
             "tagline": "夜行 — YAKO",
         },
         "phone_id": "yako", "accessory_ids": ["pb-nte", "cs-nte", "bd-nte"],
-        "limited": {"until": "2026-10-31T23:59:59", "qty": 6000, "sold": 1980},
+        "limited": {"until": "2026-10-31T23:59:59", "qty": 6000, "sold": 0},
         "world": "異象と日常が隣り合う大都市ヘロシティ。骨董品店エイボンの鑑定士は、今夜も路地の光を追いかける。その夜の色を、一台に。",
         "highlights": [
             {"title": "1/0.98型「夜行センサー」", "body": "スマートフォン最大級の超大型センサーと専用夜景パイプラインで、ネオンの滲みも看板の文字も、そのまま作品になる。"},
@@ -165,7 +165,7 @@ COLLABS = [
             "tagline": "前線 — ZENSEN",
         },
         "phone_id": "zensen", "accessory_ids": ["pb-endfield", "cs-endfield", "bd-endfield"],
-        "limited": {"until": "2026-11-30T23:59:59", "qty": 6500, "sold": 2470},
+        "limited": {"until": "2026-11-30T23:59:59", "qty": 6500, "sold": 0},
         "world": "惑星タロスの衛星、タロⅡ。エンドフィールド工業を率いる管理人は、オペレーターとともに未知の脅威と広大な大地に挑む。その旅路と作戦に耐える道具を。",
         "highlights": [
             {"title": "IP68 + MIL-STD-810H 準拠の装甲筐体", "body": "四隅の装甲リブ、リブ付き耐滑背面、グローブ/濡れ手対応タッチ。現場を想定した工業設計。"},

@@ -10,14 +10,55 @@
 
 <section class="section--sm section--flush-top" style="padding-top:var(--sp-5)">
   <div class="container" id="compareTool">
+    <div class="field" style="margin-bottom:18px"><label>人気の比較プリセット</label>
+      <div class="cluster" id="comparePresets">
+        <button type="button" class="btn btn--soft btn--sm" data-preset="suzaku-4,zankyo,shichiyo">旗艦対決: SUZAKU 4 vs 残響 vs 七耀</button>
+        <button type="button" class="btn btn--soft btn--sm" data-preset="neo-3,tsubame-3,kaname-b1">実用派: Neo 3 vs TSUBAME 3 vs 要 B1</button>
+        <button type="button" class="btn btn--soft btn--sm" data-preset="suzaku-4,suzaku-3,suzaku-2">世代比較: SUZAKU 4 / 3 / 2</button>
+        <button type="button" class="btn btn--soft btn--sm" data-preset="yako,zensen,suzaku-4">個性派: 夜行 vs 前線 vs SUZAKU 4</button>
+        <button type="button" class="btn btn--soft btn--sm" data-preset="pad-2,pad-neo,t-pad-2">タブレット: Pad 2 / Pad Neo / T-Pad 2</button>
+      </div>
+    </div>
     <div class="compare-picker" style="margin-bottom:32px">
       <div class="field"><label>モデル 1</label><select class="select compare-select" aria-label="比較する機種1"></select></div>
       <div class="field"><label>モデル 2</label><select class="select compare-select" aria-label="比較する機種2"></select></div>
       <div class="field"><label>モデル 3</label><select class="select compare-select" aria-label="比較する機種3"></select></div>
     </div>
     <div id="compareResult" aria-live="polite"></div>
+    <div id="compareDash" style="margin-top:var(--sp-6)"></div>
     <div class="chart-grid" style="margin-top:var(--sp-6)">
       <figure class="chart" id="compareRadar" hidden></figure>
+    </div>
+  </div>
+</section>
+
+<section class="section--sm">
+  <div class="container">
+    <div class="section-head"><p class="eyebrow">HOW TO READ</p><h2 class="t-h2">比較の読み方</h2>
+    <p class="t-soft" style="max-width:680px">表の<strong style="color:var(--accent)">オレンジ縁のセルはその行の最良値</strong>です。実測ダッシュボードの4指標は当社試験値で、数字の意味は次のとおりです。</p></div>
+    <div class="grid grid--2">
+      <div class="card reveal"><h3 class="t-h4">30分後fps維持率</h3><p class="t-small t-soft">30分連続の高負荷プレイ後もフレームレートがどれだけ落ちないか。長時間プレイの快適さはピーク性能よりこの数字で決まります。前線 ZENSEN の99%が全SUZAKU最高です。</p></div>
+      <div class="card reveal"><h3 class="t-h4">タッチ遅延(小さいほど速い)</h3><p class="t-small t-soft">指が触れてから画面が応えるまでの実測ミリ秒。対戦・音ゲーで体感差が出ます。残響 ZANKYO の18msが全SUZAKU最速です。</p></div>
+      <div class="card reveal"><h3 class="t-h4">0→50%充電</h3><p class="t-small t-soft">電池残量ゼロから半分まで戻すのにかかる分数。「出かける前の10分」で差が付く数字です。各製品の充電仕様の括弧書きと同じ試験の値です。</p></div>
+      <div class="card reveal"><h3 class="t-h4">コスパ指数(万点/万円)</h3><p class="t-small t-soft">AnTuTuスコアを税込価格で割った、1万円あたりの性能。純粋な「性能の買い得さ」を横並びにします(自動計算)。</p></div>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-7)"><p class="eyebrow">RECOMMEND</p><h2 class="t-h2">用途別の早見</h2></div>
+    <div class="grid grid--2">
+      <a class="card card--hover reveal" href="/products/phone/suzaku-4/"><p class="eyebrow">ゲーム最優先</p><h3 class="t-h4">SUZAKU 4</h3><p class="t-small t-soft">175Hz・ショルダートリガー・11層冷却の旗艦。迷ったらこれ。瞬間最速だけが欲しいなら残響 ZANKYOも。</p></a>
+      <a class="card card--hover reveal" href="/products/phone/yako/"><p class="eyebrow">カメラ・夜景重視</p><h3 class="t-h4">夜行 YAKO</h3><p class="t-small t-soft">1/0.98型センサー+夜景専用ISPの数量限定機。通常モデルならTSUBAME 3が軽くてバランス型。</p></a>
+      <a class="card card--hover reveal" href="/products/phone/zensen/"><p class="eyebrow">電池・タフネス重視</p><h3 class="t-h4">前線 ZENSEN</h3><p class="t-small t-soft">8,500mAh・IP68+MIL準拠・-20℃動作。毎日充電したくない人と現場で使う人へ。</p></a>
+      <a class="card card--hover reveal" href="/products/phone/tsubame-lite-2/"><p class="eyebrow">価格重視</p><h3 class="t-h4">TSUBAME Lite 2</h3><p class="t-small t-soft">3万円台でSUZAKU品質。コスパ指数では全機種トップクラスです。</p></a>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-7)"><p class="eyebrow">FAQ</p><h2 class="t-h2">比較でよくある質問</h2></div>
+    <div class="accordion">
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>AnTuTuスコアはどの条件の数値ですか?</span></button>
+        <div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">室温25℃・電源接続なし・工場出荷設定での当社測定値(万点)です。省電力版SoC(型番末尾A)は通常版より低いスコアになります。測定条件が異なるため、他社公表値との直接比較はできません。</div></div></div></div>
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>コラボモデルと通常モデル、どちらを選ぶべき?</span></button>
+        <div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">性能の方向性で選んでください。瞬間最速=残響、持続と頑丈さ=前線、夜景カメラ=夜行、映像美=七耀。いずれも数量・期間限定のため、迷っている場合は受付終了日にご注意ください。汎用性と入手性では通常モデルのSUZAKU 4が優位です。</div></div></div></div>
+      <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>販売終了モデルも比較できますか?</span></button>
+        <div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">はい、歴代全モデルを選択できます。中古や手持ち機からの買い替え検討にお使いください。販売終了モデルの価格欄は「販売終了」と表示されます。</div></div></div></div>
     </div>
   </div>
 </section>

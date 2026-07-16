@@ -3801,13 +3801,386 @@ def build_svg_gallery():
 </section>"""
     render_page("/dev/svg-gallery/", "SVG全点検グリッド(内部QA)",
                 "全機種の背面・正面と全アクセサリのSVGビジュアルを一覧点検する開発者向け内部ページ。",
-                body, "dark", [("ホーム", "/"), ("開発者向け", "/developers/"), ("SVG全点検", None)],
+                body, "dark", [("ホーム", "/"), ("内部点検ハブ", "/dev/"), ("SVG全点検", None)],
                 "開発者向け", noindex=True)
+
+
+# ==========================================================================
+# 内部点検ハブ /dev/ — デザインシステム・アニメーション・図版・チャートのQAページ群
+# (全ページ noindex。サイトマップ・検索には載せない)
+# ==========================================================================
+
+def _dev_page(slug, title, desc, body):
+    render_page(f"/dev/{slug}/" if slug else "/dev/", f"{title}(内部QA)", desc, body, "dark",
+                [("ホーム", "/"), ("内部点検ハブ", "/dev/"), (title, None)] if slug else [("ホーム", "/"), ("内部点検ハブ", None)],
+                "開発者向け", noindex=True)
+
+
+def _dev_head(eyebrow, h1, lead):
+    return (f'<section class="section"><div class="container">'
+            f'<div class="section-head"><p class="eyebrow">{eyebrow}</p><h1 class="t-h1">{h1}</h1>'
+            f'<p class="t-lead" style="max-width:720px">{lead}</p></div>')
+
+
+def build_dev_hub():
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    sections = [
+        ("ui", "UIコンポーネント", "ボタン/バッジ/カード/フォーム/タブ/表/通知 — 全部品の実物カタログ", "🧩"),
+        ("typography", "タイポグラフィ", "見出し階層・本文・等幅・和欧混植の見本帳", "🔤"),
+        ("colors", "カラートークン", "基本トークン/製品ライングロー/コラボ4+1配色の全スウォッチ", "🎨"),
+        ("animations", "アニメーション", "reveal系・キーフレーム語彙・カウンタ/カウントダウン・演出見本", "✨"),
+        ("art", "図版カタログ", "svg_art 全kind+チップパッケージ(svg_die)の一覧", "🖼"),
+        ("charts", "チャート", "charts.js 4種(bar/line/radar/donut)の描画点検", "📊"),
+        ("svg-gallery", "SVG全点検", "全デバイス背面+正面ペアとアクセサリ全バリエーション", "📱"),
+    ]
+    cards = "".join(
+        f'<a class="card card--hover reveal" href="/dev/{slug}/">'
+        f'<p class="eyebrow">{icon} {slug.upper()}</p><h2 class="t-h4">{esc(t)}</h2>'
+        f'<p class="t-small t-soft">{esc(d)}</p><p class="link-arrow">開く</p></a>'
+        for slug, t, d, icon in sections)
+    stats = [
+        (str(len(PAGES)), "公開ページ(sitemap)"),
+        (str(len(ALL_PRODUCTS)), "製品データ"),
+        (str(len(NEWS)), "ニュース記事"),
+        (ASSET_V, "アセットバージョン"),
+    ]
+    stat_cells = "".join(
+        f'<div class="card t-center"><p class="t-h3" style="color:var(--accent);font-weight:800">{esc(v)}</p>'
+        f'<p class="t-micro t-soft">{esc(l)}</p></div>' for v, l in stats)
+    body = f"""{_dev_head("INTERNAL QA HUB", "内部点検ハブ",
+        "デザインシステムの部品・配色・動き・図版・チャートを1か所で目視点検するための内部ページ群です。検索エンジンには載りません(noindex)。")}
+    <div class="grid grid--4" style="margin-bottom:var(--sp-6)">{stat_cells}</div>
+    <div class="grid grid--3 grid--cards">{cards}</div>
+    <p class="t-micro t-faint" style="margin-top:26px">ビルド: {now} / 機械検証: <code>python3 scripts/check_links.py</code> → <code>node scripts/audit.js</code></p>
+  </div>
+</section>"""
+    _dev_page("", "内部点検ハブ", "SUZAKUサイトのデザインシステム・図版・アニメーションを点検する内部ハブ。", body)
+
+
+def build_dev_ui():
+    toast_btn = ('<button class="btn btn--soft" type="button" '
+                 'onclick="window.szToast && window.szToast(\'トースト通知のサンプルです\')">トーストを表示</button>')
+    body = f"""{_dev_head("UI COMPONENTS", "UIコンポーネント",
+        "サイト全体で使う部品の実物カタログ。ここで崩れていれば本番でも崩れています。")}
+
+    <div class="section-head"><p class="eyebrow">BUTTONS</p><h2 class="t-h3">ボタン</h2></div>
+    <div class="card reveal"><div class="cluster">
+      <a class="btn btn--primary" href="#">btn--primary</a>
+      <a class="btn btn--ghost" href="#">btn--ghost</a>
+      <a class="btn btn--soft" href="#">btn--soft</a>
+      <a class="btn btn--primary btn--sm" href="#">btn--sm</a>
+      <a class="btn btn--primary btn--lg" href="#">btn--lg</a>
+      <button class="btn btn--primary" disabled>disabled</button>
+      {toast_btn}
+    </div>
+    <div class="cluster" style="margin-top:14px">
+      <a class="link-arrow" href="#">link-arrow リンク</a>
+      <span class="badge">badge</span>
+      <span class="badge badge--new">NEW</span>
+    </div></div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">CARDS</p><h2 class="t-h3">カード</h2></div>
+    <div class="grid grid--3 grid--cards">
+      <div class="card reveal"><p class="eyebrow">CARD</p><h3 class="t-h4">標準カード</h3><p class="t-small t-soft">本文テキスト。角丸・境界線・サーフェス色はトークン準拠。</p></div>
+      <a class="card card--hover reveal" href="#"><p class="eyebrow">CARD--HOVER</p><h3 class="t-h4">ホバーカード</h3><p class="t-small t-soft">ホバーで浮き上がるリンクカード。</p><p class="link-arrow">開く</p></a>
+      <div class="card card--flame reveal"><p class="eyebrow">CARD--FLAME</p><h3 class="t-h4">強調カード</h3><p class="t-small t-soft">CTAバンドなどで使う炎グラデーション。</p></div>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">NOTICE / EMPTY</p><h2 class="t-h3">通知・空状態</h2></div>
+    <div class="stack">
+      <div class="notice reveal"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10.5v4M12 17.6h.01"/></svg> 注意喚起の notice。リンクは<a href="#">この色</a>になります。</div>
+      <div class="empty reveal"><p class="empty__icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></p><p>結果が無いときの empty 表示。</p></div>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">FORMS</p><h2 class="t-h3">フォーム</h2></div>
+    <div class="card reveal"><div class="grid grid--2">
+      <div class="field"><label>テキスト入力</label><input class="input" type="text" placeholder="placeholder"></div>
+      <div class="field"><label>セレクト</label><select class="select"><option>選択肢 A</option><option>選択肢 B</option></select></div>
+    </div>
+    <div class="field" style="margin-top:14px"><label>choice(ラジオカード)</label><div class="choice-grid">
+      <label class="choice"><input type="radio" name="devc" checked><span class="choice__radio"></span><span class="choice__body"><span class="choice__title">16GB + 512GB</span></span><span class="choice__price">¥149,800</span></label>
+      <label class="choice"><input type="radio" name="devc"><span class="choice__radio"></span><span class="choice__body"><span class="choice__title">24GB + 1TB</span></span><span class="choice__price">¥179,800</span></label>
+    </div></div>
+    <div class="field" style="margin-top:14px"><label>カラースウォッチ</label><div class="cluster">
+      <button class="swatch is-active" style="--sw:#16161e" aria-label="漆黒"><i style="background:#16161e"></i></button>
+      <button class="swatch" style="--sw:#8e2418" aria-label="朱鳥"><i style="background:#8e2418"></i></button>
+      <button class="swatch" style="--sw:#d9dce4" aria-label="白銀"><i style="background:#d9dce4"></i></button>
+    </div></div></div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">TABS / ACCORDION</p><h2 class="t-h3">タブ・アコーディオン</h2></div>
+    <div class="card reveal">
+      <div class="tabs"><button class="tab is-active">タブ 1</button><button class="tab">タブ 2</button><button class="tab">タブ 3</button></div>
+      <div class="accordion" style="margin-top:16px">
+        <div class="accordion__item"><button class="accordion__q" aria-expanded="false"><span>アコーディオン(クリックで開閉)</span></button>
+          <div class="accordion__a"><div class="accordion__a-inner"><div class="accordion__a-body">開いた中身。FAQ・仕様注記で使用します。</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">TABLES</p><h2 class="t-h3">表(scroll-x内)</h2></div>
+    <div class="scroll-x reveal"><table class="spec-table quick-table">
+      <thead><tr><th scope="col">項目</th><th scope="col">値A</th><th scope="col">値B</th><th scope="col">備考</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">行見出し</th><td>データ</td><td class="compare-best">最良値ハイライト</td><td class="t-soft">補足テキスト</td></tr>
+        <tr><th scope="row">対応表示</th><td><strong style="color:var(--accent)">対応</strong></td><td><span class="t-faint">—</span></td><td class="t-soft">acc_compat_table の記法</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">TIMELINE</p><h2 class="t-h3">タイムライン</h2></div>
+    <div class="timeline reveal">
+      <div class="timeline__item"><p class="timeline__date">2026-07</p><h3 class="t-h4">タイムライン項目</h3><p class="t-small t-soft">沿革・スケジュールで使用。</p></div>
+      <div class="timeline__item"><p class="timeline__date">2026-12</p><h3 class="t-h4">次の項目</h3><p class="t-small t-soft">日付+見出し+本文の3点構成。</p></div>
+    </div>
+  </div>
+</section>"""
+    _dev_page("ui", "UIコンポーネント", "ボタン・カード・フォーム・表などUI部品の実物カタログ(内部QA)。", body)
+
+
+def build_dev_typography():
+    scale = [("t-hero", "ヒーロー見出し"), ("t-h1", "ページタイトル"), ("t-h2", "セクション見出し"),
+             ("t-h3", "サブセクション"), ("t-h4", "カード見出し"), ("t-lead", "リード文"),
+             ("t-small", "小さめ本文"), ("t-micro", "注記・キャプション")]
+    rows = "".join(
+        f'<div class="card reveal" style="display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:baseline">'
+        f'<code class="t-micro t-faint">.{cls}</code><p class="{cls}" style="margin:0">{esc(label)} — 朱雀 SUZAKU 0123</p></div>'
+        for cls, label in scale)
+    body = f"""{_dev_head("TYPOGRAPHY", "タイポグラフィ",
+        "見出し階層と本文の見本帳。基本書体は Noto Sans JP、コラボLPのみ専用フォント(明朝/コンデンス系)を限定読み込みします。")}
+    <div class="stack">{rows}</div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">MIXED</p><h2 class="t-h3">和欧混植・数字</h2></div>
+    <div class="card reveal">
+      <p>AnTuTu 4,180,000点。厚さ8.2mm・199g — 「最速は、静けさの中にある。」</p>
+      <p class="t-soft" style="margin-top:8px">The quick brown fox jumps over the lazy dog. 0123456789 ¥169,800(税込)</p>
+      <p style="margin-top:8px"><code>等幅: SZ-SUZAKU4 / ASSET_V={ASSET_V}</code></p>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">LP FONTS</p><h2 class="t-h3">コラボLP専用フォント(参考)</h2></div>
+    <div class="grid grid--2 grid--cards">
+      <div class="card reveal"><p class="eyebrow">原神 七耀</p><p>Shippori Mincho — 白磁×金の明朝。LPでのみ読み込み。</p></div>
+      <div class="card reveal"><p class="eyebrow">鳴潮 残響</p><p>Zen Old Mincho — 静謐なオールド明朝。</p></div>
+      <div class="card reveal"><p class="eyebrow">NTE 夜行</p><p>Archivo Italic — 斜体コンデンスの都会派。</p></div>
+      <div class="card reveal"><p class="eyebrow">エンドフィールド 前線</p><p>Oswald — 工業系コンデンスゴシック。</p></div>
+    </div>
+    <p class="t-micro t-faint" style="margin-top:14px">※ 専用フォントは各LPだけで読み込むため、このページではシステム代替で表示されます。実物は各 /collab/ ページで確認してください。</p>
+  </div>
+</section>"""
+    _dev_page("typography", "タイポグラフィ", "見出し階層・本文・和欧混植の見本帳(内部QA)。", body)
+
+
+def build_dev_colors():
+    base_tokens = ["--accent", "--accent-soft", "--bg", "--surface", "--surface-2", "--line",
+                   "--text", "--text-soft", "--text-faint"]
+    base_sw = "".join(
+        f'<div class="card t-center reveal"><div style="height:56px;border-radius:10px;background:var({t});border:1px solid var(--line)"></div>'
+        f'<code class="t-micro t-faint" style="display:block;margin-top:8px">{t}</code></div>'
+        for t in base_tokens)
+    line_sw = "".join(
+        f'<div class="card reveal" style="display:flex;gap:12px;align-items:center">'
+        f'<span style="width:38px;height:38px;border-radius:50%;background:{v["glow"]};flex:none"></span>'
+        f'<div><b>{esc(v["label"])}</b><br><code class="t-micro t-faint">{k} / {v["glow"]}</code></div></div>'
+        for k, v in LINES.items())
+    collab_rows = ""
+    for c in COLLABS:
+        tok = c["tokens"]
+        chips = "".join(
+            f'<span title="{name}" style="width:30px;height:30px;border-radius:8px;background:{tok[name]};border:1px solid var(--line);display:inline-block"></span>'
+            for name in ("bg", "bg2", "accent", "accent2", "glow") if isinstance(tok.get(name), str) and tok[name].startswith("#"))
+        collab_rows += (f'<div class="card reveal" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
+                        f'<b style="min-width:200px">{esc(c["edition"])}</b>'
+                        f'<span style="display:flex;gap:6px">{chips}</span>'
+                        f'<code class="t-micro t-faint">accent {tok["accent"]} / accent2 {tok["accent2"]} / glow {tok["glow"]}</code></div>')
+    body = f"""{_dev_head("COLOR TOKENS", "カラートークン",
+        "基本トークン・製品ライングロー・コラボ配色のスウォッチ一覧。値の単一ソースは base.css / data_products.py / data_collab.py。")}
+    <div class="section-head"><p class="eyebrow">BASE</p><h2 class="t-h3">基本トークン(現在のテーマで描画)</h2></div>
+    <div class="grid grid--3">{base_sw}</div>
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">LINES</p><h2 class="t-h3">製品ライングロー({len(LINES)}種)</h2></div>
+    <div class="grid grid--2">{line_sw}</div>
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">COLLAB</p><h2 class="t-h3">コラボ配色(4+ティザー)</h2></div>
+    <div class="stack">{collab_rows}</div>
+  </div>
+</section>"""
+    _dev_page("colors", "カラートークン", "基本トークン・ライングロー・コラボ配色のスウォッチ(内部QA)。", body)
+
+
+def build_dev_animations():
+    kf_cells = [
+        ("pulse 脈動", "devkf-pulse", '<span class="devkf-pulse"></span>'),
+        ("spin 回転(ファン)", "devkf-spin", '<span class="devkf-spin">✳</span>'),
+        ("blink 点滅(REC)", "devkf-blink", '<span class="devkf-blink"></span> REC'),
+        ("marquee 流し", "devkf-marquee", '<span class="devkf-marquee"><i>SUZAKU × NTE — WELCOME — SUZAKU × NTE — WELCOME — </i></span>'),
+        ("neon 明滅", "devkf-neon", '<em class="devkf-neon">NEON</em>'),
+        ("glitch ???", "devkf-glitch", '<em class="devkf-glitch">???</em>'),
+        ("belt 搬送矢印", "devkf-belt", '<span class="devkf-belt"><i></i><i></i><i></i></span>'),
+        ("shimmer スケルトン", "devkf-shimmer", '<span class="devkf-shimmer"></span>'),
+        ("fill ゲージ", "devkf-fill", '<span class="devkf-fillwrap"><i class="devkf-fill"></i></span>'),
+        ("float 浮遊", "devkf-float", '<span class="devkf-float">📦</span>'),
+    ]
+    kf_html = "".join(
+        f'<div class="card t-center reveal"><div style="height:64px;display:grid;place-items:center;overflow:hidden">{demo}</div>'
+        f'<code class="t-micro t-faint">{name}</code></div>'
+        for name, _, demo in kf_cells)
+    body = f"""{_dev_head("MOTION", "アニメーション",
+        "サイトで使う動きの語彙を1ページに集約。すべて prefers-reduced-motion で停止します。")}
+    <style>
+    .devkf-pulse {{ width: 16px; height: 16px; border-radius: 50%; background: var(--accent); animation: devPulse 1.6s ease-in-out infinite; }}
+    @keyframes devPulse {{ 0%, 100% {{ opacity: 1; transform: scale(1); }} 50% {{ opacity: 0.35; transform: scale(0.8); }} }}
+    .devkf-spin {{ font-size: 30px; color: var(--accent); animation: devSpin 2.4s linear infinite; display: inline-block; }}
+    @keyframes devSpin {{ to {{ transform: rotate(360deg); }} }}
+    .devkf-blink {{ width: 10px; height: 10px; border-radius: 50%; background: #d43a2e; display: inline-block; animation: devBlink 1.4s steps(2) infinite; }}
+    @keyframes devBlink {{ 50% {{ opacity: 0.15; }} }}
+    .devkf-marquee {{ display: block; width: 180px; overflow: hidden; white-space: nowrap; border-block: 1px solid var(--line); padding: 4px 0; }}
+    .devkf-marquee i {{ display: inline-block; font-style: normal; font-size: 11px; letter-spacing: 2px; animation: devMarq 7s linear infinite; }}
+    @keyframes devMarq {{ to {{ transform: translateX(-50%); }} }}
+    .devkf-neon {{ font-style: italic; font-weight: 900; font-size: 22px; letter-spacing: 3px; color: #ff3ea5; text-shadow: 0 0 12px #ff3ea5; animation: devPulse 2.2s ease-in-out infinite; }}
+    .devkf-glitch {{ font-style: italic; font-weight: 900; font-size: 24px; letter-spacing: 4px; color: var(--text); text-shadow: 3px 0 0 rgba(255,122,0,.6), -3px 0 0 rgba(255,255,255,.25); animation: devGlitch 2.8s steps(1) infinite; }}
+    @keyframes devGlitch {{ 0%, 92%, 100% {{ transform: none; }} 94% {{ transform: translateX(2px) skewX(-6deg); }} 96% {{ transform: translateX(-2px); }} }}
+    .devkf-belt i {{ width: 9px; height: 9px; background: var(--accent); clip-path: polygon(0 0, 100% 50%, 0 100%); display: inline-block; margin: 0 2px; animation: devPulse 1.2s linear infinite; }}
+    .devkf-belt i:nth-child(2) {{ animation-delay: 0.2s; }}
+    .devkf-belt i:nth-child(3) {{ animation-delay: 0.4s; }}
+    .devkf-shimmer {{ width: 140px; height: 14px; border-radius: 7px; display: inline-block; background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: devShim 1.6s linear infinite; }}
+    @keyframes devShim {{ to {{ background-position: -200% 0; }} }}
+    .devkf-fillwrap {{ width: 150px; height: 10px; border-radius: 5px; background: var(--line); display: inline-block; overflow: hidden; }}
+    .devkf-fill {{ display: block; height: 100%; width: 0; border-radius: 5px; background: var(--accent); animation: devFill 2.4s ease-out infinite; }}
+    @keyframes devFill {{ 60%, 100% {{ width: 82%; }} }}
+    .devkf-float {{ font-size: 26px; display: inline-block; animation: devFloat 3s ease-in-out infinite; }}
+    @keyframes devFloat {{ 0%, 100% {{ transform: translateY(4px); }} 50% {{ transform: translateY(-4px); }} }}
+    @media (prefers-reduced-motion: reduce) {{
+      .devkf-pulse, .devkf-spin, .devkf-blink, .devkf-marquee i, .devkf-neon, .devkf-glitch,
+      .devkf-belt i, .devkf-shimmer, .devkf-fill, .devkf-float {{ animation: none !important; }}
+    }}
+    </style>
+
+    <div class="section-head"><p class="eyebrow">REVEAL</p><h2 class="t-h3">スクロール出現(reveal系)</h2></div>
+    <p class="t-small t-soft" style="margin-bottom:14px">IntersectionObserverで .is-inview が付与されます。<button class="btn btn--soft btn--sm" type="button" id="devReplay">もう一度再生</button></p>
+    <div class="grid grid--4" id="devRevealRow">
+      <div class="card t-center reveal"><code class="t-micro">.reveal</code><p class="t-small t-soft">下から</p></div>
+      <div class="card t-center reveal-l"><code class="t-micro">.reveal-l</code><p class="t-small t-soft">左から</p></div>
+      <div class="card t-center reveal-r"><code class="t-micro">.reveal-r</code><p class="t-small t-soft">右から</p></div>
+      <div class="card t-center reveal-scale"><code class="t-micro">.reveal-scale</code><p class="t-small t-soft">拡大</p></div>
+    </div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">KEYFRAMES</p><h2 class="t-h3">キーフレーム語彙(10種)</h2></div>
+    <div class="grid grid--4">{kf_html}</div>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">COUNTERS</p><h2 class="t-h3">数値カウンタ・カウントダウン</h2></div>
+    <div class="grid grid--2">
+      <div class="card t-center reveal"><p class="t-h2" style="font-weight:900"><b id="devCount">0</b><i style="font-style:normal;color:var(--accent)">万点</i></p><p class="t-micro t-soft">カウントアップ(実装: collab-core.js の [data-cl-count] と同型)</p></div>
+      <div class="card t-center reveal"><p class="t-h3" style="font-weight:800" id="devCd">--日 --:--:--</p><p class="t-micro t-soft">カウントダウン(実装: .cl-count[data-until] と同型)</p></div>
+    </div>
+    <script>
+    (function () {{
+      "use strict";
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var c = document.getElementById("devCount");
+      function runCount() {{
+        if (!c) return;
+        if (reduce) {{ c.textContent = "418"; return; }}
+        var t0 = performance.now();
+        (function step(now) {{
+          var r = Math.min(1, (now - t0) / 1400);
+          c.textContent = Math.round(418 * (1 - Math.pow(1 - r, 3)));
+          if (r < 1) requestAnimationFrame(step);
+        }})(t0);
+      }}
+      runCount();
+      var cd = document.getElementById("devCd");
+      var until = Date.now() + 36 * 3600 * 1000;
+      function pad(n) {{ return (n < 10 ? "0" : "") + n; }}
+      setInterval(function () {{
+        if (!cd) return;
+        var d = Math.max(0, until - Date.now());
+        cd.textContent = Math.floor(d / 864e5) + "日 " + pad(Math.floor(d / 36e5) % 24) + ":" + pad(Math.floor(d / 6e4) % 60) + ":" + pad(Math.floor(d / 1e3) % 60);
+      }}, 1000);
+      var btn = document.getElementById("devReplay");
+      if (btn) btn.addEventListener("click", function () {{
+        var row = document.getElementById("devRevealRow");
+        Array.prototype.forEach.call(row.querySelectorAll(".reveal, .reveal-l, .reveal-r, .reveal-scale"), function (el) {{
+          el.classList.remove("is-inview");
+          void el.offsetWidth;
+          setTimeout(function () {{ el.classList.add("is-inview"); }}, 30);
+        }});
+        runCount();
+      }});
+    }})();
+    </script>
+
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">LP MOTION</p><h2 class="t-h3">コラボLPの実演出(リンク)</h2></div>
+    <div class="grid grid--2 grid--cards">
+      <a class="card card--hover reveal" href="/collab/genshin/"><p class="eyebrow">七耀</p><p class="t-small t-soft">元素ホイール切替・雲パララックス・金粒子</p></a>
+      <a class="card card--hover reveal" href="/collab/wuwa/"><p class="eyebrow">残響</p><p class="t-small t-soft">スクロール連動波形canvas・モノクロ反転</p></a>
+      <a class="card card--hover reveal" href="/collab/nte/"><p class="eyebrow">夜行</p><p class="t-small t-soft">マーキー・EL発光パターン切替・看板カタログ6種</p></a>
+      <a class="card card--hover reveal" href="/collab/endfield/"><p class="eyebrow">前線</p><p class="t-small t-soft">ターミナルタイプライタ・搬送ベルト・計器ゲージ</p></a>
+    </div>
+    <p class="t-micro t-faint" style="margin-top:14px">※ LP固有の演出は各 collab-*.css/js に実装されており、当ページの見本はデモ用の同型実装です。</p>
+  </div>
+</section>"""
+    _dev_page("animations", "アニメーション", "reveal系・キーフレーム・カウンタなど動きの語彙一覧(内部QA)。", body)
+
+
+def build_dev_art():
+    kinds = ["chip", "npu", "gpu", "memory", "storage", "cooling", "fan", "liquid", "display",
+             "camera", "battery", "os", "panel", "touch", "gamespace", "shield", "silhouette",
+             "cooler", "grip", "buds", "charger", "case", "dock"]
+    cells = "".join(
+        f'<figure class="card reveal" style="margin:0"><div>{svg_art.svg_art(k, "#e8442e", "#16161e")}</div>'
+        f'<figcaption class="t-micro t-faint t-center" style="margin-top:8px"><code>{k}</code></figcaption></figure>'
+        for k in kinds)
+    motif_cells = "".join(
+        f'<figure class="card reveal" style="margin:0"><div>{svg_art.svg_art(k, g, b, m)}</div>'
+        f'<figcaption class="t-micro t-faint t-center" style="margin-top:8px"><code>{k} / {m}</code></figcaption></figure>'
+        for k, m, g, b in [("powerbank", "genshin", "#2fb9a3", "#1f7a6b"), ("powerbank", "endfield", "#ff7a1a", "#1b1c1e"),
+                           ("clcase", "wuwa", "#00e0ff", "#101014"), ("clbuds", "nte", "#ff2d78", "#17121c")])
+    dies = "".join(
+        f'<figure class="card reveal" style="margin:0"><div>{svg_art.svg_die(gid, label, sub, glow)}</div>'
+        f'<figcaption class="t-micro t-faint t-center" style="margin-top:8px"><code>svg_die / {label}</code></figcaption></figure>'
+        for gid, label, sub, glow in [("devdie1", "RAI-G4", "3nm ・ OCTA CORE", "#e8442e"),
+                                      ("devdie2", "KIKAN-F1", "SUSTAIN 99%", "#f2d800")])
+    body = f"""{_dev_head("ART CATALOG", "図版カタログ",
+        "scripts/svg_art.py の svg_art() 全kindと svg_die() の実出力。低品質はここで見つけて容赦なく作り直す。")}
+    <div class="section-head"><p class="eyebrow">GENERIC KINDS</p><h2 class="t-h3">汎用図版({len(kinds)}種)</h2></div>
+    <div class="grid grid--3">{cells}</div>
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">MOTIF</p><h2 class="t-h3">コラボモチーフ付き(抜粋)</h2></div>
+    <div class="grid grid--2">{motif_cells}</div>
+    <div class="section-head" style="margin-top:var(--sp-6)"><p class="eyebrow">DIE</p><h2 class="t-h3">チップパッケージ(svg_die)</h2></div>
+    <div class="grid grid--2">{dies}</div>
+    <p class="t-small t-soft" style="margin-top:18px">製品本体のSVG(スマホ/タブレット背面・正面、全カラー)は <a class="link-arrow" href="/dev/svg-gallery/">SVG全点検グリッド</a> へ。</p>
+  </div>
+</section>"""
+    _dev_page("art", "図版カタログ", "svg_art全kindとチップパッケージ図の一覧(内部QA)。", body)
+
+
+def build_dev_charts():
+    charts_html = (
+        chart({"type": "bar", "title": "bar — AnTuTu世代比較(highlight付き)", "unit": "万点",
+               "labels": ["RAI-G2", "RAI-G3", "RAI-G4", "KYOSHIN-W1"], "values": [218, 312, 385, 418], "highlight": 3})
+        + chart({"type": "line", "title": "line(area) — 氷刃VC面積の推移", "unit": "mm²", "area": True,
+                 "labels": ["2023年", "2024年", "2025年", "2026年"],
+                 "series": [{"name": "氷刃", "values": [v for _, v in VC_AREA]}]})
+        + chart({"type": "radar", "title": "radar — 2系列の重ね比較", "axes": ["性能", "カメラ", "バッテリー", "冷却", "コスパ"],
+                 "series": [{"name": "SUZAKU 4", "values": [5, 4, 4, 5, 3]}, {"name": "TSUBAME 3", "values": [3, 4, 4, 3, 5]}]})
+        + chart({"type": "donut", "title": "donut — 単一値ゲージ", "label": "30分後fps維持率", "value": 99, "max": 100, "unit": "%"}))
+    body = f"""{_dev_head("CHARTS", "チャート点検",
+        "charts.js の4レンダラー(bar/line/radar/donut)を同一データ規約で描画。JSONは data-chart 属性に埋め込まれます。")}
+    <div class="chart-grid">{charts_html}</div>
+    <p class="t-micro t-faint" style="margin-top:18px">生成側: <code>gen.py chart(cfg)</code> / 描画側: <code>assets/js/charts.js</code>(1チャートの不備で全体が止まらないようtry隔離)</p>
+  </div>
+</section>"""
+    _dev_page("charts", "チャート点検", "charts.js 4種の描画点検(内部QA)。", body)
+
+
+def build_dev_pages():
+    build_svg_gallery()
+    build_dev_ui()
+    build_dev_typography()
+    build_dev_colors()
+    build_dev_animations()
+    build_dev_art()
+    build_dev_charts()
+    build_dev_hub()  # 最後に生成(PAGES統計を確定値で表示)
 
 
 def main():
     build_assets()
-    build_svg_gallery()
     for p in ALL_PRODUCTS:
         build_product_page(p)
     for t in TECHS:
@@ -3819,7 +4192,8 @@ def main():
     build_collab_pages()
     build_product_hubs()
     build_fragments()
-    build_client_data()  # PAGES確定後
+    build_dev_pages()  # 内部点検ハブ(noindex。公開PAGES確定後に統計を焼き込む)
+    build_client_data()
     build_sitemap()
     print(f"生成完了: {len(PAGES)}ページ")
 
